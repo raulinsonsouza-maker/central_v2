@@ -2408,7 +2408,7 @@ function PautaDaSemana({ clienteId }: { clienteId: string }) {
             <div className="h-8 w-1 rounded-full bg-[var(--primary)]" />
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--primary)]">
-                Gestão interna
+                Acompanhamento estratégico
               </p>
               <CardTitle className="mt-0">Pauta da Semana</CardTitle>
             </div>

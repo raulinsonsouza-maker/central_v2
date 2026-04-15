@@ -82,8 +82,8 @@ export default function CentralClientesPage() {
             </span>
           </h1>
           <p className="mt-2 max-w-lg text-sm leading-relaxed text-[var(--muted-foreground)]">
-            Hub consolidado de performance dos clientes ativos. Escolha um cliente para analisar funil,
-            investimento e resultados em profundidade.
+            Visão completa de cada cliente em um só lugar — métricas de mídia, investimento e resultados
+            atualizados para decisões mais rápidas e assertivas.
           </p>
         </div>
 
