@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["*.replit.dev", "*.repl.co", "*.riker.replit.dev"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "**.fbcdn.net", pathname: "/**" },
