@@ -13,7 +13,7 @@ import {
   Line,
   ComposedChart,
 } from "recharts";
-import { DollarSign, Target, TrendingUp, Users, Zap, BarChart3, ShoppingCart, ReceiptText, Repeat2, MousePointerClick, MessageCircle } from "lucide-react";
+import { DollarSign, Target, TrendingUp, Users, Zap, BarChart3, ShoppingCart, ReceiptText, Repeat2, MousePointerClick, MessageCircle, Eye, Activity } from "lucide-react";
 
 const tooltipStyle = {
   contentStyle: {
@@ -101,6 +101,8 @@ type DefaultPanelProps = {
     impressoes?: number;
     conversasMensagem?: number;
     leadsForm?: number;
+    profileVisits?: number;
+    custoPorVisita?: number;
   };
   chartData: Record<string, string | number>[];
   /** Nome da série de conversões/leads no gráfico (ex.: "Conversões" no Google). */
@@ -134,6 +136,8 @@ type DefaultPanelProps = {
   miguelImoveisMode?: boolean;
   /** Quando true (Miguel Imóveis canal Google), substitui CPM por Cliques e exibe linha extra com CTR e Taxa de Conversão. */
   miguelGoogleMode?: boolean;
+  /** Quando true (Academy Americana), exibe linha extra de engajamento com Visitas ao Perfil e Custo por Visita. */
+  academyEngajamentoMode?: boolean;
 };
 
 export function DefaultPanel({
@@ -156,6 +160,7 @@ export function DefaultPanel({
   conversasEngajamentoMode = false,
   miguelImoveisMode = false,
   miguelGoogleMode = false,
+  academyEngajamentoMode = false,
 }: DefaultPanelProps) {
   const isMensal = agrupamento === "mensal";
   const latestPeriod = latestFiveSeries[latestFiveSeries.length - 1]?.periodo;
@@ -335,6 +340,38 @@ export function DefaultPanel({
             value={(resumo.leadsForm ?? 0).toLocaleString("pt-BR")}
             sub="Leads via formulário e contato no site no período"
             icon={Users}
+          />
+        </section>
+      )}
+
+      {/* KPI row extra — engajamento Instagram (Academy Americana) */}
+      {!ecommerceGoogleMode && academyEngajamentoMode && (resumo.profileVisits ?? 0) > 0 && (
+        <section className="grid gap-4 sm:grid-cols-3">
+          <KpiCard
+            title="Visitas ao Perfil"
+            value={(resumo.profileVisits ?? 0).toLocaleString("pt-BR")}
+            sub="Visitas ao perfil do Instagram atribuídas às campanhas de engajamento"
+            icon={Eye}
+          />
+          <KpiCard
+            title="Custo / Visita"
+            value={
+              (resumo.profileVisits ?? 0) > 0
+                ? formatCurrency(resumo.custoPorVisita ?? 0)
+                : "—"
+            }
+            sub="Investimento dividido pelo total de visitas ao perfil do Instagram"
+            icon={Activity}
+          />
+          <KpiCard
+            title="Visitas / 1k impr."
+            value={
+              (resumo.impressoes ?? 0) > 0
+                ? `${(((resumo.profileVisits ?? 0) / (resumo.impressoes ?? 1)) * 1000).toLocaleString("pt-BR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}`
+                : "—"
+            }
+            sub="Taxa de entrega de visitas por mil impressões (eficiência de engajamento)"
+            icon={TrendingUp}
           />
         </section>
       )}

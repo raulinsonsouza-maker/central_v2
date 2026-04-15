@@ -7,6 +7,7 @@ export const CLINICA_E_SPA_SLUG = "clinica-e-spa-vida-natural";
 export const DOR_SLUG = "d-or";
 export const GRANAROLO_SLUG = "granarolo";
 export const FLORIEN_SLUG = "florien-fitoativos";
+export const ACADEMY_AMERICANA_SLUG = "academy-americana";
 
 type ClientIdentity = {
   nome?: string | null;
@@ -121,5 +122,18 @@ export function isFlorien(client?: ClientIdentity | null) {
     slug === FLORIEN_SLUG ||
     nome === "florien fitoativos" ||
     nome === "florien"
+  );
+}
+
+export function isAcademyAmericana(client?: ClientIdentity | null) {
+  if (!client) return false;
+
+  const slug = normalizeText(client.slug);
+  const nome = normalizeText(client.nome);
+
+  return (
+    slug === ACADEMY_AMERICANA_SLUG ||
+    nome === "academy americana" ||
+    slug.includes("academy") && slug.includes("americana")
   );
 }

@@ -71,9 +71,11 @@ export async function GET(
   let totalConversas = 0;
   let totalPurchases = 0;
   let totalValorConversao = 0;
+  let totalProfileVisits = 0;
   for (const r of rows) {
     totalInvestimento += Number(r.investimento);
     totalConversas += r.messagingConversationsStarted ?? 0;
+    totalProfileVisits += r.profileVisits ?? 0;
     totalLeads += isVisitasCliente
       ? (r.profileVisits ?? 0)
       : outcomeCountForFato(r.canal, r.leads, r.conversoes, undefined, isComprasCliente && r.canal !== "GOOGLE");
@@ -83,6 +85,7 @@ export async function GET(
     totalValorConversao += Number(r.websitePurchasesConversionValue ?? 0);
   }
   const cpl = totalLeads > 0 ? totalInvestimento / totalLeads : 0;
+  const custoPorVisita = totalProfileVisits > 0 ? totalInvestimento / totalProfileVisits : 0;
   const cpm = totalImpressoes > 0 ? (totalInvestimento / totalImpressoes) * 1000 : 0;
   const custoPorConversa = totalConversas > 0 ? totalInvestimento / totalConversas : 0;
   const custoPorCompra = totalPurchases > 0 ? totalInvestimento / totalPurchases : 0;
@@ -109,5 +112,7 @@ export async function GET(
     custoPorCompra: Math.round(custoPorCompra * 100) / 100,
     roas: Math.round(roas * 100) / 100,
     ticketMedio: Math.round(ticketMedio * 100) / 100,
+    profileVisits: totalProfileVisits,
+    custoPorVisita: Math.round(custoPorVisita * 100) / 100,
   });
 }
