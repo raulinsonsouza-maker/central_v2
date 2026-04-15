@@ -702,7 +702,7 @@ function formatPercentage(value: number) {
           <div>
             <p className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[var(--primary)]">
               <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-[var(--primary)]" />
-              Check-in estratégico
+              Acompanhamento estratégico
             </p>
             <h1 className="mt-1 text-2xl font-extrabold tracking-tight text-[var(--foreground)] sm:text-3xl">
               {cliente?.nome ?? "…"}
