@@ -9,9 +9,10 @@ export const GRANAROLO_SLUG = "granarolo";
 export const FLORIEN_SLUG = "florien-fitoativos";
 export const ACADEMY_AMERICANA_SLUG = "academy-americana";
 
-type ClientIdentity = {
+export type ClientIdentity = {
   nome?: string | null;
   slug?: string | null;
+  perfilPanel?: string | null;
 };
 
 function normalizeText(value?: string | null) {
@@ -24,6 +25,7 @@ function normalizeText(value?: string | null) {
 
 export function isHotelFazendaSaoJoao(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "hotel") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -39,6 +41,7 @@ export function isHotelFazendaSaoJoao(client?: ClientIdentity | null) {
 
 export function isTertulia(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "tertulia") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -48,6 +51,7 @@ export function isTertulia(client?: ClientIdentity | null) {
 
 export function isVarellaMotos(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "varella") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -57,6 +61,7 @@ export function isVarellaMotos(client?: ClientIdentity | null) {
 
 export function isMiguelImoveis(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "miguel-imoveis") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -71,6 +76,7 @@ export function isMiguelImoveis(client?: ClientIdentity | null) {
 
 export function isDrFernandoGuena(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "dr-fernando-guena") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -85,6 +91,7 @@ export function isDrFernandoGuena(client?: ClientIdentity | null) {
 
 export function isClinicaESpa(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "clinica-e-spa") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -98,6 +105,7 @@ export function isClinicaESpa(client?: ClientIdentity | null) {
 
 export function isDor(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "d-or") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -107,6 +115,7 @@ export function isDor(client?: ClientIdentity | null) {
 
 export function isGranarolo(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "granarolo") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -116,6 +125,7 @@ export function isGranarolo(client?: ClientIdentity | null) {
 
 export function isFlorien(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "florien") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -129,6 +139,7 @@ export function isFlorien(client?: ClientIdentity | null) {
 
 export function isAcademyAmericana(client?: ClientIdentity | null) {
   if (!client) return false;
+  if (client.perfilPanel === "academy-americana") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);

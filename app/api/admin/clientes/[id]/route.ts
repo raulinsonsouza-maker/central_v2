@@ -39,6 +39,7 @@ export async function PATCH(
     metaAdsAccountId?: string | null;
     ga4PropertyId?: string | null;
     leadScoringEnabled?: boolean;
+    perfilPanel?: string | null;
   };
   try {
     body = await request.json();
@@ -76,6 +77,11 @@ export async function PATCH(
     body.leadScoringEnabled !== undefined
       ? body.leadScoringEnabled
       : clienteComOrcamento.leadScoringEnabled ?? false;
+  const clienteComPerfil = cliente as typeof cliente & { perfilPanel?: string | null };
+  const perfilPanel =
+    body.perfilPanel !== undefined
+      ? (body.perfilPanel?.trim() || null)
+      : clienteComPerfil.perfilPanel ?? null;
 
   try {
     await prisma.cliente.update({
@@ -89,6 +95,7 @@ export async function PATCH(
         orcamentoMidiaGoogleMensal,
         orcamentoMidiaMetaMensal,
         leadScoringEnabled,
+        perfilPanel,
       },
     });
 

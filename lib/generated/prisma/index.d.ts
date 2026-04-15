@@ -2257,6 +2257,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal: Decimal | null
     portalToken: string | null
     leadScoringEnabled: boolean | null
+    perfilPanel: string | null
   }
 
   export type ClienteMaxAggregateOutputType = {
@@ -2272,6 +2273,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal: Decimal | null
     portalToken: string | null
     leadScoringEnabled: boolean | null
+    perfilPanel: string | null
   }
 
   export type ClienteCountAggregateOutputType = {
@@ -2287,6 +2289,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal: number
     portalToken: number
     leadScoringEnabled: number
+    perfilPanel: number
     _all: number
   }
 
@@ -2314,6 +2317,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: true
     portalToken?: true
     leadScoringEnabled?: true
+    perfilPanel?: true
   }
 
   export type ClienteMaxAggregateInputType = {
@@ -2329,6 +2333,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: true
     portalToken?: true
     leadScoringEnabled?: true
+    perfilPanel?: true
   }
 
   export type ClienteCountAggregateInputType = {
@@ -2344,6 +2349,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: true
     portalToken?: true
     leadScoringEnabled?: true
+    perfilPanel?: true
     _all?: true
   }
 
@@ -2446,6 +2452,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal: Decimal | null
     portalToken: string | null
     leadScoringEnabled: boolean
+    perfilPanel: string | null
     _count: ClienteCountAggregateOutputType | null
     _avg: ClienteAvgAggregateOutputType | null
     _sum: ClienteSumAggregateOutputType | null
@@ -2480,6 +2487,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
+    perfilPanel?: boolean
     agregadosMensal?: boolean | Cliente$agregadosMensalArgs<ExtArgs>
     agregadosSemanal?: boolean | Cliente$agregadosSemanalArgs<ExtArgs>
     contas?: boolean | Cliente$contasArgs<ExtArgs>
@@ -2507,6 +2515,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
+    perfilPanel?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -2522,6 +2531,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
+    perfilPanel?: boolean
   }, ExtArgs["result"]["cliente"]>
 
   export type ClienteSelectScalar = {
@@ -2537,9 +2547,10 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
+    perfilPanel?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "slug" | "logoUrl" | "ativo" | "createdAt" | "updatedAt" | "segmento" | "orcamentoMidiaGoogleMensal" | "orcamentoMidiaMetaMensal" | "portalToken" | "leadScoringEnabled", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "slug" | "logoUrl" | "ativo" | "createdAt" | "updatedAt" | "segmento" | "orcamentoMidiaGoogleMensal" | "orcamentoMidiaMetaMensal" | "portalToken" | "leadScoringEnabled" | "perfilPanel", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agregadosMensal?: boolean | Cliente$agregadosMensalArgs<ExtArgs>
     agregadosSemanal?: boolean | Cliente$agregadosSemanalArgs<ExtArgs>
@@ -2585,6 +2596,7 @@ export namespace Prisma {
       orcamentoMidiaMetaMensal: Prisma.Decimal | null
       portalToken: string | null
       leadScoringEnabled: boolean
+      perfilPanel: string | null
     }, ExtArgs["result"]["cliente"]>
     composites: {}
   }
@@ -3031,6 +3043,7 @@ export namespace Prisma {
     readonly orcamentoMidiaMetaMensal: FieldRef<"Cliente", 'Decimal'>
     readonly portalToken: FieldRef<"Cliente", 'String'>
     readonly leadScoringEnabled: FieldRef<"Cliente", 'Boolean'>
+    readonly perfilPanel: FieldRef<"Cliente", 'String'>
   }
     
 
@@ -19532,7 +19545,8 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal: 'orcamentoMidiaGoogleMensal',
     orcamentoMidiaMetaMensal: 'orcamentoMidiaMetaMensal',
     portalToken: 'portalToken',
-    leadScoringEnabled: 'leadScoringEnabled'
+    leadScoringEnabled: 'leadScoringEnabled',
+    perfilPanel: 'perfilPanel'
   };
 
   export type ClienteScalarFieldEnum = (typeof ClienteScalarFieldEnum)[keyof typeof ClienteScalarFieldEnum]
@@ -19964,6 +19978,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     portalToken?: StringNullableFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolFilter<"Cliente"> | boolean
+    perfilPanel?: StringNullableFilter<"Cliente"> | string | null
     agregadosMensal?: AgregadoMidiaMensalListRelationFilter
     agregadosSemanal?: AgregadoMidiaSemanalListRelationFilter
     contas?: ContaListRelationFilter
@@ -19990,6 +20005,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: SortOrderInput | SortOrder
     portalToken?: SortOrderInput | SortOrder
     leadScoringEnabled?: SortOrder
+    perfilPanel?: SortOrderInput | SortOrder
     agregadosMensal?: AgregadoMidiaMensalOrderByRelationAggregateInput
     agregadosSemanal?: AgregadoMidiaSemanalOrderByRelationAggregateInput
     contas?: ContaOrderByRelationAggregateInput
@@ -20019,6 +20035,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     leadScoringEnabled?: BoolFilter<"Cliente"> | boolean
+    perfilPanel?: StringNullableFilter<"Cliente"> | string | null
     agregadosMensal?: AgregadoMidiaMensalListRelationFilter
     agregadosSemanal?: AgregadoMidiaSemanalListRelationFilter
     contas?: ContaListRelationFilter
@@ -20045,6 +20062,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: SortOrderInput | SortOrder
     portalToken?: SortOrderInput | SortOrder
     leadScoringEnabled?: SortOrder
+    perfilPanel?: SortOrderInput | SortOrder
     _count?: ClienteCountOrderByAggregateInput
     _avg?: ClienteAvgOrderByAggregateInput
     _max?: ClienteMaxOrderByAggregateInput
@@ -20068,6 +20086,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: DecimalNullableWithAggregatesFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     portalToken?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolWithAggregatesFilter<"Cliente"> | boolean
+    perfilPanel?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
   }
 
   export type ContaWhereInput = {
@@ -21408,6 +21427,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -21434,6 +21454,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -21460,6 +21481,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -21486,6 +21508,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
@@ -21512,6 +21535,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
   }
 
   export type ClienteUpdateManyMutationInput = {
@@ -21527,6 +21551,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ClienteUncheckedUpdateManyInput = {
@@ -21542,6 +21567,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ContaCreateInput = {
@@ -23249,6 +23275,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
+    perfilPanel?: SortOrder
   }
 
   export type ClienteAvgOrderByAggregateInput = {
@@ -23269,6 +23296,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
+    perfilPanel?: SortOrder
   }
 
   export type ClienteMinOrderByAggregateInput = {
@@ -23284,6 +23312,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
+    perfilPanel?: SortOrder
   }
 
   export type ClienteSumOrderByAggregateInput = {
@@ -26564,6 +26593,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
@@ -26589,6 +26619,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
@@ -26854,6 +26885,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
@@ -26879,6 +26911,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
@@ -26968,6 +27001,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -26993,6 +27027,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -27067,6 +27102,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -27092,6 +27128,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
@@ -27156,6 +27193,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
@@ -27181,6 +27219,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
@@ -27222,6 +27261,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
@@ -27247,6 +27287,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
@@ -27272,6 +27313,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
@@ -27297,6 +27339,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
@@ -27338,6 +27381,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
@@ -27363,6 +27407,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
@@ -27388,6 +27433,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -27413,6 +27459,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -27454,6 +27501,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -27479,6 +27527,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
@@ -27504,6 +27553,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -27529,6 +27579,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -27570,6 +27621,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -27595,6 +27647,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
@@ -27620,6 +27673,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -27645,6 +27699,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -27719,6 +27774,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -27744,6 +27800,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
@@ -27808,6 +27865,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -27833,6 +27891,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -27907,6 +27966,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -27932,6 +27992,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
@@ -27996,6 +28057,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -28021,6 +28083,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -28095,6 +28158,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -28120,6 +28184,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
@@ -28184,6 +28249,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -28209,6 +28275,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -28250,6 +28317,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -28275,6 +28343,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
@@ -28300,6 +28369,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
     contas?: ContaCreateNestedManyWithoutClienteInput
@@ -28325,6 +28395,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    perfilPanel?: string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
@@ -28366,6 +28437,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
     contas?: ContaUpdateManyWithoutClienteNestedInput
@@ -28391,6 +28463,7 @@ export namespace Prisma {
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput

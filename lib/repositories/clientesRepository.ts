@@ -34,6 +34,7 @@ export async function createCliente(data: {
   orcamentoMidiaGoogleMensal?: number | null;
   orcamentoMidiaMetaMensal?: number | null;
   leadScoringEnabled?: boolean;
+  perfilPanel?: string | null;
 }) {
   return prisma.cliente.create({
     data: {
@@ -45,6 +46,7 @@ export async function createCliente(data: {
       orcamentoMidiaGoogleMensal: data.orcamentoMidiaGoogleMensal ?? null,
       orcamentoMidiaMetaMensal: data.orcamentoMidiaMetaMensal ?? null,
       leadScoringEnabled: data.leadScoringEnabled ?? false,
+      perfilPanel: data.perfilPanel ?? null,
       portalToken: randomUUID(),
     },
   });

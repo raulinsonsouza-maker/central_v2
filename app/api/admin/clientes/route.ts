@@ -47,6 +47,7 @@ export async function POST(request: NextRequest) {
     metaAdsAccountId?: string | null;
     ga4PropertyId?: string | null;
     leadScoringEnabled?: boolean;
+    perfilPanel?: string | null;
   };
   try {
     body = await request.json();
@@ -72,6 +73,7 @@ export async function POST(request: NextRequest) {
       orcamentoMidiaGoogleMensal: body.orcamentoMidiaGoogleMensal ?? null,
       orcamentoMidiaMetaMensal: body.orcamentoMidiaMetaMensal ?? null,
       leadScoringEnabled: body.leadScoringEnabled ?? false,
+      perfilPanel: body.perfilPanel?.trim() || null,
     });
 
     await upsertContaPlataforma({

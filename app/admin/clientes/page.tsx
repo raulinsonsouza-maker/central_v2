@@ -42,6 +42,7 @@ interface ClienteAdmin {
   orcamentoMidiaMetaMensal?: number | null;
   portalToken?: string | null;
   leadScoringEnabled?: boolean;
+  perfilPanel?: string | null;
   contas: ContaAdmin[];
 }
 
@@ -60,6 +61,7 @@ interface ClientePayload {
   metaAdsAccountId?: string | null;
   ga4PropertyId?: string | null;
   leadScoringEnabled?: boolean;
+  perfilPanel?: string | null;
 }
 
 function getHeaders(token?: string, includeJson = false): HeadersInit {
@@ -322,6 +324,7 @@ function ClienteForm({
   const [leadScoringEnabled, setLeadScoringEnabled] = useState(
     initialValues.leadScoringEnabled ?? false
   );
+  const [perfilPanel, setPerfilPanel] = useState(initialValues.perfilPanel ?? "");
   const [showSegmentoManager, setShowSegmentoManager] = useState(false);
 
   return (
@@ -423,6 +426,26 @@ function ClienteForm({
               </FormField>
             </div>
 
+            <FormField label="Perfil de painel especial" hint="Define o tipo de dashboard customizado. Imune a mudanças de nome ou slug.">
+              <select
+                value={perfilPanel}
+                onChange={(e) => setPerfilPanel(e.target.value)}
+                className={inputClass}
+              >
+                <option value="">(padrão — detecta por slug/nome)</option>
+                <option value="hotel">Hotel Fazenda São João</option>
+                <option value="tertulia">Tertúlia</option>
+                <option value="varella">Varella Motos</option>
+                <option value="florien">Florien FitoAtivos</option>
+                <option value="clinica-e-spa">Clínica e Spa Vida Natural</option>
+                <option value="d-or">D&apos;or</option>
+                <option value="granarolo">Granarolo</option>
+                <option value="miguel-imoveis">Miguel Imóveis</option>
+                <option value="dr-fernando-guena">Dr. Fernando Guena</option>
+                <option value="academy-americana">Academy Americana</option>
+              </select>
+            </FormField>
+
             <div className="flex flex-wrap items-center gap-5 rounded-xl bg-[var(--muted)]/30 px-4 py-3">
               <label className="flex cursor-pointer items-center gap-2.5">
                 <input
@@ -489,6 +512,7 @@ function ClienteForm({
                     syncAfterCreate: syncAfterSave,
                     syncNow: syncAfterSave,
                     leadScoringEnabled,
+                    perfilPanel: perfilPanel || null,
                   })
                 }
                 disabled={pending}
@@ -1029,6 +1053,7 @@ export default function AdminClientesPage() {
             orcamentoMidiaGoogleMensal: editing.orcamentoMidiaGoogleMensal ?? null,
             orcamentoMidiaMetaMensal: editing.orcamentoMidiaMetaMensal ?? null,
             leadScoringEnabled: editing.leadScoringEnabled ?? false,
+            perfilPanel: editing.perfilPanel ?? null,
           }}
           segmentos={segmentos}
           adminToken={adminToken}
