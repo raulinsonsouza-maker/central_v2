@@ -139,10 +139,15 @@ export default function CentralClientesPage() {
       {/* Separador "Clientes ativos" */}
       <div className="flex items-center gap-3">
         <div className="h-px flex-1 bg-[var(--border)]" />
-        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+        <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
           {searchQuery
             ? `${filteredClientes.length} resultado${filteredClientes.length !== 1 ? "s" : ""}`
             : "Clientes ativos"}
+          {!searchQuery && activeClientes.length > 0 && (
+            <span className="rounded-full bg-[var(--primary)]/15 px-2 py-0.5 text-[10px] font-bold text-[var(--primary)] normal-case tracking-normal">
+              {activeClientes.length}
+            </span>
+          )}
         </span>
         <div className="h-px flex-1 bg-[var(--border)]" />
       </div>
