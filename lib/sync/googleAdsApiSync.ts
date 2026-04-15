@@ -13,11 +13,30 @@ import { upsertGoogleAdsCriativo } from "@/lib/repositories/googleAdsCriativosRe
 import { findAllClientes } from "@/lib/repositories/clientesRepository";
 import { prisma } from "@/lib/db";
 
+/** Extract a human-readable message from google-ads-api errors (which are often non-Error objects). */
+function extractGoogleAdsError(e: unknown): string {
+  if (e instanceof Error) return e.message;
+  if (e && typeof e === "object") {
+    const obj = e as Record<string, unknown>;
+    if (typeof obj.message === "string" && obj.message) return obj.message;
+    if (Array.isArray(obj.errors) && obj.errors.length > 0) {
+      const first = obj.errors[0] as Record<string, unknown>;
+      if (typeof first.message === "string") return first.message;
+      return JSON.stringify(first);
+    }
+    if (Array.isArray(obj.details) && obj.details.length > 0) {
+      const first = obj.details[0] as Record<string, unknown>;
+      if (typeof first.message === "string") return first.message;
+    }
+    try { return JSON.stringify(obj); } catch { /* fall through */ }
+  }
+  return String(e);
+}
+
 function formatDate(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
-/** Retorna data de 90 dias atrás para cobrir "últimos 90 dias" do dashboard. */
 function getDefaultDateFrom(): string {
   const d = new Date();
   d.setDate(d.getDate() - 90);
@@ -35,10 +54,6 @@ export interface GoogleAdsSyncResult {
   error?: string;
 }
 
-/**
- * Sync Google Ads campaign data into FatoMidiaDiario (canal "GOOGLE").
- * Uses default date range from 2026-01-01 to today unless overridden.
- */
 export async function syncGoogleAdsCliente(
   clienteId: string,
   options?: GoogleAdsSyncOptions
@@ -105,7 +120,7 @@ export async function syncGoogleAdsCliente(
 
     return { daysProcessed: byDate.size };
   } catch (e) {
-    const message = e instanceof Error ? e.message : String(e);
+    const message = extractGoogleAdsError(e);
     return { daysProcessed: 0, error: message };
   }
 }
@@ -116,9 +131,6 @@ export interface GoogleAdsSyncAllResult {
   error?: string;
 }
 
-/**
- * Sync Google Ads for all active clients with Conta GOOGLE_ADS.
- */
 export async function syncGoogleAdsTodosClientes(): Promise<GoogleAdsSyncAllResult[]> {
   const clientes = await findAllClientes(true);
   const today = formatDate(new Date());

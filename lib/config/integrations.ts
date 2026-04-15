@@ -7,6 +7,7 @@ const KEYS = {
   googleRefreshToken: "google_ads_refresh_token",
   googleClientId: "google_ads_client_id",
   googleClientSecret: "google_ads_client_secret",
+  googleLoginCustomerId: "google_ads_login_customer_id",
   googleAnalyticsCredentials: "google_analytics_credentials",
 } as const;
 
@@ -17,6 +18,7 @@ export interface IntegrationsConfig {
   googleRefreshToken: string | null;
   googleClientId: string | null;
   googleClientSecret: string | null;
+  googleLoginCustomerId: string | null;
   googleAnalyticsCredentials: string | null;
 }
 
@@ -31,6 +33,7 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
           KEYS.googleRefreshToken,
           KEYS.googleClientId,
           KEYS.googleClientSecret,
+          KEYS.googleLoginCustomerId,
           KEYS.googleAnalyticsCredentials,
         ],
       },
@@ -46,6 +49,8 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
     googleRefreshToken: map.get(KEYS.googleRefreshToken) ?? null,
     googleClientId: map.get(KEYS.googleClientId) ?? null,
     googleClientSecret: map.get(KEYS.googleClientSecret) ?? null,
+    googleLoginCustomerId:
+      map.get(KEYS.googleLoginCustomerId) ?? process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID ?? null,
     googleAnalyticsCredentials:
       process.env.GOOGLE_ANALYTICS_CREDENTIALS ?? map.get(KEYS.googleAnalyticsCredentials) ?? null,
   };
@@ -58,6 +63,7 @@ export async function updateIntegrationsConfig(data: {
   googleRefreshToken?: string;
   googleClientId?: string;
   googleClientSecret?: string;
+  googleLoginCustomerId?: string;
   googleAnalyticsCredentials?: string;
 }) {
   const ops = [];
@@ -118,6 +124,16 @@ export async function updateIntegrationsConfig(data: {
         where: { key: KEYS.googleClientSecret },
         create: { key: KEYS.googleClientSecret, value: data.googleClientSecret.trim() },
         update: { value: data.googleClientSecret.trim() },
+      })
+    );
+  }
+
+  if (data.googleLoginCustomerId !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.googleLoginCustomerId },
+        create: { key: KEYS.googleLoginCustomerId, value: data.googleLoginCustomerId.replace(/\D/g, "") },
+        update: { value: data.googleLoginCustomerId.replace(/\D/g, "") },
       })
     );
   }

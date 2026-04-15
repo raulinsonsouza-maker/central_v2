@@ -25,6 +25,7 @@ async function fetchIntegrationsConfig(token?: string) {
     hasGoogleRefreshToken: boolean;
     hasGoogleClientId: boolean;
     hasGoogleClientSecret: boolean;
+    googleLoginCustomerId: string;
   }>;
 }
 
@@ -36,6 +37,7 @@ async function updateIntegrationsConfigApi(
     googleRefreshToken?: string;
     googleClientId?: string;
     googleClientSecret?: string;
+    googleLoginCustomerId?: string;
   },
   token?: string
 ) {
@@ -55,6 +57,7 @@ async function updateIntegrationsConfigApi(
     hasGoogleRefreshToken: boolean;
     hasGoogleClientId: boolean;
     hasGoogleClientSecret: boolean;
+    googleLoginCustomerId: string;
   };
 }
 
@@ -78,6 +81,7 @@ export default function AdminIntegrationsConfigPage() {
   const [googleClientSecret, setGoogleClientSecret] = useState("");
   const [googleDeveloperToken, setGoogleDeveloperToken] = useState("");
   const [googleRefreshToken, setGoogleRefreshToken] = useState("");
+  const [googleLoginCustomerId, setGoogleLoginCustomerId] = useState("");
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
 
@@ -107,6 +111,7 @@ export default function AdminIntegrationsConfigPage() {
       googleRefreshToken?: string;
       googleClientId?: string;
       googleClientSecret?: string;
+      googleLoginCustomerId?: string;
     }) => updateIntegrationsConfigApi(body, adminToken || undefined),
     onSuccess: () => {
       setFormError("");
@@ -116,6 +121,7 @@ export default function AdminIntegrationsConfigPage() {
       setGoogleClientSecret("");
       setGoogleDeveloperToken("");
       setGoogleRefreshToken("");
+      setGoogleLoginCustomerId("");
     },
     onError: (e: Error) => {
       setFormError(e.message);
@@ -342,6 +348,24 @@ export default function AdminIntegrationsConfigPage() {
                 Por segurança, o valor atual não é exibido. Preencha apenas se quiser atualizar.
               </p>
             </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Login Customer ID (MCC)
+              </label>
+              <input
+                type="text"
+                value={googleLoginCustomerId}
+                onChange={(e) => setGoogleLoginCustomerId(e.target.value)}
+                placeholder={data?.googleLoginCustomerId ? data.googleLoginCustomerId : "Ex: 3830547260"}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+              />
+              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                ID da conta MCC (gerenciadora). Necessário quando o acesso é feito via conta mãe.
+                {data?.googleLoginCustomerId && (
+                  <span className="ml-1 text-[var(--primary)]">Atual: {data.googleLoginCustomerId}</span>
+                )}
+              </p>
+            </div>
           </CardContent>
         </Card>
       </section>
@@ -357,6 +381,7 @@ export default function AdminIntegrationsConfigPage() {
               googleRefreshToken?: string;
               googleClientId?: string;
               googleClientSecret?: string;
+              googleLoginCustomerId?: string;
             } = {};
 
             if (metaAccessToken.trim()) body.metaAccessToken = metaAccessToken.trim();
@@ -365,6 +390,7 @@ export default function AdminIntegrationsConfigPage() {
             if (googleClientSecret.trim()) body.googleClientSecret = googleClientSecret.trim();
             if (googleDeveloperToken.trim()) body.googleDeveloperToken = googleDeveloperToken.trim();
             if (googleRefreshToken.trim()) body.googleRefreshToken = googleRefreshToken.trim();
+            if (googleLoginCustomerId.trim()) body.googleLoginCustomerId = googleLoginCustomerId.trim();
 
             if (Object.keys(body).length === 0) {
               setFormError("Preencha ao menos um campo para atualizar.");

@@ -8,6 +8,18 @@ function isAdminAuthorized(request: NextRequest): boolean {
   return token === expected;
 }
 
+function buildResponse(config: Awaited<ReturnType<typeof getIntegrationsConfig>>) {
+  return {
+    metaAdAccountId: config.metaAdAccountId ?? "",
+    hasMetaAccessToken: !!config.metaAccessToken,
+    hasGoogleDeveloperToken: !!config.googleDeveloperToken,
+    hasGoogleRefreshToken: !!config.googleRefreshToken,
+    hasGoogleClientId: !!config.googleClientId,
+    hasGoogleClientSecret: !!config.googleClientSecret,
+    googleLoginCustomerId: config.googleLoginCustomerId ?? "",
+  };
+}
+
 export async function GET(request: NextRequest) {
   if (!isAdminAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -15,14 +27,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const config = await getIntegrationsConfig();
-    return NextResponse.json({
-      metaAdAccountId: config.metaAdAccountId ?? "",
-      hasMetaAccessToken: !!config.metaAccessToken,
-      hasGoogleDeveloperToken: !!config.googleDeveloperToken,
-      hasGoogleRefreshToken: !!config.googleRefreshToken,
-      hasGoogleClientId: !!config.googleClientId,
-      hasGoogleClientSecret: !!config.googleClientSecret,
-    });
+    return NextResponse.json(buildResponse(config));
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     return NextResponse.json({ error: message }, { status: 500 });
@@ -41,6 +46,7 @@ export async function PATCH(request: NextRequest) {
     googleRefreshToken?: string;
     googleClientId?: string;
     googleClientSecret?: string;
+    googleLoginCustomerId?: string;
   };
 
   try {
@@ -52,18 +58,9 @@ export async function PATCH(request: NextRequest) {
   try {
     await updateIntegrationsConfig(body);
     const config = await getIntegrationsConfig();
-    return NextResponse.json({
-      ok: true,
-      metaAdAccountId: config.metaAdAccountId ?? "",
-      hasMetaAccessToken: !!config.metaAccessToken,
-      hasGoogleDeveloperToken: !!config.googleDeveloperToken,
-      hasGoogleRefreshToken: !!config.googleRefreshToken,
-      hasGoogleClientId: !!config.googleClientId,
-      hasGoogleClientSecret: !!config.googleClientSecret,
-    });
+    return NextResponse.json({ ok: true, ...buildResponse(config) });
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
-

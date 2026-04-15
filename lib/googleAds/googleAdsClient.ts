@@ -2,12 +2,12 @@ import { GoogleAdsApi } from "google-ads-api";
 import { getIntegrationsConfig } from "@/lib/config/integrations";
 
 async function getClientAndRefreshToken() {
-  const loginCustomerId = process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID?.replace(/-/g, "");
   const fromDb = await getIntegrationsConfig();
   const clientId = fromDb.googleClientId ?? process.env.GOOGLE_ADS_CLIENT_ID;
   const clientSecret = fromDb.googleClientSecret ?? process.env.GOOGLE_ADS_CLIENT_SECRET;
   const developerToken = fromDb.googleDeveloperToken ?? process.env.GOOGLE_ADS_DEVELOPER_TOKEN;
   const refreshToken = fromDb.googleRefreshToken ?? process.env.GOOGLE_ADS_REFRESH_TOKEN;
+  const loginCustomerId = (fromDb.googleLoginCustomerId ?? process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID)?.replace(/-/g, "");
 
   if (!clientId || !clientSecret || !developerToken || !refreshToken) {
     throw new Error(
