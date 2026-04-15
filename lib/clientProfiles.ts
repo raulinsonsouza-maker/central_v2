@@ -30,8 +30,10 @@ export function isHotelFazendaSaoJoao(client?: ClientIdentity | null) {
 
   return (
     slug === HOTEL_FAZENDA_SAO_JOAO_SLUG ||
+    slug === "conta-hotel" ||
     nome === "hotel fazenda sao joao" ||
-    nome === "resort fazenda sao joao"
+    nome === "resort fazenda sao joao" ||
+    nome === "conta hotel"
   );
 }
 
