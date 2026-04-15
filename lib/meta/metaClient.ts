@@ -500,6 +500,59 @@ function ensureActPrefix(accountId: string): string {
 }
 
 /**
+ * Checks whether a Meta API error message is a transient/retryable error.
+ * These include 503 service unavailable, unknown errors, and rate limits.
+ */
+function isTransientMetaError(message: string): boolean {
+  const lower = message.toLowerCase();
+  return (
+    lower.includes("service temporarily unavailable") ||
+    lower.includes("an unknown error occurred") ||
+    lower.includes("try again") ||
+    lower.includes("temporarily") ||
+    lower.includes("rate limit") ||
+    lower.includes("too many calls") ||
+    lower.includes("user request limit")
+  );
+}
+
+/**
+ * Wraps a fetch call with up to `maxRetries` retries for transient Meta API errors.
+ * Waits 3s before the first retry, 6s before the second, etc. (3s * attempt).
+ */
+async function fetchWithRetry(
+  urlOrFn: string | (() => Promise<Response>),
+  maxRetries = 3
+): Promise<Response> {
+  const doFetch = typeof urlOrFn === "string" ? () => fetch(urlOrFn) : urlOrFn;
+  let lastError: Error | null = null;
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    if (attempt > 0) {
+      const waitMs = attempt * 3000;
+      console.warn(`[fetchWithRetry] transient error, retrying in ${waitMs}ms (attempt ${attempt}/${maxRetries})...`);
+      await new Promise((r) => setTimeout(r, waitMs));
+    }
+    try {
+      const res = await doFetch();
+      // If it's a 503 or similar server error, check if we should retry
+      if (!res.ok && res.status >= 500 && attempt < maxRetries) {
+        const body = await res.clone().json().catch(() => ({})) as { error?: { message?: string } };
+        const msg = body?.error?.message ?? `HTTP ${res.status}`;
+        if (isTransientMetaError(msg) || res.status === 503) {
+          lastError = new Error(msg);
+          continue;
+        }
+      }
+      return res;
+    } catch (e) {
+      lastError = e instanceof Error ? e : new Error(String(e));
+      if (!isTransientMetaError(lastError.message) || attempt >= maxRetries) throw lastError;
+    }
+  }
+  throw lastError ?? new Error("Max retries exceeded");
+}
+
+/**
  * Fetch all ad accounts the token has access to.
  */
 export async function fetchAdAccounts(token: string): Promise<MetaAdAccount[]> {
@@ -594,14 +647,29 @@ export async function fetchAccountInsights(
   let url: string | null = `${GRAPH_BASE}/${actId}/insights?${params.toString()}`;
 
   while (url) {
-    const res = await fetch(url);
-    const data = (await res.json()) as MetaInsightsResponse;
-    if (!res.ok) {
-      throw new Error(data?.error?.message ?? `Meta API error: ${res.status}`);
+    const currentUrl = url;
+    let data: MetaInsightsResponse | null = null;
+    let lastMsg = "";
+    let succeeded = false;
+    for (let attempt = 0; attempt <= 3; attempt++) {
+      if (attempt > 0) {
+        const waitMs = attempt * 5000;
+        console.warn(`[fetchAccountInsights] retry ${attempt}/3 in ${waitMs}ms after: ${lastMsg}`);
+        await new Promise((r) => setTimeout(r, waitMs));
+      }
+      const res = await fetch(currentUrl);
+      const d = (await res.json()) as MetaInsightsResponse;
+      const errMsg = d?.error?.message ?? (res.ok ? "" : `HTTP ${res.status}`);
+      if (!res.ok || d.error) {
+        lastMsg = errMsg;
+        if (isTransientMetaError(errMsg) && attempt < 3) continue;
+        throw new Error(errMsg || `Meta API error: ${res.status}`);
+      }
+      data = d;
+      succeeded = true;
+      break;
     }
-    if (data.error) {
-      throw new Error(data.error.message);
-    }
+    if (!succeeded || !data) throw new Error(lastMsg || "Max retries exceeded");
     if (data.data?.length) {
       all.push(...data.data);
     }
@@ -637,14 +705,29 @@ export async function fetchCampaignInsightsAggregatedByDay(
   let url: string | null = `${GRAPH_BASE}/${actId}/insights?${params.toString()}`;
 
   while (url) {
-    const res = await fetch(url);
-    const data = (await res.json()) as MetaInsightsResponse;
-    if (!res.ok) {
-      throw new Error(data?.error?.message ?? `Meta API error: ${res.status}`);
+    const currentUrl = url;
+    let data: MetaInsightsResponse | null = null;
+    let lastMsg = "";
+    let succeeded = false;
+    for (let attempt = 0; attempt <= 3; attempt++) {
+      if (attempt > 0) {
+        const waitMs = attempt * 5000;
+        console.warn(`[fetchCampaignInsightsAggregatedByDay] retry ${attempt}/3 in ${waitMs}ms after: ${lastMsg}`);
+        await new Promise((r) => setTimeout(r, waitMs));
+      }
+      const res = await fetch(currentUrl);
+      const d = (await res.json()) as MetaInsightsResponse;
+      const errMsg = d?.error?.message ?? (res.ok ? "" : `HTTP ${res.status}`);
+      if (!res.ok || d.error) {
+        lastMsg = errMsg;
+        if (isTransientMetaError(errMsg) && attempt < 3) continue;
+        throw new Error(errMsg || `Meta API error: ${res.status}`);
+      }
+      data = d;
+      succeeded = true;
+      break;
     }
-    if (data.error) {
-      throw new Error(data.error.message);
-    }
+    if (!succeeded || !data) throw new Error(lastMsg || "Max retries exceeded");
     if (data.data?.length) {
       campaignRows.push(...data.data);
     }
@@ -736,14 +819,29 @@ export async function fetchCampaignInsightsPerCampaign(
   let url: string | null = `${GRAPH_BASE}/${actId}/insights?${params.toString()}`;
 
   while (url) {
-    const res = await fetch(url);
-    const data = (await res.json()) as MetaInsightsResponse;
-    if (!res.ok) {
-      throw new Error(data?.error?.message ?? `Meta API error: ${res.status}`);
+    const currentUrl = url;
+    let data: MetaInsightsResponse | null = null;
+    let lastMsg = "";
+    let succeeded = false;
+    for (let attempt = 0; attempt <= 3; attempt++) {
+      if (attempt > 0) {
+        const waitMs = attempt * 5000;
+        console.warn(`[fetchCampaignInsightsPerCampaign] retry ${attempt}/3 in ${waitMs}ms after: ${lastMsg}`);
+        await new Promise((r) => setTimeout(r, waitMs));
+      }
+      const res = await fetch(currentUrl);
+      const d = (await res.json()) as MetaInsightsResponse;
+      const errMsg = d?.error?.message ?? (res.ok ? "" : `HTTP ${res.status}`);
+      if (!res.ok || d.error) {
+        lastMsg = errMsg;
+        if (isTransientMetaError(errMsg) && attempt < 3) continue;
+        throw new Error(errMsg || `Meta API error: ${res.status}`);
+      }
+      data = d;
+      succeeded = true;
+      break;
     }
-    if (data.error) {
-      throw new Error(data.error.message);
-    }
+    if (!succeeded || !data) throw new Error(lastMsg || "Max retries exceeded");
     if (data.data?.length) {
       all.push(...data.data);
     }

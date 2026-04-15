@@ -63,7 +63,7 @@ export async function syncMetaCliente(
   const creativeDateTo = options?.creativeDateTo ?? options?.dateTo ?? today;
 
   try {
-    const cliente = await prisma.cliente.findUnique({ where: { id: clienteId }, select: { nome: true, slug: true } });
+    const cliente = await prisma.cliente.findUnique({ where: { id: clienteId }, select: { nome: true, slug: true, perfilPanel: true } });
     const useCampaignLevel = isFlorien(cliente);
     const useCampaignPerRow = isHotelFazendaSaoJoao(cliente);
 
