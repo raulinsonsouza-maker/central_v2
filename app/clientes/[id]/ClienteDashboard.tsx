@@ -23,7 +23,7 @@ import {
   ResponsiveContainer,
   ComposedChart,
 } from "recharts";
-import { ArrowLeft, CalendarDays, ChevronLeft, ChevronRight, SlidersHorizontal, BarChart3, Play, TrendingUp, X, Wallet, AlertTriangle, Zap, Target, Film, MousePointerClick, Eye, EyeOff } from "lucide-react";
+import { ArrowLeft, CalendarDays, ChevronLeft, ChevronRight, SlidersHorizontal, BarChart3, Play, TrendingUp, X, Wallet, AlertTriangle, Zap, Target, Film, MousePointerClick, Eye, EyeOff, CheckCircle2, Circle, Trash2, Flag, Clock, ChevronDown } from "lucide-react";
 import { upgradeFbCdnImageUrl } from "@/lib/utils";
 
 /* ─── data fetchers (unchanged) ─── */
@@ -1213,8 +1213,8 @@ function formatPercentage(value: number) {
         </Card>
       )}
 
-      {/* ── Pauta da semana (geral only) ── */}
-      {id && canal === "geral" && <PautaDaSemana clienteId={id} />}
+      {/* ── Pauta da semana (geral only, internal only) ── */}
+      {id && canal === "geral" && !portalMode && <PautaDaSemana clienteId={id} />}
 
       {/* ── Empty state ── */}
       {id && (canal === "geral" || subView === "dados") && resumo && resumo.leads === 0 && Number(resumo.investimento) === 0 && (
@@ -2272,18 +2272,52 @@ function MetaCriativosGrid({
   );
 }
 
-/* ─── Pauta da Semana (unchanged logic) ─── */
+/* ─── Pauta da Semana — Task Manager ─── */
+
+type Tarefa = {
+  id: string;
+  titulo: string;
+  status: string;
+  prioridade: string;
+  dataFim: string | null;
+  createdAt: string;
+};
+
+const PRIO_CONFIG: Record<string, { label: string; color: string; dot: string }> = {
+  ALTA:  { label: "Alta",  color: "text-[var(--primary)]",  dot: "bg-[var(--primary)]" },
+  MEDIA: { label: "Média", color: "text-amber-400",          dot: "bg-amber-400" },
+  BAIXA: { label: "Baixa", color: "text-[var(--muted-foreground)]", dot: "bg-[var(--muted-foreground)]" },
+};
+
+function formatDateBR(iso: string | null) {
+  if (!iso) return null;
+  const d = new Date(iso);
+  return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+function isOverdue(iso: string | null) {
+  if (!iso) return false;
+  return new Date(iso) < new Date(new Date().toDateString());
+}
 
 function PautaDaSemana({ clienteId }: { clienteId: string }) {
   const [titulo, setTitulo] = React.useState("");
+  const [prioridade, setPrioridade] = React.useState("MEDIA");
+  const [dataFim, setDataFim] = React.useState("");
+  const [showConcluidas, setShowConcluidas] = React.useState(false);
   const queryClient = useQueryClient();
-  const { data: pautas } = useQuery({
+
+  const { data: tarefas = [] } = useQuery<Tarefa[]>({
     queryKey: ["pautas", clienteId],
     queryFn: () =>
       fetch(`/api/clientes/${clienteId}/pautas`).then((r) => (r.ok ? r.json() : [])),
   });
+
+  const abertas = tarefas.filter((t) => t.status === "ABERTA");
+  const concluidas = tarefas.filter((t) => t.status === "CONCLUIDA");
+
   const addMutation = useMutation({
-    mutationFn: (body: { titulo: string }) =>
+    mutationFn: (body: { titulo: string; prioridade: string; dataFim?: string }) =>
       fetch(`/api/clientes/${clienteId}/pautas`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -2292,56 +2326,173 @@ function PautaDaSemana({ clienteId }: { clienteId: string }) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["pautas", clienteId] });
       setTitulo("");
+      setPrioridade("MEDIA");
+      setDataFim("");
     },
   });
+
+  const patchMutation = useMutation({
+    mutationFn: ({ id, data }: { id: string; data: Partial<Tarefa> }) =>
+      fetch(`/api/clientes/${clienteId}/pautas/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pautas", clienteId] }),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: string) =>
+      fetch(`/api/clientes/${clienteId}/pautas/${id}`, { method: "DELETE" }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["pautas", clienteId] }),
+  });
+
+  function handleAdd() {
+    const t = titulo.trim();
+    if (!t) return;
+    addMutation.mutate({ titulo: t, prioridade, dataFim: dataFim || undefined });
+  }
+
+  function TarefaRow({ tarefa, done }: { tarefa: Tarefa; done: boolean }) {
+    const prio = PRIO_CONFIG[tarefa.prioridade] ?? PRIO_CONFIG.MEDIA;
+    const overdue = !done && isOverdue(tarefa.dataFim);
+    return (
+      <li className={`group flex items-start gap-3 rounded-xl border px-4 py-3 text-sm transition-colors ${done ? "border-[var(--border)]/50 bg-transparent opacity-60" : "border-[var(--border)] bg-[var(--muted)]/20 hover:bg-[var(--muted)]/40"}`}>
+        {/* Complete / undo button */}
+        <button
+          title={done ? "Reabrir tarefa" : "Concluir tarefa"}
+          onClick={() => patchMutation.mutate({ id: tarefa.id, data: { status: done ? "ABERTA" : "CONCLUIDA" } })}
+          className="mt-0.5 shrink-0 text-[var(--muted-foreground)] transition hover:text-[var(--primary)]"
+        >
+          {done ? <CheckCircle2 className="h-4 w-4 text-[var(--primary)]" /> : <Circle className="h-4 w-4" />}
+        </button>
+
+        {/* Content */}
+        <div className="min-w-0 flex-1">
+          <span className={`break-words leading-snug ${done ? "line-through text-[var(--muted-foreground)]" : "text-[var(--foreground)]"}`}>
+            {tarefa.titulo}
+          </span>
+          <div className="mt-1.5 flex flex-wrap items-center gap-2">
+            {/* Priority */}
+            <span className={`flex items-center gap-1 text-[10px] font-semibold uppercase tracking-wider ${prio.color}`}>
+              <span className={`inline-block h-1.5 w-1.5 rounded-full ${prio.dot}`} />
+              {prio.label}
+            </span>
+            {/* Due date */}
+            {tarefa.dataFim && (
+              <span className={`flex items-center gap-1 text-[10px] ${overdue ? "text-red-400 font-semibold" : "text-[var(--muted-foreground)]"}`}>
+                <Clock className="h-3 w-3" />
+                {overdue ? "Vencida · " : ""}{formatDateBR(tarefa.dataFim)}
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Delete */}
+        <button
+          title="Apagar tarefa"
+          onClick={() => deleteMutation.mutate(tarefa.id)}
+          className="mt-0.5 shrink-0 text-[var(--muted-foreground)] opacity-0 transition hover:text-red-400 group-hover:opacity-100"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
+      </li>
+    );
+  }
 
   return (
     <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
       <CardHeader>
-        <div className="flex items-center gap-3">
-          <div className="h-8 w-1 rounded-full bg-[var(--primary)]" />
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--primary)]">
-              Check-in estratégico
-            </p>
-            <CardTitle className="mt-0">Pauta da Semana</CardTitle>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-1 rounded-full bg-[var(--primary)]" />
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--primary)]">
+                Gestão interna
+              </p>
+              <CardTitle className="mt-0">Pauta da Semana</CardTitle>
+            </div>
           </div>
+          <span className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted-foreground)]">
+            {abertas.length} aberta{abertas.length !== 1 ? "s" : ""}
+          </span>
         </div>
       </CardHeader>
+
       <CardContent className="space-y-4">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Adicionar novo assunto para o check-in..."
-            className="flex-1 rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
-            value={titulo}
-            onChange={(e) => setTitulo(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" && titulo.trim()) addMutation.mutate({ titulo: titulo.trim() });
-            }}
-          />
-          <button
-            onClick={() => titulo.trim() && addMutation.mutate({ titulo: titulo.trim() })}
-            disabled={!titulo.trim() || addMutation.isPending}
-            className="rounded-xl bg-[var(--primary)] px-5 py-2.5 text-sm font-medium text-[var(--primary-foreground)] transition hover:opacity-90 disabled:opacity-50"
-          >
-            {addMutation.isPending ? "…" : "+ Novo item"}
-          </button>
-        </div>
-        {Array.isArray(pautas) && pautas.length > 0 && (
-          <ul className="space-y-2">
-            {pautas.map((p: { id: string; titulo: string; status: string }) => (
-              <li
-                key={p.id}
-                className="flex items-center justify-between rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 px-4 py-3 text-sm transition-colors hover:bg-[var(--muted)]/40"
+        {/* ── Add form ── */}
+        <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/10 p-3 space-y-2">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Descreva a tarefa ou pauta..."
+              className="flex-1 rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm transition-colors focus:border-[var(--primary)]/50 focus:outline-none"
+              value={titulo}
+              onChange={(e) => setTitulo(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") handleAdd(); }}
+            />
+          </div>
+          <div className="flex gap-2 flex-wrap">
+            {/* Priority */}
+            <div className="relative flex items-center gap-1.5">
+              <Flag className="h-3.5 w-3.5 text-[var(--muted-foreground)]" />
+              <select
+                value={prioridade}
+                onChange={(e) => setPrioridade(e.target.value)}
+                className="rounded-lg border border-[var(--border)] bg-[var(--background)] py-1.5 pl-2 pr-6 text-xs appearance-none focus:outline-none focus:border-[var(--primary)]/50 cursor-pointer"
               >
-                <span className="text-[var(--foreground)]">{p.titulo}</span>
-                <span className="rounded-md bg-[var(--muted)] px-2 py-0.5 text-[10px] font-medium uppercase tracking-wider text-[var(--muted-foreground)]">
-                  {p.status}
-                </span>
-              </li>
-            ))}
+                <option value="ALTA">Alta prioridade</option>
+                <option value="MEDIA">Média prioridade</option>
+                <option value="BAIXA">Baixa prioridade</option>
+              </select>
+            </div>
+            {/* Due date */}
+            <div className="flex items-center gap-1.5">
+              <Clock className="h-3.5 w-3.5 text-[var(--muted-foreground)]" />
+              <input
+                type="date"
+                value={dataFim}
+                onChange={(e) => setDataFim(e.target.value)}
+                className="rounded-lg border border-[var(--border)] bg-[var(--background)] py-1.5 px-2 text-xs focus:outline-none focus:border-[var(--primary)]/50 cursor-pointer [color-scheme:dark]"
+              />
+            </div>
+            <button
+              onClick={handleAdd}
+              disabled={!titulo.trim() || addMutation.isPending}
+              className="ml-auto rounded-lg bg-[var(--primary)] px-4 py-1.5 text-xs font-semibold text-[var(--primary-foreground)] transition hover:opacity-90 disabled:opacity-50"
+            >
+              {addMutation.isPending ? "…" : "+ Adicionar"}
+            </button>
+          </div>
+        </div>
+
+        {/* ── Open tasks ── */}
+        {abertas.length === 0 ? (
+          <p className="py-4 text-center text-xs text-[var(--muted-foreground)]">
+            Nenhuma tarefa em aberto. Adicione uma acima.
+          </p>
+        ) : (
+          <ul className="space-y-2">
+            {abertas.map((t) => <TarefaRow key={t.id} tarefa={t} done={false} />)}
           </ul>
+        )}
+
+        {/* ── Completed tasks (collapsible) ── */}
+        {concluidas.length > 0 && (
+          <div>
+            <button
+              onClick={() => setShowConcluidas((v) => !v)}
+              className="flex items-center gap-1.5 text-[11px] text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition"
+            >
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform ${showConcluidas ? "" : "-rotate-90"}`} />
+              {concluidas.length} concluída{concluidas.length !== 1 ? "s" : ""}
+            </button>
+            {showConcluidas && (
+              <ul className="mt-2 space-y-2">
+                {concluidas.map((t) => <TarefaRow key={t.id} tarefa={t} done={true} />)}
+              </ul>
+            )}
+          </div>
         )}
       </CardContent>
     </Card>

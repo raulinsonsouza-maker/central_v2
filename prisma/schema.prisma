@@ -142,18 +142,21 @@ model Meta {
 }
 
 model PautaReuniao {
-  id        String   @id @default(cuid())
-  clienteId String
-  semanaIso Int
-  ano       Int
-  titulo    String
-  descricao String?
-  status    String   @default("ABERTA")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  cliente   Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  id         String    @id @default(cuid())
+  clienteId  String
+  semanaIso  Int
+  ano        Int
+  titulo     String
+  descricao  String?
+  status     String    @default("ABERTA")
+  prioridade String    @default("MEDIA")
+  dataFim    DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  cliente    Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
 
   @@index([clienteId, ano, semanaIso])
+  @@index([clienteId, status])
 }
 
 model GoogleAdsCriativo {

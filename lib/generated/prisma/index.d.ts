@@ -9977,6 +9977,8 @@ export namespace Prisma {
     titulo: string | null
     descricao: string | null
     status: string | null
+    prioridade: string | null
+    dataFim: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9989,6 +9991,8 @@ export namespace Prisma {
     titulo: string | null
     descricao: string | null
     status: string | null
+    prioridade: string | null
+    dataFim: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -10001,6 +10005,8 @@ export namespace Prisma {
     titulo: number
     descricao: number
     status: number
+    prioridade: number
+    dataFim: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -10025,6 +10031,8 @@ export namespace Prisma {
     titulo?: true
     descricao?: true
     status?: true
+    prioridade?: true
+    dataFim?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10037,6 +10045,8 @@ export namespace Prisma {
     titulo?: true
     descricao?: true
     status?: true
+    prioridade?: true
+    dataFim?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -10049,6 +10059,8 @@ export namespace Prisma {
     titulo?: true
     descricao?: true
     status?: true
+    prioridade?: true
+    dataFim?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -10148,6 +10160,8 @@ export namespace Prisma {
     titulo: string
     descricao: string | null
     status: string
+    prioridade: string
+    dataFim: Date | null
     createdAt: Date
     updatedAt: Date
     _count: PautaReuniaoCountAggregateOutputType | null
@@ -10179,6 +10193,8 @@ export namespace Prisma {
     titulo?: boolean
     descricao?: boolean
     status?: boolean
+    prioridade?: boolean
+    dataFim?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -10192,6 +10208,8 @@ export namespace Prisma {
     titulo?: boolean
     descricao?: boolean
     status?: boolean
+    prioridade?: boolean
+    dataFim?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -10205,6 +10223,8 @@ export namespace Prisma {
     titulo?: boolean
     descricao?: boolean
     status?: boolean
+    prioridade?: boolean
+    dataFim?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -10218,11 +10238,13 @@ export namespace Prisma {
     titulo?: boolean
     descricao?: boolean
     status?: boolean
+    prioridade?: boolean
+    dataFim?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PautaReuniaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "semanaIso" | "ano" | "titulo" | "descricao" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["pautaReuniao"]>
+  export type PautaReuniaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "semanaIso" | "ano" | "titulo" | "descricao" | "status" | "prioridade" | "dataFim" | "createdAt" | "updatedAt", ExtArgs["result"]["pautaReuniao"]>
   export type PautaReuniaoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
   }
@@ -10246,6 +10268,8 @@ export namespace Prisma {
       titulo: string
       descricao: string | null
       status: string
+      prioridade: string
+      dataFim: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["pautaReuniao"]>
@@ -10679,6 +10703,8 @@ export namespace Prisma {
     readonly titulo: FieldRef<"PautaReuniao", 'String'>
     readonly descricao: FieldRef<"PautaReuniao", 'String'>
     readonly status: FieldRef<"PautaReuniao", 'String'>
+    readonly prioridade: FieldRef<"PautaReuniao", 'String'>
+    readonly dataFim: FieldRef<"PautaReuniao", 'DateTime'>
     readonly createdAt: FieldRef<"PautaReuniao", 'DateTime'>
     readonly updatedAt: FieldRef<"PautaReuniao", 'DateTime'>
   }
@@ -19618,6 +19644,8 @@ export namespace Prisma {
     titulo: 'titulo',
     descricao: 'descricao',
     status: 'status',
+    prioridade: 'prioridade',
+    dataFim: 'dataFim',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -20570,6 +20598,8 @@ export namespace Prisma {
     titulo?: StringFilter<"PautaReuniao"> | string
     descricao?: StringNullableFilter<"PautaReuniao"> | string | null
     status?: StringFilter<"PautaReuniao"> | string
+    prioridade?: StringFilter<"PautaReuniao"> | string
+    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
     createdAt?: DateTimeFilter<"PautaReuniao"> | Date | string
     updatedAt?: DateTimeFilter<"PautaReuniao"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -20583,6 +20613,8 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrderInput | SortOrder
     status?: SortOrder
+    prioridade?: SortOrder
+    dataFim?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
@@ -20599,6 +20631,8 @@ export namespace Prisma {
     titulo?: StringFilter<"PautaReuniao"> | string
     descricao?: StringNullableFilter<"PautaReuniao"> | string | null
     status?: StringFilter<"PautaReuniao"> | string
+    prioridade?: StringFilter<"PautaReuniao"> | string
+    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
     createdAt?: DateTimeFilter<"PautaReuniao"> | Date | string
     updatedAt?: DateTimeFilter<"PautaReuniao"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -20612,6 +20646,8 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrderInput | SortOrder
     status?: SortOrder
+    prioridade?: SortOrder
+    dataFim?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PautaReuniaoCountOrderByAggregateInput
@@ -20632,6 +20668,8 @@ export namespace Prisma {
     titulo?: StringWithAggregatesFilter<"PautaReuniao"> | string
     descricao?: StringNullableWithAggregatesFilter<"PautaReuniao"> | string | null
     status?: StringWithAggregatesFilter<"PautaReuniao"> | string
+    prioridade?: StringWithAggregatesFilter<"PautaReuniao"> | string
+    dataFim?: DateTimeNullableWithAggregatesFilter<"PautaReuniao"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"PautaReuniao"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PautaReuniao"> | Date | string
   }
@@ -22104,6 +22142,8 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
+    prioridade?: string
+    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutPautasReuniaoInput
@@ -22117,6 +22157,8 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
+    prioridade?: string
+    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22128,6 +22170,8 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    prioridade?: StringFieldUpdateOperationsInput | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutPautasReuniaoNestedInput
@@ -22141,6 +22185,8 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    prioridade?: StringFieldUpdateOperationsInput | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22153,6 +22199,8 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
+    prioridade?: string
+    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22164,6 +22212,8 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    prioridade?: StringFieldUpdateOperationsInput | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22176,6 +22226,8 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    prioridade?: StringFieldUpdateOperationsInput | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23771,6 +23823,17 @@ export namespace Prisma {
     _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type PautaReuniaoCountOrderByAggregateInput = {
     id?: SortOrder
     clienteId?: SortOrder
@@ -23779,6 +23842,8 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrder
     status?: SortOrder
+    prioridade?: SortOrder
+    dataFim?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23796,6 +23861,8 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrder
     status?: SortOrder
+    prioridade?: SortOrder
+    dataFim?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23808,6 +23875,8 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrder
     status?: SortOrder
+    prioridade?: SortOrder
+    dataFim?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -23815,6 +23884,20 @@ export namespace Prisma {
   export type PautaReuniaoSumOrderByAggregateInput = {
     semanaIso?: SortOrder
     ano?: SortOrder
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type BigIntFilter<$PrismaModel = never> = {
@@ -25111,6 +25194,10 @@ export namespace Prisma {
     connect?: ClienteWhereUniqueInput
   }
 
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
   export type ClienteUpdateOneRequiredWithoutPautasReuniaoNestedInput = {
     create?: XOR<ClienteCreateWithoutPautasReuniaoInput, ClienteUncheckedCreateWithoutPautasReuniaoInput>
     connectOrCreate?: ClienteCreateOrConnectWithoutPautasReuniaoInput
@@ -25473,6 +25560,31 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
   }
 
   export type NestedBigIntFilter<$PrismaModel = never> = {
@@ -25998,6 +26110,8 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
+    prioridade?: string
+    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26009,6 +26123,8 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
+    prioridade?: string
+    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26429,6 +26545,8 @@ export namespace Prisma {
     titulo?: StringFilter<"PautaReuniao"> | string
     descricao?: StringNullableFilter<"PautaReuniao"> | string | null
     status?: StringFilter<"PautaReuniao"> | string
+    prioridade?: StringFilter<"PautaReuniao"> | string
+    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
     createdAt?: DateTimeFilter<"PautaReuniao"> | Date | string
     updatedAt?: DateTimeFilter<"PautaReuniao"> | Date | string
   }
@@ -28471,6 +28589,8 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
+    prioridade?: string
+    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29027,6 +29147,8 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    prioridade?: StringFieldUpdateOperationsInput | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29038,6 +29160,8 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    prioridade?: StringFieldUpdateOperationsInput | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29049,6 +29173,8 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
+    prioridade?: StringFieldUpdateOperationsInput | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
