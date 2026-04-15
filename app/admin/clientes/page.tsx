@@ -968,7 +968,7 @@ export default function AdminClientesPage() {
                         ) : (
                           <>
                             <Copy className="h-3.5 w-3.5" />
-                            Link
+                            Link do Portal
                           </>
                         )}
                       </button>

@@ -19,7 +19,7 @@ model Cliente {
   segmento                   String?
   orcamentoMidiaGoogleMensal Decimal?                @db.Decimal(14, 2)
   orcamentoMidiaMetaMensal   Decimal?                @db.Decimal(14, 2)
-  portalToken                String?                 @unique
+  portalToken                String?                 @unique @default(dbgenerated("gen_random_uuid()::text"))
   agregadosMensal            AgregadoMidiaMensal[]
   agregadosSemanal           AgregadoMidiaSemanal[]
   contas                     Conta[]
