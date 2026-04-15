@@ -5,6 +5,7 @@ Dashboard de performance e planejamento para clientes de consultoria estratégic
 
 ## Main Sections
 - `/clientes` — Central de Clientes: performance de campanhas por cliente
+- `/portal/[token]` — Portal exclusivo do cliente: acesso direto ao dashboard de um cliente via link com token único (sem header, sem navegação admin)
 - `/planejamento` — Central de Planejamento: planos táticos/estratégicos para apresentação a clientes
   - `/planejamento/hotel-fazenda-sao-joao` — Plano "Máquina de Aquisição" (Meta Ads)
 
@@ -53,6 +54,15 @@ Uses Replit's built-in PostgreSQL. Schema managed via Prisma.
 - `ADMIN_SECRET` - Token for admin area protection
 
 ## Admin Features
+
+### Portal Exclusivo por Cliente
+- `Cliente.portalToken String? @unique` — UUID único gerado automaticamente para cada cliente
+- Rota pública `/portal/[token]` — renderiza o `ClienteDashboard` sem header e sem links de navegação admin
+- API `GET /api/portal/[token]` — resolve token → clienteId (pública)
+- API `POST /api/admin/clientes/[id]/regenerate-token` — gera novo UUID e invalida o link anterior (requer `x-admin-token` header)
+- Admin clientes: botões "Link" (copia URL para clipboard com feedback "Copiado!") e "Novo link" (confirma antes de regenerar) por cliente
+- `ClienteDashboard` exportado como named export em `app/clientes/[id]/page.tsx`; `portalMode` prop oculta back-link e link de administração
+- `Header` oculto em todas as rotas `/portal/*`
 
 ### Segment Management
 - `Segmento` Prisma model: `id`, `nome` (unique), `cor` (hex color)

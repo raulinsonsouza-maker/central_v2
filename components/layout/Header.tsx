@@ -9,6 +9,9 @@ export function Header() {
   const pathname = usePathname();
   const isAdminClientes = pathname.startsWith("/admin/clientes");
   const isAdminConfig = pathname.startsWith("/admin/configuracoes");
+  const isPortal = pathname.startsWith("/portal");
+
+  if (isPortal) return null;
 
   const iconClass = (active: boolean) =>
     `flex h-9 w-9 items-center justify-center rounded-lg transition-colors ${

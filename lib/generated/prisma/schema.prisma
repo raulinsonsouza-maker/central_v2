@@ -19,6 +19,7 @@ model Cliente {
   segmento                   String?
   orcamentoMidiaGoogleMensal Decimal?                @db.Decimal(14, 2)
   orcamentoMidiaMetaMensal   Decimal?                @db.Decimal(14, 2)
+  portalToken                String?                 @unique
   agregadosMensal            AgregadoMidiaMensal[]
   agregadosSemanal           AgregadoMidiaSemanal[]
   contas                     Conta[]

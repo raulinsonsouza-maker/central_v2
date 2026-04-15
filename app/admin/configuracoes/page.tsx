@@ -170,7 +170,7 @@ export default function AdminIntegrationsConfigPage() {
             </div>
             <h2 className="text-lg font-bold text-[var(--foreground)]">Configurações protegidas</h2>
             <p className="text-center text-xs text-[var(--muted-foreground)]">
-              Informe o token de administração para gerenciar as credenciais de API.
+              Informe a senha para acessar as configurações de integração.
             </p>
           </div>
           <CardContent className="px-6 pb-6">
@@ -179,7 +179,7 @@ export default function AdminIntegrationsConfigPage() {
                 <KeyRound className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-foreground)]" />
                 <input
                   type="password"
-                  placeholder="Token de acesso"
+                  placeholder="Senha"
                   className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
                   value={tokenInput}
                   onChange={(e) => setTokenInput(e.target.value)}

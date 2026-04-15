@@ -316,9 +316,7 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }
 
 /* ─── main page ─── */
 
-export default function ClienteDetailPage() {
-  const params = useParams();
-  const id = params.id as string;
+export function ClienteDashboard({ id, portalMode = false }: { id: string; portalMode?: boolean }) {
   const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring">("geral");
   const [subView, setSubView] = React.useState<"dados" | "criativos">("dados");
   const [saldoVisible, setSaldoVisible] = React.useState(false);
@@ -691,13 +689,15 @@ function formatPercentage(value: number) {
     <main className="space-y-8 pb-12">
       {/* ── Breadcrumb + Title + Channel tabs ── */}
       <section className="space-y-5">
-        <Link
-          href="/clientes"
-          className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Central de clientes
-        </Link>
+        {!portalMode && (
+          <Link
+            href="/clientes"
+            className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Central de clientes
+          </Link>
+        )}
 
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
@@ -1232,18 +1232,26 @@ function formatPercentage(value: number) {
               configure as credenciais do Google Sheets e clique em{" "}
               <strong className="text-[var(--foreground)]">Sincronizar</strong>.
             </p>
-            <Link
-              href="/admin/clientes"
-              className="mt-5 inline-flex items-center gap-1.5 rounded-lg bg-[var(--primary)]/10 px-4 py-2 text-sm font-medium text-[var(--primary)] transition hover:bg-[var(--primary)]/20"
-            >
-              Ir para Administração
-              <ChevronRight className="h-3.5 w-3.5" />
-            </Link>
+            {!portalMode && (
+              <Link
+                href="/admin/clientes"
+                className="mt-5 inline-flex items-center gap-1.5 rounded-lg bg-[var(--primary)]/10 px-4 py-2 text-sm font-medium text-[var(--primary)] transition hover:bg-[var(--primary)]/20"
+              >
+                Ir para Administração
+                <ChevronRight className="h-3.5 w-3.5" />
+              </Link>
+            )}
           </CardContent>
         </Card>
       )}
     </main>
   );
+}
+
+export default function ClienteDetailPage() {
+  const params = useParams();
+  const id = params.id as string;
+  return <ClienteDashboard id={id} />;
 }
 
 /* ─── Meta Criativos Grid ─── */

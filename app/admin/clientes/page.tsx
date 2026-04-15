@@ -10,11 +10,13 @@ import {
   Building2,
   CheckCircle2,
   ChevronDown,
+  Copy,
   Eye,
   KeyRound,
   Pencil,
   Plus,
   RefreshCw,
+  RotateCcw,
   Shield,
   X,
 } from "lucide-react";
@@ -39,6 +41,7 @@ interface ClienteAdmin {
   ativo: boolean;
   orcamentoMidiaGoogleMensal?: number | null;
   orcamentoMidiaMetaMensal?: number | null;
+  portalToken?: string | null;
   contas: ContaAdmin[];
 }
 
@@ -516,6 +519,8 @@ export default function AdminClientesPage() {
   const [editError, setEditError] = useState("");
   const [editSuccess, setEditSuccess] = useState("");
   const [filterStatus, setFilterStatus] = useState<"ativos" | "churn">("ativos");
+  const [copiedPortalId, setCopiedPortalId] = useState<string | null>(null);
+  const [confirmRegenId, setConfirmRegenId] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -622,6 +627,22 @@ export default function AdminClientesPage() {
     },
   });
 
+  const regenTokenMutation = useMutation({
+    mutationFn: (clienteId: string) =>
+      fetch(`/api/admin/clientes/${clienteId}/regenerate-token`, {
+        method: "POST",
+        headers: getHeaders(adminToken || undefined),
+      }).then((r) => r.json()),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin", "clientes"] });
+      setConfirmRegenId(null);
+    },
+    onError: (e: Error) => {
+      setFormError(e.message);
+      setConfirmRegenId(null);
+    },
+  });
+
   const unauthorized = error instanceof Error && error.message === "Unauthorized";
 
   const filteredClientes = useMemo(() => {
@@ -636,7 +657,7 @@ export default function AdminClientesPage() {
     });
   }, [clientes, filterStatus]);
 
-  if (unauthorized) {
+  if (!adminToken || unauthorized) {
     return (
       <main className="flex min-h-[60vh] items-center justify-center">
         <Card className="w-full max-w-sm overflow-hidden rounded-2xl border-[var(--border)]">
@@ -646,7 +667,7 @@ export default function AdminClientesPage() {
             </div>
             <h2 className="text-lg font-bold text-[var(--foreground)]">Acesso restrito</h2>
             <p className="text-center text-xs text-[var(--muted-foreground)]">
-              Informe o token de administração para continuar.
+              Informe a senha para acessar a administração de clientes.
             </p>
           </div>
           <CardContent className="px-6 pb-6">
@@ -655,7 +676,7 @@ export default function AdminClientesPage() {
                 <KeyRound className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-foreground)]" />
                 <input
                   type="password"
-                  placeholder="Token de acesso"
+                  placeholder="Senha"
                   className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
                   value={tokenInput}
                   onChange={(e) => setTokenInput(e.target.value)}
@@ -921,6 +942,58 @@ export default function AdminClientesPage() {
                       <Eye className="h-3.5 w-3.5" />
                       Ver
                     </Link>
+                    {confirmRegenId !== cliente.id && (
+                      <button
+                        onClick={() => {
+                          const origin = window.location.origin;
+                          navigator.clipboard.writeText(`${origin}/portal/${cliente.portalToken}`);
+                          setCopiedPortalId(cliente.id);
+                          setTimeout(() => setCopiedPortalId(null), 2000);
+                        }}
+                        title="Copiar link exclusivo do portal do cliente"
+                        disabled={!cliente.portalToken}
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition-all hover:border-[var(--primary)]/30 hover:bg-[var(--primary)]/5 hover:text-[var(--primary)] disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        {copiedPortalId === cliente.id ? (
+                          <>
+                            <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+                            Copiado!
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-3.5 w-3.5" />
+                            Link
+                          </>
+                        )}
+                      </button>
+                    )}
+                    {confirmRegenId === cliente.id ? (
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs text-amber-400">Substituir link?</span>
+                        <button
+                          onClick={() => regenTokenMutation.mutate(cliente.id)}
+                          disabled={regenTokenMutation.isPending}
+                          className="rounded-lg bg-amber-500/10 px-2 py-1.5 text-xs font-medium text-amber-400 transition hover:bg-amber-500/20 disabled:opacity-50"
+                        >
+                          {regenTokenMutation.isPending ? "..." : "Confirmar"}
+                        </button>
+                        <button
+                          onClick={() => setConfirmRegenId(null)}
+                          className="rounded-lg px-2 py-1.5 text-xs font-medium text-[var(--muted-foreground)] transition hover:bg-[var(--muted)]"
+                        >
+                          Cancelar
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmRegenId(cliente.id)}
+                        title="Gerar novo link (o link atual deixará de funcionar)"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition-all hover:border-amber-500/30 hover:bg-amber-500/5 hover:text-amber-400"
+                      >
+                        <RotateCcw className="h-3.5 w-3.5" />
+                        Novo link
+                      </button>
+                    )}
                   </div>
                 </div>
               </li>
