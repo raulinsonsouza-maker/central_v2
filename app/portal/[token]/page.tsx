@@ -2,7 +2,7 @@
 
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { ClienteDashboard } from "@/app/clientes/[id]/page";
+import { ClienteDashboard } from "@/app/clientes/[id]/ClienteDashboard";
 
 function PortalNotFound() {
   return (
