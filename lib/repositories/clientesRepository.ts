@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { randomUUID } from "crypto";
 
 export async function findAllClientes(ativoOnly = true) {
   return prisma.cliente.findMany({
@@ -42,6 +43,7 @@ export async function createCliente(data: {
       ativo: data.ativo ?? true,
       orcamentoMidiaGoogleMensal: data.orcamentoMidiaGoogleMensal ?? null,
       orcamentoMidiaMetaMensal: data.orcamentoMidiaMetaMensal ?? null,
+      portalToken: randomUUID(),
     },
   });
 }

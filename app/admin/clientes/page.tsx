@@ -628,11 +628,17 @@ export default function AdminClientesPage() {
   });
 
   const regenTokenMutation = useMutation({
-    mutationFn: (clienteId: string) =>
-      fetch(`/api/admin/clientes/${clienteId}/regenerate-token`, {
+    mutationFn: async (clienteId: string) => {
+      const r = await fetch(`/api/admin/clientes/${clienteId}/regenerate-token`, {
         method: "POST",
         headers: getHeaders(adminToken || undefined),
-      }).then((r) => r.json()),
+      });
+      if (!r.ok) {
+        const body = await r.json().catch(() => ({}));
+        throw new Error(body.error ?? `Erro ${r.status} ao gerar novo link`);
+      }
+      return r.json();
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin", "clientes"] });
       setConfirmRegenId(null);
