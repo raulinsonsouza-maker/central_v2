@@ -23,6 +23,8 @@ async function fetchIntegrationsConfig(token?: string) {
     hasMetaAccessToken: boolean;
     hasGoogleDeveloperToken: boolean;
     hasGoogleRefreshToken: boolean;
+    hasGoogleClientId: boolean;
+    hasGoogleClientSecret: boolean;
   }>;
 }
 
@@ -32,6 +34,8 @@ async function updateIntegrationsConfigApi(
     metaAdAccountId?: string;
     googleDeveloperToken?: string;
     googleRefreshToken?: string;
+    googleClientId?: string;
+    googleClientSecret?: string;
   },
   token?: string
 ) {
@@ -49,6 +53,8 @@ async function updateIntegrationsConfigApi(
     hasMetaAccessToken: boolean;
     hasGoogleDeveloperToken: boolean;
     hasGoogleRefreshToken: boolean;
+    hasGoogleClientId: boolean;
+    hasGoogleClientSecret: boolean;
   };
 }
 
@@ -271,8 +277,8 @@ export default function AdminIntegrationsConfigPage() {
           <CardHeader>
             <CardTitle className="text-base">Google Ads</CardTitle>
             <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-              Tokens utilizados para autenticar a API do Google Ads. Os IDs de cliente continuam sendo configurados por
-              cliente.
+              Credenciais OAuth e tokens para autenticar a API do Google Ads. Os IDs de conta continuam sendo
+              configurados por cliente.
             </p>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -349,10 +355,14 @@ export default function AdminIntegrationsConfigPage() {
               metaAdAccountId?: string;
               googleDeveloperToken?: string;
               googleRefreshToken?: string;
+              googleClientId?: string;
+              googleClientSecret?: string;
             } = {};
 
             if (metaAccessToken.trim()) body.metaAccessToken = metaAccessToken.trim();
             if (metaAdAccountId.trim()) body.metaAdAccountId = metaAdAccountId.trim();
+            if (googleClientId.trim()) body.googleClientId = googleClientId.trim();
+            if (googleClientSecret.trim()) body.googleClientSecret = googleClientSecret.trim();
             if (googleDeveloperToken.trim()) body.googleDeveloperToken = googleDeveloperToken.trim();
             if (googleRefreshToken.trim()) body.googleRefreshToken = googleRefreshToken.trim();
 
