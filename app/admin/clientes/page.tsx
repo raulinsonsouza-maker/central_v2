@@ -7,7 +7,6 @@ import Link from "next/link";
 import {
   AlertTriangle,
   ArrowLeft,
-  Building2,
   CheckCircle2,
   ChevronDown,
   Copy,
@@ -42,6 +41,7 @@ interface ClienteAdmin {
   orcamentoMidiaGoogleMensal?: number | null;
   orcamentoMidiaMetaMensal?: number | null;
   portalToken?: string | null;
+  leadScoringEnabled?: boolean;
   contas: ContaAdmin[];
 }
 
@@ -59,6 +59,7 @@ interface ClientePayload {
   googleAdsLoginCustomerId?: string | null;
   metaAdsAccountId?: string | null;
   ga4PropertyId?: string | null;
+  leadScoringEnabled?: boolean;
 }
 
 function getHeaders(token?: string, includeJson = false): HeadersInit {
@@ -134,18 +135,6 @@ async function syncAll(token?: string) {
   };
 }
 
-async function importMetaClientes(token?: string) {
-  const res = await fetch("/api/admin/import-meta-clientes", {
-    method: "POST",
-    headers: getHeaders(token),
-  });
-  const data = await res.json().catch(() => ({}));
-  if (res.status === 401) throw new Error("Unauthorized");
-  if (!res.ok) throw new Error(data.error || res.statusText);
-  return data as {
-    summary?: { created: number; linked: number; skipped: number; total: number };
-  };
-}
 
 function FormField({
   label,
@@ -330,6 +319,9 @@ function ClienteForm({
   const [syncAfterSave, setSyncAfterSave] = useState(
     initialValues.syncAfterCreate ?? initialValues.syncNow ?? true
   );
+  const [leadScoringEnabled, setLeadScoringEnabled] = useState(
+    initialValues.leadScoringEnabled ?? false
+  );
   const [showSegmentoManager, setShowSegmentoManager] = useState(false);
 
   return (
@@ -450,6 +442,15 @@ function ClienteForm({
                 />
                 <span className="text-sm text-[var(--foreground)]">Sincronizar após salvar</span>
               </label>
+              <label className="flex cursor-pointer items-center gap-2.5">
+                <input
+                  type="checkbox"
+                  checked={leadScoringEnabled}
+                  onChange={(e) => setLeadScoringEnabled(e.target.checked)}
+                  className="h-4 w-4 rounded border-[var(--border)] accent-[var(--primary)]"
+                />
+                <span className="text-sm text-[var(--foreground)]">Lead Scoring ativado</span>
+              </label>
             </div>
 
             {error && (
@@ -487,6 +488,7 @@ function ClienteForm({
                     ga4PropertyId: ga4PropertyId.trim() || null,
                     syncAfterCreate: syncAfterSave,
                     syncNow: syncAfterSave,
+                    leadScoringEnabled,
                   })
                 }
                 disabled={pending}
@@ -613,19 +615,6 @@ export default function AdminClientesPage() {
     },
   });
 
-  const importMetaMutation = useMutation({
-    mutationFn: () => importMetaClientes(adminToken || undefined),
-    onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["admin", "clientes"] });
-      const total = data.summary?.total ?? 0;
-      setFormError("");
-      setFormSuccess(`Importação Meta concluída. ${total} conta(s) processada(s).`);
-    },
-    onError: (e: Error) => {
-      setFormError(e.message);
-      setFormSuccess("");
-    },
-  });
 
   const regenTokenMutation = useMutation({
     mutationFn: async (clienteId: string) => {
@@ -739,14 +728,6 @@ export default function AdminClientesPage() {
             >
               <RefreshCw className={`h-3.5 w-3.5 ${syncAllMutation.isPending ? "animate-spin" : ""}`} />
               {syncAllMutation.isPending ? "Atualizando..." : "Atualizar todos"}
-            </button>
-            <button
-              onClick={() => importMetaMutation.mutate()}
-              disabled={importMetaMutation.isPending}
-              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] transition-all hover:border-[var(--primary)]/30 hover:text-[var(--primary)] disabled:opacity-50"
-            >
-              <Building2 className={`h-3.5 w-3.5 ${importMetaMutation.isPending ? "animate-spin" : ""}`} />
-              {importMetaMutation.isPending ? "Importando..." : "Importar contas Meta"}
             </button>
             <button
               onClick={() => setShowCreateForm(true)}
@@ -930,24 +911,6 @@ export default function AdminClientesPage() {
                         Leads
                       </button>
                     )}
-                    <button
-                      onClick={() => {
-                        setEditing(cliente);
-                        setEditError("");
-                        setEditSuccess("");
-                      }}
-                      className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition-all hover:border-[var(--primary)]/30 hover:bg-[var(--primary)]/5 hover:text-[var(--primary)]"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                      Editar
-                    </button>
-                    <Link
-                      href={`/clientes/${cliente.id}`}
-                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition-all hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
-                    >
-                      <Eye className="h-3.5 w-3.5" />
-                      Ver
-                    </Link>
                     {confirmRegenId !== cliente.id && (
                       <button
                         onClick={() => {
@@ -1000,6 +963,24 @@ export default function AdminClientesPage() {
                         Novo link
                       </button>
                     )}
+                    <button
+                      onClick={() => {
+                        setEditing(cliente);
+                        setEditError("");
+                        setEditSuccess("");
+                      }}
+                      className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition-all hover:border-[var(--primary)]/30 hover:bg-[var(--primary)]/5 hover:text-[var(--primary)]"
+                    >
+                      <Pencil className="h-3.5 w-3.5" />
+                      Editar
+                    </button>
+                    <Link
+                      href={`/clientes/${cliente.id}`}
+                      className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition-all hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
+                    >
+                      <Eye className="h-3.5 w-3.5" />
+                      Ver
+                    </Link>
                   </div>
                 </div>
               </li>
@@ -1047,6 +1028,7 @@ export default function AdminClientesPage() {
             ga4PropertyId: getConta(editing, "GOOGLE_ANALYTICS")?.accountIdPlataforma ?? null,
             orcamentoMidiaGoogleMensal: editing.orcamentoMidiaGoogleMensal ?? null,
             orcamentoMidiaMetaMensal: editing.orcamentoMidiaMetaMensal ?? null,
+            leadScoringEnabled: editing.leadScoringEnabled ?? false,
           }}
           segmentos={segmentos}
           adminToken={adminToken}

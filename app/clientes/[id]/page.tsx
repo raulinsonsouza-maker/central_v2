@@ -718,7 +718,7 @@ function formatPercentage(value: number) {
               "geral",
               "meta",
               "google",
-              ...(cliente?.contas?.some((c: { plataforma: string }) => c.plataforma === "META") ? ["lead-scoring"] : []),
+              ...(cliente?.leadScoringEnabled ? ["lead-scoring"] : []),
               ...(isMiguelImoveis(cliente) ? ["imoveis"] : []),
             ] as const).map((c) => (
               <button

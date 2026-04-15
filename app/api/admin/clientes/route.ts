@@ -46,6 +46,7 @@ export async function POST(request: NextRequest) {
     googleAdsLoginCustomerId?: string | null;
     metaAdsAccountId?: string | null;
     ga4PropertyId?: string | null;
+    leadScoringEnabled?: boolean;
   };
   try {
     body = await request.json();
@@ -70,6 +71,7 @@ export async function POST(request: NextRequest) {
       ativo: body.ativo ?? true,
       orcamentoMidiaGoogleMensal: body.orcamentoMidiaGoogleMensal ?? null,
       orcamentoMidiaMetaMensal: body.orcamentoMidiaMetaMensal ?? null,
+      leadScoringEnabled: body.leadScoringEnabled ?? false,
     });
 
     await upsertContaPlataforma({

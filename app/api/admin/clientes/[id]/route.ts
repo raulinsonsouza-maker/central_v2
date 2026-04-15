@@ -38,6 +38,7 @@ export async function PATCH(
     googleAdsLoginCustomerId?: string | null;
     metaAdsAccountId?: string | null;
     ga4PropertyId?: string | null;
+    leadScoringEnabled?: boolean;
   };
   try {
     body = await request.json();
@@ -61,6 +62,7 @@ export async function PATCH(
   const clienteComOrcamento = cliente as typeof cliente & {
     orcamentoMidiaGoogleMensal?: number | null;
     orcamentoMidiaMetaMensal?: number | null;
+    leadScoringEnabled?: boolean;
   };
   const orcamentoMidiaGoogleMensal =
     body.orcamentoMidiaGoogleMensal !== undefined
@@ -70,6 +72,10 @@ export async function PATCH(
     body.orcamentoMidiaMetaMensal !== undefined
       ? body.orcamentoMidiaMetaMensal
       : clienteComOrcamento.orcamentoMidiaMetaMensal ?? null;
+  const leadScoringEnabled =
+    body.leadScoringEnabled !== undefined
+      ? body.leadScoringEnabled
+      : clienteComOrcamento.leadScoringEnabled ?? false;
 
   try {
     await prisma.cliente.update({
@@ -82,6 +88,7 @@ export async function PATCH(
         ativo,
         orcamentoMidiaGoogleMensal,
         orcamentoMidiaMetaMensal,
+        leadScoringEnabled,
       },
     });
 
