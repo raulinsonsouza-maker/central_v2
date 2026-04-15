@@ -20,6 +20,8 @@ export async function GET(request: NextRequest) {
       hasMetaAccessToken: !!config.metaAccessToken,
       hasGoogleDeveloperToken: !!config.googleDeveloperToken,
       hasGoogleRefreshToken: !!config.googleRefreshToken,
+      hasGoogleClientId: !!config.googleClientId,
+      hasGoogleClientSecret: !!config.googleClientSecret,
     });
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
@@ -37,6 +39,8 @@ export async function PATCH(request: NextRequest) {
     metaAdAccountId?: string;
     googleDeveloperToken?: string;
     googleRefreshToken?: string;
+    googleClientId?: string;
+    googleClientSecret?: string;
   };
 
   try {
@@ -54,6 +58,8 @@ export async function PATCH(request: NextRequest) {
       hasMetaAccessToken: !!config.metaAccessToken,
       hasGoogleDeveloperToken: !!config.googleDeveloperToken,
       hasGoogleRefreshToken: !!config.googleRefreshToken,
+      hasGoogleClientId: !!config.googleClientId,
+      hasGoogleClientSecret: !!config.googleClientSecret,
     });
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);

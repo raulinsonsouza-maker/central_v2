@@ -68,6 +68,8 @@ export default function AdminIntegrationsConfigPage() {
   const [tokenInput, setTokenInput] = useState("");
   const [metaAccessToken, setMetaAccessToken] = useState("");
   const [metaAdAccountId, setMetaAdAccountId] = useState("");
+  const [googleClientId, setGoogleClientId] = useState("");
+  const [googleClientSecret, setGoogleClientSecret] = useState("");
   const [googleDeveloperToken, setGoogleDeveloperToken] = useState("");
   const [googleRefreshToken, setGoogleRefreshToken] = useState("");
   const [formError, setFormError] = useState("");
@@ -97,11 +99,15 @@ export default function AdminIntegrationsConfigPage() {
       metaAdAccountId?: string;
       googleDeveloperToken?: string;
       googleRefreshToken?: string;
+      googleClientId?: string;
+      googleClientSecret?: string;
     }) => updateIntegrationsConfigApi(body, adminToken || undefined),
     onSuccess: () => {
       setFormError("");
       setFormSuccess("Configurações atualizadas com sucesso.");
       setMetaAccessToken("");
+      setGoogleClientId("");
+      setGoogleClientSecret("");
       setGoogleDeveloperToken("");
       setGoogleRefreshToken("");
     },
@@ -272,6 +278,36 @@ export default function AdminIntegrationsConfigPage() {
           <CardContent className="space-y-4">
             <div>
               <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Client ID
+              </label>
+              <input
+                type="password"
+                value={googleClientId}
+                onChange={(e) => setGoogleClientId(e.target.value)}
+                placeholder={data?.hasGoogleClientId ? "••••••••••••••••••••" : "Cole o client ID OAuth do Google Ads"}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+              />
+              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                Por segurança, o valor atual não é exibido. Preencha apenas se quiser atualizar.
+              </p>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Client Secret
+              </label>
+              <input
+                type="password"
+                value={googleClientSecret}
+                onChange={(e) => setGoogleClientSecret(e.target.value)}
+                placeholder={data?.hasGoogleClientSecret ? "••••••••••••••••••••" : "Cole o client secret OAuth do Google Ads"}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+              />
+              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                Por segurança, o valor atual não é exibido. Preencha apenas se quiser atualizar.
+              </p>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
                 Developer token
               </label>
               <input
@@ -297,7 +333,7 @@ export default function AdminIntegrationsConfigPage() {
                 className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
               />
               <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
-                Este token é utilizado junto do client ID e client secret configurados via variáveis de ambiente.
+                Por segurança, o valor atual não é exibido. Preencha apenas se quiser atualizar.
               </p>
             </div>
           </CardContent>

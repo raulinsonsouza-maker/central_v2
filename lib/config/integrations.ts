@@ -5,6 +5,8 @@ const KEYS = {
   metaAdAccountId: "meta_ad_account_id",
   googleDeveloperToken: "google_ads_developer_token",
   googleRefreshToken: "google_ads_refresh_token",
+  googleClientId: "google_ads_client_id",
+  googleClientSecret: "google_ads_client_secret",
   googleAnalyticsCredentials: "google_analytics_credentials",
 } as const;
 
@@ -13,6 +15,8 @@ export interface IntegrationsConfig {
   metaAdAccountId: string | null;
   googleDeveloperToken: string | null;
   googleRefreshToken: string | null;
+  googleClientId: string | null;
+  googleClientSecret: string | null;
   googleAnalyticsCredentials: string | null;
 }
 
@@ -25,6 +29,8 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
           KEYS.metaAdAccountId,
           KEYS.googleDeveloperToken,
           KEYS.googleRefreshToken,
+          KEYS.googleClientId,
+          KEYS.googleClientSecret,
           KEYS.googleAnalyticsCredentials,
         ],
       },
@@ -38,6 +44,8 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
     metaAdAccountId: map.get(KEYS.metaAdAccountId) ?? null,
     googleDeveloperToken: map.get(KEYS.googleDeveloperToken) ?? null,
     googleRefreshToken: map.get(KEYS.googleRefreshToken) ?? null,
+    googleClientId: map.get(KEYS.googleClientId) ?? null,
+    googleClientSecret: map.get(KEYS.googleClientSecret) ?? null,
     googleAnalyticsCredentials:
       process.env.GOOGLE_ANALYTICS_CREDENTIALS ?? map.get(KEYS.googleAnalyticsCredentials) ?? null,
   };
@@ -48,6 +56,8 @@ export async function updateIntegrationsConfig(data: {
   metaAdAccountId?: string;
   googleDeveloperToken?: string;
   googleRefreshToken?: string;
+  googleClientId?: string;
+  googleClientSecret?: string;
   googleAnalyticsCredentials?: string;
 }) {
   const ops = [];
@@ -88,6 +98,26 @@ export async function updateIntegrationsConfig(data: {
         where: { key: KEYS.googleRefreshToken },
         create: { key: KEYS.googleRefreshToken, value: data.googleRefreshToken.trim() },
         update: { value: data.googleRefreshToken.trim() },
+      })
+    );
+  }
+
+  if (data.googleClientId !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.googleClientId },
+        create: { key: KEYS.googleClientId, value: data.googleClientId.trim() },
+        update: { value: data.googleClientId.trim() },
+      })
+    );
+  }
+
+  if (data.googleClientSecret !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.googleClientSecret },
+        create: { key: KEYS.googleClientSecret, value: data.googleClientSecret.trim() },
+        update: { value: data.googleClientSecret.trim() },
       })
     );
   }
