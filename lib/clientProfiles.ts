@@ -8,6 +8,7 @@ export const DOR_SLUG = "d-or";
 export const GRANAROLO_SLUG = "granarolo";
 export const FLORIEN_SLUG = "florien-fitoativos";
 export const ACADEMY_AMERICANA_SLUG = "academy-americana";
+export const VITO_BALDUCCI_SLUG = "vito-balducci";
 
 export type ClientIdentity = {
   nome?: string | null;
@@ -148,5 +149,18 @@ export function isAcademyAmericana(client?: ClientIdentity | null) {
     slug === ACADEMY_AMERICANA_SLUG ||
     nome === "academy americana" ||
     slug.includes("academy") && slug.includes("americana")
+  );
+}
+
+export function isVitoBalducci(client?: ClientIdentity | null) {
+  if (!client) return false;
+  if (client.perfilPanel === "vito-balducci") return true;
+
+  const slug = normalizeText(client.slug);
+  const nome = normalizeText(client.nome);
+
+  return (
+    slug === VITO_BALDUCCI_SLUG ||
+    nome === "vito balducci"
   );
 }

@@ -12,7 +12,7 @@ import { LeadScoringPanel } from "@/components/clientes/LeadScoringPanel";
 import { HotelFazendaSaoJoaoPanel } from "@/components/clientes/HotelFazendaSaoJoaoPanel";
 import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
-import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana } from "@/lib/clientProfiles";
+import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci } from "@/lib/clientProfiles";
 import {
   Bar,
   XAxis,
@@ -441,10 +441,10 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const isMiguelGooglePanel = isMiguelImoveis(cliente) && canal === "google";
   const isMiguelPanel = isDrFernandoGuena(cliente) && canal !== "google";
   const isClinicaESpaPanel = isClinicaESpa(cliente) && canal !== "google";
-  const isComprasPanel = (isDor(cliente) || isGranarolo(cliente)) && canal !== "google";
+  const isComprasPanel = (isDor(cliente) || isGranarolo(cliente) || isVitoBalducci(cliente)) && canal !== "google";
   const isVisitasPanel = isFlorien(cliente) && canal !== "google";
   const isAcademyPanel = isAcademyAmericana(cliente) && canal !== "google";
-  const isEcommerceMode = isGranarolo(cliente) || isDor(cliente);
+  const isEcommerceMode = isGranarolo(cliente) || isDor(cliente) || isVitoBalducci(cliente);
   const convLabels = React.useMemo(() => isComprasPanel
     ? { singular: "compra", plural: "compras", metric: "Custo/Compra", metricFull: "Custo / Compra", kpi: "Meta Custo/Compra", dbKey: "COMPRAS", taxa: "TAXA COMPRA", cust: "CUSTO / COMPRA", semResult: "sem compras", crLabel: "CR (clique→compra)", chartKey: "Compras", sub: "Total do período" }
     : isVisitasPanel

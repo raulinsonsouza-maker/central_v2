@@ -443,6 +443,7 @@ function ClienteForm({
                 <option value="miguel-imoveis">Miguel Imóveis</option>
                 <option value="dr-fernando-guena">Dr. Fernando Guena</option>
                 <option value="academy-americana">Academy Americana</option>
+                <option value="vito-balducci">Vito Balducci</option>
               </select>
             </FormField>
 
