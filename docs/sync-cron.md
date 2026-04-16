@@ -1,6 +1,6 @@
-# Sync diário (planilhas → base) e atualização dos dashboards
+# Sync diário — Meta Ads, Google Ads e GA4
 
-Este documento descreve a rotina de sincronização diária às **07:00 horário de Brasília (America/Sao_Paulo)**, que atualiza os dados das planilhas Google Sheets no banco e mantém os dashboards atualizados todos os dias.
+Este documento descreve a rotina de sincronização diária às **05:00 horário de Brasília (America/Sao_Paulo)**, que busca os dados de Meta Ads, Google Ads e GA4 na API de cada plataforma e persiste no banco, mantendo os dashboards atualizados todos os dias.
 
 ## Decisão de host
 
@@ -11,15 +11,17 @@ A aplicação pode rodar em dois cenários:
 | **Vercel** | Cron configurado no próprio projeto via `vercel.json`. A Vercel chama a URL do deployment (GET) no horário agendado. **Recomendado** se o deploy já for na Vercel. |
 | **VPS / VM / Docker / outro** | Cron externo (crontab do SO, GitHub Actions ou outro agendador) faz POST (ou GET) na URL do endpoint em produção. Ver [Caminho B](#caminho-b-deploy-fora-da-vercel) abaixo. |
 
-O repositório já inclui configuração para **Vercel**; para outros hosts, use a documentação e o script opcional descritos no Caminho B.
-
 ---
 
 ## Horário e timezone
 
-- **Horário:** 07:00 (uma vez ao dia).
-- **Timezone:** America/Sao_Paulo (Brasília, BRT).
-- **Expressão cron (UTC):** `0 10 * * *` (10:00 UTC = 07:00 BRT).
+Todos os crons rodam entre **05:00h e 05:40h Brasília (BRT = UTC-3)**.
+
+| Sync | Horário BRT | Expressão cron (UTC) |
+|------|------------|----------------------|
+| Meta Ads | 05:00h | `0 8 * * *` |
+| Google Ads | 05:20h | `20 8 * * *` |
+| GA4 / Analytics | 05:40h | `40 8 * * *` |
 
 ---
 
@@ -27,12 +29,15 @@ O repositório já inclui configuração para **Vercel**; para outros hosts, use
 
 ### Configuração no repositório
 
-O arquivo **`vercel.json`** na raiz já define o Cron Job:
+O arquivo **`vercel.json`** na raiz já define os três Cron Jobs:
 
-- **Path:** `/api/sync/google-sheets`
-- **Schedule:** `0 10 * * *` (07:00 BRT)
+| Path | Schedule | Horário BRT |
+|------|----------|-------------|
+| `/api/sync/meta` | `0 8 * * *` | 05:00h |
+| `/api/sync/google-ads` | `20 8 * * *` | 05:20h |
+| `/api/sync/analytics` | `40 8 * * *` | 05:40h |
 
-A rota aceita **GET** (usado pela Vercel ao disparar o cron) e **POST** (para chamadas manuais ou crons externos). A autenticação é feita por:
+Cada rota aceita **GET** (usado pela Vercel ao disparar o cron) e **POST** (para chamadas manuais ou crons externos). A autenticação é feita por:
 
 - Header `Authorization: Bearer <token>` (a Vercel envia `CRON_SECRET` assim)
 - Header `x-cron-token: <token>`
@@ -43,126 +48,94 @@ Todos são validados contra a variável de ambiente **`SYNC_CRON_TOKEN`**.
 ### Variáveis de ambiente na Vercel
 
 1. **SYNC_CRON_TOKEN** (obrigatório em produção)
-   - Gere um valor seguro, por exemplo: `openssl rand -hex 32`
-   - Adicione em **Project Settings → Environment Variables** para Production (e Preview se quiser testar cron em preview).
-   - **CRON_SECRET:** defina com o **mesmo valor** de `SYNC_CRON_TOKEN`. A Vercel envia esse valor no header `Authorization: Bearer` ao chamar o cron; a API compara com `SYNC_CRON_TOKEN`.
+   - Gere um valor seguro: `openssl rand -hex 32`
+   - Adicione em **Project Settings → Environment Variables** para Production.
+   - **CRON_SECRET:** defina com o **mesmo valor** de `SYNC_CRON_TOKEN`. A Vercel envia esse valor no header `Authorization: Bearer` ao chamar o cron.
 
-2. Confirme também: **GOOGLE_CLIENT_EMAIL**, **GOOGLE_PRIVATE_KEY**, **DATABASE_URL**.
+2. Confirme também: **META_ACCESS_TOKEN**, **GOOGLE_ADS_DEVELOPER_TOKEN**, **GOOGLE_CLIENT_EMAIL**, **GOOGLE_PRIVATE_KEY**, **DATABASE_URL**.
 
-Após o deploy, o cron passa a rodar automaticamente todos os dias às 07:00 BRT.
+Após o deploy, os três crons passam a rodar automaticamente todos os dias a partir de 05:00h BRT.
 
 ---
 
 ## Caminho B — Deploy fora da Vercel (VPS, Docker, etc.)
 
-### Endpoint
+### Endpoints
 
-- **URL:** `POST https://<seu-dominio>/api/sync/google-sheets` ou `GET https://<seu-dominio>/api/sync/google-sheets`
-- **Autenticação:** envie o token em um dos formatos:
-  - Header: `x-cron-token: SEU_SYNC_CRON_TOKEN`
-  - Header: `Authorization: Bearer SEU_SYNC_CRON_TOKEN`
-  - Query: `?token=SEU_SYNC_CRON_TOKEN`
+| Sync | URL |
+|------|-----|
+| Meta Ads | `POST https://<seu-dominio>/api/sync/meta` |
+| Google Ads | `POST https://<seu-dominio>/api/sync/google-ads` |
+| GA4 | `POST https://<seu-dominio>/api/sync/analytics` |
 
-### Exemplo de chamada (curl)
+**Autenticação:** envie o token em um dos formatos:
+- Header: `x-cron-token: SEU_SYNC_CRON_TOKEN`
+- Header: `Authorization: Bearer SEU_SYNC_CRON_TOKEN`
+- Query: `?token=SEU_SYNC_CRON_TOKEN`
+
+### Crontab (05:00h BRT)
+
+Para servidor em UTC (BRT = UTC-3):
+
+```cron
+# Meta Ads — 05:00h BRT (08:00 UTC)
+0 8 * * * curl -s -X POST "https://seu-dominio.com/api/sync/meta" -H "x-cron-token: SEU_TOKEN" > /dev/null 2>&1
+
+# Google Ads — 05:20h BRT (08:20 UTC)
+20 8 * * * curl -s -X POST "https://seu-dominio.com/api/sync/google-ads" -H "x-cron-token: SEU_TOKEN" > /dev/null 2>&1
+
+# GA4 / Analytics — 05:40h BRT (08:40 UTC)
+40 8 * * * curl -s -X POST "https://seu-dominio.com/api/sync/analytics" -H "x-cron-token: SEU_TOKEN" > /dev/null 2>&1
+```
+
+### Exemplo de chamada manual (curl)
 
 ```bash
-# Sync de todos os clientes
-curl -X POST "https://seu-dominio.com/api/sync/google-sheets" \
+# Sync Meta — todos os clientes
+curl -X POST "https://seu-dominio.com/api/sync/meta" \
   -H "x-cron-token: SEU_SYNC_CRON_TOKEN"
 
-# Sync de um cliente específico
-curl -X POST "https://seu-dominio.com/api/sync/google-sheets" \
+# Sync Meta — cliente específico
+curl -X POST "https://seu-dominio.com/api/sync/meta" \
   -H "x-cron-token: SEU_SYNC_CRON_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"clienteId": "id-do-cliente"}'
+
+# Sync Google Ads — todos os clientes
+curl -X POST "https://seu-dominio.com/api/sync/google-ads" \
+  -H "x-cron-token: SEU_SYNC_CRON_TOKEN"
+
+# Sync GA4 — todos os clientes
+curl -X POST "https://seu-dominio.com/api/sync/analytics" \
+  -H "x-cron-token: SEU_SYNC_CRON_TOKEN"
 ```
-
-### Crontab (07:00 BRT)
-
-Ajuste o fuso do servidor (ou use a hora UTC equivalente). Para servidor em UTC:
-
-- 07:00 BRT = 10:00 UTC → `0 10 * * *`
-
-Exemplo (substitua `SEU_TOKEN` e a URL):
-
-```cron
-0 10 * * * curl -s -X POST "https://seu-dominio.com/api/sync/google-sheets" -H "x-cron-token: SEU_TOKEN" > /dev/null 2>&1
-```
-
-Ou use o script incluído no repositório (lê o token de variável de ambiente):
-
-```cron
-0 10 * * * /caminho/para/scripts/run-sync.sh
-```
-
-### Script opcional: `scripts/run-sync.sh`
-
-O script `scripts/run-sync.sh` faz o POST usando a variável de ambiente `SYNC_CRON_TOKEN` e `SYNC_URL` (ou um default). Útil para crontab ou execução manual em servidores. Ver comentários no próprio script.
 
 ---
 
 ## Configurar SYNC_CRON_TOKEN em produção
 
-1. Gere um token forte (ex.: `openssl rand -hex 32`).
+1. Gere um token forte: `openssl rand -hex 32`
 2. Guarde em cofre de segredos (1Password, variáveis do host, etc.); **não** commite no repositório.
 3. No painel do host (Vercel, servidor, etc.):
    - Defina **SYNC_CRON_TOKEN** com esse valor.
-   - Na Vercel, defina também **CRON_SECRET** com o mesmo valor (para o cron automático enviar o Bearer correto).
+   - Na Vercel, defina também **CRON_SECRET** com o mesmo valor.
 
 ---
 
-## Testar o endpoint (staging/produção)
-
-### Teste de sucesso (sync de todos os clientes)
-
-```bash
-curl -X POST "https://seu-dominio.com/api/sync/google-sheets" \
-  -H "x-cron-token: SEU_SYNC_CRON_TOKEN" \
-  -w "\n%{http_code}\n"
-```
-
-Esperado: HTTP 200 e body com `"ok": true` e `results`.
-
-### Teste de falha (não autorizado)
-
-```bash
-curl -X POST "https://seu-dominio.com/api/sync/google-sheets" \
-  -w "\n%{http_code}\n"
-```
-
-Esperado: HTTP 401 e body com `"error": "Unauthorized"`.
-
-### Após ativar o cron
-
-No primeiro dia, confira os logs (Vercel Dashboard → Logs, ou logs do servidor) para confirmar que o job rodou no horário esperado e sem erro.
-
----
-
-## Operação (ops)
+## Operação
 
 ### Onde ver os logs
 
-- **Vercel:** Dashboard do projeto → **Logs**. Filtre por path `/api/sync/google-sheets` ou por horário próximo de 07:00 BRT (10:00 UTC).
-- **Outro host:** Logs do servidor (stdout/stderr do processo que atende a API) ou do agendador (crontab logs, etc.).
+- **Vercel:** Dashboard do projeto → **Logs**. Filtre por path `/api/sync/meta`, `/api/sync/google-ads` ou `/api/sync/analytics`, ou por horário próximo de 05:00h BRT (08:00 UTC).
+- **Outro host:** Logs do servidor (stdout/stderr) ou do agendador.
 
 ### Como reexecutar o sync manualmente
 
-1. **Pela aplicação:** em **Administração** > **Clientes**, use o botão **Sincronizar** do cliente desejado (sync apenas daquele cliente).
-2. **Pela API (todos os clientes):**
-   ```bash
-   curl -X POST "https://seu-dominio.com/api/sync/google-sheets" \
-     -H "x-cron-token: SEU_SYNC_CRON_TOKEN"
-   ```
-3. **Pela API (um cliente):**
-   ```bash
-   curl -X POST "https://seu-dominio.com/api/sync/google-sheets" \
-     -H "x-cron-token: SEU_SYNC_CRON_TOKEN" \
-     -H "Content-Type: application/json" \
-     -d '{"clienteId": "id-do-cliente"}'
-   ```
+1. **Pela aplicação:** em **Administração** > **Clientes**, use o botão **Sincronizar** do cliente desejado.
+2. **Pela API** (ver exemplos acima em Caminho B).
 
 ### Resumo para a equipe
 
-- **O quê:** Sync diário das planilhas Google Sheets para o Postgres; os dashboards leem do banco, então ficam atualizados após cada sync.
-- **Quando:** Todos os dias às **07:00 horário de Brasília**.
-- **Onde configurar:** `vercel.json` (Vercel) ou crontab/script (outro host); variável **SYNC_CRON_TOKEN** (e **CRON_SECRET** na Vercel) em produção.
+- **O quê:** Sync diário das APIs de Meta Ads, Google Ads e GA4 para o Postgres; os dashboards leem do banco, então ficam atualizados após cada sync.
+- **Quando:** Todos os dias entre **05:00h e 05:40h horário de Brasília**.
+- **Onde configurar:** `vercel.json` (Vercel) ou crontab (outro host); variável **SYNC_CRON_TOKEN** (e **CRON_SECRET** na Vercel) em produção.
