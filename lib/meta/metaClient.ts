@@ -842,10 +842,12 @@ async function fetchCampaignInsightsPerCampaignChunk(
     let data: MetaInsightsResponse | null = null;
     let lastMsg = "";
     let succeeded = false;
+    // Longer backoff: 15s, 30s, 45s to give Meta API more recovery time
+    const backoffs = [15000, 30000, 45000];
     for (let attempt = 0; attempt <= 3; attempt++) {
       if (attempt > 0) {
-        const waitMs = attempt * 5000;
-        console.warn(`[fetchCampaignInsightsPerCampaign] retry ${attempt}/3 in ${waitMs}ms (chunk ${dateFrom}→${dateTo}) after: ${lastMsg}`);
+        const waitMs = backoffs[attempt - 1] ?? 15000;
+        console.warn(`[fetchCampaignInsightsPerCampaign] retry ${attempt}/3 in ${waitMs / 1000}s (chunk ${dateFrom}→${dateTo}) after: ${lastMsg}`);
         await new Promise((r) => setTimeout(r, waitMs));
       }
       const res = await fetch(currentUrl);
@@ -873,6 +875,7 @@ async function fetchCampaignInsightsPerCampaignChunk(
 /**
  * Fetch campaign-level daily insights keeping each campaign as a separate row.
  * Splits large date ranges into 30-day chunks to avoid Meta API errors.
+ * Fault-tolerant: failed chunks are skipped with a warning so partial data is still saved.
  * Returns rows that include campaign_id and campaign_name alongside metrics.
  * Used when per-campaign breakdown is needed (e.g. Hotel Fazenda São João).
  */
@@ -885,9 +888,20 @@ export async function fetchCampaignInsightsPerCampaign(
   const actId = ensureActPrefix(accountId);
   const chunks = splitDateRange(dateFrom, dateTo, 30);
   const all: MetaInsightRow[] = [];
-  for (const [chunkFrom, chunkTo] of chunks) {
-    const rows = await fetchCampaignInsightsPerCampaignChunk(actId, token, chunkFrom, chunkTo);
-    all.push(...rows);
+  for (let i = 0; i < chunks.length; i++) {
+    const [chunkFrom, chunkTo] = chunks[i];
+    try {
+      const rows = await fetchCampaignInsightsPerCampaignChunk(actId, token, chunkFrom, chunkTo);
+      all.push(...rows);
+      console.log(`[fetchCampaignInsightsPerCampaign] chunk ${i + 1}/${chunks.length} OK (${chunkFrom}→${chunkTo}): ${rows.length} rows`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.warn(`[fetchCampaignInsightsPerCampaign] chunk ${i + 1}/${chunks.length} FAILED (${chunkFrom}→${chunkTo}): ${msg} — skipping`);
+    }
+    // Pause between chunks to reduce pressure on the Meta API
+    if (i < chunks.length - 1) {
+      await new Promise((r) => setTimeout(r, 5000));
+    }
   }
   return all;
 }
