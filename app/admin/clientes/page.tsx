@@ -433,30 +433,28 @@ function ClienteForm({
                 className={inputClass}
               >
                 <option value="">(padrão — detecta por slug/nome)</option>
-                <optgroup label="── E-commerce ──">
+                <optgroup label="▸ Modelos padrão (novos clientes)">
+                  <option value="ecommerce">E-commerce</option>
+                  <option value="hotel">Hotel / Resort</option>
+                  <option value="restaurante">Restaurante / Bar</option>
+                  <option value="clinica">Clínica &amp; Saúde</option>
+                  <option value="medico">Médico / Especialista</option>
+                  <option value="imoveis">Imobiliária</option>
+                  <option value="academia">Escola / Academia</option>
+                  <option value="concessionaria">Concessionária / Motos</option>
+                  <option value="instagram-visitas">Visitas ao Perfil (Instagram)</option>
+                </optgroup>
+                <optgroup label="▸ Clientes configurados">
                   <option value="d-or">E-commerce — D&apos;or</option>
                   <option value="granarolo">E-commerce — Granarolo</option>
                   <option value="vito-balducci">E-commerce — Vito Balducci</option>
-                </optgroup>
-                <optgroup label="── Hotelaria ──">
-                  <option value="hotel">Hotel / Resort</option>
-                </optgroup>
-                <optgroup label="── Saúde &amp; Bem-estar ──">
-                  <option value="clinica-e-spa">Clínica &amp; Spa</option>
-                  <option value="dr-fernando-guena">Médico / Especialista</option>
-                </optgroup>
-                <optgroup label="── Gastronomia ──">
-                  <option value="tertulia">Restaurante / Bar</option>
-                </optgroup>
-                <optgroup label="── Imobiliário ──">
-                  <option value="miguel-imoveis">Imobiliária</option>
-                </optgroup>
-                <optgroup label="── Educação ──">
-                  <option value="academy-americana">Escola / Academia</option>
-                </optgroup>
-                <optgroup label="── Outros ──">
-                  <option value="varella">Concessionária / Motos</option>
-                  <option value="florien">Visitas ao Perfil (Instagram)</option>
+                  <option value="tertulia">Tertúlia</option>
+                  <option value="varella">Varella Motos</option>
+                  <option value="florien">Florien FitoAtivos</option>
+                  <option value="clinica-e-spa">Clínica e Spa Vida Natural</option>
+                  <option value="dr-fernando-guena">Dr. Fernando Guena</option>
+                  <option value="miguel-imoveis">Miguel Imóveis</option>
+                  <option value="academy-americana">Academy Americana</option>
                 </optgroup>
               </select>
             </FormField>

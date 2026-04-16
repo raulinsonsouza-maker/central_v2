@@ -26,6 +26,7 @@ function normalizeText(value?: string | null) {
 
 export function isHotelFazendaSaoJoao(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "hotel") return true;
 
   const slug = normalizeText(client.slug);
@@ -42,7 +43,9 @@ export function isHotelFazendaSaoJoao(client?: ClientIdentity | null) {
 
 export function isTertulia(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "tertulia") return true;
+  if (client.perfilPanel === "restaurante") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -52,7 +55,9 @@ export function isTertulia(client?: ClientIdentity | null) {
 
 export function isVarellaMotos(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "varella") return true;
+  if (client.perfilPanel === "concessionaria") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -62,7 +67,9 @@ export function isVarellaMotos(client?: ClientIdentity | null) {
 
 export function isMiguelImoveis(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "miguel-imoveis") return true;
+  if (client.perfilPanel === "imoveis") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -77,7 +84,9 @@ export function isMiguelImoveis(client?: ClientIdentity | null) {
 
 export function isDrFernandoGuena(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "dr-fernando-guena") return true;
+  if (client.perfilPanel === "medico") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -92,7 +101,9 @@ export function isDrFernandoGuena(client?: ClientIdentity | null) {
 
 export function isClinicaESpa(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "clinica-e-spa") return true;
+  if (client.perfilPanel === "clinica") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -106,7 +117,9 @@ export function isClinicaESpa(client?: ClientIdentity | null) {
 
 export function isDor(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "d-or") return true;
+  if (client.perfilPanel === "ecommerce") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -126,7 +139,9 @@ export function isGranarolo(client?: ClientIdentity | null) {
 
 export function isFlorien(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "florien") return true;
+  if (client.perfilPanel === "instagram-visitas") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
@@ -140,7 +155,9 @@ export function isFlorien(client?: ClientIdentity | null) {
 
 export function isAcademyAmericana(client?: ClientIdentity | null) {
   if (!client) return false;
+  // generic template value
   if (client.perfilPanel === "academy-americana") return true;
+  if (client.perfilPanel === "academia") return true;
 
   const slug = normalizeText(client.slug);
   const nome = normalizeText(client.nome);
