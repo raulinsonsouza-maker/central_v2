@@ -86,13 +86,12 @@ export async function syncMetaCliente(
     });
     if (conta) contaId = conta.id;
 
-    // For per-campaign mode: remove old aggregate rows (campaignName="") for the period
-    // to prevent double-counting when campaign-level rows are inserted.
+    // For per-campaign mode: remove ALL old aggregate rows (campaignName="") for this client.
+    // This covers data synced before per-campaign mode was enabled, preventing "Campanha sem nome"
+    // from appearing in the Campanhas com Vendas section.
     if (useCampaignPerRow && rows.length > 0) {
-      const periodStart = new Date(dateFrom + "T00:00:00Z");
-      const periodEnd = new Date(dateTo + "T23:59:59Z");
       await prisma.fatoMidiaDiario.deleteMany({
-        where: { clienteId, canal: "META", campaignName: "", data: { gte: periodStart, lte: periodEnd } },
+        where: { clienteId, canal: "META", campaignName: "" },
       });
     }
 
