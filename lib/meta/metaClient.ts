@@ -795,24 +795,43 @@ export async function fetchCampaignInsightsAggregatedByDay(
 }
 
 /**
- * Fetch campaign-level daily insights keeping each campaign as a separate row.
- * Returns rows that include campaign_id and campaign_name alongside metrics.
- * Used when per-campaign breakdown is needed (e.g. Hotel Fazenda São João).
+ * Split a date range into chunks of at most maxDays days.
+ * Returns array of [from, to] pairs as "YYYY-MM-DD" strings.
  */
-export async function fetchCampaignInsightsPerCampaign(
-  accountId: string,
+function splitDateRange(dateFrom: string, dateTo: string, maxDays = 30): Array<[string, string]> {
+  const chunks: Array<[string, string]> = [];
+  let current = new Date(dateFrom + "T00:00:00Z");
+  const end = new Date(dateTo + "T00:00:00Z");
+  while (current <= end) {
+    const chunkEnd = new Date(current);
+    chunkEnd.setUTCDate(chunkEnd.getUTCDate() + maxDays - 1);
+    if (chunkEnd > end) chunkEnd.setTime(end.getTime());
+    chunks.push([
+      current.toISOString().slice(0, 10),
+      chunkEnd.toISOString().slice(0, 10),
+    ]);
+    current = new Date(chunkEnd);
+    current.setUTCDate(current.getUTCDate() + 1);
+  }
+  return chunks;
+}
+
+/**
+ * Fetch one chunk of campaign-level daily insights (max 30-day range).
+ */
+async function fetchCampaignInsightsPerCampaignChunk(
+  actId: string,
   token: string,
   dateFrom: string,
   dateTo: string
 ): Promise<MetaInsightRow[]> {
-  const actId = ensureActPrefix(accountId);
   const params = new URLSearchParams({
     access_token: token,
     level: "campaign",
     fields: "campaign_id,campaign_name,date_start,date_stop,spend,impressions,clicks,inline_link_clicks,reach,ctr,cpc,actions,action_values,unique_actions",
     time_increment: "1",
     limit: "200",
-    "time_range": JSON.stringify({ since: dateFrom, until: dateTo }),
+    time_range: JSON.stringify({ since: dateFrom, until: dateTo }),
   });
 
   const all: MetaInsightRow[] = [];
@@ -826,7 +845,7 @@ export async function fetchCampaignInsightsPerCampaign(
     for (let attempt = 0; attempt <= 3; attempt++) {
       if (attempt > 0) {
         const waitMs = attempt * 5000;
-        console.warn(`[fetchCampaignInsightsPerCampaign] retry ${attempt}/3 in ${waitMs}ms after: ${lastMsg}`);
+        console.warn(`[fetchCampaignInsightsPerCampaign] retry ${attempt}/3 in ${waitMs}ms (chunk ${dateFrom}→${dateTo}) after: ${lastMsg}`);
         await new Promise((r) => setTimeout(r, waitMs));
       }
       const res = await fetch(currentUrl);
@@ -848,6 +867,28 @@ export async function fetchCampaignInsightsPerCampaign(
     url = data.paging?.next ?? null;
   }
 
+  return all;
+}
+
+/**
+ * Fetch campaign-level daily insights keeping each campaign as a separate row.
+ * Splits large date ranges into 30-day chunks to avoid Meta API errors.
+ * Returns rows that include campaign_id and campaign_name alongside metrics.
+ * Used when per-campaign breakdown is needed (e.g. Hotel Fazenda São João).
+ */
+export async function fetchCampaignInsightsPerCampaign(
+  accountId: string,
+  token: string,
+  dateFrom: string,
+  dateTo: string
+): Promise<MetaInsightRow[]> {
+  const actId = ensureActPrefix(accountId);
+  const chunks = splitDateRange(dateFrom, dateTo, 30);
+  const all: MetaInsightRow[] = [];
+  for (const [chunkFrom, chunkTo] of chunks) {
+    const rows = await fetchCampaignInsightsPerCampaignChunk(actId, token, chunkFrom, chunkTo);
+    all.push(...rows);
+  }
   return all;
 }
 
