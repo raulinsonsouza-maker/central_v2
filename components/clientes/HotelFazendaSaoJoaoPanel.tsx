@@ -89,10 +89,10 @@ function formatInteger(value: number) {
   return value.toLocaleString("pt-BR");
 }
 
-function formatPercentage(value: number) {
+function formatPercentage(value: number, decimals = 2) {
   return `${value.toLocaleString("pt-BR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
   })}%`;
 }
 
@@ -111,6 +111,10 @@ function ResortChartTooltip({
       }
     | undefined;
 
+  const invest = Number(chartPoint?.Investimento ?? 0);
+  const fat = Number(chartPoint?.Faturamento ?? 0);
+  const pct = fat > 0 ? (invest / fat) * 100 : 0;
+
   return (
     <div
       className="rounded-[14px] border px-4 py-3"
@@ -125,19 +129,26 @@ function ResortChartTooltip({
         <div className="flex items-center justify-between gap-5">
           <span className="font-semibold text-[#ff7f1f]">Faturamento</span>
           <span className="font-extrabold text-[#ff7f1f]">
-            {formatCurrency(Number(chartPoint?.Faturamento ?? 0))}
+            {formatCurrency(fat)}
           </span>
         </div>
         <div className="flex items-center justify-between gap-5">
           <span className="font-medium text-[var(--foreground)]/80">Investimento</span>
           <span className="font-semibold text-[var(--foreground)]">
-            {formatCurrency(Number(chartPoint?.Investimento ?? 0))}
+            {formatCurrency(invest)}
           </span>
         </div>
         <div className="flex items-center justify-between gap-5">
           <span className="font-medium text-[var(--foreground)]/80">Vendas</span>
           <span className="font-semibold text-[var(--foreground)]">
             {formatInteger(Number(chartPoint?.Vendas ?? 0))}
+          </span>
+        </div>
+        <div className="flex items-center justify-between gap-5 border-t border-white/10 pt-2">
+          <span className="font-medium text-[var(--foreground)]/60 text-[11px]">Invest. / Fat.</span>
+          <span className={`font-bold text-[11px] ${pct < 10 ? "text-emerald-400" : pct < 15 ? "text-amber-400" : "text-red-400"}`}>
+            {formatPercentage(pct, 1)}
+            <span className="ml-1 opacity-60">{pct < 10 ? "✓" : "↑"}</span>
           </span>
         </div>
       </div>
@@ -182,6 +193,39 @@ function ResortKpi({
   );
 }
 
+function MetricCard({
+  label,
+  value,
+  sub,
+  highlight,
+}: {
+  label: string;
+  value: string;
+  sub: string;
+  highlight?: "ok" | "warn" | "danger" | "neutral";
+}) {
+  const valueColor =
+    highlight === "ok"
+      ? "text-emerald-400"
+      : highlight === "warn"
+        ? "text-amber-400"
+        : highlight === "danger"
+          ? "text-red-400"
+          : "text-[var(--foreground)]";
+
+  return (
+    <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
+      <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+        {label}
+      </p>
+      <p className={`mt-2 text-xl font-bold tabular-nums ${valueColor}`}>
+        {value}
+      </p>
+      <p className="mt-1 text-[11px] text-[var(--muted-foreground)] leading-snug">{sub}</p>
+    </div>
+  );
+}
+
 export function HotelFazendaSaoJoaoPanel({
   data,
   canalLabel,
@@ -191,6 +235,14 @@ export function HotelFazendaSaoJoaoPanel({
 }) {
   const latestFiveSeries = data.series.slice(-5);
   const receitaPorLead = data.resumo.leads > 0 ? data.resumo.faturamento / data.resumo.leads : 0;
+
+  const pctInvestFaturamento =
+    data.resumo.faturamento > 0
+      ? (data.resumo.investimento / data.resumo.faturamento) * 100
+      : 0;
+  const pctHighlight: "ok" | "warn" | "danger" =
+    pctInvestFaturamento < 10 ? "ok" : pctInvestFaturamento < 15 ? "warn" : "danger";
+
   const chartData = data.series.map((item) => ({
     periodo: item.periodo,
     Investimento: Number(item.investimento.toFixed(2)),
@@ -201,31 +253,9 @@ export function HotelFazendaSaoJoaoPanel({
   const topRoasWeek = [...data.series].sort((a, b) => b.roas - a.roas)[0];
   const topSalesWeek = [...data.series].sort((a, b) => b.purchases - a.purchases)[0];
 
-  const leadMixCards = [
-    {
-      label: "Leads via site",
-      value: formatInteger(data.leadMix.websiteLeads),
-      icon: Globe,
-    },
-    {
-      label: "Leads on-Facebook",
-      value: formatInteger(data.leadMix.onFacebookLeads),
-      icon: Users,
-    },
-    {
-      label: "Conversas iniciadas",
-      value: formatInteger(data.leadMix.messagingConversationsStarted),
-      icon: MessageSquareMore,
-    },
-    {
-      label: "Receita por lead",
-      value: formatCurrency(receitaPorLead),
-      icon: BadgeDollarSign,
-    },
-  ];
-
   return (
     <section className="space-y-6">
+      {/* ── KPI row ── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
         <ResortKpi
           title="Faturamento"
@@ -258,21 +288,23 @@ export function HotelFazendaSaoJoaoPanel({
         <ResortKpi
           title="Custo por venda"
           value={formatCurrency(data.resumo.cpa)}
-          sub="Eficiência comercial"
+          sub="Investimento ÷ vendas"
           icon={Target}
         />
       </div>
 
+      {/* ── Chart + Funil side-by-side ── */}
       <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
+        {/* Chart */}
         <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
           <CardHeader className="pb-2">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold tracking-tight text-[var(--foreground)]">
-                  Performance comercial
+                  Performance semanal de receita
                 </h3>
                 <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
-                  Comparativo semanal entre investimento e faturamento, com destaques comerciais.
+                  Linha = faturamento (eixo esq.) · Barras = investimento em mídia (eixo dir.)
                 </p>
               </div>
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
@@ -283,12 +315,12 @@ export function HotelFazendaSaoJoaoPanel({
           <CardContent className="space-y-4">
             <div className="flex flex-wrap items-center gap-2">
               <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--muted)]/20 px-3 py-1 text-[11px] font-medium text-[var(--muted-foreground)]">
-                <span className="h-2 w-2 rounded-full bg-[rgba(255,106,0,0.45)]" />
-                Investimento
+                <span className="h-2 w-2 rounded-full bg-[rgba(255,106,0,0.55)]" />
+                Investimento em mídia (barras)
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-[var(--border)] bg-[var(--muted)]/20 px-3 py-1 text-[11px] font-medium text-[var(--muted-foreground)]">
                 <span className="h-2 w-2 rounded-full bg-[var(--primary)]" />
-                Faturamento
+                Faturamento gerado (linha)
               </span>
               <span className="inline-flex items-center rounded-full border border-[var(--primary)]/20 bg-[var(--primary)]/8 px-3 py-1 text-[11px] font-medium text-[var(--foreground)]">
                 {formatInteger(data.resumo.purchases)} vendas no período
@@ -296,7 +328,7 @@ export function HotelFazendaSaoJoaoPanel({
             </div>
             <div className="h-72">
               <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart data={chartData}>
+                <ComposedChart data={chartData} margin={{ right: 8 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.45} />
                   <XAxis
                     dataKey="periodo"
@@ -305,23 +337,36 @@ export function HotelFazendaSaoJoaoPanel({
                     tickLine={false}
                     axisLine={false}
                   />
+                  {/* Left axis: faturamento */}
                   <YAxis
-                    yAxisId="money"
+                    yAxisId="fat"
                     stroke="var(--muted-foreground)"
                     fontSize={11}
                     tickLine={false}
                     axisLine={false}
-                    tickFormatter={(value) => `R$ ${Number(value).toLocaleString("pt-BR")}`}
+                    tickFormatter={(v) => `R$ ${Number(v / 1000).toFixed(0)}k`}
+                    width={56}
+                  />
+                  {/* Right axis: investimento (smaller scale) */}
+                  <YAxis
+                    yAxisId="inv"
+                    orientation="right"
+                    stroke="rgba(255,106,0,0.4)"
+                    fontSize={10}
+                    tickLine={false}
+                    axisLine={false}
+                    tickFormatter={(v) => `R$ ${Number(v / 1000).toFixed(0)}k`}
+                    width={52}
                   />
                   <Tooltip content={<ResortChartTooltip />} />
                   <Bar
-                    yAxisId="money"
+                    yAxisId="inv"
                     dataKey="Investimento"
                     fill="rgba(255, 106, 0, 0.42)"
                     radius={[6, 6, 0, 0]}
                   />
                   <Line
-                    yAxisId="money"
+                    yAxisId="fat"
                     type="monotone"
                     dataKey="Faturamento"
                     stroke="#ff7f1f"
@@ -340,7 +385,7 @@ export function HotelFazendaSaoJoaoPanel({
             <div className="grid gap-3 md:grid-cols-3">
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                  Maior faturamento semanal
+                  Melhor semana de receita
                 </p>
                 <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
                   {topFaturamentoWeek ? formatCurrency(topFaturamentoWeek.faturamento) : "—"}
@@ -380,76 +425,168 @@ export function HotelFazendaSaoJoaoPanel({
           </CardContent>
         </Card>
 
+        {/* Funil & Eficiência */}
         <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
           <CardHeader className="pb-2">
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold tracking-tight text-[var(--foreground)]">
-                  Leitura de receita
+                  Funil & Eficiência
                 </h3>
                 <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
-                  Indicadores comerciais para análise executiva do resort.
+                  Conversão, custo e saúde financeira da operação.
                 </p>
               </div>
             </div>
           </CardHeader>
           <CardContent className="grid gap-3 sm:grid-cols-2 xl:grid-cols-1">
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                Ticket médio
+            <MetricCard
+              label="Ticket médio por venda"
+              value={formatCurrency(data.resumo.ticketMedio)}
+              sub="Faturamento ÷ número de vendas no período"
+            />
+            <MetricCard
+              label="Conversão lead → venda"
+              value={formatPercentage(data.resumo.taxaVendaLead)}
+              sub={`De cada 100 leads, ${data.resumo.taxaVendaLead.toFixed(1)} viraram reservas`}
+            />
+            <MetricCard
+              label="Conversão clique → venda"
+              value={formatPercentage(data.resumo.taxaVendaClique)}
+              sub="Eficiência do tráfego no fundo do funil"
+            />
+            <MetricCard
+              label="CTR — taxa de clique"
+              value={formatPercentage(data.resumo.ctr)}
+              sub="% das impressões que geraram um clique no anúncio"
+            />
+            {/* New: % investido do faturamento */}
+            <div className={`rounded-2xl border p-4 ${
+              pctHighlight === "ok"
+                ? "border-emerald-500/30 bg-emerald-500/5"
+                : pctHighlight === "warn"
+                  ? "border-amber-500/30 bg-amber-500/5"
+                  : "border-red-500/30 bg-red-500/5"
+            }`}>
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  Investimento / Faturamento
+                </p>
+                <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${
+                  pctHighlight === "ok"
+                    ? "text-emerald-400 bg-emerald-500/15"
+                    : pctHighlight === "warn"
+                      ? "text-amber-400 bg-amber-500/15"
+                      : "text-red-400 bg-red-500/15"
+                }`}>
+                  {pctHighlight === "ok" ? "✓ Dentro da meta" : "↑ Acima da meta"}
+                </span>
+              </div>
+              <p className={`text-xl font-bold tabular-nums ${
+                pctHighlight === "ok"
+                  ? "text-emerald-400"
+                  : pctHighlight === "warn"
+                    ? "text-amber-400"
+                    : "text-red-400"
+              }`}>
+                {formatPercentage(pctInvestFaturamento, 1)}
               </p>
-              <p className="mt-2 text-xl font-bold text-[var(--foreground)]">
-                {formatCurrency(data.resumo.ticketMedio)}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                Taxa lead para venda
-              </p>
-              <p className="mt-2 text-xl font-bold text-[var(--foreground)]">
-                {formatPercentage(data.resumo.taxaVendaLead)}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                Taxa clique para venda
-              </p>
-              <p className="mt-2 text-xl font-bold text-[var(--foreground)]">
-                {formatPercentage(data.resumo.taxaVendaClique)}
-              </p>
-            </div>
-            <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
-              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                CTR do período
-              </p>
-              <p className="mt-2 text-xl font-bold text-[var(--foreground)]">
-                {formatPercentage(data.resumo.ctr)}
+              <div className="mt-2 h-1.5 rounded-full bg-white/10 overflow-hidden">
+                <div
+                  className={`h-full rounded-full transition-all ${
+                    pctHighlight === "ok" ? "bg-emerald-500" : pctHighlight === "warn" ? "bg-amber-500" : "bg-red-500"
+                  }`}
+                  style={{ width: `${Math.min(pctInvestFaturamento / 20 * 100, 100)}%` }}
+                />
+              </div>
+              <p className="mt-1.5 text-[11px] text-[var(--muted-foreground)]">
+                Meta: manter abaixo de 10% do faturamento
               </p>
             </div>
           </CardContent>
         </Card>
       </div>
 
+      {/* ── Lead mix cards ── */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {leadMixCards.map((item) => (
-          <Card key={item.label} className="overflow-hidden rounded-2xl border-[var(--border)]">
-            <CardContent className="flex items-center gap-3 p-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
-                <item.icon className="h-4 w-4" />
-              </div>
-              <div>
-                <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                  {item.label}
-                </p>
-                <p className="mt-1 text-lg font-bold text-[var(--foreground)]">
-                  {item.value}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+        <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
+          <CardContent className="flex items-start gap-3 p-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
+              <Globe className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Leads via Site
+              </p>
+              <p className="mt-1 text-lg font-bold text-[var(--foreground)]">
+                {formatInteger(data.leadMix.websiteLeads)}
+              </p>
+              <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">
+                Clicaram no anúncio e preencheram no site
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
+          <CardContent className="flex items-start gap-3 p-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
+              <Users className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Leads Instantâneos
+              </p>
+              <p className="mt-1 text-lg font-bold text-[var(--foreground)]">
+                {formatInteger(data.leadMix.onFacebookLeads)}
+              </p>
+              <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">
+                Formulário nativo dentro do Meta/Facebook
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
+          <CardContent className="flex items-start gap-3 p-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
+              <MessageSquareMore className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Conversas Iniciadas
+              </p>
+              <p className="mt-1 text-lg font-bold text-[var(--foreground)]">
+                {formatInteger(data.leadMix.messagingConversationsStarted)}
+              </p>
+              <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">
+                Contatos via WhatsApp ou Messenger direto
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
+          <CardContent className="flex items-start gap-3 p-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
+              <BadgeDollarSign className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Receita por Lead
+              </p>
+              <p className="mt-1 text-lg font-bold text-[var(--foreground)]">
+                {formatCurrency(receitaPorLead)}
+              </p>
+              <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">
+                Faturamento ÷ total de leads gerados
+              </p>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
+      {/* ── Weekly breakdown table ── */}
       {latestFiveSeries.length > 0 && (
         <Card className="overflow-hidden rounded-[2rem] border border-[var(--border)] bg-[linear-gradient(180deg,rgba(20,21,26,0.98),rgba(12,12,16,1))] shadow-[0_24px_80px_rgba(0,0,0,0.38)]">
           <CardHeader className="border-b border-[var(--border)]/60 px-6 pb-5 pt-6 sm:px-8">
@@ -516,6 +653,13 @@ export function HotelFazendaSaoJoaoPanel({
                           maximumFractionDigits: 2,
                         })}x`,
                     },
+                    {
+                      label: "Invest./Faturamento",
+                      render: (item: PainelSerie) => {
+                        const p = item.faturamento > 0 ? (item.investimento / item.faturamento) * 100 : 0;
+                        return formatPercentage(p, 1);
+                      },
+                    },
                     { label: "CPL", render: (item: PainelSerie) => formatCurrency(item.cpl) },
                     { label: "Custo por venda", render: (item: PainelSerie) => formatCurrency(item.cpa) },
                     { label: "Ticket médio", render: (item: PainelSerie) => formatCurrency(item.ticketMedio) },
@@ -528,6 +672,17 @@ export function HotelFazendaSaoJoaoPanel({
                       </td>
                       {latestFiveSeries.map((item, index) => {
                         const isLatest = index === latestFiveSeries.length - 1;
+                        const rawValue = metric.label === "Invest./Faturamento"
+                          ? (item.faturamento > 0 ? (item.investimento / item.faturamento) * 100 : 0)
+                          : null;
+                        const pctColor =
+                          rawValue !== null
+                            ? rawValue < 10
+                              ? "text-emerald-400"
+                              : rawValue < 15
+                                ? "text-amber-400"
+                                : "text-red-400"
+                            : null;
                         return (
                           <td
                             key={`${metric.label}-${item.periodo}`}
@@ -539,7 +694,7 @@ export function HotelFazendaSaoJoaoPanel({
                                   : "bg-white/[0.015]"
                             }`}
                           >
-                            <span className="text-sm font-bold tabular-nums text-[var(--foreground)]">
+                            <span className={`text-sm font-bold tabular-nums ${pctColor ?? "text-[var(--foreground)]"}`}>
                               {metric.render(item)}
                             </span>
                           </td>
@@ -553,7 +708,6 @@ export function HotelFazendaSaoJoaoPanel({
           </CardContent>
         </Card>
       )}
-
     </section>
   );
 }
