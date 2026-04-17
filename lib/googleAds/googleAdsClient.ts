@@ -90,6 +90,8 @@ export interface GoogleAdsAdCreativeRow {
     cost_micros?: string | number;
     conversions?: string | number;
     all_conversions?: string | number;
+    conversions_value?: string | number;
+    all_conversions_value?: string | number;
   };
 }
 
@@ -276,7 +278,9 @@ export async function fetchAdCreatives(
       metrics.clicks,
       metrics.cost_micros,
       metrics.conversions,
-      metrics.all_conversions
+      metrics.all_conversions,
+      metrics.conversions_value,
+      metrics.all_conversions_value
     FROM ad_group_ad
     WHERE ad_group_ad.status = 'ENABLED'
       AND segments.date BETWEEN '${dateFrom}' AND '${dateTo}'
