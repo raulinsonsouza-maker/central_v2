@@ -176,6 +176,7 @@ export async function GET(
       videoId: c.videoId ?? null,
       videoSourceUrl: c.videoSourceUrl ?? null,
       videoPictureUrl: c.videoPictureUrl ?? null,
+      videoEmbedHtml: c.videoEmbedHtml ?? null,
       body: c.body ?? null,
       title: c.title ?? null,
       spend: Number(c.spend),

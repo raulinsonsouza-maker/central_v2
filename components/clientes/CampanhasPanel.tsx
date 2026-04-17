@@ -66,6 +66,7 @@ interface Criativo {
   videoId: string | null;
   videoSourceUrl: string | null;
   videoPictureUrl: string | null;
+  videoEmbedHtml: string | null;
   body: string | null;
   title: string | null;
   spend: number;
@@ -366,60 +367,206 @@ function ConjuntosTable({ conjuntos, onSelect }: { conjuntos: Conjunto[]; onSele
   );
 }
 
+function VideoModal({ c, onClose }: { c: Criativo; onClose: () => void }) {
+  const [iframeBody, setIframeBody] = React.useState<string | null>(null);
+  const [iframeLoading, setIframeLoading] = React.useState(false);
+  const [iframeFailed, setIframeFailed] = React.useState(false);
+  const [metaPreview, setMetaPreview] = React.useState<{ src: string; w: number; h: number } | null>(null);
+
+  const thumb = c.videoPictureUrl ?? c.imageUrl;
+  const thumbUpgraded = thumb ? upgradeFbCdnImageUrl(thumb) : null;
+
+  const needsMetaPreview = !c.videoSourceUrl && !c.videoEmbedHtml;
+
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  React.useEffect(() => {
+    if (!needsMetaPreview) return;
+    setIframeLoading(true);
+    fetch(`/api/meta/preview?adId=${encodeURIComponent(c.adId)}&adFormat=MOBILE_FEED_STANDARD`)
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((data: { body?: string }) => {
+        if (data?.body) setIframeBody(data.body);
+        else setIframeFailed(true);
+      })
+      .catch(() => setIframeFailed(true))
+      .finally(() => setIframeLoading(false));
+  }, [needsMetaPreview, c.adId]);
+
+  React.useEffect(() => {
+    if (!iframeBody) return;
+    try {
+      const doc = new DOMParser().parseFromString(iframeBody, "text/html");
+      const iframe = doc.querySelector("iframe");
+      const src = iframe?.getAttribute("src") ?? "";
+      const w = parseInt(iframe?.getAttribute("width") ?? "0", 10) || 320;
+      const h = parseInt(iframe?.getAttribute("height") ?? "0", 10) || 560;
+      if (src) setMetaPreview({ src, w, h });
+    } catch { /* ignore */ }
+  }, [iframeBody]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-sm rounded-3xl bg-[var(--card)] border border-white/[0.08] overflow-hidden shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.06]">
+          <Play className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
+          <p className="text-sm font-semibold text-[var(--foreground)] flex-1 min-w-0 truncate">{c.adName}</p>
+          <button
+            onClick={onClose}
+            className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors flex-shrink-0 p-1"
+            aria-label="Fechar"
+          >
+            ✕
+          </button>
+        </div>
+
+        {/* Video body */}
+        <div className="flex items-center justify-center bg-black min-h-[300px]">
+          {c.videoSourceUrl ? (
+            <video
+              src={c.videoSourceUrl}
+              poster={thumbUpgraded ?? undefined}
+              controls
+              autoPlay
+              playsInline
+              preload="metadata"
+              className="w-full max-h-[70vh] object-contain"
+            />
+          ) : c.videoEmbedHtml ? (
+            <div
+              className="w-full aspect-video"
+              dangerouslySetInnerHTML={{ __html: c.videoEmbedHtml }}
+            />
+          ) : iframeLoading ? (
+            <div className="flex flex-col items-center gap-3 py-12 text-[var(--muted-foreground)]">
+              <div className="w-8 h-8 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+              <p className="text-xs">Carregando prévia do Meta…</p>
+            </div>
+          ) : metaPreview ? (
+            (() => {
+              const scale = 320 / metaPreview.w;
+              const displayH = Math.round(metaPreview.h * scale);
+              return (
+                <div style={{ width: 320, height: displayH, overflow: "hidden", position: "relative" }}>
+                  <div style={{ transform: `scale(${scale})`, transformOrigin: "top left", width: metaPreview.w, height: metaPreview.h }}>
+                    <iframe
+                      title="Prévia do anúncio"
+                      src={metaPreview.src}
+                      scrolling="no"
+                      style={{ border: "none", display: "block", width: metaPreview.w, height: metaPreview.h }}
+                    />
+                  </div>
+                </div>
+              );
+            })()
+          ) : iframeFailed ? (
+            <div className="flex flex-col items-center gap-3 py-12 text-[var(--muted-foreground)]">
+              {thumbUpgraded
+                ? <img src={thumbUpgraded} alt={c.adName} className="w-full max-h-[50vh] object-contain" />
+                : <Play className="w-12 h-12 opacity-20" />
+              }
+              <p className="text-xs mt-2 opacity-60">Prévia não disponível</p>
+            </div>
+          ) : thumbUpgraded ? (
+            <img src={thumbUpgraded} alt={c.adName} className="w-full max-h-[70vh] object-contain" />
+          ) : (
+            <div className="flex flex-col items-center gap-3 py-12 text-[var(--muted-foreground)]">
+              <Play className="w-12 h-12 opacity-20" />
+              <p className="text-xs">Nenhuma prévia disponível</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CriativoCard({ c }: { c: Criativo }) {
-  const [videoError, setVideoError] = React.useState(false);
+  const [showModal, setShowModal] = React.useState(false);
   const thumb = c.videoPictureUrl ?? c.imageUrl;
   const thumbUpgraded = thumb ? upgradeFbCdnImageUrl(thumb) : null;
   const isVideo = c.mediaType === "VIDEO";
   const isActive = c.effectiveStatus === "ACTIVE";
 
   return (
-    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] overflow-hidden flex flex-col">
-      <div className="relative aspect-[4/3] bg-black/30 overflow-hidden flex-shrink-0">
-        {isVideo && c.videoSourceUrl && !videoError ? (
-          <video src={c.videoSourceUrl} poster={thumbUpgraded ?? undefined} controls className="w-full h-full object-cover" onError={() => setVideoError(true)} />
-        ) : thumbUpgraded ? (
-          <img src={thumbUpgraded} alt={c.adName} className="w-full h-full object-cover" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-[var(--muted-foreground)]">
-            {isVideo ? <Play className="w-10 h-10 opacity-30" /> : <Eye className="w-10 h-10 opacity-30" />}
-          </div>
-        )}
-        <div className="absolute top-2.5 left-2.5 flex gap-1.5">
-          {isVideo && (
-            <span className="text-[10px] font-bold bg-black/80 text-white px-2 py-1 rounded-full flex items-center gap-1">
-              <Play className="w-2.5 h-2.5" /> Vídeo
-            </span>
-          )}
-          <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${isActive ? "bg-emerald-500/25 text-emerald-400" : "bg-white/10 text-[var(--muted-foreground)]"}`}>
-            {isActive ? "Ativo" : (c.effectiveStatus ?? "—")}
-          </span>
-        </div>
-      </div>
-      <div className="p-4 flex-1 flex flex-col gap-3">
-        <p className="text-sm font-semibold text-[var(--foreground)] line-clamp-2 leading-snug">{c.adName}</p>
-        {(c.title || c.body) && (
-          <div className="text-xs text-[var(--muted-foreground)] space-y-1">
-            {c.title && <p className="font-medium text-[var(--foreground)]/70 line-clamp-1">{c.title}</p>}
-            {c.body && <p className="line-clamp-2 leading-relaxed">{c.body}</p>}
-          </div>
-        )}
-        <div className="mt-auto pt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-white/[0.06]">
-          {[
-            { label: "Investido", value: fmtBrl(c.spend) },
-            { label: "Impressões", value: fmt(c.impressions) },
-            { label: "Cliques", value: fmt(c.clicks) },
-            ...(c.ctr !== null ? [{ label: "CTR", value: fmtPct(c.ctr) }] : []),
-            ...(c.cpc !== null ? [{ label: "CPC", value: fmtBrl(c.cpc) }] : []),
-          ].map(({ label, value }) => (
-            <div key={label} className="flex flex-col gap-1">
-              <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--muted-foreground)]">{label}</span>
-              <span className="text-sm font-bold tabular-nums text-[var(--foreground)]">{value}</span>
+    <>
+      {showModal && <VideoModal c={c} onClose={() => setShowModal(false)} />}
+      <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] overflow-hidden flex flex-col">
+        {/* Thumbnail / Preview */}
+        <div
+          className={`relative aspect-[4/3] bg-black/30 overflow-hidden flex-shrink-0 ${isVideo ? "cursor-pointer group" : ""}`}
+          onClick={() => isVideo && setShowModal(true)}
+        >
+          {thumbUpgraded ? (
+            <img src={thumbUpgraded} alt={c.adName} className={`w-full h-full object-cover ${isVideo ? "group-hover:brightness-75 transition-[filter]" : ""}`} onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+          ) : (
+            <div className="w-full h-full flex items-center justify-center text-[var(--muted-foreground)]">
+              <Play className="w-10 h-10 opacity-30" />
             </div>
-          ))}
+          )}
+
+          {/* Play overlay for videos */}
+          {isVideo && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="w-14 h-14 rounded-full bg-[var(--primary)] flex items-center justify-center shadow-lg">
+                <Play className="w-6 h-6 text-white fill-white ml-0.5" />
+              </div>
+            </div>
+          )}
+
+          {/* Badges */}
+          <div className="absolute top-2.5 left-2.5 flex gap-1.5">
+            {isVideo && (
+              <button
+                onClick={(e) => { e.stopPropagation(); setShowModal(true); }}
+                className="text-[10px] font-bold bg-black/80 text-white px-2 py-1 rounded-full flex items-center gap-1 hover:bg-[var(--primary)] transition-colors"
+              >
+                <Play className="w-2.5 h-2.5" /> Assistir
+              </button>
+            )}
+            <span className={`text-[10px] font-bold px-2 py-1 rounded-full ${isActive ? "bg-emerald-500/25 text-emerald-400" : "bg-white/10 text-[var(--muted-foreground)]"}`}>
+              {isActive ? "Ativo" : (c.effectiveStatus ?? "—")}
+            </span>
+          </div>
+        </div>
+
+        {/* Info */}
+        <div className="p-4 flex-1 flex flex-col gap-3">
+          <p className="text-sm font-semibold text-[var(--foreground)] line-clamp-2 leading-snug">{c.adName}</p>
+          {(c.title || c.body) && (
+            <div className="text-xs text-[var(--muted-foreground)] space-y-1">
+              {c.title && <p className="font-medium text-[var(--foreground)]/70 line-clamp-1">{c.title}</p>}
+              {c.body && <p className="line-clamp-2 leading-relaxed">{c.body}</p>}
+            </div>
+          )}
+          <div className="mt-auto pt-3 grid grid-cols-2 gap-x-4 gap-y-2.5 border-t border-white/[0.06]">
+            {[
+              { label: "Investido", value: fmtBrl(c.spend) },
+              { label: "Impressões", value: fmt(c.impressions) },
+              { label: "Cliques", value: fmt(c.clicks) },
+              ...(c.ctr !== null ? [{ label: "CTR", value: fmtPct(c.ctr) }] : []),
+              ...(c.cpc !== null ? [{ label: "CPC", value: fmtBrl(c.cpc) }] : []),
+            ].map(({ label, value }) => (
+              <div key={label} className="flex flex-col gap-1">
+                <span className="text-[9px] font-semibold uppercase tracking-widest text-[var(--muted-foreground)]">{label}</span>
+                <span className="text-sm font-bold tabular-nums text-[var(--foreground)]">{value}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
