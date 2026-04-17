@@ -112,11 +112,6 @@ type DefaultPanelProps = {
   dateFilter: { label: string };
   canal: string;
   canalLabels: Record<string, string>;
-  financeiro?: {
-    meses?: { ano: number; mes: number; planejadoTotal: number; realizadoTotal: number }[];
-    totalPlanejado?: number;
-    totalRealizado?: number;
-  } | null;
   formatCurrency: (value: number) => string;
   /** Quando true, troca labels de Leads/CPL para Conversas/Custo por Conversa */
   conversasMode?: boolean;
@@ -149,7 +144,6 @@ export function DefaultPanel({
   dateFilter,
   canal,
   canalLabels,
-  financeiro,
   formatCurrency,
   conversasMode = false,
   comprasMode = false,
@@ -607,100 +601,6 @@ export function DefaultPanel({
         </Card>
       )}
 
-      {/* Financial tracking */}
-      {financeiro && financeiro.meses && financeiro.meses.length > 0 && (
-        <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
-          <CardHeader>
-            <div className="flex flex-wrap items-start justify-between gap-4">
-              <SectionHeader
-                title="Acompanhamento financeiro · Plano x Real"
-                subtitle="Status de investimento no ano atual (planejado versus realizado em todos os canais)"
-              />
-              <div className="flex flex-wrap items-center gap-2">
-                <div className="inline-flex items-center gap-2 rounded-lg border border-[var(--border)] bg-[var(--muted)]/30 px-3 py-1.5 text-xs">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[var(--muted-foreground)]/60" />
-                  <span className="text-[var(--muted-foreground)]">Orçado</span>
-                  <strong className="text-[var(--foreground)]">
-                    R${" "}
-                    {Number(financeiro.totalPlanejado ?? 0).toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </strong>
-                </div>
-                <div className="inline-flex items-center gap-2 rounded-lg border border-[var(--primary)]/20 bg-[var(--primary)]/5 px-3 py-1.5 text-xs">
-                  <span className="h-2.5 w-2.5 rounded-full bg-[var(--primary)]" />
-                  <span className="text-[var(--muted-foreground)]">Realizado</span>
-                  <strong className="text-[var(--primary)]">
-                    R${" "}
-                    {Number(financeiro.totalRealizado ?? 0).toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })}
-                  </strong>
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart
-                  data={financeiro.meses.map(
-                    (m: { ano: number; mes: number; planejadoTotal: number; realizadoTotal: number }) => ({
-                      mes: new Date(m.ano, m.mes - 1, 1)
-                        .toLocaleString("pt-BR", { month: "short" })
-                        .toUpperCase(),
-                      Orcado: m.planejadoTotal,
-                      Realizado: m.realizadoTotal,
-                    })
-                  )}
-                >
-                  <defs>
-                    <linearGradient id="finBarGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--muted-foreground)" stopOpacity={0.2} />
-                      <stop offset="100%" stopColor="var(--muted)" stopOpacity={0.6} />
-                    </linearGradient>
-                    <linearGradient id="finRealGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="var(--primary)" stopOpacity={0.9} />
-                      <stop offset="100%" stopColor="var(--primary)" stopOpacity={0.6} />
-                    </linearGradient>
-                  </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.5} />
-                  <XAxis
-                    dataKey="mes"
-                    stroke="var(--muted-foreground)"
-                    fontSize={11}
-                    tickLine={false}
-                    axisLine={false}
-                  />
-                  <YAxis
-                    stroke="var(--muted-foreground)"
-                    fontSize={11}
-                    tickLine={false}
-                    axisLine={false}
-                    tickFormatter={(value) => formatCurrency(Number(value))}
-                  />
-                  <Tooltip
-                    formatter={(value: number, name: string) => [
-                      formatCurrency(Number(value)),
-                      name,
-                    ]}
-                    {...tooltipStyle}
-                  />
-                  <Legend
-                    iconType="circle"
-                    iconSize={8}
-                    wrapperStyle={{ paddingTop: 12, fontSize: 12 }}
-                  />
-                  <Bar dataKey="Orcado" fill="url(#finBarGrad)" radius={[6, 6, 0, 0]} />
-                  <Bar dataKey="Realizado" fill="url(#finRealGrad)" radius={[6, 6, 0, 0]} />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-          </CardContent>
-        </Card>
-      )}
     </>
   );
 }

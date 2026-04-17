@@ -1120,7 +1120,6 @@ function formatPercentage(value: number) {
           dateFilter={dateFilter}
           canal={canal}
           canalLabels={canalLabels}
-          financeiro={financeiro ?? undefined}
           formatCurrency={formatCurrency}
           conversasMode={isMiguelPanel || isClinicaESpaPanel}
           miguelImoveisMode={isMiguelImoveisPanel}
@@ -1165,13 +1164,8 @@ function formatPercentage(value: number) {
         />
       )}
 
-      {/* ── Comportamento GA4 (todos os painéis quando configurado) ── */}
-      {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && analytics?.hasAnalytics && (
-        <AnalyticsGA4Section data={analytics} />
-      )}
-
-      {/* ── Financial tracking (para painéis customizados) ── */}
-      {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && isSpecialPanel && financeiro && financeiro.meses && (
+      {/* ── Financial tracking (Plano x Real) ── */}
+      {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && financeiro && financeiro.meses && (
         <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
           <CardHeader>
             <div className="flex flex-wrap items-start justify-between gap-4">
@@ -1263,6 +1257,11 @@ function formatPercentage(value: number) {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* ── Comportamento GA4 (todos os painéis quando configurado) ── */}
+      {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && analytics?.hasAnalytics && (
+        <AnalyticsGA4Section data={analytics} />
       )}
 
       {/* ── Pauta da semana (geral only, internal only) ── */}
