@@ -80,6 +80,28 @@ interface Criativo {
 }
 
 const rowBg = (isTop: boolean) => isTop ? "bg-[var(--primary)]/[0.07]" : "bg-white/[0.03]";
+
+// ── Campaign type detection ─────────────────────────────────────────────────
+type CampType = "vendas" | "leads" | "alcance" | "rmkt" | "eventos" | "outro";
+
+function detectCampType(nome: string, leads: number, purchases: number): CampType {
+  if (purchases > 0) return "vendas";
+  if (leads > 0) return "leads";
+  const n = nome.toLowerCase();
+  if (/engajamento|engagement|alcance|reach|awareness|reconhecimento/.test(n)) return "alcance";
+  if (/rmkt|retargeting|remarketing|reengaj/.test(n)) return "rmkt";
+  if (/evento|events?\b/.test(n)) return "eventos";
+  return "outro";
+}
+
+const CAMP_TYPE_META: Record<CampType, { label: string; color: string }> = {
+  vendas:  { label: "Vendas",     color: "bg-emerald-500/20 text-emerald-400" },
+  leads:   { label: "Leads",      color: "bg-[var(--primary)]/20 text-[var(--primary)]" },
+  alcance: { label: "Alcance",    color: "bg-white/[0.08] text-white/40" },
+  rmkt:    { label: "Remarketing",color: "bg-violet-500/20 text-violet-400" },
+  eventos: { label: "Eventos",    color: "bg-sky-500/20 text-sky-400" },
+  outro:   { label: "Outro",      color: "bg-white/[0.06] text-white/30" },
+};
 const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 
 type SortCol = "nome" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "faturamento" | "roas";
@@ -173,28 +195,40 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
           {sorted.map((c, i) => {
             const isTop = i === 0;
             const bg = rowBg(isTop);
+            const ctype = detectCampType(c.nome, c.leads, c.purchases);
+            const { label: typeLabel, color: typeColor } = CAMP_TYPE_META[ctype];
+            // Non-conversion campaigns: show "—" instead of "0" for conversion metrics
+            const isNonConversion = ctype === "alcance" || ctype === "eventos";
+
             return (
               <tr
                 key={c.nome}
-                className="group cursor-pointer"
+                className={`group cursor-pointer ${isNonConversion ? "opacity-75 hover:opacity-100 transition-opacity" : ""}`}
                 onClick={() => onSelect(c.nome)}
               >
-                {/* Campanha name */}
+                {/* Campanha name + type badge */}
                 <td className={`rounded-l-2xl px-4 py-4 ${bg}`}>
-                  <div className="flex items-center gap-2.5">
-                    {isTop && (
-                      <span className="shrink-0 rounded-full bg-[var(--primary)]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--primary)]">
+                  <div className="flex items-start gap-2.5">
+                    {/* Rank badge */}
+                    {isTop ? (
+                      <span className="shrink-0 rounded-full bg-[var(--primary)]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--primary)] mt-0.5">
                         #1
                       </span>
-                    )}
-                    {!isTop && (
-                      <span className="text-[11px] font-bold text-white/20 tabular-nums shrink-0 w-5 text-right">
+                    ) : (
+                      <span className="text-[11px] font-bold text-white/20 tabular-nums shrink-0 w-5 text-right mt-0.5">
                         #{i + 1}
                       </span>
                     )}
-                    <p className="text-[12px] font-semibold leading-snug text-[var(--foreground)] line-clamp-2 max-w-[360px]">
-                      {c.nome}
-                    </p>
+                    <div className="min-w-0">
+                      <p className="text-[12px] font-semibold leading-snug text-[var(--foreground)] line-clamp-2 max-w-[360px]">
+                        {c.nome}
+                      </p>
+                      {ctype !== "outro" && (
+                        <span className={`mt-1 inline-block text-[9px] font-bold uppercase tracking-[0.16em] px-1.5 py-0.5 rounded-full ${typeColor}`}>
+                          {typeLabel}
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </td>
 
@@ -221,41 +255,53 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
                 {/* Leads */}
                 {hasLeads && (
                   <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
-                    <span className={`text-[14px] font-bold ${isTop && c.leads > 0 ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
-                      {fmt(c.leads)}
-                    </span>
+                    {isNonConversion ? (
+                      <span className="text-[13px] text-white/20">—</span>
+                    ) : (
+                      <span className={`text-[14px] font-bold ${isTop && c.leads > 0 ? "text-[var(--primary)]" : c.leads > 0 ? "text-[var(--foreground)]" : "text-white/30"}`}>
+                        {c.leads > 0 ? fmt(c.leads) : "—"}
+                      </span>
+                    )}
                   </td>
                 )}
 
                 {/* CPL */}
                 {hasLeads && (
                   <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
-                    {c.cpl !== null ? fmtBrl(c.cpl) : "—"}
+                    {isNonConversion ? <span className="text-white/20">—</span> : (c.cpl !== null ? fmtBrl(c.cpl) : "—")}
                   </td>
                 )}
 
                 {/* Vendas */}
                 {hasSales && (
                   <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
-                    <span className={`text-[15px] font-black ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
-                      {fmt(c.purchases)}
-                    </span>
+                    {isNonConversion ? (
+                      <span className="text-[13px] text-white/20">—</span>
+                    ) : (
+                      <span className={`text-[15px] font-black ${isTop && c.purchases > 0 ? "text-[var(--primary)]" : c.purchases > 0 ? "text-[var(--foreground)]" : "text-white/30"}`}>
+                        {c.purchases > 0 ? fmt(c.purchases) : "—"}
+                      </span>
+                    )}
                   </td>
                 )}
 
                 {/* Faturado */}
                 {hasSales && (
                   <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
-                    <span className={`text-[13px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
-                      {c.faturamento > 0 ? fmtBrl(c.faturamento) : "—"}
-                    </span>
+                    {isNonConversion ? (
+                      <span className="text-[13px] text-white/20">—</span>
+                    ) : (
+                      <span className={`text-[13px] font-bold ${isTop && c.faturamento > 0 ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
+                        {c.faturamento > 0 ? fmtBrl(c.faturamento) : "—"}
+                      </span>
+                    )}
                   </td>
                 )}
 
                 {/* ROAS */}
                 {hasSales && (
                   <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
-                    {c.roas !== null ? fmt(c.roas, 2) + "x" : "—"}
+                    {isNonConversion ? <span className="text-white/20">—</span> : (c.roas !== null ? fmt(c.roas, 2) + "x" : "—")}
                   </td>
                 )}
 
