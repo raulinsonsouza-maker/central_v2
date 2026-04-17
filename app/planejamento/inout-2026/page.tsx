@@ -603,33 +603,62 @@ export default function InoutPlano2026() {
                 <p className="text-xs text-neutral-500 mt-4">Budget de marketing por empreendimento (faixa 0,8–3% do VGV)</p>
               </div>
 
-              <div className="h-64">
-                <p className="text-xs font-bold uppercase tracking-widest text-neutral-500 mb-3 text-center">
-                  Concentração de VGV (Regra 80/20)
-                </p>
-                <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                    <Pie
-                      data={[
-                        { name: "Top 20% incorporadoras", value: 80 },
-                        { name: "Outros 80%", value: 20 },
-                      ]}
-                      cx="50%" cy="50%" innerRadius={55} outerRadius={90}
-                      startAngle={90} endAngle={-270}
-                      dataKey="value"
-                      strokeWidth={2}
-                      stroke="#0a0a0c"
-                    >
-                      <Cell fill="#ff6a00" />
-                      <Cell fill="#2a2a2a" />
-                    </Pie>
-                    <Tooltip formatter={(v) => `${v}% do VGV`} contentStyle={{ background: "#1c1c1e", border: "1px solid #333", borderRadius: 12, color: "#e5e5e5" }} itemStyle={{ color: "#e5e5e5" }} labelStyle={{ color: "#999" }} />
-                  </PieChart>
-                </ResponsiveContainer>
-                <p className="text-center text-sm text-neutral-400 mt-2">
-                  <strong className="text-orange-400">20%</strong> das incorporadoras =&nbsp;
-                  <strong className="text-white">80% do VGV</strong>
-                </p>
+              <div className="rounded-xl bg-neutral-950 border border-neutral-800 p-5 md:p-6 self-center">
+                <p className="text-[11px] font-black uppercase tracking-widest text-orange-500 mb-1">Regra 80/20 do VGV</p>
+                <h4 className="text-base md:text-lg font-extrabold text-white mb-5 leading-tight">
+                  Onde concentrar a energia comercial
+                </h4>
+
+                <div className="space-y-5">
+                  {/* linha 1: empresas */}
+                  <div>
+                    <div className="flex items-baseline justify-between mb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">% das incorporadoras</span>
+                      <span className="text-xs text-neutral-400">100%</span>
+                    </div>
+                    <div className="flex h-9 rounded-lg overflow-hidden border border-neutral-800">
+                      <div className="bg-orange-500 flex items-center justify-center text-white font-extrabold text-sm" style={{ width: "20%" }}>
+                        20%
+                      </div>
+                      <div className="bg-neutral-800 flex items-center justify-center text-neutral-500 font-bold text-sm" style={{ width: "80%" }}>
+                        80%
+                      </div>
+                    </div>
+                    <div className="flex justify-between mt-1.5 text-[10px] text-neutral-500">
+                      <span className="text-orange-400 font-semibold">Top players</span>
+                      <span>Long tail</span>
+                    </div>
+                  </div>
+
+                  {/* linha 2: VGV */}
+                  <div>
+                    <div className="flex items-baseline justify-between mb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-500">% do VGV total</span>
+                      <span className="text-xs text-neutral-400">100%</span>
+                    </div>
+                    <div className="flex h-9 rounded-lg overflow-hidden border border-neutral-800">
+                      <div className="bg-orange-500 flex items-center justify-center text-white font-extrabold text-sm" style={{ width: "80%" }}>
+                        80%
+                      </div>
+                      <div className="bg-neutral-800 flex items-center justify-center text-neutral-500 font-bold text-sm" style={{ width: "20%" }}>
+                        20%
+                      </div>
+                    </div>
+                    <div className="flex justify-between mt-1.5 text-[10px] text-neutral-500">
+                      <span className="text-orange-400 font-semibold">Concentrado nos grandes</span>
+                      <span>Pulverizado</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-5 pt-4 border-t border-neutral-800 flex items-center gap-3">
+                  <div className="flex-1">
+                    <p className="text-sm text-neutral-300 leading-snug">
+                      <strong className="text-orange-400">20% das incorporadoras</strong> respondem por{" "}
+                      <strong className="text-white">80% do VGV</strong> — atender 5 grandes vale mais que 50 pequenas.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </Card>
