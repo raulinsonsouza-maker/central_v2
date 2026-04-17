@@ -108,13 +108,16 @@ export async function GET(
   }
 
   if (nivel === "conjuntos" && campanha) {
-    // Group MetaAdsCriativo by adsetId for the given campaign
+    // Get the latest snapshot per ad (cumulative metrics) for this campaign.
+    // We use distinct on adId ordered by date desc so each ad contributes once
+    // with its most up-to-date purchase / revenue totals.
     const criativos = await prisma.metaAdsCriativo.findMany({
       where: {
         clienteId: id,
-        data: { gte: dataInicio, lte: dataFim },
         campaignName: campanha,
       },
+      orderBy: { data: "desc" },
+      distinct: ["adId"],
     });
 
     const byConjunto = new Map<string, {
@@ -171,18 +174,19 @@ export async function GET(
   }
 
   if (nivel === "criativos" && campanha && conjunto) {
-    // Fetch all daily rows for the adset in the period
+    // Get the latest snapshot per ad (cumulative metrics). Each ad appears once,
+    // with spend/impressions/purchases totalling the full sync window.
     const rows = await prisma.metaAdsCriativo.findMany({
       where: {
         clienteId: id,
-        data: { gte: dataInicio, lte: dataFim },
         campaignName: campanha,
         adsetId: conjunto,
       },
       orderBy: [{ data: "desc" }],
+      distinct: ["adId"],
     });
 
-    // Aggregate by adId — multiple rows exist (one per day) for the same creative
+    // Map by adId — with distinct, each ad appears exactly once
     const byAd = new Map<string, {
       adId: string; adName: string; mediaType: string;
       imageUrl: string | null; videoId: string | null;

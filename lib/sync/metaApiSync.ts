@@ -59,8 +59,8 @@ export async function syncMetaCliente(
   const today = formatDate(new Date());
   const dateFrom = options?.dateFrom ?? DEFAULT_DATE_FROM;
   const dateTo = options?.dateTo ?? today;
-  const creativeDateFrom = options?.creativeDateFrom ?? options?.dateFrom ?? today;
-  const creativeDateTo = options?.creativeDateTo ?? options?.dateTo ?? today;
+  const creativeDateFrom = options?.creativeDateFrom ?? DEFAULT_DATE_FROM;
+  const creativeDateTo = options?.creativeDateTo ?? today;
 
   try {
     const cliente = await prisma.cliente.findUnique({ where: { id: clienteId }, select: { nome: true, slug: true, perfilPanel: true } });
