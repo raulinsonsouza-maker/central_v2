@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, ArrowLeft, BarChart3, Play, Target, Eye } from "lucide-react";
+import { ChevronRight, ArrowLeft, BarChart3, Play, Target, Eye, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
 import { upgradeFbCdnImageUrl } from "@/lib/utils";
 
 type DateFilter = {
@@ -76,10 +76,43 @@ interface Criativo {
   effectiveStatus: string | null;
 }
 
-const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 const rowBg = (isTop: boolean) => isTop ? "bg-[var(--primary)]/[0.07]" : "bg-white/[0.03]";
 
+type SortCol = "nome" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "faturamento" | "roas";
+type SortDir = "asc" | "desc";
+
+function SortIcon({ col, sortCol, sortDir }: { col: SortCol; sortCol: SortCol; sortDir: SortDir }) {
+  if (col !== sortCol) return <ChevronsUpDown className="w-3 h-3 opacity-30 ml-1 inline-block" />;
+  return sortDir === "asc"
+    ? <ChevronUp className="w-3 h-3 text-[var(--primary)] ml-1 inline-block" />
+    : <ChevronDown className="w-3 h-3 text-[var(--primary)] ml-1 inline-block" />;
+}
+
+function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] {
+  return [...arr].sort((a, b) => {
+    let va: number | string, vb: number | string;
+    if (col === "nome") { va = a.nome; vb = b.nome; }
+    else if (col === "cpl") { va = a.cpl ?? Infinity; vb = b.cpl ?? Infinity; }
+    else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
+    else if (col === "ctr") { va = a.ctr ?? -Infinity; vb = b.ctr ?? -Infinity; }
+    else { va = a[col] as number; vb = b[col] as number; }
+    if (va < vb) return dir === "asc" ? -1 : 1;
+    if (va > vb) return dir === "asc" ? 1 : -1;
+    return 0;
+  });
+}
+
 function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSelect: (nome: string) => void }) {
+  const [sortCol, setSortCol] = React.useState<SortCol>("investimento");
+  const [sortDir, setSortDir] = React.useState<SortDir>("desc");
+
+  function handleSort(col: SortCol) {
+    if (col === sortCol) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortCol(col); setSortDir(col === "nome" ? "asc" : "desc"); }
+  }
+
+  const sorted = sortCampanhas(campanhas, sortCol, sortDir);
+
   const hasLeads = campanhas.some(c => c.leads > 0);
   const hasSales = campanhas.some(c => c.purchases > 0 || c.faturamento > 0);
 
@@ -95,27 +128,40 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
   const totalCpl = totals.leads > 0 ? totals.investimento / totals.leads : null;
   const totalRoas = totals.investimento > 0 && totals.faturamento > 0 ? totals.faturamento / totals.investimento : null;
 
+  function Th({ col, label, align = "right" }: { col: SortCol; label: string; align?: "left" | "right" }) {
+    const active = col === sortCol;
+    return (
+      <th
+        className={`px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] cursor-pointer select-none whitespace-nowrap text-${align} transition-colors ${active ? "text-[var(--primary)]" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
+        onClick={() => handleSort(col)}
+      >
+        {label}
+        <SortIcon col={col} sortCol={sortCol} sortDir={sortDir} />
+      </th>
+    );
+  }
+
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: hasSales ? 960 : hasLeads ? 820 : 700 }}>
         <thead>
           <tr>
-            <th className={`${thClass} text-left min-w-[280px]`}>Campanha</th>
-            <th className={`${thClass} text-right`}>Investido</th>
-            <th className={`${thClass} text-right`}>Impressões</th>
-            <th className={`${thClass} text-right`}>Cliques</th>
-            <th className={`${thClass} text-right`}>CTR</th>
-            {hasLeads && <th className={`${thClass} text-right`}>Leads</th>}
-            {hasLeads && <th className={`${thClass} text-right`}>CPL</th>}
-            {hasSales && <th className={`${thClass} text-right`}>Vendas</th>}
-            {hasSales && <th className={`${thClass} text-right`}>Faturado</th>}
-            {hasSales && <th className={`${thClass} text-right`}>ROAS</th>}
+            <Th col="nome" label="Campanha" align="left" />
+            <Th col="investimento" label="Investido" />
+            <Th col="impressoes" label="Impressões" />
+            <Th col="cliques" label="Cliques" />
+            <Th col="ctr" label="CTR" />
+            {hasLeads && <Th col="leads" label="Leads" />}
+            {hasLeads && <Th col="cpl" label="CPL" />}
+            {hasSales && <Th col="purchases" label="Vendas" />}
+            {hasSales && <Th col="faturamento" label="Faturado" />}
+            {hasSales && <Th col="roas" label="ROAS" />}
             <th className="w-8" />
           </tr>
         </thead>
 
         <tbody>
-          {campanhas.map((c, i) => {
+          {sorted.map((c, i) => {
             const isTop = i === 0;
             const bg = rowBg(isTop);
             return (
