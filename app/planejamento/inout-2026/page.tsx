@@ -385,23 +385,24 @@ function SimuladorICP() {
   );
 }
 
+const NAV_ITEMS = [
+  { id: "mercado", label: "Mercado" },
+  { id: "dinheiro", label: "Oportunidade" },
+  { id: "posicionamento", label: "Posicionamento" },
+  { id: "icp", label: "ICP" },
+  { id: "mix-aquisicao", label: "Mix" },
+  { id: "aquisicao", label: "Aquisição" },
+  { id: "simuladores", label: "Simuladores" },
+  { id: "meta", label: "Meta 2026" },
+] as const;
+
 // ─── MAIN PAGE ────────────────────────────────────────────────────────────────
 export default function InoutPlano2026() {
   const [activeSection, setActiveSection] = useState("");
-
-  const navItems = [
-    { id: "mercado", label: "Mercado" },
-    { id: "dinheiro", label: "Oportunidade" },
-    { id: "posicionamento", label: "Posicionamento" },
-    { id: "icp", label: "ICP" },
-    { id: "mix-aquisicao", label: "Mix" },
-    { id: "aquisicao", label: "Aquisição" },
-    { id: "simuladores", label: "Simuladores" },
-    { id: "meta", label: "Meta 2026" },
-  ];
+  const navItems = NAV_ITEMS;
 
   useEffect(() => {
-    const ids = navItems.map((n) => n.id);
+    const ids = NAV_ITEMS.map((n) => n.id);
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) if (e.isIntersecting) setActiveSection(e.target.id);
@@ -410,7 +411,6 @@ export default function InoutPlano2026() {
     );
     ids.forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
     return () => obs.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const metaMensal = 2_500_000 / 12;

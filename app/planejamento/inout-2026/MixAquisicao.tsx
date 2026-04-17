@@ -120,7 +120,7 @@ function OutboundBloco() {
   ];
 
   const kpis = [
-    { label: "Contatos enviados", valor: "60–100", sub: "por semana" },
+    { label: "Contatos qualificados", valor: "10–20", sub: "por dia útil" },
     { label: "Taxa de resposta", valor: "12–18%", sub: "abordagem certa" },
     { label: "Reuniões marcadas", valor: "12–20", sub: "por mês" },
   ];
