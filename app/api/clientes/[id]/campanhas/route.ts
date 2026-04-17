@@ -157,35 +157,64 @@ export async function GET(
   }
 
   if (nivel === "criativos" && campanha && conjunto) {
-    // Individual ad creatives for the given adset
-    const criativos = await prisma.metaAdsCriativo.findMany({
+    // Fetch all daily rows for the adset in the period
+    const rows = await prisma.metaAdsCriativo.findMany({
       where: {
         clienteId: id,
         data: { gte: dataInicio, lte: dataFim },
         campaignName: campanha,
         adsetId: conjunto,
       },
-      orderBy: [{ spend: "desc" }],
+      orderBy: [{ data: "desc" }],
     });
 
-    const list = criativos.map((c) => ({
-      adId: c.adId,
-      adName: c.adName,
-      mediaType: c.mediaType,
-      imageUrl: c.imageUrlFull ?? c.imageUrl ?? null,
-      videoId: c.videoId ?? null,
-      videoSourceUrl: c.videoSourceUrl ?? null,
-      videoPictureUrl: c.videoPictureUrl ?? null,
-      videoEmbedHtml: c.videoEmbedHtml ?? null,
-      body: c.body ?? null,
-      title: c.title ?? null,
-      spend: Number(c.spend),
-      impressions: c.impressions,
-      clicks: c.clicks,
-      ctr: c.ctr ? Number(c.ctr) : c.impressions > 0 ? (c.clicks / c.impressions) * 100 : null,
-      cpc: c.cpc ? Number(c.cpc) : null,
-      effectiveStatus: c.effectiveStatus ?? null,
-    }));
+    // Aggregate by adId — multiple rows exist (one per day) for the same creative
+    const byAd = new Map<string, {
+      adId: string; adName: string; mediaType: string;
+      imageUrl: string | null; videoId: string | null;
+      videoSourceUrl: string | null; videoPictureUrl: string | null;
+      videoEmbedHtml: string | null; body: string | null; title: string | null;
+      effectiveStatus: string | null; spend: number; impressions: number; clicks: number;
+      daysActive: number;
+    }>();
+
+    for (const r of rows) {
+      const existing = byAd.get(r.adId);
+      if (existing) {
+        existing.spend += Number(r.spend);
+        existing.impressions += r.impressions;
+        existing.clicks += r.clicks;
+        existing.daysActive += 1;
+        // Keep most recent (first row due to desc order) creative metadata
+      } else {
+        byAd.set(r.adId, {
+          adId: r.adId,
+          adName: r.adName,
+          mediaType: r.mediaType,
+          imageUrl: r.imageUrlFull ?? r.imageUrl ?? null,
+          videoId: r.videoId ?? null,
+          videoSourceUrl: r.videoSourceUrl ?? null,
+          videoPictureUrl: r.videoPictureUrl ?? null,
+          videoEmbedHtml: r.videoEmbedHtml ?? null,
+          body: r.body ?? null,
+          title: r.title ?? null,
+          effectiveStatus: r.effectiveStatus ?? null,
+          spend: Number(r.spend),
+          impressions: r.impressions,
+          clicks: r.clicks,
+          daysActive: 1,
+        });
+      }
+    }
+
+    const list = Array.from(byAd.values())
+      .map((v) => ({
+        ...v,
+        ctr: v.impressions > 0 ? (v.clicks / v.impressions) * 100 : null,
+        cpc: v.clicks > 0 ? v.spend / v.clicks : null,
+        cpm: v.impressions > 0 ? (v.spend / v.impressions) * 1000 : null,
+      }))
+      .sort((a, b) => b.spend - a.spend);
 
     return NextResponse.json({ nivel: "criativos", campanha, conjunto, criativos: list });
   }

@@ -74,6 +74,8 @@ interface Criativo {
   clicks: number;
   ctr: number | null;
   cpc: number | null;
+  cpm: number | null;
+  daysActive: number;
   effectiveStatus: string | null;
 }
 
@@ -499,7 +501,7 @@ function CriativosTable({ criativos }: { criativos: Criativo[] }) {
     <>
       {modalCriativo && <VideoModal c={modalCriativo} onClose={() => setModalCriativo(null)} />}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[620px] border-separate [border-spacing:0_6px]">
+        <table className="w-full min-w-[680px] border-separate [border-spacing:0_6px]">
           <thead>
             <tr>
               <th className={`${thClass} text-left`}>Criativo</th>
@@ -508,6 +510,7 @@ function CriativosTable({ criativos }: { criativos: Criativo[] }) {
               <th className={`${thClass} text-right`}>Cliques</th>
               <th className={`${thClass} text-right`}>CTR</th>
               <th className={`${thClass} text-right`}>CPC</th>
+              <th className={`${thClass} text-right`}>CPM</th>
             </tr>
           </thead>
           <tbody>
@@ -518,6 +521,7 @@ function CriativosTable({ criativos }: { criativos: Criativo[] }) {
               const bg = rowBg(isTop);
               const thumb = c.videoPictureUrl ?? c.imageUrl;
               const thumbUpgraded = thumb ? upgradeFbCdnImageUrl(thumb) : null;
+              const hasAdCopy = c.title || c.body;
 
               return (
                 <tr
@@ -525,16 +529,16 @@ function CriativosTable({ criativos }: { criativos: Criativo[] }) {
                   className="group cursor-pointer"
                   onClick={() => setModalCriativo(c)}
                 >
-                  {/* Thumbnail + name */}
+                  {/* Thumbnail + name + ad copy */}
                   <td className={`rounded-l-2xl px-4 py-3 ${bg}`}>
-                    <div className="flex items-center gap-3 min-w-0">
-                      {/* Thumbnail */}
-                      <div className="w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-black/40 relative">
+                    <div className="flex items-start gap-3 min-w-0">
+                      {/* Thumbnail — taller if has ad copy */}
+                      <div className={`${hasAdCopy ? "w-14 h-14" : "w-11 h-11"} rounded-xl overflow-hidden flex-shrink-0 bg-black/40 relative mt-0.5`}>
                         {thumbUpgraded ? (
                           <img
                             src={thumbUpgraded}
                             alt={c.adName}
-                            className="w-full h-full object-cover"
+                            className="w-full h-full object-cover group-hover:brightness-90 transition-[filter]"
                             onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
                           />
                         ) : (
@@ -544,44 +548,69 @@ function CriativosTable({ criativos }: { criativos: Criativo[] }) {
                               : <Eye className="w-4 h-4 text-white/30" />}
                           </div>
                         )}
-                        {isVideo && (
-                          <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
-                            <Play className="w-4 h-4 text-white fill-white" />
-                          </div>
-                        )}
+                        {/* Play overlay for videos */}
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Play className="w-4 h-4 text-white fill-white" />
+                        </div>
                       </div>
 
-                      {/* Name + meta */}
+                      {/* Text block */}
                       <div className="min-w-0 flex-1">
+                        {/* Ad name */}
                         <p className="text-[13px] font-semibold text-[var(--foreground)] leading-snug line-clamp-1">{c.adName}</p>
-                        <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5 flex items-center gap-1.5">
+
+                        {/* Ad copy: headline + body */}
+                        {hasAdCopy && (
+                          <div className="mt-1 space-y-0.5">
+                            {c.title && (
+                              <p className="text-[11px] text-[var(--foreground)]/60 font-medium line-clamp-1 leading-snug">{c.title}</p>
+                            )}
+                            {c.body && (
+                              <p className="text-[11px] text-[var(--muted-foreground)] line-clamp-2 leading-relaxed">{c.body}</p>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Meta row: type · status · days · click hint */}
+                        <p className="text-[11px] text-[var(--muted-foreground)] mt-1.5 flex items-center gap-1.5 flex-wrap">
                           {isVideo
-                            ? <><Play className="w-2.5 h-2.5" /> Vídeo</>
-                            : <><Eye className="w-2.5 h-2.5" /> Imagem</>
+                            ? <><Play className="w-2.5 h-2.5 flex-shrink-0" /> Vídeo</>
+                            : <><Eye className="w-2.5 h-2.5 flex-shrink-0" /> Imagem</>
                           }
                           <span className="opacity-30">·</span>
-                          <span className={isActive ? "text-emerald-400" : ""}>{isActive ? "Ativo" : (c.effectiveStatus ?? "—")}</span>
+                          <span className={isActive ? "text-emerald-400" : "text-amber-400/80"}>
+                            {isActive ? "Ativo" : (c.effectiveStatus ?? "—")}
+                          </span>
+                          {c.daysActive > 1 && (
+                            <>
+                              <span className="opacity-30">·</span>
+                              <span>{c.daysActive} dias</span>
+                            </>
+                          )}
                           <span className="opacity-30">·</span>
-                          <span className="group-hover:text-[var(--primary)] transition-colors">Clique para ver</span>
+                          <span className="group-hover:text-[var(--primary)] transition-colors">Ver criativo</span>
                         </p>
                       </div>
                     </div>
                   </td>
 
-                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                     {fmtBrl(c.spend)}
                   </td>
-                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                     {fmt(c.impressions)}
                   </td>
-                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                     {fmt(c.clicks)}
                   </td>
-                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] whitespace-nowrap ${bg} ${c.ctr !== null && c.ctr >= 1 ? "text-emerald-400" : "text-[var(--muted-foreground)]"}`}>
                     {c.ctr !== null ? fmtPct(c.ctr) : "—"}
                   </td>
-                  <td className={`rounded-r-2xl px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                     {c.cpc !== null ? fmtBrl(c.cpc) : "—"}
+                  </td>
+                  <td className={`rounded-r-2xl px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                    {c.cpm !== null ? fmtBrl(c.cpm) : "—"}
                   </td>
                 </tr>
               );
