@@ -41,12 +41,12 @@ const Arrow = ({ c = "w-4 h-4" }: { c?: string }) => (
 function TabEstrategia() {
   const [faturamento, setFaturamento] = useState(50_000);
   const [margem, setMargem] = useState(20);
-  const fee = 5_000;
-  const midia = 7_500;
+  const [fee, setFee] = useState(5_000);
+  const [midia, setMidia] = useState(5_000);
   const investimentoTotal = fee + midia;
   const lucroBruto = faturamento * (margem / 100);
   const lucroLiquido = lucroBruto - investimentoTotal;
-  const peso = (investimentoTotal / lucroBruto) * 100;
+  const peso = lucroBruto > 0 ? (investimentoTotal / lucroBruto) * 100 : 0;
 
   const inviavel = lucroLiquido < 0;
   const apertado = !inviavel && peso > 70;
@@ -102,22 +102,31 @@ function TabEstrategia() {
           </div>
 
           <div className="space-y-3">
-            <div className="rounded-xl bg-neutral-900 p-5 border border-neutral-800">
-              <p className="text-neutral-500 text-[10px] uppercase tracking-widest font-bold mb-3">Estrutura inout (fixa)</p>
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <p className="text-neutral-500 text-xs mb-0.5">Fee</p>
-                  <p className="text-white font-bold text-lg">{fmt(fee)}</p>
-                </div>
-                <div>
-                  <p className="text-neutral-500 text-xs mb-0.5">Mídia média</p>
-                  <p className="text-white font-bold text-lg">{fmt(midia)}</p>
-                </div>
-                <div>
-                  <p className="text-orange-400 text-xs mb-0.5 font-bold">TOTAL</p>
-                  <p className="text-orange-400 font-extrabold text-lg">{fmt(investimentoTotal)}</p>
-                </div>
+            <div className="rounded-xl bg-neutral-900 p-5 border border-neutral-800 space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-neutral-500 text-[10px] uppercase tracking-widest font-bold">Estrutura inout (ajuste)</p>
+                <p className="text-orange-400 text-[10px] uppercase tracking-widest font-bold">Total {fmt(investimentoTotal)}</p>
               </div>
+
+              {[
+                { label: "Fee mensal", value: fee, set: setFee, min: 3_000, max: 15_000, step: 500 },
+                { label: "Mídia média", value: midia, set: setMidia, min: 3_000, max: 15_000, step: 500 },
+              ].map(({ label, value, set, min, max, step }) => (
+                <div key={label} className="space-y-1.5">
+                  <div className="flex justify-between text-xs">
+                    <span className="text-neutral-400 font-medium">{label}</span>
+                    <span className="text-white font-bold tabular-nums">{fmt(value)}</span>
+                  </div>
+                  <input type="range" min={min} max={max} step={step} value={value}
+                    onChange={(e) => set(Number(e.target.value))}
+                    className="w-full accent-orange-500 cursor-pointer h-1" />
+                </div>
+              ))}
+
+              <p className="text-[10px] text-neutral-500 leading-snug pt-1 border-t border-neutral-800">
+                Na prática, mídia ≈ fee. Cliente pequeno raramente comporta mídia muito acima disso —
+                quando comporta, geralmente também comporta um fee maior.
+              </p>
             </div>
 
             <div className="rounded-xl bg-neutral-900 p-5 border border-neutral-800">
