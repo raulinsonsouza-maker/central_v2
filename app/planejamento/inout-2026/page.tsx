@@ -419,12 +419,17 @@ export default function InoutPlano2026() {
     { name: "Sua meta", value: 2.5, label: "R$ 2,5M", sub: "Faturamento inout 2026" },
   ];
 
-  const dinheiroBars = [
-    { name: "Alto padrão", valor: 7200, cor: "#ff6a00", insight: "↑120% em lançamentos (Forbes)" },
-    { name: "MCMV", valor: 5800, cor: "#f97316", insight: "Volume + velocidade de giro" },
-    { name: "Interior SP", valor: 4300, cor: "#fb923c", insight: "R$ 12,7bi VGV, menor concorrência" },
-    { name: "Tecnologia/IA", valor: 3900, cor: "#fdba74", insight: "R$ 12bi VGV impactado por IA" },
-  ];
+  // Score 0-100 composto: cada critério vale 0-25 (somando 100)
+  // Tamanho: tamanho do mercado em VGV/ano
+  // Pagamento: capacidade financeira média do segmento
+  // Brecha: nível de concorrência (invertido — mais brecha = menos concorrência)
+  // Urgência: pressão real do segmento por resultado em 2026
+  const segmentoScore = [
+    { name: "Médio/Alto padrão", tamanho: 22, pagamento: 24, brecha: 12, urgencia: 25, insight: "↑120% em lançamentos. Maior ticket, maior verba." },
+    { name: "MCMV",              tamanho: 25, pagamento: 14, brecha: 10, urgencia: 18, insight: "Maior volume de vendas do mercado. Giro rápido." },
+    { name: "Interior SP",       tamanho: 18, pagamento: 18, brecha: 22, urgencia: 16, insight: "R$ 12,7bi em VGV com pouca agência forte." },
+    { name: "Tecnologia/IA",     tamanho: 14, pagamento: 22, brecha: 24, urgencia: 20, insight: "R$ 12bi impactados por IA. Diferencial defensável." },
+  ].map((s) => ({ ...s, total: s.tamanho + s.pagamento + s.brecha + s.urgencia }));
 
   const quarterData = [
     { tri: "Q1", meta: 350_000, real: 0, label: "Base: 5–7 clientes, ticket R$15k" },
@@ -729,19 +734,59 @@ export default function InoutPlano2026() {
           <div className="grid md:grid-cols-2 gap-6">
             <Card>
               <SectionLabel label="Índice de oportunidade" />
-              <h3 className="text-lg font-extrabold text-white mb-4">Score de atratividade por segmento</h3>
-              <div className="h-56">
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={dinheiroBars} layout="vertical" margin={{ top: 0, right: 8, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#222" horizontal={false} />
-                    <XAxis type="number" hide />
-                    <YAxis type="category" dataKey="name" tick={{ fill: "#aaa", fontSize: 12 }} axisLine={false} tickLine={false} width={90} />
-                    <Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #333", borderRadius: 12, fontSize: 12, color: "#e5e5e5" }} itemStyle={{ color: "#e5e5e5" }} labelStyle={{ color: "#999" }} formatter={(v) => [`Score ${v}`, "Atratividade"]} />
-                    <Bar dataKey="valor" name="Score" radius={[0, 6, 6, 0]}>
-                      {dinheiroBars.map((b, i) => <Cell key={i} fill={b.cor} />)}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
+              <h3 className="text-lg font-extrabold text-white mb-1">Score de atratividade por segmento</h3>
+              <p className="text-xs text-neutral-500 mb-5">
+                Score 0–100 = soma de 4 critérios (cada um 0–25): tamanho de mercado, capacidade de pagamento, brecha competitiva e urgência.
+              </p>
+
+              <div className="space-y-4">
+                {[...segmentoScore].sort((a, b) => b.total - a.total).map((s) => {
+                  const tierColor = s.total >= 80 ? "emerald" : s.total >= 70 ? "orange" : s.total >= 60 ? "amber" : "neutral";
+                  const tierMap = {
+                    emerald: { bar: "bg-emerald-500", text: "text-emerald-400", bg: "bg-emerald-500/10" },
+                    orange:  { bar: "bg-orange-500",  text: "text-orange-400",  bg: "bg-orange-500/10" },
+                    amber:   { bar: "bg-amber-500",   text: "text-amber-400",   bg: "bg-amber-500/10" },
+                    neutral: { bar: "bg-neutral-500", text: "text-neutral-400", bg: "bg-neutral-500/10" },
+                  } as const;
+                  const ts = tierMap[tierColor];
+                  return (
+                    <div key={s.name} className="rounded-xl bg-neutral-900 border border-neutral-800 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-baseline gap-3">
+                          <p className="font-bold text-white text-sm">{s.name}</p>
+                          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${ts.bg} ${ts.text}`}>
+                            {s.total >= 80 ? "Prioridade máxima" : s.total >= 70 ? "Alta" : s.total >= 60 ? "Média" : "Baixa"}
+                          </span>
+                        </div>
+                        <p className={`text-2xl font-extrabold tabular-nums ${ts.text}`}>
+                          {s.total}<span className="text-xs text-neutral-500 font-normal">/100</span>
+                        </p>
+                      </div>
+
+                      {/* breakdown */}
+                      <div className="grid grid-cols-4 gap-2 mb-2">
+                        {[
+                          { label: "Tamanho", v: s.tamanho },
+                          { label: "Pagamento", v: s.pagamento },
+                          { label: "Brecha", v: s.brecha },
+                          { label: "Urgência", v: s.urgencia },
+                        ].map((c) => (
+                          <div key={c.label}>
+                            <div className="flex items-baseline justify-between mb-1">
+                              <span className="text-[9px] uppercase tracking-widest font-bold text-neutral-500">{c.label}</span>
+                              <span className="text-[10px] font-bold text-neutral-300 tabular-nums">{c.v}</span>
+                            </div>
+                            <div className="h-1.5 rounded-full bg-neutral-800 overflow-hidden">
+                              <div className={`h-full ${ts.bar}`} style={{ width: `${(c.v / 25) * 100}%` }} />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      <p className="text-xs text-neutral-500 leading-snug pt-2">{s.insight}</p>
+                    </div>
+                  );
+                })}
               </div>
             </Card>
 
