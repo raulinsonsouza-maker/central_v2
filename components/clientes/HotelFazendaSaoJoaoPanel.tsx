@@ -181,7 +181,7 @@ function ResortKpi({
             {title}
           </p>
           <p
-            className={`mt-1 text-2xl font-extrabold leading-none tabular-nums ${
+            className={`mt-1 text-xl font-extrabold leading-none tabular-nums ${
               accent ? "text-[var(--primary)]" : "text-[var(--foreground)]"
             }`}
           >
@@ -296,7 +296,7 @@ export function HotelFazendaSaoJoaoPanel({
       </div>
 
       {/* ── Chart + Funil side-by-side ── */}
-      <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
+      <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr] xl:items-start">
         {/* Chart */}
         <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
           <CardHeader className="pb-2">
