@@ -194,8 +194,8 @@ function OutboundBloco() {
             <ul className="space-y-1.5 text-xs text-neutral-400">
               <li className="flex gap-2"><span className="text-orange-500">→</span> Mostra que a pesquisa foi feita (empreendimento + VGV)</li>
               <li className="flex gap-2"><span className="text-orange-500">→</span> Fala a língua dele: estoque, giro, margem</li>
-              <li className="flex gap-2"><span className="text-orange-500">→</span> Oferece resultado tangível, não "diagnóstico"</li>
-              <li className="flex gap-2"><span className="text-orange-500">→</span> Pede 15min, não "uma conversa"</li>
+              <li className="flex gap-2"><span className="text-orange-500">→</span> Oferece resultado tangível, não &quot;diagnóstico&quot;</li>
+              <li className="flex gap-2"><span className="text-orange-500">→</span> Pede 15min, não &quot;uma conversa&quot;</li>
             </ul>
           </div>
         </div>
