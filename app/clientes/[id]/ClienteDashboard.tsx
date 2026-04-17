@@ -320,18 +320,18 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring">("geral");
   const [subView, setSubView] = React.useState<"dados" | "criativos">("dados");
   const [saldoVisible, setSaldoVisible] = React.useState(false);
-  const [presetPeriodo, setPresetPeriodo] = React.useState<PresetPeriodo>(() => {
-    if (typeof window === "undefined") return "mesAtual";
-    return (localStorage.getItem("inout-date-preset") as PresetPeriodo) ?? "mesAtual";
-  });
-  const [customInicio, setCustomInicio] = React.useState(() => {
-    if (typeof window === "undefined") return "";
-    return localStorage.getItem("inout-date-custom-inicio") ?? "";
-  });
-  const [customFim, setCustomFim] = React.useState(() => {
-    if (typeof window === "undefined") return "";
-    return localStorage.getItem("inout-date-custom-fim") ?? "";
-  });
+  const [presetPeriodo, setPresetPeriodo] = React.useState<PresetPeriodo>("mesAtual");
+  const [customInicio, setCustomInicio] = React.useState("");
+  const [customFim, setCustomFim] = React.useState("");
+
+  React.useEffect(() => {
+    const stored = localStorage.getItem("inout-date-preset") as PresetPeriodo | null;
+    if (stored) setPresetPeriodo(stored);
+    const inicio = localStorage.getItem("inout-date-custom-inicio");
+    if (inicio) setCustomInicio(inicio);
+    const fim = localStorage.getItem("inout-date-custom-fim");
+    if (fim) setCustomFim(fim);
+  }, []);
   const [filterOpen, setFilterOpen] = React.useState(false);
   const [visibleMonth, setVisibleMonth] = React.useState(() => {
     const today = new Date();
