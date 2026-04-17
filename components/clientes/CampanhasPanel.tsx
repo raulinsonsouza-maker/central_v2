@@ -73,10 +73,18 @@ interface Criativo {
   effectiveStatus: string | null;
 }
 
-function Metric({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+interface MetricCellProps {
+  label: string;
+  value: string;
+  highlight?: boolean;
+}
+
+function MetricCell({ label, value, highlight }: MetricCellProps) {
   return (
-    <div className="flex flex-col gap-1 min-w-0">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-foreground)]">{label}</span>
+    <div className="flex flex-col gap-1.5">
+      <span className="text-[10px] font-semibold uppercase tracking-widest text-[var(--muted-foreground)]">
+        {label}
+      </span>
       <span className={`text-sm font-bold tabular-nums ${highlight ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
         {value}
       </span>
@@ -84,80 +92,81 @@ function Metric({ label, value, highlight }: { label: string; value: string; hig
   );
 }
 
-function CampanhaRow({ c, rank, isFirst, onClick }: { c: Campanha; rank: number; isFirst?: boolean; onClick: () => void }) {
+function CampanhaRow({ c, rank, isLast, onClick }: { c: Campanha; rank: number; isLast?: boolean; onClick: () => void }) {
   const hasSales = c.purchases > 0 || c.faturamento > 0;
   const hasLeads = c.leads > 0;
+  const isTop = rank === 1;
 
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left group transition-colors hover:bg-white/[0.03] ${!isFirst ? "border-t border-white/[0.06]" : ""}`}
+      className={`w-full text-left group transition-all duration-150 hover:bg-[var(--primary)]/[0.04] relative ${!isLast ? "border-b border-white/[0.05]" : ""}`}
     >
-      <div className="px-6 py-5">
-        {/* Top row: rank + name + investment + chevron */}
-        <div className="flex items-start gap-4">
-          <span className="text-xs font-bold text-[var(--muted-foreground)] mt-0.5 tabular-nums w-6 flex-shrink-0 text-right">
+      {/* Orange left accent for top campaign */}
+      {isTop && (
+        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--primary)] rounded-r-full" />
+      )}
+      <div className="px-6 py-5 pl-8">
+        {/* Name row */}
+        <div className="flex items-center gap-3">
+          <span className={`text-xs font-bold tabular-nums w-5 flex-shrink-0 ${isTop ? "text-[var(--primary)]" : "text-white/25"}`}>
             #{rank}
           </span>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-[15px] font-semibold text-[var(--foreground)] leading-snug">
-                {c.nome}
-              </span>
-              <span className="text-xs text-[var(--muted-foreground)] bg-white/[0.06] px-2.5 py-1 rounded-full flex-shrink-0">
-                {fmtBrl(c.investimento)} investido
-              </span>
-            </div>
+          <span className="flex-1 min-w-0 text-[14px] font-semibold text-[var(--foreground)] leading-snug truncate">
+            {c.nome}
+          </span>
+          <span className="text-xs text-[var(--muted-foreground)] bg-white/[0.05] px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
+            {fmtBrl(c.investimento)} investido
+          </span>
+          <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-[var(--primary)] transition-colors flex-shrink-0" />
+        </div>
 
-            {/* Metrics row */}
-            <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3">
-              <Metric label="Impressões" value={fmt(c.impressoes)} />
-              <Metric label="Cliques" value={fmt(c.cliques)} />
-              {c.ctr !== null && <Metric label="CTR" value={fmtPct(c.ctr)} />}
-              {hasLeads && <Metric label="Leads" value={fmt(c.leads)} />}
-              {c.cpl !== null && <Metric label="CPL" value={fmtBrl(c.cpl)} />}
-              {hasSales && <Metric label="Vendas" value={fmt(c.purchases)} highlight />}
-              {hasSales && c.faturamento > 0 && <Metric label="Faturado" value={fmtBrl(c.faturamento)} highlight />}
-              {c.roas !== null && <Metric label="ROAS" value={fmt(c.roas, 2) + "x"} />}
-              {c.cpa !== null && <Metric label="Custo/Venda" value={fmtBrl(c.cpa)} />}
-            </div>
-          </div>
-          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[var(--primary)] transition-colors mt-1 flex-shrink-0" />
+        {/* Metrics row */}
+        <div className="mt-4 ml-8 flex flex-wrap gap-x-7 gap-y-3">
+          <MetricCell label="Impressões" value={fmt(c.impressoes)} />
+          <MetricCell label="Cliques" value={fmt(c.cliques)} />
+          {c.ctr !== null && <MetricCell label="CTR" value={fmtPct(c.ctr)} />}
+          {hasLeads && <MetricCell label="Leads" value={fmt(c.leads)} />}
+          {c.cpl !== null && <MetricCell label="CPL" value={fmtBrl(c.cpl)} />}
+          {hasSales && <MetricCell label="Vendas" value={fmt(c.purchases)} highlight />}
+          {hasSales && c.faturamento > 0 && <MetricCell label="Faturado" value={fmtBrl(c.faturamento)} highlight />}
+          {c.roas !== null && <MetricCell label="ROAS" value={fmt(c.roas, 2) + "x"} />}
+          {c.cpa !== null && <MetricCell label="Custo/Venda" value={fmtBrl(c.cpa)} />}
         </div>
       </div>
     </button>
   );
 }
 
-function ConjuntoRow({ c, rank, isFirst, onClick }: { c: Conjunto; rank: number; isFirst?: boolean; onClick: () => void }) {
+function ConjuntoRow({ c, rank, isLast, onClick }: { c: Conjunto; rank: number; isLast?: boolean; onClick: () => void }) {
+  const isTop = rank === 1;
   return (
     <button
       onClick={onClick}
-      className={`w-full text-left group transition-colors hover:bg-white/[0.03] ${!isFirst ? "border-t border-white/[0.06]" : ""}`}
+      className={`w-full text-left group transition-all duration-150 hover:bg-[var(--primary)]/[0.04] relative ${!isLast ? "border-b border-white/[0.05]" : ""}`}
     >
-      <div className="px-6 py-5">
-        <div className="flex items-start gap-4">
-          <span className="text-xs font-bold text-[var(--muted-foreground)] mt-0.5 tabular-nums w-6 flex-shrink-0 text-right">
+      {isTop && (
+        <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-[var(--primary)] rounded-r-full" />
+      )}
+      <div className="px-6 py-5 pl-8">
+        <div className="flex items-center gap-3">
+          <span className={`text-xs font-bold tabular-nums w-5 flex-shrink-0 ${isTop ? "text-[var(--primary)]" : "text-white/25"}`}>
             #{rank}
           </span>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-[15px] font-semibold text-[var(--foreground)] leading-snug">
-                {c.adsetName}
-              </span>
-              <span className="text-xs text-[var(--muted-foreground)] bg-white/[0.06] px-2.5 py-1 rounded-full flex-shrink-0">
-                {c.adCount} {c.adCount === 1 ? "anúncio" : "anúncios"}
-              </span>
-            </div>
-            <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3">
-              <Metric label="Investido" value={fmtBrl(c.spend)} />
-              <Metric label="Impressões" value={fmt(c.impressions)} />
-              <Metric label="Cliques" value={fmt(c.clicks)} />
-              {c.ctr !== null && <Metric label="CTR" value={fmtPct(c.ctr)} />}
-              {c.cpc !== null && <Metric label="CPC" value={fmtBrl(c.cpc)} />}
-            </div>
-          </div>
-          <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[var(--primary)] transition-colors mt-1 flex-shrink-0" />
+          <span className="flex-1 min-w-0 text-[14px] font-semibold text-[var(--foreground)] leading-snug truncate">
+            {c.adsetName}
+          </span>
+          <span className="text-xs text-[var(--muted-foreground)] bg-white/[0.05] px-2.5 py-1 rounded-full flex-shrink-0 whitespace-nowrap">
+            {c.adCount} {c.adCount === 1 ? "anúncio" : "anúncios"}
+          </span>
+          <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-[var(--primary)] transition-colors flex-shrink-0" />
+        </div>
+        <div className="mt-4 ml-8 flex flex-wrap gap-x-7 gap-y-3">
+          <MetricCell label="Investido" value={fmtBrl(c.spend)} />
+          <MetricCell label="Impressões" value={fmt(c.impressions)} />
+          <MetricCell label="Cliques" value={fmt(c.clicks)} />
+          {c.ctr !== null && <MetricCell label="CTR" value={fmtPct(c.ctr)} />}
+          {c.cpc !== null && <MetricCell label="CPC" value={fmtBrl(c.cpc)} />}
         </div>
       </div>
     </button>
@@ -172,7 +181,7 @@ function CriativoCard({ c }: { c: Criativo }) {
   const isActive = c.effectiveStatus === "ACTIVE";
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-white/[0.03] overflow-hidden flex flex-col">
+    <div className="rounded-2xl border border-white/[0.07] bg-white/[0.03] overflow-hidden flex flex-col">
       <div className="relative aspect-[4/3] bg-black/30 overflow-hidden flex-shrink-0">
         {isVideo && c.videoSourceUrl && !videoError ? (
           <video
@@ -214,11 +223,11 @@ function CriativoCard({ c }: { c: Criativo }) {
           </div>
         )}
         <div className="mt-auto pt-3 grid grid-cols-2 gap-x-4 gap-y-3 border-t border-white/[0.06]">
-          <Metric label="Investido" value={fmtBrl(c.spend)} />
-          <Metric label="Impressões" value={fmt(c.impressions)} />
-          <Metric label="Cliques" value={fmt(c.clicks)} />
-          {c.ctr !== null && <Metric label="CTR" value={fmtPct(c.ctr)} />}
-          {c.cpc !== null && <Metric label="CPC" value={fmtBrl(c.cpc)} />}
+          <MetricCell label="Investido" value={fmtBrl(c.spend)} />
+          <MetricCell label="Impressões" value={fmt(c.impressions)} />
+          <MetricCell label="Cliques" value={fmt(c.clicks)} />
+          {c.ctr !== null && <MetricCell label="CTR" value={fmtPct(c.ctr)} />}
+          {c.cpc !== null && <MetricCell label="CPC" value={fmtBrl(c.cpc)} />}
         </div>
       </div>
     </div>
@@ -262,17 +271,22 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
   const conjuntos: Conjunto[] = data?.conjuntos ?? [];
   const criativos: Criativo[] = data?.criativos ?? [];
 
-  const countLabel = nivel === "campanhas"
-    ? campanhas.length > 0 ? `${campanhas.length} campanha${campanhas.length !== 1 ? "s" : ""}` : null
-    : nivel === "conjuntos"
-    ? conjuntos.length > 0 ? `${conjuntos.length} conjunto${conjuntos.length !== 1 ? "s" : ""}` : null
-    : criativos.length > 0 ? `${criativos.length} criativo${criativos.length !== 1 ? "s" : ""}` : null;
+  const countLabel =
+    nivel === "campanhas" && campanhas.length > 0
+      ? `${campanhas.length} campanha${campanhas.length !== 1 ? "s" : ""}`
+      : nivel === "conjuntos" && conjuntos.length > 0
+      ? `${conjuntos.length} conjunto${conjuntos.length !== 1 ? "s" : ""}`
+      : nivel === "criativos" && criativos.length > 0
+      ? `${criativos.length} criativo${criativos.length !== 1 ? "s" : ""}`
+      : null;
+
+  const isRoot = nivel === "campanhas";
 
   return (
-    <div className="rounded-2xl border border-white/[0.08] bg-[var(--card)] overflow-hidden">
+    <div className="rounded-2xl border border-white/[0.07] bg-[var(--card)] overflow-hidden">
       {/* ── Header ── */}
-      <div className="px-6 py-5 border-b border-white/[0.06] flex items-center gap-3">
-        {nivel !== "campanhas" && (
+      <div className="px-6 py-4 border-b border-white/[0.05] flex items-center gap-3">
+        {!isRoot && (
           <button
             onClick={goBack}
             className="p-2 rounded-xl hover:bg-white/[0.06] transition-colors text-[var(--muted-foreground)] hover:text-[var(--foreground)] flex-shrink-0"
@@ -281,49 +295,56 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
           </button>
         )}
 
+        {/* Title / Breadcrumb */}
         <div className="flex-1 min-w-0">
-          {/* Breadcrumb */}
-          <nav className="flex items-center gap-1.5 text-xs text-[var(--muted-foreground)] mb-1.5 flex-wrap">
-            <button
-              onClick={() => { setSelectedCampanha(null); setSelectedConjunto(null); }}
-              className={`transition-colors hover:text-[var(--foreground)] ${nivel === "campanhas" ? "text-[var(--foreground)] font-semibold" : "hover:underline"}`}
-            >
+          {isRoot ? (
+            /* Root: just the title */
+            <h3 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
+              <BarChart3 className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
               Campanhas
-            </button>
-            {selectedCampanha && (
-              <>
-                <ChevronRight className="w-3 h-3 flex-shrink-0 opacity-40" />
+            </h3>
+          ) : (
+            /* Drill-down: breadcrumb + title */
+            <>
+              <nav className="flex items-center gap-1.5 text-[11px] text-[var(--muted-foreground)] mb-1 flex-wrap">
                 <button
-                  onClick={() => setSelectedConjunto(null)}
-                  className={`transition-colors hover:text-[var(--foreground)] truncate max-w-[200px] ${nivel === "conjuntos" ? "text-[var(--foreground)] font-semibold" : "hover:underline"}`}
+                  onClick={() => { setSelectedCampanha(null); setSelectedConjunto(null); }}
+                  className="hover:text-[var(--foreground)] hover:underline transition-colors"
                 >
-                  {selectedCampanha}
+                  Campanhas
                 </button>
-              </>
-            )}
-            {selectedConjunto && (
-              <>
-                <ChevronRight className="w-3 h-3 flex-shrink-0 opacity-40" />
-                <span className="text-[var(--foreground)] font-semibold truncate max-w-[200px]">
-                  {conjuntos.find(c => c.adsetId === selectedConjunto)?.adsetName ?? "Conjunto"}
-                </span>
-              </>
-            )}
-          </nav>
-
-          {/* Title */}
-          <h3 className="text-base font-bold text-[var(--foreground)] flex items-center gap-2">
-            {nivel === "campanhas" && <BarChart3 className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />}
-            {nivel === "conjuntos" && <Target className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />}
-            {nivel === "criativos" && <Eye className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />}
-            {nivel === "campanhas" && "Campanhas"}
-            {nivel === "conjuntos" && "Conjuntos de Anúncios"}
-            {nivel === "criativos" && "Criativos"}
-          </h3>
+                {selectedCampanha && (
+                  <>
+                    <ChevronRight className="w-2.5 h-2.5 flex-shrink-0 opacity-40" />
+                    <button
+                      onClick={() => setSelectedConjunto(null)}
+                      className={`hover:text-[var(--foreground)] transition-colors truncate max-w-[220px] ${nivel === "conjuntos" ? "text-[var(--foreground)] font-semibold" : "hover:underline"}`}
+                    >
+                      {selectedCampanha}
+                    </button>
+                  </>
+                )}
+                {selectedConjunto && (
+                  <>
+                    <ChevronRight className="w-2.5 h-2.5 flex-shrink-0 opacity-40" />
+                    <span className="text-[var(--foreground)] font-semibold truncate max-w-[220px]">
+                      {conjuntos.find(c => c.adsetId === selectedConjunto)?.adsetName ?? "Conjunto"}
+                    </span>
+                  </>
+                )}
+              </nav>
+              <h3 className="text-sm font-bold text-[var(--foreground)] flex items-center gap-2">
+                {nivel === "conjuntos" && <Target className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />}
+                {nivel === "criativos" && <Eye className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />}
+                {nivel === "conjuntos" && "Conjuntos de Anúncios"}
+                {nivel === "criativos" && "Criativos"}
+              </h3>
+            </>
+          )}
         </div>
 
         {countLabel && !isLoading && (
-          <span className="text-xs font-semibold bg-[var(--primary)]/10 text-[var(--primary)] px-3 py-1.5 rounded-full flex-shrink-0">
+          <span className="text-xs font-semibold bg-[var(--primary)]/10 text-[var(--primary)] px-3 py-1 rounded-full flex-shrink-0">
             {countLabel}
           </span>
         )}
@@ -331,7 +352,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
 
       {/* ── Body ── */}
       {isLoading && (
-        <div className="flex items-center justify-center py-16 text-[var(--muted-foreground)] text-sm gap-2.5">
+        <div className="flex items-center justify-center py-14 text-[var(--muted-foreground)] text-sm gap-2.5">
           <div className="w-4 h-4 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
           Carregando…
         </div>
@@ -345,8 +366,8 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
 
       {!isLoading && !isError && nivel === "campanhas" && (
         campanhas.length === 0 ? (
-          <div className="text-center py-16 text-[var(--muted-foreground)] text-sm">
-            <BarChart3 className="w-10 h-10 mx-auto mb-3 opacity-20" />
+          <div className="text-center py-14 text-[var(--muted-foreground)] text-sm">
+            <BarChart3 className="w-9 h-9 mx-auto mb-3 opacity-20" />
             <p className="font-medium">Nenhuma campanha encontrada no período.</p>
             <p className="text-xs mt-1.5 opacity-60">Os dados aparecem após o próximo sync.</p>
           </div>
@@ -357,7 +378,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
                 key={c.nome}
                 c={c}
                 rank={i + 1}
-                isFirst={i === 0}
+                isLast={i === campanhas.length - 1}
                 onClick={() => setSelectedCampanha(c.nome)}
               />
             ))}
@@ -367,8 +388,8 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
 
       {!isLoading && !isError && nivel === "conjuntos" && (
         conjuntos.length === 0 ? (
-          <div className="text-center py-16 text-[var(--muted-foreground)] text-sm">
-            <Target className="w-10 h-10 mx-auto mb-3 opacity-20" />
+          <div className="text-center py-14 text-[var(--muted-foreground)] text-sm">
+            <Target className="w-9 h-9 mx-auto mb-3 opacity-20" />
             <p className="font-medium">Nenhum conjunto encontrado para esta campanha.</p>
             <p className="text-xs mt-1.5 opacity-60">Os conjuntos aparecem após o próximo sync de criativos.</p>
           </div>
@@ -379,7 +400,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
                 key={c.adsetId}
                 c={c}
                 rank={i + 1}
-                isFirst={i === 0}
+                isLast={i === conjuntos.length - 1}
                 onClick={() => setSelectedConjunto(c.adsetId)}
               />
             ))}
@@ -389,8 +410,8 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
 
       {!isLoading && !isError && nivel === "criativos" && (
         criativos.length === 0 ? (
-          <div className="text-center py-16 text-[var(--muted-foreground)] text-sm">
-            <Eye className="w-10 h-10 mx-auto mb-3 opacity-20" />
+          <div className="text-center py-14 text-[var(--muted-foreground)] text-sm">
+            <Eye className="w-9 h-9 mx-auto mb-3 opacity-20" />
             <p className="font-medium">Nenhum criativo encontrado para este conjunto.</p>
             <p className="text-xs mt-1.5 opacity-60">Os criativos aparecem após o próximo sync.</p>
           </div>
