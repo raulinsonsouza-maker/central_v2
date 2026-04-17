@@ -77,6 +77,7 @@ interface Criativo {
 }
 
 const rowBg = (isTop: boolean) => isTop ? "bg-[var(--primary)]/[0.07]" : "bg-white/[0.03]";
+const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 
 type SortCol = "nome" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "faturamento" | "roas";
 type SortDir = "asc" | "desc";
@@ -86,6 +87,22 @@ function SortIcon({ col, sortCol, sortDir }: { col: SortCol; sortCol: SortCol; s
   return sortDir === "asc"
     ? <ChevronUp className="w-3 h-3 text-[var(--primary)] ml-1 inline-block" />
     : <ChevronDown className="w-3 h-3 text-[var(--primary)] ml-1 inline-block" />;
+}
+
+function SortTh({ col, label, align = "right", sortCol, sortDir, onSort }: {
+  col: SortCol; label: string; align?: "left" | "right";
+  sortCol: SortCol; sortDir: SortDir; onSort: (col: SortCol) => void;
+}) {
+  const active = col === sortCol;
+  return (
+    <th
+      className={`px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] cursor-pointer select-none whitespace-nowrap text-${align} transition-colors ${active ? "text-[var(--primary)]" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
+      onClick={() => onSort(col)}
+    >
+      {label}
+      <SortIcon col={col} sortCol={sortCol} sortDir={sortDir} />
+    </th>
+  );
 }
 
 function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] {
@@ -128,34 +145,23 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
   const totalCpl = totals.leads > 0 ? totals.investimento / totals.leads : null;
   const totalRoas = totals.investimento > 0 && totals.faturamento > 0 ? totals.faturamento / totals.investimento : null;
 
-  function Th({ col, label, align = "right" }: { col: SortCol; label: string; align?: "left" | "right" }) {
-    const active = col === sortCol;
-    return (
-      <th
-        className={`px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] cursor-pointer select-none whitespace-nowrap text-${align} transition-colors ${active ? "text-[var(--primary)]" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
-        onClick={() => handleSort(col)}
-      >
-        {label}
-        <SortIcon col={col} sortCol={sortCol} sortDir={sortDir} />
-      </th>
-    );
-  }
+  const st = { sortCol, sortDir, onSort: handleSort };
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: hasSales ? 960 : hasLeads ? 820 : 700 }}>
         <thead>
           <tr>
-            <Th col="nome" label="Campanha" align="left" />
-            <Th col="investimento" label="Investido" />
-            <Th col="impressoes" label="Impressões" />
-            <Th col="cliques" label="Cliques" />
-            <Th col="ctr" label="CTR" />
-            {hasLeads && <Th col="leads" label="Leads" />}
-            {hasLeads && <Th col="cpl" label="CPL" />}
-            {hasSales && <Th col="purchases" label="Vendas" />}
-            {hasSales && <Th col="faturamento" label="Faturado" />}
-            {hasSales && <Th col="roas" label="ROAS" />}
+            <SortTh col="nome" label="Campanha" align="left" {...st} />
+            <SortTh col="investimento" label="Investido" {...st} />
+            <SortTh col="impressoes" label="Impressões" {...st} />
+            <SortTh col="cliques" label="Cliques" {...st} />
+            <SortTh col="ctr" label="CTR" {...st} />
+            {hasLeads && <SortTh col="leads" label="Leads" {...st} />}
+            {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
+            {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
+            {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
+            {hasSales && <SortTh col="roas" label="ROAS" {...st} />}
             <th className="w-8" />
           </tr>
         </thead>
