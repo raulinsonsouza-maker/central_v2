@@ -621,7 +621,7 @@ export default function InoutPlano2026() {
                       <Cell fill="#ff6a00" />
                       <Cell fill="#2a2a2a" />
                     </Pie>
-                    <Tooltip formatter={(v) => `${v}% do VGV`} contentStyle={{ background: "#1c1c1e", border: "1px solid #333", borderRadius: 12 }} />
+                    <Tooltip formatter={(v) => `${v}% do VGV`} contentStyle={{ background: "#1c1c1e", border: "1px solid #333", borderRadius: 12, color: "#e5e5e5" }} itemStyle={{ color: "#e5e5e5" }} labelStyle={{ color: "#999" }} />
                   </PieChart>
                 </ResponsiveContainer>
                 <p className="text-center text-sm text-neutral-400 mt-2">
@@ -705,7 +705,7 @@ export default function InoutPlano2026() {
                     <CartesianGrid strokeDasharray="3 3" stroke="#222" horizontal={false} />
                     <XAxis type="number" hide />
                     <YAxis type="category" dataKey="name" tick={{ fill: "#aaa", fontSize: 12 }} axisLine={false} tickLine={false} width={90} />
-                    <Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #333", borderRadius: 12, fontSize: 12 }} formatter={(v) => [`Score ${v}`, "Atratividade"]} />
+                    <Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #333", borderRadius: 12, fontSize: 12, color: "#e5e5e5" }} itemStyle={{ color: "#e5e5e5" }} labelStyle={{ color: "#999" }} formatter={(v) => [`Score ${v}`, "Atratividade"]} />
                     <Bar dataKey="valor" name="Score" radius={[0, 6, 6, 0]}>
                       {dinheiroBars.map((b, i) => <Cell key={i} fill={b.cor} />)}
                     </Bar>
@@ -961,7 +961,7 @@ export default function InoutPlano2026() {
                     <CartesianGrid strokeDasharray="3 3" stroke="#222" />
                     <XAxis dataKey="tri" tick={{ fill: "#666", fontSize: 12 }} axisLine={false} tickLine={false} />
                     <YAxis tickFormatter={(v) => fmt(v, 1)} tick={{ fill: "#666", fontSize: 10 }} axisLine={false} tickLine={false} width={68} />
-                    <Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #333", borderRadius: 12, fontSize: 12 }} formatter={(v) => [fmt(v as number, 2), "Acumulado"]} />
+                    <Tooltip contentStyle={{ background: "#1c1c1e", border: "1px solid #333", borderRadius: 12, fontSize: 12, color: "#e5e5e5" }} itemStyle={{ color: "#e5e5e5" }} labelStyle={{ color: "#999" }} formatter={(v) => [fmt(v as number, 2), "Acumulado"]} />
                     <ReferenceLine y={2_500_000} stroke="#ff6a00" strokeDasharray="4 4"
                       label={{ value: "Meta R$ 2,5M", position: "insideTopRight", fill: "#ff6a00", fontSize: 11 }} />
                     <Bar dataKey="acumulado" name="Acumulado" fill="#ff6a00" radius={[6, 6, 0, 0]}>
