@@ -296,7 +296,7 @@ export function HotelFazendaSaoJoaoPanel({
       </div>
 
       {/* ── Chart + Funil side-by-side ── */}
-      <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr] xl:items-start">
+      <div className="grid gap-4 xl:grid-cols-[1.6fr_1fr]">
         {/* Chart */}
         <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
           <CardHeader className="pb-2">
