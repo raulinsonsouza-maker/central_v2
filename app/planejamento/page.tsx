@@ -15,6 +15,14 @@ type Plano = {
 
 const PLANOS: Plano[] = [
   {
+    slug: "inout-2026",
+    nome: "Planejamento Inout 2026",
+    cliente: "Inout",
+    descricao: "Estratégia de nicho imobiliário, ICP, simuladores de receita e VGV — faturamento alvo de R$ 2,5M em 2026.",
+    tag: "Estratégia",
+    updatedAt: "Abr 2026",
+  },
+  {
     slug: "hotel-fazenda-sao-joao",
     nome: "Máquina de Aquisição",
     cliente: "Hotel Fazenda São João",
