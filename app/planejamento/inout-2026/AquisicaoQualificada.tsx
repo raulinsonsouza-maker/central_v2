@@ -359,16 +359,6 @@ const QUESTIONS: Q[] = [
     ],
   },
   {
-    id: "vgv",
-    pergunta: "Qual o VGV médio dos seus empreendimentos?",
-    opcoes: [
-      { label: "Acima de R$ 100M", weight: 30 },
-      { label: "R$ 50M – R$ 100M", weight: 25 },
-      { label: "R$ 20M – R$ 50M", weight: 15 },
-      { label: "Abaixo de R$ 20M / não trabalho com VGV", weight: 5 },
-    ],
-  },
-  {
     id: "faturamento",
     pergunta: "Qual o faturamento mensal médio da operação?",
     opcoes: [
@@ -377,6 +367,17 @@ const QUESTIONS: Q[] = [
       { label: "R$ 150 mil – R$ 300 mil", weight: 15 },
       { label: "Até R$ 150 mil", weight: 0, dq: true },
     ],
+  },
+  {
+    id: "vgv",
+    pergunta: "Qual o VGV médio dos seus empreendimentos? (Valor Geral de Vendas — soma do potencial de venda total)",
+    opcoes: [
+      { label: "Acima de R$ 100M", weight: 30 },
+      { label: "R$ 50M – R$ 100M", weight: 25 },
+      { label: "R$ 20M – R$ 50M", weight: 15 },
+      { label: "Abaixo de R$ 20M", weight: 8 },
+    ],
+    showIf: (a) => a.tipo === "Construtora" || a.tipo === "Incorporadora",
   },
   {
     id: "objetivo",
