@@ -103,6 +103,7 @@ export async function GET(
         cpc: v.cliques > 0 ? v.investimento / v.cliques : null,
         custoConversao: v.conversoes > 0 ? v.investimento / v.conversoes : null,
       }))
+      .filter(c => c.investimento > 1)
       .sort((a, b) => b.investimento - a.investimento);
 
     return NextResponse.json({ nivel: "campanhas", campanhas });

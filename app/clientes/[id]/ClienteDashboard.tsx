@@ -320,7 +320,6 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }
 export function ClienteDashboard({ id, portalMode = false }: { id: string; portalMode?: boolean }) {
   const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring">("geral");
   const [subView, setSubView] = React.useState<"dados" | "criativos">("dados");
-  const [googleSubView, setGoogleSubView] = React.useState<"campanhas" | "keywords">("campanhas");
   const [saldoVisible, setSaldoVisible] = React.useState(false);
   const [presetPeriodo, setPresetPeriodo] = React.useState<PresetPeriodo>("mesAtual");
   const [customInicio, setCustomInicio] = React.useState("");
@@ -446,7 +445,7 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const { data: googleKeywordsData, isLoading: googleKeywordsLoading } = useQuery({
     queryKey: ["google-keywords", id, dateFilter.periodo, dateFilter.dataInicio, dateFilter.dataFim],
     queryFn: () => fetchGoogleKeywords(id, dateFilter),
-    enabled: !!id && canal === "google" && subView === "criativos" && googleSubView === "keywords",
+    enabled: !!id && canal === "google" && subView === "criativos",
   });
   const isHotelPanel = isHotelFazendaSaoJoao(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring";
   const isTertuliaPanel = isTertulia(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring";
@@ -1064,41 +1063,20 @@ function formatPercentage(value: number) {
         </div>
       )}
 
-      {/* ── Google Ads: Campanhas + Keywords ── */}
+      {/* ── Google Ads: Keywords (Criativos tab) ── */}
       {canal === "google" && subView === "criativos" && (
-        <div className="space-y-4">
-          {/* tab switcher */}
-          <div className="flex gap-1 rounded-xl border border-[var(--border)] bg-white/[0.02] p-1 w-fit">
-            {(["campanhas", "keywords"] as const).map((v) => (
-              <button
-                key={v}
-                onClick={() => setGoogleSubView(v)}
-                className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition-all ${googleSubView === v ? "bg-[var(--primary)] text-white shadow" : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"}`}
-              >
-                {v === "campanhas" ? "Campanhas" : "Keywords"}
-              </button>
-            ))}
-          </div>
-
-          {googleSubView === "campanhas" && (
-            <GoogleCampanhasPanel clienteId={id} filter={dateFilter} />
-          )}
-
-          {googleSubView === "keywords" && (
-            <GoogleKeywordsPanel
-              data={
-                googleKeywordsData ?? {
-                  keywords: [],
-                  totals: { impressions: 0, clicks: 0, cost: 0, conversions: 0, cpl: 0, ctr: 0 },
-                  dateFrom: "",
-                  dateTo: "",
-                }
-              }
-              formatCurrency={formatCurrency}
-              isLoading={googleKeywordsLoading}
-            />
-          )}
-        </div>
+        <GoogleKeywordsPanel
+          data={
+            googleKeywordsData ?? {
+              keywords: [],
+              totals: { impressions: 0, clicks: 0, cost: 0, conversions: 0, cpl: 0, ctr: 0 },
+              dateFrom: "",
+              dateTo: "",
+            }
+          }
+          formatCurrency={formatCurrency}
+          isLoading={googleKeywordsLoading}
+        />
       )}
 
       {/* ── Imóveis panel (only for Miguel Imóveis on the imoveis tab) ── */}
@@ -1185,6 +1163,11 @@ function formatPercentage(value: number) {
           dateFilter={dateFilter}
           canal={canal}
         />
+      )}
+
+      {/* ── Google Ads: Campanhas (nível de campanha, aba Análise) ── */}
+      {canal === "google" && subView === "dados" && (
+        <GoogleCampanhasPanel clienteId={id} filter={dateFilter} />
       )}
 
       {/* ── Financial tracking (Plano x Real) ── */}

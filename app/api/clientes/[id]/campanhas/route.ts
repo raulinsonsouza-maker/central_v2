@@ -102,6 +102,7 @@ export async function GET(
         roas: v.investimento > 0 && v.faturamento > 0 ? v.faturamento / v.investimento : null,
         ctr: v.impressoes > 0 ? (v.cliques / v.impressoes) * 100 : null,
       }))
+      .filter(c => c.investimento > 1)
       .sort((a, b) => b.investimento - a.investimento);
 
     return NextResponse.json({ nivel: "campanhas", campanhas });
