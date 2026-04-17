@@ -28,6 +28,7 @@ model Cliente {
   fatosAnalyticsDiario       FatoAnalyticsDiario[]
   fatosAnalyticsPorCanal     FatoAnalyticsPorCanal[]
   fatosMidia                 FatoMidiaDiario[]
+  googleAdsCampanhas         GoogleAdsCampanha[]
   googleAdsCriativos         GoogleAdsCriativo[]
   metas                      Meta[]
   metaAdsCriativos           MetaAdsCriativo[]
@@ -47,6 +48,7 @@ model Conta {
   cliente                  Cliente               @relation(fields: [clienteId], references: [id], onDelete: Cascade)
   fatosAnalyticsDiario     FatoAnalyticsDiario[]
   fatosMidia               FatoMidiaDiario[]
+  googleAdsCampanhas       GoogleAdsCampanha[]
   googleAdsCriativos       GoogleAdsCriativo[]
   metaAdsCriativos         MetaAdsCriativo[]
 
@@ -186,6 +188,30 @@ model GoogleAdsCriativo {
   conta                Conta?   @relation(fields: [contaId], references: [id])
 
   @@unique([clienteId, adResourceName, data])
+  @@index([clienteId, data])
+}
+
+model GoogleAdsCampanha {
+  id                   String   @id @default(cuid())
+  clienteId            String
+  contaId              String?
+  campaignId           String
+  campaignName         String
+  campaignStatus       String?
+  campaignType         String?
+  data                 DateTime @db.Date
+  impressoes           Int      @default(0)
+  cliques              Int      @default(0)
+  custoMicros          BigInt   @default(0)
+  conversoes           Float    @default(0)
+  conversaoValorMicros BigInt   @default(0)
+  alcance              Int      @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  cliente              Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  conta                Conta?   @relation(fields: [contaId], references: [id])
+
+  @@unique([clienteId, campaignId, data])
   @@index([clienteId, data])
 }
 

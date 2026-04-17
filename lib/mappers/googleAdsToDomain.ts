@@ -79,6 +79,69 @@ export function aggregateCampaignRowsByDate(
   return byDate;
 }
 
+export interface GoogleAdsCampanhaPayload {
+  campaignId: string;
+  campaignName: string;
+  campaignStatus: string | null;
+  campaignType: string | null;
+  data: Date;
+  impressoes: number;
+  cliques: number;
+  custoMicros: bigint;
+  conversoes: number;
+  conversaoValorMicros: bigint;
+  alcance: number;
+}
+
+/**
+ * Mapeia uma linha de campanha GAQL preservando o breakdown por campanha (sem agregar).
+ * Usado para popular a tabela GoogleAdsCampanha.
+ */
+export function mapCampaignRowToIndividualPayload(row: GoogleAdsCampaignRow): GoogleAdsCampanhaPayload | null {
+  const rowAny = row as Record<string, unknown>;
+  const campaign = (row.campaign ?? rowAny.campaign) as Record<string, unknown> | undefined;
+  const metrics = (row.metrics ?? rowAny.metrics) as Record<string, unknown> | undefined;
+  const segments = (row.segments ?? rowAny.segments) as Record<string, unknown> | undefined;
+
+  const campaignId = campaign?.id != null ? String(campaign.id) : null;
+  const campaignName = campaign?.name != null ? String(campaign.name) : null;
+  if (!campaignId || !campaignName) return null;
+
+  const campaignStatus = campaign?.status != null ? String(campaign.status) : null;
+  const campaignType = campaign?.advertising_channel_type != null
+    ? String(campaign.advertising_channel_type)
+    : null;
+
+  const costMicros = metrics?.cost_micros ?? metrics?.costMicros;
+  const investimento = parseNum(costMicros) / 1_000_000;
+  if (investimento <= 0) return null;
+
+  const impressoes = parseNum(metrics?.impressions);
+  const cliques = parseNum(metrics?.clicks);
+  const conversoes = parseNum(metrics?.conversions);
+  const faturamento =
+    parseNum(metrics?.conversions_value ?? (metrics as Record<string, unknown>)?.conversionsValue) ||
+    parseNum(metrics?.all_conversions_value ?? (metrics as Record<string, unknown>)?.allConversionsValue);
+  const alcance = parseNum(metrics?.unique_users ?? (metrics as Record<string, unknown>)?.uniqueUsers);
+
+  const dateStr = segments?.date;
+  const data = dateStr ? new Date(String(dateStr) + "T12:00:00Z") : new Date();
+
+  return {
+    campaignId,
+    campaignName,
+    campaignStatus,
+    campaignType,
+    data,
+    impressoes: Math.round(impressoes),
+    cliques: Math.round(cliques),
+    custoMicros: BigInt(Math.round(investimento * 1_000_000)),
+    conversoes,
+    conversaoValorMicros: BigInt(Math.round(faturamento * 1_000_000)),
+    alcance: Math.round(alcance),
+  };
+}
+
 export interface GoogleAdsCriativoPayload {
   adResourceName: string;
   campaignId: string | null;

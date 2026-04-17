@@ -54,6 +54,11 @@ export type PautaReuniao = $Result.DefaultSelection<Prisma.$PautaReuniaoPayload>
  */
 export type GoogleAdsCriativo = $Result.DefaultSelection<Prisma.$GoogleAdsCriativoPayload>
 /**
+ * Model GoogleAdsCampanha
+ * 
+ */
+export type GoogleAdsCampanha = $Result.DefaultSelection<Prisma.$GoogleAdsCampanhaPayload>
+/**
  * Model MetaAdsCriativo
  * 
  */
@@ -281,6 +286,16 @@ export class PrismaClient<
     * ```
     */
   get googleAdsCriativo(): Prisma.GoogleAdsCriativoDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.googleAdsCampanha`: Exposes CRUD operations for the **GoogleAdsCampanha** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GoogleAdsCampanhas
+    * const googleAdsCampanhas = await prisma.googleAdsCampanha.findMany()
+    * ```
+    */
+  get googleAdsCampanha(): Prisma.GoogleAdsCampanhaDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.metaAdsCriativo`: Exposes CRUD operations for the **MetaAdsCriativo** model.
@@ -790,6 +805,7 @@ export namespace Prisma {
     Meta: 'Meta',
     PautaReuniao: 'PautaReuniao',
     GoogleAdsCriativo: 'GoogleAdsCriativo',
+    GoogleAdsCampanha: 'GoogleAdsCampanha',
     MetaAdsCriativo: 'MetaAdsCriativo',
     FatoAnalyticsDiario: 'FatoAnalyticsDiario',
     FatoAnalyticsPorCanal: 'FatoAnalyticsPorCanal',
@@ -814,7 +830,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "conta" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "segmento" | "metaLeadIndividual"
+      modelProps: "cliente" | "conta" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "segmento" | "metaLeadIndividual"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1410,6 +1426,80 @@ export namespace Prisma {
           }
         }
       }
+      GoogleAdsCampanha: {
+        payload: Prisma.$GoogleAdsCampanhaPayload<ExtArgs>
+        fields: Prisma.GoogleAdsCampanhaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GoogleAdsCampanhaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GoogleAdsCampanhaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>
+          }
+          findFirst: {
+            args: Prisma.GoogleAdsCampanhaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GoogleAdsCampanhaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>
+          }
+          findMany: {
+            args: Prisma.GoogleAdsCampanhaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>[]
+          }
+          create: {
+            args: Prisma.GoogleAdsCampanhaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>
+          }
+          createMany: {
+            args: Prisma.GoogleAdsCampanhaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GoogleAdsCampanhaCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>[]
+          }
+          delete: {
+            args: Prisma.GoogleAdsCampanhaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>
+          }
+          update: {
+            args: Prisma.GoogleAdsCampanhaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>
+          }
+          deleteMany: {
+            args: Prisma.GoogleAdsCampanhaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GoogleAdsCampanhaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GoogleAdsCampanhaUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>[]
+          }
+          upsert: {
+            args: Prisma.GoogleAdsCampanhaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GoogleAdsCampanhaPayload>
+          }
+          aggregate: {
+            args: Prisma.GoogleAdsCampanhaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGoogleAdsCampanha>
+          }
+          groupBy: {
+            args: Prisma.GoogleAdsCampanhaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GoogleAdsCampanhaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GoogleAdsCampanhaCountArgs<ExtArgs>
+            result: $Utils.Optional<GoogleAdsCampanhaCountAggregateOutputType> | number
+          }
+        }
+      }
       MetaAdsCriativo: {
         payload: Prisma.$MetaAdsCriativoPayload<ExtArgs>
         fields: Prisma.MetaAdsCriativoFieldRefs
@@ -1958,6 +2048,7 @@ export namespace Prisma {
     meta?: MetaOmit
     pautaReuniao?: PautaReuniaoOmit
     googleAdsCriativo?: GoogleAdsCriativoOmit
+    googleAdsCampanha?: GoogleAdsCampanhaOmit
     metaAdsCriativo?: MetaAdsCriativoOmit
     fatoAnalyticsDiario?: FatoAnalyticsDiarioOmit
     fatoAnalyticsPorCanal?: FatoAnalyticsPorCanalOmit
@@ -2050,6 +2141,7 @@ export namespace Prisma {
     fatosAnalyticsDiario: number
     fatosAnalyticsPorCanal: number
     fatosMidia: number
+    googleAdsCampanhas: number
     googleAdsCriativos: number
     metas: number
     metaAdsCriativos: number
@@ -2064,6 +2156,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: boolean | ClienteCountOutputTypeCountFatosAnalyticsDiarioArgs
     fatosAnalyticsPorCanal?: boolean | ClienteCountOutputTypeCountFatosAnalyticsPorCanalArgs
     fatosMidia?: boolean | ClienteCountOutputTypeCountFatosMidiaArgs
+    googleAdsCampanhas?: boolean | ClienteCountOutputTypeCountGoogleAdsCampanhasArgs
     googleAdsCriativos?: boolean | ClienteCountOutputTypeCountGoogleAdsCriativosArgs
     metas?: boolean | ClienteCountOutputTypeCountMetasArgs
     metaAdsCriativos?: boolean | ClienteCountOutputTypeCountMetaAdsCriativosArgs
@@ -2127,6 +2220,13 @@ export namespace Prisma {
   /**
    * ClienteCountOutputType without action
    */
+  export type ClienteCountOutputTypeCountGoogleAdsCampanhasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoogleAdsCampanhaWhereInput
+  }
+
+  /**
+   * ClienteCountOutputType without action
+   */
   export type ClienteCountOutputTypeCountGoogleAdsCriativosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: GoogleAdsCriativoWhereInput
   }
@@ -2167,6 +2267,7 @@ export namespace Prisma {
   export type ContaCountOutputType = {
     fatosAnalyticsDiario: number
     fatosMidia: number
+    googleAdsCampanhas: number
     googleAdsCriativos: number
     metaAdsCriativos: number
   }
@@ -2174,6 +2275,7 @@ export namespace Prisma {
   export type ContaCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     fatosAnalyticsDiario?: boolean | ContaCountOutputTypeCountFatosAnalyticsDiarioArgs
     fatosMidia?: boolean | ContaCountOutputTypeCountFatosMidiaArgs
+    googleAdsCampanhas?: boolean | ContaCountOutputTypeCountGoogleAdsCampanhasArgs
     googleAdsCriativos?: boolean | ContaCountOutputTypeCountGoogleAdsCriativosArgs
     metaAdsCriativos?: boolean | ContaCountOutputTypeCountMetaAdsCriativosArgs
   }
@@ -2201,6 +2303,13 @@ export namespace Prisma {
    */
   export type ContaCountOutputTypeCountFatosMidiaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: FatoMidiaDiarioWhereInput
+  }
+
+  /**
+   * ContaCountOutputType without action
+   */
+  export type ContaCountOutputTypeCountGoogleAdsCampanhasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoogleAdsCampanhaWhereInput
   }
 
   /**
@@ -2494,6 +2603,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: boolean | Cliente$fatosAnalyticsDiarioArgs<ExtArgs>
     fatosAnalyticsPorCanal?: boolean | Cliente$fatosAnalyticsPorCanalArgs<ExtArgs>
     fatosMidia?: boolean | Cliente$fatosMidiaArgs<ExtArgs>
+    googleAdsCampanhas?: boolean | Cliente$googleAdsCampanhasArgs<ExtArgs>
     googleAdsCriativos?: boolean | Cliente$googleAdsCriativosArgs<ExtArgs>
     metas?: boolean | Cliente$metasArgs<ExtArgs>
     metaAdsCriativos?: boolean | Cliente$metaAdsCriativosArgs<ExtArgs>
@@ -2558,6 +2668,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: boolean | Cliente$fatosAnalyticsDiarioArgs<ExtArgs>
     fatosAnalyticsPorCanal?: boolean | Cliente$fatosAnalyticsPorCanalArgs<ExtArgs>
     fatosMidia?: boolean | Cliente$fatosMidiaArgs<ExtArgs>
+    googleAdsCampanhas?: boolean | Cliente$googleAdsCampanhasArgs<ExtArgs>
     googleAdsCriativos?: boolean | Cliente$googleAdsCriativosArgs<ExtArgs>
     metas?: boolean | Cliente$metasArgs<ExtArgs>
     metaAdsCriativos?: boolean | Cliente$metaAdsCriativosArgs<ExtArgs>
@@ -2577,6 +2688,7 @@ export namespace Prisma {
       fatosAnalyticsDiario: Prisma.$FatoAnalyticsDiarioPayload<ExtArgs>[]
       fatosAnalyticsPorCanal: Prisma.$FatoAnalyticsPorCanalPayload<ExtArgs>[]
       fatosMidia: Prisma.$FatoMidiaDiarioPayload<ExtArgs>[]
+      googleAdsCampanhas: Prisma.$GoogleAdsCampanhaPayload<ExtArgs>[]
       googleAdsCriativos: Prisma.$GoogleAdsCriativoPayload<ExtArgs>[]
       metas: Prisma.$MetaPayload<ExtArgs>[]
       metaAdsCriativos: Prisma.$MetaAdsCriativoPayload<ExtArgs>[]
@@ -2997,6 +3109,7 @@ export namespace Prisma {
     fatosAnalyticsDiario<T extends Cliente$fatosAnalyticsDiarioArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$fatosAnalyticsDiarioArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FatoAnalyticsDiarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     fatosAnalyticsPorCanal<T extends Cliente$fatosAnalyticsPorCanalArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$fatosAnalyticsPorCanalArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FatoAnalyticsPorCanalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     fatosMidia<T extends Cliente$fatosMidiaArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$fatosMidiaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FatoMidiaDiarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    googleAdsCampanhas<T extends Cliente$googleAdsCampanhasArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$googleAdsCampanhasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     googleAdsCriativos<T extends Cliente$googleAdsCriativosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$googleAdsCriativosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoogleAdsCriativoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     metas<T extends Cliente$metasArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$metasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MetaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     metaAdsCriativos<T extends Cliente$metaAdsCriativosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$metaAdsCriativosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MetaAdsCriativoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -3576,6 +3689,30 @@ export namespace Prisma {
   }
 
   /**
+   * Cliente.googleAdsCampanhas
+   */
+  export type Cliente$googleAdsCampanhasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    where?: GoogleAdsCampanhaWhereInput
+    orderBy?: GoogleAdsCampanhaOrderByWithRelationInput | GoogleAdsCampanhaOrderByWithRelationInput[]
+    cursor?: GoogleAdsCampanhaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GoogleAdsCampanhaScalarFieldEnum | GoogleAdsCampanhaScalarFieldEnum[]
+  }
+
+  /**
    * Cliente.googleAdsCriativos
    */
   export type Cliente$googleAdsCriativosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3905,6 +4042,7 @@ export namespace Prisma {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     fatosAnalyticsDiario?: boolean | Conta$fatosAnalyticsDiarioArgs<ExtArgs>
     fatosMidia?: boolean | Conta$fatosMidiaArgs<ExtArgs>
+    googleAdsCampanhas?: boolean | Conta$googleAdsCampanhasArgs<ExtArgs>
     googleAdsCriativos?: boolean | Conta$googleAdsCriativosArgs<ExtArgs>
     metaAdsCriativos?: boolean | Conta$metaAdsCriativosArgs<ExtArgs>
     _count?: boolean | ContaCountOutputTypeDefaultArgs<ExtArgs>
@@ -3950,6 +4088,7 @@ export namespace Prisma {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     fatosAnalyticsDiario?: boolean | Conta$fatosAnalyticsDiarioArgs<ExtArgs>
     fatosMidia?: boolean | Conta$fatosMidiaArgs<ExtArgs>
+    googleAdsCampanhas?: boolean | Conta$googleAdsCampanhasArgs<ExtArgs>
     googleAdsCriativos?: boolean | Conta$googleAdsCriativosArgs<ExtArgs>
     metaAdsCriativos?: boolean | Conta$metaAdsCriativosArgs<ExtArgs>
     _count?: boolean | ContaCountOutputTypeDefaultArgs<ExtArgs>
@@ -3967,6 +4106,7 @@ export namespace Prisma {
       cliente: Prisma.$ClientePayload<ExtArgs>
       fatosAnalyticsDiario: Prisma.$FatoAnalyticsDiarioPayload<ExtArgs>[]
       fatosMidia: Prisma.$FatoMidiaDiarioPayload<ExtArgs>[]
+      googleAdsCampanhas: Prisma.$GoogleAdsCampanhaPayload<ExtArgs>[]
       googleAdsCriativos: Prisma.$GoogleAdsCriativoPayload<ExtArgs>[]
       metaAdsCriativos: Prisma.$MetaAdsCriativoPayload<ExtArgs>[]
     }
@@ -4376,6 +4516,7 @@ export namespace Prisma {
     cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     fatosAnalyticsDiario<T extends Conta$fatosAnalyticsDiarioArgs<ExtArgs> = {}>(args?: Subset<T, Conta$fatosAnalyticsDiarioArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FatoAnalyticsDiarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     fatosMidia<T extends Conta$fatosMidiaArgs<ExtArgs> = {}>(args?: Subset<T, Conta$fatosMidiaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FatoMidiaDiarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    googleAdsCampanhas<T extends Conta$googleAdsCampanhasArgs<ExtArgs> = {}>(args?: Subset<T, Conta$googleAdsCampanhasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     googleAdsCriativos<T extends Conta$googleAdsCriativosArgs<ExtArgs> = {}>(args?: Subset<T, Conta$googleAdsCriativosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoogleAdsCriativoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     metaAdsCriativos<T extends Conta$metaAdsCriativosArgs<ExtArgs> = {}>(args?: Subset<T, Conta$metaAdsCriativosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MetaAdsCriativoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -4856,6 +4997,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: FatoMidiaDiarioScalarFieldEnum | FatoMidiaDiarioScalarFieldEnum[]
+  }
+
+  /**
+   * Conta.googleAdsCampanhas
+   */
+  export type Conta$googleAdsCampanhasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    where?: GoogleAdsCampanhaWhereInput
+    orderBy?: GoogleAdsCampanhaOrderByWithRelationInput | GoogleAdsCampanhaOrderByWithRelationInput[]
+    cursor?: GoogleAdsCampanhaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: GoogleAdsCampanhaScalarFieldEnum | GoogleAdsCampanhaScalarFieldEnum[]
   }
 
   /**
@@ -12478,6 +12643,1288 @@ export namespace Prisma {
 
 
   /**
+   * Model GoogleAdsCampanha
+   */
+
+  export type AggregateGoogleAdsCampanha = {
+    _count: GoogleAdsCampanhaCountAggregateOutputType | null
+    _avg: GoogleAdsCampanhaAvgAggregateOutputType | null
+    _sum: GoogleAdsCampanhaSumAggregateOutputType | null
+    _min: GoogleAdsCampanhaMinAggregateOutputType | null
+    _max: GoogleAdsCampanhaMaxAggregateOutputType | null
+  }
+
+  export type GoogleAdsCampanhaAvgAggregateOutputType = {
+    impressoes: number | null
+    cliques: number | null
+    custoMicros: number | null
+    conversoes: number | null
+    conversaoValorMicros: number | null
+    alcance: number | null
+  }
+
+  export type GoogleAdsCampanhaSumAggregateOutputType = {
+    impressoes: number | null
+    cliques: number | null
+    custoMicros: bigint | null
+    conversoes: number | null
+    conversaoValorMicros: bigint | null
+    alcance: number | null
+  }
+
+  export type GoogleAdsCampanhaMinAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    contaId: string | null
+    campaignId: string | null
+    campaignName: string | null
+    campaignStatus: string | null
+    campaignType: string | null
+    data: Date | null
+    impressoes: number | null
+    cliques: number | null
+    custoMicros: bigint | null
+    conversoes: number | null
+    conversaoValorMicros: bigint | null
+    alcance: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GoogleAdsCampanhaMaxAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    contaId: string | null
+    campaignId: string | null
+    campaignName: string | null
+    campaignStatus: string | null
+    campaignType: string | null
+    data: Date | null
+    impressoes: number | null
+    cliques: number | null
+    custoMicros: bigint | null
+    conversoes: number | null
+    conversaoValorMicros: bigint | null
+    alcance: number | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type GoogleAdsCampanhaCountAggregateOutputType = {
+    id: number
+    clienteId: number
+    contaId: number
+    campaignId: number
+    campaignName: number
+    campaignStatus: number
+    campaignType: number
+    data: number
+    impressoes: number
+    cliques: number
+    custoMicros: number
+    conversoes: number
+    conversaoValorMicros: number
+    alcance: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type GoogleAdsCampanhaAvgAggregateInputType = {
+    impressoes?: true
+    cliques?: true
+    custoMicros?: true
+    conversoes?: true
+    conversaoValorMicros?: true
+    alcance?: true
+  }
+
+  export type GoogleAdsCampanhaSumAggregateInputType = {
+    impressoes?: true
+    cliques?: true
+    custoMicros?: true
+    conversoes?: true
+    conversaoValorMicros?: true
+    alcance?: true
+  }
+
+  export type GoogleAdsCampanhaMinAggregateInputType = {
+    id?: true
+    clienteId?: true
+    contaId?: true
+    campaignId?: true
+    campaignName?: true
+    campaignStatus?: true
+    campaignType?: true
+    data?: true
+    impressoes?: true
+    cliques?: true
+    custoMicros?: true
+    conversoes?: true
+    conversaoValorMicros?: true
+    alcance?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GoogleAdsCampanhaMaxAggregateInputType = {
+    id?: true
+    clienteId?: true
+    contaId?: true
+    campaignId?: true
+    campaignName?: true
+    campaignStatus?: true
+    campaignType?: true
+    data?: true
+    impressoes?: true
+    cliques?: true
+    custoMicros?: true
+    conversoes?: true
+    conversaoValorMicros?: true
+    alcance?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type GoogleAdsCampanhaCountAggregateInputType = {
+    id?: true
+    clienteId?: true
+    contaId?: true
+    campaignId?: true
+    campaignName?: true
+    campaignStatus?: true
+    campaignType?: true
+    data?: true
+    impressoes?: true
+    cliques?: true
+    custoMicros?: true
+    conversoes?: true
+    conversaoValorMicros?: true
+    alcance?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type GoogleAdsCampanhaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GoogleAdsCampanha to aggregate.
+     */
+    where?: GoogleAdsCampanhaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoogleAdsCampanhas to fetch.
+     */
+    orderBy?: GoogleAdsCampanhaOrderByWithRelationInput | GoogleAdsCampanhaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GoogleAdsCampanhaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoogleAdsCampanhas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoogleAdsCampanhas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GoogleAdsCampanhas
+    **/
+    _count?: true | GoogleAdsCampanhaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: GoogleAdsCampanhaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: GoogleAdsCampanhaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GoogleAdsCampanhaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GoogleAdsCampanhaMaxAggregateInputType
+  }
+
+  export type GetGoogleAdsCampanhaAggregateType<T extends GoogleAdsCampanhaAggregateArgs> = {
+        [P in keyof T & keyof AggregateGoogleAdsCampanha]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGoogleAdsCampanha[P]>
+      : GetScalarType<T[P], AggregateGoogleAdsCampanha[P]>
+  }
+
+
+
+
+  export type GoogleAdsCampanhaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GoogleAdsCampanhaWhereInput
+    orderBy?: GoogleAdsCampanhaOrderByWithAggregationInput | GoogleAdsCampanhaOrderByWithAggregationInput[]
+    by: GoogleAdsCampanhaScalarFieldEnum[] | GoogleAdsCampanhaScalarFieldEnum
+    having?: GoogleAdsCampanhaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GoogleAdsCampanhaCountAggregateInputType | true
+    _avg?: GoogleAdsCampanhaAvgAggregateInputType
+    _sum?: GoogleAdsCampanhaSumAggregateInputType
+    _min?: GoogleAdsCampanhaMinAggregateInputType
+    _max?: GoogleAdsCampanhaMaxAggregateInputType
+  }
+
+  export type GoogleAdsCampanhaGroupByOutputType = {
+    id: string
+    clienteId: string
+    contaId: string | null
+    campaignId: string
+    campaignName: string
+    campaignStatus: string | null
+    campaignType: string | null
+    data: Date
+    impressoes: number
+    cliques: number
+    custoMicros: bigint
+    conversoes: number
+    conversaoValorMicros: bigint
+    alcance: number
+    createdAt: Date
+    updatedAt: Date
+    _count: GoogleAdsCampanhaCountAggregateOutputType | null
+    _avg: GoogleAdsCampanhaAvgAggregateOutputType | null
+    _sum: GoogleAdsCampanhaSumAggregateOutputType | null
+    _min: GoogleAdsCampanhaMinAggregateOutputType | null
+    _max: GoogleAdsCampanhaMaxAggregateOutputType | null
+  }
+
+  type GetGoogleAdsCampanhaGroupByPayload<T extends GoogleAdsCampanhaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GoogleAdsCampanhaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GoogleAdsCampanhaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GoogleAdsCampanhaGroupByOutputType[P]>
+            : GetScalarType<T[P], GoogleAdsCampanhaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GoogleAdsCampanhaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    contaId?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    campaignStatus?: boolean
+    campaignType?: boolean
+    data?: boolean
+    impressoes?: boolean
+    cliques?: boolean
+    custoMicros?: boolean
+    conversoes?: boolean
+    conversaoValorMicros?: boolean
+    alcance?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conta?: boolean | GoogleAdsCampanha$contaArgs<ExtArgs>
+  }, ExtArgs["result"]["googleAdsCampanha"]>
+
+  export type GoogleAdsCampanhaSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    contaId?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    campaignStatus?: boolean
+    campaignType?: boolean
+    data?: boolean
+    impressoes?: boolean
+    cliques?: boolean
+    custoMicros?: boolean
+    conversoes?: boolean
+    conversaoValorMicros?: boolean
+    alcance?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conta?: boolean | GoogleAdsCampanha$contaArgs<ExtArgs>
+  }, ExtArgs["result"]["googleAdsCampanha"]>
+
+  export type GoogleAdsCampanhaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    contaId?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    campaignStatus?: boolean
+    campaignType?: boolean
+    data?: boolean
+    impressoes?: boolean
+    cliques?: boolean
+    custoMicros?: boolean
+    conversoes?: boolean
+    conversaoValorMicros?: boolean
+    alcance?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conta?: boolean | GoogleAdsCampanha$contaArgs<ExtArgs>
+  }, ExtArgs["result"]["googleAdsCampanha"]>
+
+  export type GoogleAdsCampanhaSelectScalar = {
+    id?: boolean
+    clienteId?: boolean
+    contaId?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    campaignStatus?: boolean
+    campaignType?: boolean
+    data?: boolean
+    impressoes?: boolean
+    cliques?: boolean
+    custoMicros?: boolean
+    conversoes?: boolean
+    conversaoValorMicros?: boolean
+    alcance?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type GoogleAdsCampanhaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "campaignId" | "campaignName" | "campaignStatus" | "campaignType" | "data" | "impressoes" | "cliques" | "custoMicros" | "conversoes" | "conversaoValorMicros" | "alcance" | "createdAt" | "updatedAt", ExtArgs["result"]["googleAdsCampanha"]>
+  export type GoogleAdsCampanhaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conta?: boolean | GoogleAdsCampanha$contaArgs<ExtArgs>
+  }
+  export type GoogleAdsCampanhaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conta?: boolean | GoogleAdsCampanha$contaArgs<ExtArgs>
+  }
+  export type GoogleAdsCampanhaIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conta?: boolean | GoogleAdsCampanha$contaArgs<ExtArgs>
+  }
+
+  export type $GoogleAdsCampanhaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GoogleAdsCampanha"
+    objects: {
+      cliente: Prisma.$ClientePayload<ExtArgs>
+      conta: Prisma.$ContaPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      clienteId: string
+      contaId: string | null
+      campaignId: string
+      campaignName: string
+      campaignStatus: string | null
+      campaignType: string | null
+      data: Date
+      impressoes: number
+      cliques: number
+      custoMicros: bigint
+      conversoes: number
+      conversaoValorMicros: bigint
+      alcance: number
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["googleAdsCampanha"]>
+    composites: {}
+  }
+
+  type GoogleAdsCampanhaGetPayload<S extends boolean | null | undefined | GoogleAdsCampanhaDefaultArgs> = $Result.GetResult<Prisma.$GoogleAdsCampanhaPayload, S>
+
+  type GoogleAdsCampanhaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GoogleAdsCampanhaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GoogleAdsCampanhaCountAggregateInputType | true
+    }
+
+  export interface GoogleAdsCampanhaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GoogleAdsCampanha'], meta: { name: 'GoogleAdsCampanha' } }
+    /**
+     * Find zero or one GoogleAdsCampanha that matches the filter.
+     * @param {GoogleAdsCampanhaFindUniqueArgs} args - Arguments to find a GoogleAdsCampanha
+     * @example
+     * // Get one GoogleAdsCampanha
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GoogleAdsCampanhaFindUniqueArgs>(args: SelectSubset<T, GoogleAdsCampanhaFindUniqueArgs<ExtArgs>>): Prisma__GoogleAdsCampanhaClient<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GoogleAdsCampanha that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GoogleAdsCampanhaFindUniqueOrThrowArgs} args - Arguments to find a GoogleAdsCampanha
+     * @example
+     * // Get one GoogleAdsCampanha
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GoogleAdsCampanhaFindUniqueOrThrowArgs>(args: SelectSubset<T, GoogleAdsCampanhaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GoogleAdsCampanhaClient<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GoogleAdsCampanha that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoogleAdsCampanhaFindFirstArgs} args - Arguments to find a GoogleAdsCampanha
+     * @example
+     * // Get one GoogleAdsCampanha
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GoogleAdsCampanhaFindFirstArgs>(args?: SelectSubset<T, GoogleAdsCampanhaFindFirstArgs<ExtArgs>>): Prisma__GoogleAdsCampanhaClient<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GoogleAdsCampanha that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoogleAdsCampanhaFindFirstOrThrowArgs} args - Arguments to find a GoogleAdsCampanha
+     * @example
+     * // Get one GoogleAdsCampanha
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GoogleAdsCampanhaFindFirstOrThrowArgs>(args?: SelectSubset<T, GoogleAdsCampanhaFindFirstOrThrowArgs<ExtArgs>>): Prisma__GoogleAdsCampanhaClient<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GoogleAdsCampanhas that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoogleAdsCampanhaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GoogleAdsCampanhas
+     * const googleAdsCampanhas = await prisma.googleAdsCampanha.findMany()
+     * 
+     * // Get first 10 GoogleAdsCampanhas
+     * const googleAdsCampanhas = await prisma.googleAdsCampanha.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const googleAdsCampanhaWithIdOnly = await prisma.googleAdsCampanha.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GoogleAdsCampanhaFindManyArgs>(args?: SelectSubset<T, GoogleAdsCampanhaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GoogleAdsCampanha.
+     * @param {GoogleAdsCampanhaCreateArgs} args - Arguments to create a GoogleAdsCampanha.
+     * @example
+     * // Create one GoogleAdsCampanha
+     * const GoogleAdsCampanha = await prisma.googleAdsCampanha.create({
+     *   data: {
+     *     // ... data to create a GoogleAdsCampanha
+     *   }
+     * })
+     * 
+     */
+    create<T extends GoogleAdsCampanhaCreateArgs>(args: SelectSubset<T, GoogleAdsCampanhaCreateArgs<ExtArgs>>): Prisma__GoogleAdsCampanhaClient<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GoogleAdsCampanhas.
+     * @param {GoogleAdsCampanhaCreateManyArgs} args - Arguments to create many GoogleAdsCampanhas.
+     * @example
+     * // Create many GoogleAdsCampanhas
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GoogleAdsCampanhaCreateManyArgs>(args?: SelectSubset<T, GoogleAdsCampanhaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GoogleAdsCampanhas and returns the data saved in the database.
+     * @param {GoogleAdsCampanhaCreateManyAndReturnArgs} args - Arguments to create many GoogleAdsCampanhas.
+     * @example
+     * // Create many GoogleAdsCampanhas
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GoogleAdsCampanhas and only return the `id`
+     * const googleAdsCampanhaWithIdOnly = await prisma.googleAdsCampanha.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GoogleAdsCampanhaCreateManyAndReturnArgs>(args?: SelectSubset<T, GoogleAdsCampanhaCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GoogleAdsCampanha.
+     * @param {GoogleAdsCampanhaDeleteArgs} args - Arguments to delete one GoogleAdsCampanha.
+     * @example
+     * // Delete one GoogleAdsCampanha
+     * const GoogleAdsCampanha = await prisma.googleAdsCampanha.delete({
+     *   where: {
+     *     // ... filter to delete one GoogleAdsCampanha
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GoogleAdsCampanhaDeleteArgs>(args: SelectSubset<T, GoogleAdsCampanhaDeleteArgs<ExtArgs>>): Prisma__GoogleAdsCampanhaClient<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GoogleAdsCampanha.
+     * @param {GoogleAdsCampanhaUpdateArgs} args - Arguments to update one GoogleAdsCampanha.
+     * @example
+     * // Update one GoogleAdsCampanha
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GoogleAdsCampanhaUpdateArgs>(args: SelectSubset<T, GoogleAdsCampanhaUpdateArgs<ExtArgs>>): Prisma__GoogleAdsCampanhaClient<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GoogleAdsCampanhas.
+     * @param {GoogleAdsCampanhaDeleteManyArgs} args - Arguments to filter GoogleAdsCampanhas to delete.
+     * @example
+     * // Delete a few GoogleAdsCampanhas
+     * const { count } = await prisma.googleAdsCampanha.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GoogleAdsCampanhaDeleteManyArgs>(args?: SelectSubset<T, GoogleAdsCampanhaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GoogleAdsCampanhas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoogleAdsCampanhaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GoogleAdsCampanhas
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GoogleAdsCampanhaUpdateManyArgs>(args: SelectSubset<T, GoogleAdsCampanhaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GoogleAdsCampanhas and returns the data updated in the database.
+     * @param {GoogleAdsCampanhaUpdateManyAndReturnArgs} args - Arguments to update many GoogleAdsCampanhas.
+     * @example
+     * // Update many GoogleAdsCampanhas
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GoogleAdsCampanhas and only return the `id`
+     * const googleAdsCampanhaWithIdOnly = await prisma.googleAdsCampanha.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GoogleAdsCampanhaUpdateManyAndReturnArgs>(args: SelectSubset<T, GoogleAdsCampanhaUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GoogleAdsCampanha.
+     * @param {GoogleAdsCampanhaUpsertArgs} args - Arguments to update or create a GoogleAdsCampanha.
+     * @example
+     * // Update or create a GoogleAdsCampanha
+     * const googleAdsCampanha = await prisma.googleAdsCampanha.upsert({
+     *   create: {
+     *     // ... data to create a GoogleAdsCampanha
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GoogleAdsCampanha we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GoogleAdsCampanhaUpsertArgs>(args: SelectSubset<T, GoogleAdsCampanhaUpsertArgs<ExtArgs>>): Prisma__GoogleAdsCampanhaClient<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GoogleAdsCampanhas.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoogleAdsCampanhaCountArgs} args - Arguments to filter GoogleAdsCampanhas to count.
+     * @example
+     * // Count the number of GoogleAdsCampanhas
+     * const count = await prisma.googleAdsCampanha.count({
+     *   where: {
+     *     // ... the filter for the GoogleAdsCampanhas we want to count
+     *   }
+     * })
+    **/
+    count<T extends GoogleAdsCampanhaCountArgs>(
+      args?: Subset<T, GoogleAdsCampanhaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GoogleAdsCampanhaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GoogleAdsCampanha.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoogleAdsCampanhaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GoogleAdsCampanhaAggregateArgs>(args: Subset<T, GoogleAdsCampanhaAggregateArgs>): Prisma.PrismaPromise<GetGoogleAdsCampanhaAggregateType<T>>
+
+    /**
+     * Group by GoogleAdsCampanha.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GoogleAdsCampanhaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GoogleAdsCampanhaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GoogleAdsCampanhaGroupByArgs['orderBy'] }
+        : { orderBy?: GoogleAdsCampanhaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GoogleAdsCampanhaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGoogleAdsCampanhaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GoogleAdsCampanha model
+   */
+  readonly fields: GoogleAdsCampanhaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GoogleAdsCampanha.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GoogleAdsCampanhaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    conta<T extends GoogleAdsCampanha$contaArgs<ExtArgs> = {}>(args?: Subset<T, GoogleAdsCampanha$contaArgs<ExtArgs>>): Prisma__ContaClient<$Result.GetResult<Prisma.$ContaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GoogleAdsCampanha model
+   */
+  interface GoogleAdsCampanhaFieldRefs {
+    readonly id: FieldRef<"GoogleAdsCampanha", 'String'>
+    readonly clienteId: FieldRef<"GoogleAdsCampanha", 'String'>
+    readonly contaId: FieldRef<"GoogleAdsCampanha", 'String'>
+    readonly campaignId: FieldRef<"GoogleAdsCampanha", 'String'>
+    readonly campaignName: FieldRef<"GoogleAdsCampanha", 'String'>
+    readonly campaignStatus: FieldRef<"GoogleAdsCampanha", 'String'>
+    readonly campaignType: FieldRef<"GoogleAdsCampanha", 'String'>
+    readonly data: FieldRef<"GoogleAdsCampanha", 'DateTime'>
+    readonly impressoes: FieldRef<"GoogleAdsCampanha", 'Int'>
+    readonly cliques: FieldRef<"GoogleAdsCampanha", 'Int'>
+    readonly custoMicros: FieldRef<"GoogleAdsCampanha", 'BigInt'>
+    readonly conversoes: FieldRef<"GoogleAdsCampanha", 'Float'>
+    readonly conversaoValorMicros: FieldRef<"GoogleAdsCampanha", 'BigInt'>
+    readonly alcance: FieldRef<"GoogleAdsCampanha", 'Int'>
+    readonly createdAt: FieldRef<"GoogleAdsCampanha", 'DateTime'>
+    readonly updatedAt: FieldRef<"GoogleAdsCampanha", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GoogleAdsCampanha findUnique
+   */
+  export type GoogleAdsCampanhaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * Filter, which GoogleAdsCampanha to fetch.
+     */
+    where: GoogleAdsCampanhaWhereUniqueInput
+  }
+
+  /**
+   * GoogleAdsCampanha findUniqueOrThrow
+   */
+  export type GoogleAdsCampanhaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * Filter, which GoogleAdsCampanha to fetch.
+     */
+    where: GoogleAdsCampanhaWhereUniqueInput
+  }
+
+  /**
+   * GoogleAdsCampanha findFirst
+   */
+  export type GoogleAdsCampanhaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * Filter, which GoogleAdsCampanha to fetch.
+     */
+    where?: GoogleAdsCampanhaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoogleAdsCampanhas to fetch.
+     */
+    orderBy?: GoogleAdsCampanhaOrderByWithRelationInput | GoogleAdsCampanhaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GoogleAdsCampanhas.
+     */
+    cursor?: GoogleAdsCampanhaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoogleAdsCampanhas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoogleAdsCampanhas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GoogleAdsCampanhas.
+     */
+    distinct?: GoogleAdsCampanhaScalarFieldEnum | GoogleAdsCampanhaScalarFieldEnum[]
+  }
+
+  /**
+   * GoogleAdsCampanha findFirstOrThrow
+   */
+  export type GoogleAdsCampanhaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * Filter, which GoogleAdsCampanha to fetch.
+     */
+    where?: GoogleAdsCampanhaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoogleAdsCampanhas to fetch.
+     */
+    orderBy?: GoogleAdsCampanhaOrderByWithRelationInput | GoogleAdsCampanhaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GoogleAdsCampanhas.
+     */
+    cursor?: GoogleAdsCampanhaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoogleAdsCampanhas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoogleAdsCampanhas.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GoogleAdsCampanhas.
+     */
+    distinct?: GoogleAdsCampanhaScalarFieldEnum | GoogleAdsCampanhaScalarFieldEnum[]
+  }
+
+  /**
+   * GoogleAdsCampanha findMany
+   */
+  export type GoogleAdsCampanhaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * Filter, which GoogleAdsCampanhas to fetch.
+     */
+    where?: GoogleAdsCampanhaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GoogleAdsCampanhas to fetch.
+     */
+    orderBy?: GoogleAdsCampanhaOrderByWithRelationInput | GoogleAdsCampanhaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GoogleAdsCampanhas.
+     */
+    cursor?: GoogleAdsCampanhaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GoogleAdsCampanhas from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GoogleAdsCampanhas.
+     */
+    skip?: number
+    distinct?: GoogleAdsCampanhaScalarFieldEnum | GoogleAdsCampanhaScalarFieldEnum[]
+  }
+
+  /**
+   * GoogleAdsCampanha create
+   */
+  export type GoogleAdsCampanhaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * The data needed to create a GoogleAdsCampanha.
+     */
+    data: XOR<GoogleAdsCampanhaCreateInput, GoogleAdsCampanhaUncheckedCreateInput>
+  }
+
+  /**
+   * GoogleAdsCampanha createMany
+   */
+  export type GoogleAdsCampanhaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GoogleAdsCampanhas.
+     */
+    data: GoogleAdsCampanhaCreateManyInput | GoogleAdsCampanhaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GoogleAdsCampanha createManyAndReturn
+   */
+  export type GoogleAdsCampanhaCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * The data used to create many GoogleAdsCampanhas.
+     */
+    data: GoogleAdsCampanhaCreateManyInput | GoogleAdsCampanhaCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GoogleAdsCampanha update
+   */
+  export type GoogleAdsCampanhaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * The data needed to update a GoogleAdsCampanha.
+     */
+    data: XOR<GoogleAdsCampanhaUpdateInput, GoogleAdsCampanhaUncheckedUpdateInput>
+    /**
+     * Choose, which GoogleAdsCampanha to update.
+     */
+    where: GoogleAdsCampanhaWhereUniqueInput
+  }
+
+  /**
+   * GoogleAdsCampanha updateMany
+   */
+  export type GoogleAdsCampanhaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GoogleAdsCampanhas.
+     */
+    data: XOR<GoogleAdsCampanhaUpdateManyMutationInput, GoogleAdsCampanhaUncheckedUpdateManyInput>
+    /**
+     * Filter which GoogleAdsCampanhas to update
+     */
+    where?: GoogleAdsCampanhaWhereInput
+    /**
+     * Limit how many GoogleAdsCampanhas to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GoogleAdsCampanha updateManyAndReturn
+   */
+  export type GoogleAdsCampanhaUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * The data used to update GoogleAdsCampanhas.
+     */
+    data: XOR<GoogleAdsCampanhaUpdateManyMutationInput, GoogleAdsCampanhaUncheckedUpdateManyInput>
+    /**
+     * Filter which GoogleAdsCampanhas to update
+     */
+    where?: GoogleAdsCampanhaWhereInput
+    /**
+     * Limit how many GoogleAdsCampanhas to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * GoogleAdsCampanha upsert
+   */
+  export type GoogleAdsCampanhaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * The filter to search for the GoogleAdsCampanha to update in case it exists.
+     */
+    where: GoogleAdsCampanhaWhereUniqueInput
+    /**
+     * In case the GoogleAdsCampanha found by the `where` argument doesn't exist, create a new GoogleAdsCampanha with this data.
+     */
+    create: XOR<GoogleAdsCampanhaCreateInput, GoogleAdsCampanhaUncheckedCreateInput>
+    /**
+     * In case the GoogleAdsCampanha was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GoogleAdsCampanhaUpdateInput, GoogleAdsCampanhaUncheckedUpdateInput>
+  }
+
+  /**
+   * GoogleAdsCampanha delete
+   */
+  export type GoogleAdsCampanhaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+    /**
+     * Filter which GoogleAdsCampanha to delete.
+     */
+    where: GoogleAdsCampanhaWhereUniqueInput
+  }
+
+  /**
+   * GoogleAdsCampanha deleteMany
+   */
+  export type GoogleAdsCampanhaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GoogleAdsCampanhas to delete
+     */
+    where?: GoogleAdsCampanhaWhereInput
+    /**
+     * Limit how many GoogleAdsCampanhas to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GoogleAdsCampanha.conta
+   */
+  export type GoogleAdsCampanha$contaArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conta
+     */
+    select?: ContaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conta
+     */
+    omit?: ContaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContaInclude<ExtArgs> | null
+    where?: ContaWhereInput
+  }
+
+  /**
+   * GoogleAdsCampanha without action
+   */
+  export type GoogleAdsCampanhaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GoogleAdsCampanha
+     */
+    select?: GoogleAdsCampanhaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GoogleAdsCampanha
+     */
+    omit?: GoogleAdsCampanhaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: GoogleAdsCampanhaInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Model MetaAdsCriativo
    */
 
@@ -19827,6 +21274,28 @@ export namespace Prisma {
   export type GoogleAdsCriativoScalarFieldEnum = (typeof GoogleAdsCriativoScalarFieldEnum)[keyof typeof GoogleAdsCriativoScalarFieldEnum]
 
 
+  export const GoogleAdsCampanhaScalarFieldEnum: {
+    id: 'id',
+    clienteId: 'clienteId',
+    contaId: 'contaId',
+    campaignId: 'campaignId',
+    campaignName: 'campaignName',
+    campaignStatus: 'campaignStatus',
+    campaignType: 'campaignType',
+    data: 'data',
+    impressoes: 'impressoes',
+    cliques: 'cliques',
+    custoMicros: 'custoMicros',
+    conversoes: 'conversoes',
+    conversaoValorMicros: 'conversaoValorMicros',
+    alcance: 'alcance',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type GoogleAdsCampanhaScalarFieldEnum = (typeof GoogleAdsCampanhaScalarFieldEnum)[keyof typeof GoogleAdsCampanhaScalarFieldEnum]
+
+
   export const MetaAdsCriativoScalarFieldEnum: {
     id: 'id',
     clienteId: 'clienteId',
@@ -20074,20 +21543,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Json'
-   */
-  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
-    
-
-
-  /**
-   * Reference to a field of type 'QueryMode'
-   */
-  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
-    
-
-
-  /**
    * Reference to a field of type 'Float'
    */
   export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -20098,6 +21553,20 @@ export namespace Prisma {
    * Reference to a field of type 'Float[]'
    */
   export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Json'
+   */
+  export type JsonFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Json'>
+    
+
+
+  /**
+   * Reference to a field of type 'QueryMode'
+   */
+  export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
   /**
    * Deep Input Types
@@ -20127,6 +21596,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioListRelationFilter
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalListRelationFilter
     fatosMidia?: FatoMidiaDiarioListRelationFilter
+    googleAdsCampanhas?: GoogleAdsCampanhaListRelationFilter
     googleAdsCriativos?: GoogleAdsCriativoListRelationFilter
     metas?: MetaListRelationFilter
     metaAdsCriativos?: MetaAdsCriativoListRelationFilter
@@ -20154,6 +21624,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioOrderByRelationAggregateInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalOrderByRelationAggregateInput
     fatosMidia?: FatoMidiaDiarioOrderByRelationAggregateInput
+    googleAdsCampanhas?: GoogleAdsCampanhaOrderByRelationAggregateInput
     googleAdsCriativos?: GoogleAdsCriativoOrderByRelationAggregateInput
     metas?: MetaOrderByRelationAggregateInput
     metaAdsCriativos?: MetaAdsCriativoOrderByRelationAggregateInput
@@ -20184,6 +21655,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioListRelationFilter
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalListRelationFilter
     fatosMidia?: FatoMidiaDiarioListRelationFilter
+    googleAdsCampanhas?: GoogleAdsCampanhaListRelationFilter
     googleAdsCriativos?: GoogleAdsCriativoListRelationFilter
     metas?: MetaListRelationFilter
     metaAdsCriativos?: MetaAdsCriativoListRelationFilter
@@ -20246,6 +21718,7 @@ export namespace Prisma {
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     fatosAnalyticsDiario?: FatoAnalyticsDiarioListRelationFilter
     fatosMidia?: FatoMidiaDiarioListRelationFilter
+    googleAdsCampanhas?: GoogleAdsCampanhaListRelationFilter
     googleAdsCriativos?: GoogleAdsCriativoListRelationFilter
     metaAdsCriativos?: MetaAdsCriativoListRelationFilter
   }
@@ -20262,6 +21735,7 @@ export namespace Prisma {
     cliente?: ClienteOrderByWithRelationInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioOrderByRelationAggregateInput
     fatosMidia?: FatoMidiaDiarioOrderByRelationAggregateInput
+    googleAdsCampanhas?: GoogleAdsCampanhaOrderByRelationAggregateInput
     googleAdsCriativos?: GoogleAdsCriativoOrderByRelationAggregateInput
     metaAdsCriativos?: MetaAdsCriativoOrderByRelationAggregateInput
   }
@@ -20282,6 +21756,7 @@ export namespace Prisma {
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     fatosAnalyticsDiario?: FatoAnalyticsDiarioListRelationFilter
     fatosMidia?: FatoMidiaDiarioListRelationFilter
+    googleAdsCampanhas?: GoogleAdsCampanhaListRelationFilter
     googleAdsCriativos?: GoogleAdsCriativoListRelationFilter
     metaAdsCriativos?: MetaAdsCriativoListRelationFilter
   }, "id" | "clienteId_plataforma">
@@ -20976,6 +22451,122 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"GoogleAdsCriativo"> | Date | string
   }
 
+  export type GoogleAdsCampanhaWhereInput = {
+    AND?: GoogleAdsCampanhaWhereInput | GoogleAdsCampanhaWhereInput[]
+    OR?: GoogleAdsCampanhaWhereInput[]
+    NOT?: GoogleAdsCampanhaWhereInput | GoogleAdsCampanhaWhereInput[]
+    id?: StringFilter<"GoogleAdsCampanha"> | string
+    clienteId?: StringFilter<"GoogleAdsCampanha"> | string
+    contaId?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    campaignId?: StringFilter<"GoogleAdsCampanha"> | string
+    campaignName?: StringFilter<"GoogleAdsCampanha"> | string
+    campaignStatus?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    campaignType?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    data?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+    impressoes?: IntFilter<"GoogleAdsCampanha"> | number
+    cliques?: IntFilter<"GoogleAdsCampanha"> | number
+    custoMicros?: BigIntFilter<"GoogleAdsCampanha"> | bigint | number
+    conversoes?: FloatFilter<"GoogleAdsCampanha"> | number
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCampanha"> | bigint | number
+    alcance?: IntFilter<"GoogleAdsCampanha"> | number
+    createdAt?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+    updatedAt?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    conta?: XOR<ContaNullableScalarRelationFilter, ContaWhereInput> | null
+  }
+
+  export type GoogleAdsCampanhaOrderByWithRelationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    contaId?: SortOrderInput | SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    campaignStatus?: SortOrderInput | SortOrder
+    campaignType?: SortOrderInput | SortOrder
+    data?: SortOrder
+    impressoes?: SortOrder
+    cliques?: SortOrder
+    custoMicros?: SortOrder
+    conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
+    alcance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cliente?: ClienteOrderByWithRelationInput
+    conta?: ContaOrderByWithRelationInput
+  }
+
+  export type GoogleAdsCampanhaWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    clienteId_campaignId_data?: GoogleAdsCampanhaClienteIdCampaignIdDataCompoundUniqueInput
+    AND?: GoogleAdsCampanhaWhereInput | GoogleAdsCampanhaWhereInput[]
+    OR?: GoogleAdsCampanhaWhereInput[]
+    NOT?: GoogleAdsCampanhaWhereInput | GoogleAdsCampanhaWhereInput[]
+    clienteId?: StringFilter<"GoogleAdsCampanha"> | string
+    contaId?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    campaignId?: StringFilter<"GoogleAdsCampanha"> | string
+    campaignName?: StringFilter<"GoogleAdsCampanha"> | string
+    campaignStatus?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    campaignType?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    data?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+    impressoes?: IntFilter<"GoogleAdsCampanha"> | number
+    cliques?: IntFilter<"GoogleAdsCampanha"> | number
+    custoMicros?: BigIntFilter<"GoogleAdsCampanha"> | bigint | number
+    conversoes?: FloatFilter<"GoogleAdsCampanha"> | number
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCampanha"> | bigint | number
+    alcance?: IntFilter<"GoogleAdsCampanha"> | number
+    createdAt?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+    updatedAt?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    conta?: XOR<ContaNullableScalarRelationFilter, ContaWhereInput> | null
+  }, "id" | "clienteId_campaignId_data">
+
+  export type GoogleAdsCampanhaOrderByWithAggregationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    contaId?: SortOrderInput | SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    campaignStatus?: SortOrderInput | SortOrder
+    campaignType?: SortOrderInput | SortOrder
+    data?: SortOrder
+    impressoes?: SortOrder
+    cliques?: SortOrder
+    custoMicros?: SortOrder
+    conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
+    alcance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: GoogleAdsCampanhaCountOrderByAggregateInput
+    _avg?: GoogleAdsCampanhaAvgOrderByAggregateInput
+    _max?: GoogleAdsCampanhaMaxOrderByAggregateInput
+    _min?: GoogleAdsCampanhaMinOrderByAggregateInput
+    _sum?: GoogleAdsCampanhaSumOrderByAggregateInput
+  }
+
+  export type GoogleAdsCampanhaScalarWhereWithAggregatesInput = {
+    AND?: GoogleAdsCampanhaScalarWhereWithAggregatesInput | GoogleAdsCampanhaScalarWhereWithAggregatesInput[]
+    OR?: GoogleAdsCampanhaScalarWhereWithAggregatesInput[]
+    NOT?: GoogleAdsCampanhaScalarWhereWithAggregatesInput | GoogleAdsCampanhaScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GoogleAdsCampanha"> | string
+    clienteId?: StringWithAggregatesFilter<"GoogleAdsCampanha"> | string
+    contaId?: StringNullableWithAggregatesFilter<"GoogleAdsCampanha"> | string | null
+    campaignId?: StringWithAggregatesFilter<"GoogleAdsCampanha"> | string
+    campaignName?: StringWithAggregatesFilter<"GoogleAdsCampanha"> | string
+    campaignStatus?: StringNullableWithAggregatesFilter<"GoogleAdsCampanha"> | string | null
+    campaignType?: StringNullableWithAggregatesFilter<"GoogleAdsCampanha"> | string | null
+    data?: DateTimeWithAggregatesFilter<"GoogleAdsCampanha"> | Date | string
+    impressoes?: IntWithAggregatesFilter<"GoogleAdsCampanha"> | number
+    cliques?: IntWithAggregatesFilter<"GoogleAdsCampanha"> | number
+    custoMicros?: BigIntWithAggregatesFilter<"GoogleAdsCampanha"> | bigint | number
+    conversoes?: FloatWithAggregatesFilter<"GoogleAdsCampanha"> | number
+    conversaoValorMicros?: BigIntWithAggregatesFilter<"GoogleAdsCampanha"> | bigint | number
+    alcance?: IntWithAggregatesFilter<"GoogleAdsCampanha"> | number
+    createdAt?: DateTimeWithAggregatesFilter<"GoogleAdsCampanha"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"GoogleAdsCampanha"> | Date | string
+  }
+
   export type MetaAdsCriativoWhereInput = {
     AND?: MetaAdsCriativoWhereInput | MetaAdsCriativoWhereInput[]
     OR?: MetaAdsCriativoWhereInput[]
@@ -21621,6 +23212,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -21648,6 +23240,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -21675,6 +23268,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -21702,6 +23296,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -21768,6 +23363,7 @@ export namespace Prisma {
     cliente: ClienteCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutContaInput
   }
@@ -21783,6 +23379,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutContaInput
   }
@@ -21798,6 +23395,7 @@ export namespace Prisma {
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutContaNestedInput
   }
@@ -21813,6 +23411,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
   }
@@ -22607,6 +24206,137 @@ export namespace Prisma {
     conversoes?: IntFieldUpdateOperationsInput | number
     conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoogleAdsCampanhaCreateInput = {
+    id?: string
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutGoogleAdsCampanhasInput
+    conta?: ContaCreateNestedOneWithoutGoogleAdsCampanhasInput
+  }
+
+  export type GoogleAdsCampanhaUncheckedCreateInput = {
+    id?: string
+    clienteId: string
+    contaId?: string | null
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GoogleAdsCampanhaUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutGoogleAdsCampanhasNestedInput
+    conta?: ContaUpdateOneWithoutGoogleAdsCampanhasNestedInput
+  }
+
+  export type GoogleAdsCampanhaUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    contaId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoogleAdsCampanhaCreateManyInput = {
+    id?: string
+    clienteId: string
+    contaId?: string | null
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GoogleAdsCampanhaUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoogleAdsCampanhaUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    contaId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -23433,6 +25163,12 @@ export namespace Prisma {
     none?: FatoMidiaDiarioWhereInput
   }
 
+  export type GoogleAdsCampanhaListRelationFilter = {
+    every?: GoogleAdsCampanhaWhereInput
+    some?: GoogleAdsCampanhaWhereInput
+    none?: GoogleAdsCampanhaWhereInput
+  }
+
   export type GoogleAdsCriativoListRelationFilter = {
     every?: GoogleAdsCriativoWhereInput
     some?: GoogleAdsCriativoWhereInput
@@ -23489,6 +25225,10 @@ export namespace Prisma {
   }
 
   export type FatoMidiaDiarioOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type GoogleAdsCampanhaOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -24300,6 +26040,114 @@ export namespace Prisma {
     _max?: NestedBigIntFilter<$PrismaModel>
   }
 
+  export type FloatFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type GoogleAdsCampanhaClienteIdCampaignIdDataCompoundUniqueInput = {
+    clienteId: string
+    campaignId: string
+    data: Date | string
+  }
+
+  export type GoogleAdsCampanhaCountOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    contaId?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    campaignStatus?: SortOrder
+    campaignType?: SortOrder
+    data?: SortOrder
+    impressoes?: SortOrder
+    cliques?: SortOrder
+    custoMicros?: SortOrder
+    conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
+    alcance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoogleAdsCampanhaAvgOrderByAggregateInput = {
+    impressoes?: SortOrder
+    cliques?: SortOrder
+    custoMicros?: SortOrder
+    conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
+    alcance?: SortOrder
+  }
+
+  export type GoogleAdsCampanhaMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    contaId?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    campaignStatus?: SortOrder
+    campaignType?: SortOrder
+    data?: SortOrder
+    impressoes?: SortOrder
+    cliques?: SortOrder
+    custoMicros?: SortOrder
+    conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
+    alcance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoogleAdsCampanhaMinOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    contaId?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    campaignStatus?: SortOrder
+    campaignType?: SortOrder
+    data?: SortOrder
+    impressoes?: SortOrder
+    cliques?: SortOrder
+    custoMicros?: SortOrder
+    conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
+    alcance?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type GoogleAdsCampanhaSumOrderByAggregateInput = {
+    impressoes?: SortOrder
+    cliques?: SortOrder
+    custoMicros?: SortOrder
+    conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
+    alcance?: SortOrder
+  }
+
+  export type FloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
+
   export type MetaAdsCriativoClienteIdAdIdDataCompoundUniqueInput = {
     clienteId: string
     adId: string
@@ -24780,6 +26628,13 @@ export namespace Prisma {
     connect?: FatoMidiaDiarioWhereUniqueInput | FatoMidiaDiarioWhereUniqueInput[]
   }
 
+  export type GoogleAdsCampanhaCreateNestedManyWithoutClienteInput = {
+    create?: XOR<GoogleAdsCampanhaCreateWithoutClienteInput, GoogleAdsCampanhaUncheckedCreateWithoutClienteInput> | GoogleAdsCampanhaCreateWithoutClienteInput[] | GoogleAdsCampanhaUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: GoogleAdsCampanhaCreateOrConnectWithoutClienteInput | GoogleAdsCampanhaCreateOrConnectWithoutClienteInput[]
+    createMany?: GoogleAdsCampanhaCreateManyClienteInputEnvelope
+    connect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+  }
+
   export type GoogleAdsCriativoCreateNestedManyWithoutClienteInput = {
     create?: XOR<GoogleAdsCriativoCreateWithoutClienteInput, GoogleAdsCriativoUncheckedCreateWithoutClienteInput> | GoogleAdsCriativoCreateWithoutClienteInput[] | GoogleAdsCriativoUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: GoogleAdsCriativoCreateOrConnectWithoutClienteInput | GoogleAdsCriativoCreateOrConnectWithoutClienteInput[]
@@ -24855,6 +26710,13 @@ export namespace Prisma {
     connectOrCreate?: FatoMidiaDiarioCreateOrConnectWithoutClienteInput | FatoMidiaDiarioCreateOrConnectWithoutClienteInput[]
     createMany?: FatoMidiaDiarioCreateManyClienteInputEnvelope
     connect?: FatoMidiaDiarioWhereUniqueInput | FatoMidiaDiarioWhereUniqueInput[]
+  }
+
+  export type GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput = {
+    create?: XOR<GoogleAdsCampanhaCreateWithoutClienteInput, GoogleAdsCampanhaUncheckedCreateWithoutClienteInput> | GoogleAdsCampanhaCreateWithoutClienteInput[] | GoogleAdsCampanhaUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: GoogleAdsCampanhaCreateOrConnectWithoutClienteInput | GoogleAdsCampanhaCreateOrConnectWithoutClienteInput[]
+    createMany?: GoogleAdsCampanhaCreateManyClienteInputEnvelope
+    connect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
   }
 
   export type GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput = {
@@ -24998,6 +26860,20 @@ export namespace Prisma {
     update?: FatoMidiaDiarioUpdateWithWhereUniqueWithoutClienteInput | FatoMidiaDiarioUpdateWithWhereUniqueWithoutClienteInput[]
     updateMany?: FatoMidiaDiarioUpdateManyWithWhereWithoutClienteInput | FatoMidiaDiarioUpdateManyWithWhereWithoutClienteInput[]
     deleteMany?: FatoMidiaDiarioScalarWhereInput | FatoMidiaDiarioScalarWhereInput[]
+  }
+
+  export type GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<GoogleAdsCampanhaCreateWithoutClienteInput, GoogleAdsCampanhaUncheckedCreateWithoutClienteInput> | GoogleAdsCampanhaCreateWithoutClienteInput[] | GoogleAdsCampanhaUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: GoogleAdsCampanhaCreateOrConnectWithoutClienteInput | GoogleAdsCampanhaCreateOrConnectWithoutClienteInput[]
+    upsert?: GoogleAdsCampanhaUpsertWithWhereUniqueWithoutClienteInput | GoogleAdsCampanhaUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: GoogleAdsCampanhaCreateManyClienteInputEnvelope
+    set?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    disconnect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    delete?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    connect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    update?: GoogleAdsCampanhaUpdateWithWhereUniqueWithoutClienteInput | GoogleAdsCampanhaUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: GoogleAdsCampanhaUpdateManyWithWhereWithoutClienteInput | GoogleAdsCampanhaUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: GoogleAdsCampanhaScalarWhereInput | GoogleAdsCampanhaScalarWhereInput[]
   }
 
   export type GoogleAdsCriativoUpdateManyWithoutClienteNestedInput = {
@@ -25154,6 +27030,20 @@ export namespace Prisma {
     deleteMany?: FatoMidiaDiarioScalarWhereInput | FatoMidiaDiarioScalarWhereInput[]
   }
 
+  export type GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<GoogleAdsCampanhaCreateWithoutClienteInput, GoogleAdsCampanhaUncheckedCreateWithoutClienteInput> | GoogleAdsCampanhaCreateWithoutClienteInput[] | GoogleAdsCampanhaUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: GoogleAdsCampanhaCreateOrConnectWithoutClienteInput | GoogleAdsCampanhaCreateOrConnectWithoutClienteInput[]
+    upsert?: GoogleAdsCampanhaUpsertWithWhereUniqueWithoutClienteInput | GoogleAdsCampanhaUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: GoogleAdsCampanhaCreateManyClienteInputEnvelope
+    set?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    disconnect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    delete?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    connect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    update?: GoogleAdsCampanhaUpdateWithWhereUniqueWithoutClienteInput | GoogleAdsCampanhaUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: GoogleAdsCampanhaUpdateManyWithWhereWithoutClienteInput | GoogleAdsCampanhaUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: GoogleAdsCampanhaScalarWhereInput | GoogleAdsCampanhaScalarWhereInput[]
+  }
+
   export type GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput = {
     create?: XOR<GoogleAdsCriativoCreateWithoutClienteInput, GoogleAdsCriativoUncheckedCreateWithoutClienteInput> | GoogleAdsCriativoCreateWithoutClienteInput[] | GoogleAdsCriativoUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: GoogleAdsCriativoCreateOrConnectWithoutClienteInput | GoogleAdsCriativoCreateOrConnectWithoutClienteInput[]
@@ -25244,6 +27134,13 @@ export namespace Prisma {
     connect?: FatoMidiaDiarioWhereUniqueInput | FatoMidiaDiarioWhereUniqueInput[]
   }
 
+  export type GoogleAdsCampanhaCreateNestedManyWithoutContaInput = {
+    create?: XOR<GoogleAdsCampanhaCreateWithoutContaInput, GoogleAdsCampanhaUncheckedCreateWithoutContaInput> | GoogleAdsCampanhaCreateWithoutContaInput[] | GoogleAdsCampanhaUncheckedCreateWithoutContaInput[]
+    connectOrCreate?: GoogleAdsCampanhaCreateOrConnectWithoutContaInput | GoogleAdsCampanhaCreateOrConnectWithoutContaInput[]
+    createMany?: GoogleAdsCampanhaCreateManyContaInputEnvelope
+    connect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+  }
+
   export type GoogleAdsCriativoCreateNestedManyWithoutContaInput = {
     create?: XOR<GoogleAdsCriativoCreateWithoutContaInput, GoogleAdsCriativoUncheckedCreateWithoutContaInput> | GoogleAdsCriativoCreateWithoutContaInput[] | GoogleAdsCriativoUncheckedCreateWithoutContaInput[]
     connectOrCreate?: GoogleAdsCriativoCreateOrConnectWithoutContaInput | GoogleAdsCriativoCreateOrConnectWithoutContaInput[]
@@ -25270,6 +27167,13 @@ export namespace Prisma {
     connectOrCreate?: FatoMidiaDiarioCreateOrConnectWithoutContaInput | FatoMidiaDiarioCreateOrConnectWithoutContaInput[]
     createMany?: FatoMidiaDiarioCreateManyContaInputEnvelope
     connect?: FatoMidiaDiarioWhereUniqueInput | FatoMidiaDiarioWhereUniqueInput[]
+  }
+
+  export type GoogleAdsCampanhaUncheckedCreateNestedManyWithoutContaInput = {
+    create?: XOR<GoogleAdsCampanhaCreateWithoutContaInput, GoogleAdsCampanhaUncheckedCreateWithoutContaInput> | GoogleAdsCampanhaCreateWithoutContaInput[] | GoogleAdsCampanhaUncheckedCreateWithoutContaInput[]
+    connectOrCreate?: GoogleAdsCampanhaCreateOrConnectWithoutContaInput | GoogleAdsCampanhaCreateOrConnectWithoutContaInput[]
+    createMany?: GoogleAdsCampanhaCreateManyContaInputEnvelope
+    connect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
   }
 
   export type GoogleAdsCriativoUncheckedCreateNestedManyWithoutContaInput = {
@@ -25320,6 +27224,20 @@ export namespace Prisma {
     update?: FatoMidiaDiarioUpdateWithWhereUniqueWithoutContaInput | FatoMidiaDiarioUpdateWithWhereUniqueWithoutContaInput[]
     updateMany?: FatoMidiaDiarioUpdateManyWithWhereWithoutContaInput | FatoMidiaDiarioUpdateManyWithWhereWithoutContaInput[]
     deleteMany?: FatoMidiaDiarioScalarWhereInput | FatoMidiaDiarioScalarWhereInput[]
+  }
+
+  export type GoogleAdsCampanhaUpdateManyWithoutContaNestedInput = {
+    create?: XOR<GoogleAdsCampanhaCreateWithoutContaInput, GoogleAdsCampanhaUncheckedCreateWithoutContaInput> | GoogleAdsCampanhaCreateWithoutContaInput[] | GoogleAdsCampanhaUncheckedCreateWithoutContaInput[]
+    connectOrCreate?: GoogleAdsCampanhaCreateOrConnectWithoutContaInput | GoogleAdsCampanhaCreateOrConnectWithoutContaInput[]
+    upsert?: GoogleAdsCampanhaUpsertWithWhereUniqueWithoutContaInput | GoogleAdsCampanhaUpsertWithWhereUniqueWithoutContaInput[]
+    createMany?: GoogleAdsCampanhaCreateManyContaInputEnvelope
+    set?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    disconnect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    delete?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    connect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    update?: GoogleAdsCampanhaUpdateWithWhereUniqueWithoutContaInput | GoogleAdsCampanhaUpdateWithWhereUniqueWithoutContaInput[]
+    updateMany?: GoogleAdsCampanhaUpdateManyWithWhereWithoutContaInput | GoogleAdsCampanhaUpdateManyWithWhereWithoutContaInput[]
+    deleteMany?: GoogleAdsCampanhaScalarWhereInput | GoogleAdsCampanhaScalarWhereInput[]
   }
 
   export type GoogleAdsCriativoUpdateManyWithoutContaNestedInput = {
@@ -25376,6 +27294,20 @@ export namespace Prisma {
     update?: FatoMidiaDiarioUpdateWithWhereUniqueWithoutContaInput | FatoMidiaDiarioUpdateWithWhereUniqueWithoutContaInput[]
     updateMany?: FatoMidiaDiarioUpdateManyWithWhereWithoutContaInput | FatoMidiaDiarioUpdateManyWithWhereWithoutContaInput[]
     deleteMany?: FatoMidiaDiarioScalarWhereInput | FatoMidiaDiarioScalarWhereInput[]
+  }
+
+  export type GoogleAdsCampanhaUncheckedUpdateManyWithoutContaNestedInput = {
+    create?: XOR<GoogleAdsCampanhaCreateWithoutContaInput, GoogleAdsCampanhaUncheckedCreateWithoutContaInput> | GoogleAdsCampanhaCreateWithoutContaInput[] | GoogleAdsCampanhaUncheckedCreateWithoutContaInput[]
+    connectOrCreate?: GoogleAdsCampanhaCreateOrConnectWithoutContaInput | GoogleAdsCampanhaCreateOrConnectWithoutContaInput[]
+    upsert?: GoogleAdsCampanhaUpsertWithWhereUniqueWithoutContaInput | GoogleAdsCampanhaUpsertWithWhereUniqueWithoutContaInput[]
+    createMany?: GoogleAdsCampanhaCreateManyContaInputEnvelope
+    set?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    disconnect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    delete?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    connect?: GoogleAdsCampanhaWhereUniqueInput | GoogleAdsCampanhaWhereUniqueInput[]
+    update?: GoogleAdsCampanhaUpdateWithWhereUniqueWithoutContaInput | GoogleAdsCampanhaUpdateWithWhereUniqueWithoutContaInput[]
+    updateMany?: GoogleAdsCampanhaUpdateManyWithWhereWithoutContaInput | GoogleAdsCampanhaUpdateManyWithWhereWithoutContaInput[]
+    deleteMany?: GoogleAdsCampanhaScalarWhereInput | GoogleAdsCampanhaScalarWhereInput[]
   }
 
   export type GoogleAdsCriativoUncheckedUpdateManyWithoutContaNestedInput = {
@@ -25556,6 +27488,44 @@ export namespace Prisma {
     delete?: ContaWhereInput | boolean
     connect?: ContaWhereUniqueInput
     update?: XOR<XOR<ContaUpdateToOneWithWhereWithoutGoogleAdsCriativosInput, ContaUpdateWithoutGoogleAdsCriativosInput>, ContaUncheckedUpdateWithoutGoogleAdsCriativosInput>
+  }
+
+  export type ClienteCreateNestedOneWithoutGoogleAdsCampanhasInput = {
+    create?: XOR<ClienteCreateWithoutGoogleAdsCampanhasInput, ClienteUncheckedCreateWithoutGoogleAdsCampanhasInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutGoogleAdsCampanhasInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type ContaCreateNestedOneWithoutGoogleAdsCampanhasInput = {
+    create?: XOR<ContaCreateWithoutGoogleAdsCampanhasInput, ContaUncheckedCreateWithoutGoogleAdsCampanhasInput>
+    connectOrCreate?: ContaCreateOrConnectWithoutGoogleAdsCampanhasInput
+    connect?: ContaWhereUniqueInput
+  }
+
+  export type FloatFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
+  export type ClienteUpdateOneRequiredWithoutGoogleAdsCampanhasNestedInput = {
+    create?: XOR<ClienteCreateWithoutGoogleAdsCampanhasInput, ClienteUncheckedCreateWithoutGoogleAdsCampanhasInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutGoogleAdsCampanhasInput
+    upsert?: ClienteUpsertWithoutGoogleAdsCampanhasInput
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutGoogleAdsCampanhasInput, ClienteUpdateWithoutGoogleAdsCampanhasInput>, ClienteUncheckedUpdateWithoutGoogleAdsCampanhasInput>
+  }
+
+  export type ContaUpdateOneWithoutGoogleAdsCampanhasNestedInput = {
+    create?: XOR<ContaCreateWithoutGoogleAdsCampanhasInput, ContaUncheckedCreateWithoutGoogleAdsCampanhasInput>
+    connectOrCreate?: ContaCreateOrConnectWithoutGoogleAdsCampanhasInput
+    upsert?: ContaUpsertWithoutGoogleAdsCampanhasInput
+    disconnect?: ContaWhereInput | boolean
+    delete?: ContaWhereInput | boolean
+    connect?: ContaWhereUniqueInput
+    update?: XOR<XOR<ContaUpdateToOneWithWhereWithoutGoogleAdsCampanhasInput, ContaUpdateWithoutGoogleAdsCampanhasInput>, ContaUncheckedUpdateWithoutGoogleAdsCampanhasInput>
   }
 
   export type ClienteCreateNestedOneWithoutMetaAdsCriativosInput = {
@@ -25927,6 +27897,22 @@ export namespace Prisma {
     _min?: NestedBigIntFilter<$PrismaModel>
     _max?: NestedBigIntFilter<$PrismaModel>
   }
+
+  export type NestedFloatWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel>
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel>
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatWithAggregatesFilter<$PrismaModel> | number
+    _count?: NestedIntFilter<$PrismaModel>
+    _avg?: NestedFloatFilter<$PrismaModel>
+    _sum?: NestedFloatFilter<$PrismaModel>
+    _min?: NestedFloatFilter<$PrismaModel>
+    _max?: NestedFloatFilter<$PrismaModel>
+  }
   export type NestedJsonNullableFilter<$PrismaModel = never> =
     | PatchUndefined<
         Either<Required<NestedJsonNullableFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>,
@@ -26037,6 +28023,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutContaInput
   }
@@ -26051,6 +28038,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutContaInput
   }
@@ -26200,6 +28188,52 @@ export namespace Prisma {
 
   export type FatoMidiaDiarioCreateManyClienteInputEnvelope = {
     data: FatoMidiaDiarioCreateManyClienteInput | FatoMidiaDiarioCreateManyClienteInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GoogleAdsCampanhaCreateWithoutClienteInput = {
+    id?: string
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    conta?: ContaCreateNestedOneWithoutGoogleAdsCampanhasInput
+  }
+
+  export type GoogleAdsCampanhaUncheckedCreateWithoutClienteInput = {
+    id?: string
+    contaId?: string | null
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GoogleAdsCampanhaCreateOrConnectWithoutClienteInput = {
+    where: GoogleAdsCampanhaWhereUniqueInput
+    create: XOR<GoogleAdsCampanhaCreateWithoutClienteInput, GoogleAdsCampanhaUncheckedCreateWithoutClienteInput>
+  }
+
+  export type GoogleAdsCampanhaCreateManyClienteInputEnvelope = {
+    data: GoogleAdsCampanhaCreateManyClienteInput | GoogleAdsCampanhaCreateManyClienteInput[]
     skipDuplicates?: boolean
   }
 
@@ -26683,6 +28717,44 @@ export namespace Prisma {
     campaignName?: StringFilter<"FatoMidiaDiario"> | string
   }
 
+  export type GoogleAdsCampanhaUpsertWithWhereUniqueWithoutClienteInput = {
+    where: GoogleAdsCampanhaWhereUniqueInput
+    update: XOR<GoogleAdsCampanhaUpdateWithoutClienteInput, GoogleAdsCampanhaUncheckedUpdateWithoutClienteInput>
+    create: XOR<GoogleAdsCampanhaCreateWithoutClienteInput, GoogleAdsCampanhaUncheckedCreateWithoutClienteInput>
+  }
+
+  export type GoogleAdsCampanhaUpdateWithWhereUniqueWithoutClienteInput = {
+    where: GoogleAdsCampanhaWhereUniqueInput
+    data: XOR<GoogleAdsCampanhaUpdateWithoutClienteInput, GoogleAdsCampanhaUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type GoogleAdsCampanhaUpdateManyWithWhereWithoutClienteInput = {
+    where: GoogleAdsCampanhaScalarWhereInput
+    data: XOR<GoogleAdsCampanhaUpdateManyMutationInput, GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteInput>
+  }
+
+  export type GoogleAdsCampanhaScalarWhereInput = {
+    AND?: GoogleAdsCampanhaScalarWhereInput | GoogleAdsCampanhaScalarWhereInput[]
+    OR?: GoogleAdsCampanhaScalarWhereInput[]
+    NOT?: GoogleAdsCampanhaScalarWhereInput | GoogleAdsCampanhaScalarWhereInput[]
+    id?: StringFilter<"GoogleAdsCampanha"> | string
+    clienteId?: StringFilter<"GoogleAdsCampanha"> | string
+    contaId?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    campaignId?: StringFilter<"GoogleAdsCampanha"> | string
+    campaignName?: StringFilter<"GoogleAdsCampanha"> | string
+    campaignStatus?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    campaignType?: StringNullableFilter<"GoogleAdsCampanha"> | string | null
+    data?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+    impressoes?: IntFilter<"GoogleAdsCampanha"> | number
+    cliques?: IntFilter<"GoogleAdsCampanha"> | number
+    custoMicros?: BigIntFilter<"GoogleAdsCampanha"> | bigint | number
+    conversoes?: FloatFilter<"GoogleAdsCampanha"> | number
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCampanha"> | bigint | number
+    alcance?: IntFilter<"GoogleAdsCampanha"> | number
+    createdAt?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+    updatedAt?: DateTimeFilter<"GoogleAdsCampanha"> | Date | string
+  }
+
   export type GoogleAdsCriativoUpsertWithWhereUniqueWithoutClienteInput = {
     where: GoogleAdsCriativoWhereUniqueInput
     update: XOR<GoogleAdsCriativoUpdateWithoutClienteInput, GoogleAdsCriativoUncheckedUpdateWithoutClienteInput>
@@ -26911,6 +28983,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -26937,6 +29010,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -27054,6 +29128,52 @@ export namespace Prisma {
 
   export type FatoMidiaDiarioCreateManyContaInputEnvelope = {
     data: FatoMidiaDiarioCreateManyContaInput | FatoMidiaDiarioCreateManyContaInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type GoogleAdsCampanhaCreateWithoutContaInput = {
+    id?: string
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutGoogleAdsCampanhasInput
+  }
+
+  export type GoogleAdsCampanhaUncheckedCreateWithoutContaInput = {
+    id?: string
+    clienteId: string
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type GoogleAdsCampanhaCreateOrConnectWithoutContaInput = {
+    where: GoogleAdsCampanhaWhereUniqueInput
+    create: XOR<GoogleAdsCampanhaCreateWithoutContaInput, GoogleAdsCampanhaUncheckedCreateWithoutContaInput>
+  }
+
+  export type GoogleAdsCampanhaCreateManyContaInputEnvelope = {
+    data: GoogleAdsCampanhaCreateManyContaInput | GoogleAdsCampanhaCreateManyContaInput[]
     skipDuplicates?: boolean
   }
 
@@ -27221,6 +29341,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -27247,6 +29368,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -27284,6 +29406,22 @@ export namespace Prisma {
   export type FatoMidiaDiarioUpdateManyWithWhereWithoutContaInput = {
     where: FatoMidiaDiarioScalarWhereInput
     data: XOR<FatoMidiaDiarioUpdateManyMutationInput, FatoMidiaDiarioUncheckedUpdateManyWithoutContaInput>
+  }
+
+  export type GoogleAdsCampanhaUpsertWithWhereUniqueWithoutContaInput = {
+    where: GoogleAdsCampanhaWhereUniqueInput
+    update: XOR<GoogleAdsCampanhaUpdateWithoutContaInput, GoogleAdsCampanhaUncheckedUpdateWithoutContaInput>
+    create: XOR<GoogleAdsCampanhaCreateWithoutContaInput, GoogleAdsCampanhaUncheckedCreateWithoutContaInput>
+  }
+
+  export type GoogleAdsCampanhaUpdateWithWhereUniqueWithoutContaInput = {
+    where: GoogleAdsCampanhaWhereUniqueInput
+    data: XOR<GoogleAdsCampanhaUpdateWithoutContaInput, GoogleAdsCampanhaUncheckedUpdateWithoutContaInput>
+  }
+
+  export type GoogleAdsCampanhaUpdateManyWithWhereWithoutContaInput = {
+    where: GoogleAdsCampanhaScalarWhereInput
+    data: XOR<GoogleAdsCampanhaUpdateManyMutationInput, GoogleAdsCampanhaUncheckedUpdateManyWithoutContaInput>
   }
 
   export type GoogleAdsCriativoUpsertWithWhereUniqueWithoutContaInput = {
@@ -27337,6 +29475,7 @@ export namespace Prisma {
     contas?: ContaCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -27363,6 +29502,7 @@ export namespace Prisma {
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -27385,6 +29525,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutContaInput
   }
@@ -27399,6 +29540,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutContaInput
   }
@@ -27438,6 +29580,7 @@ export namespace Prisma {
     contas?: ContaUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -27464,6 +29607,7 @@ export namespace Prisma {
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -27492,6 +29636,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutContaNestedInput
   }
@@ -27506,6 +29651,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
   }
@@ -27529,6 +29675,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -27555,6 +29702,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -27597,6 +29745,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -27623,6 +29772,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -27649,6 +29799,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -27675,6 +29826,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -27717,6 +29869,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -27743,6 +29896,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -27770,6 +29924,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
@@ -27796,6 +29951,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
@@ -27838,6 +29994,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
@@ -27864,6 +30021,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
@@ -27890,6 +30048,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -27916,6 +30075,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -27958,6 +30118,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -27984,6 +30145,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -28010,6 +30172,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
@@ -28036,6 +30199,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
@@ -28058,6 +30222,7 @@ export namespace Prisma {
     cliente: ClienteCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutContaInput
   }
 
@@ -28072,6 +30237,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutContaInput
   }
 
@@ -28111,6 +30277,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
@@ -28137,6 +30304,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
@@ -28165,6 +30333,7 @@ export namespace Prisma {
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutContaNestedInput
   }
 
@@ -28179,6 +30348,207 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutContaNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
+  }
+
+  export type ClienteCreateWithoutGoogleAdsCampanhasInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
+    contas?: ContaCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
+    metas?: MetaCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutGoogleAdsCampanhasInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
+    contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutGoogleAdsCampanhasInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutGoogleAdsCampanhasInput, ClienteUncheckedCreateWithoutGoogleAdsCampanhasInput>
+  }
+
+  export type ContaCreateWithoutGoogleAdsCampanhasInput = {
+    id?: string
+    plataforma: string
+    accountIdPlataforma?: string | null
+    googleAdsLoginCustomerId?: string | null
+    nomeConta?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutContasInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
+    fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
+    googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
+    metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutContaInput
+  }
+
+  export type ContaUncheckedCreateWithoutGoogleAdsCampanhasInput = {
+    id?: string
+    clienteId: string
+    plataforma: string
+    accountIdPlataforma?: string | null
+    googleAdsLoginCustomerId?: string | null
+    nomeConta?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
+    fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutContaInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutContaInput
+  }
+
+  export type ContaCreateOrConnectWithoutGoogleAdsCampanhasInput = {
+    where: ContaWhereUniqueInput
+    create: XOR<ContaCreateWithoutGoogleAdsCampanhasInput, ContaUncheckedCreateWithoutGoogleAdsCampanhasInput>
+  }
+
+  export type ClienteUpsertWithoutGoogleAdsCampanhasInput = {
+    update: XOR<ClienteUpdateWithoutGoogleAdsCampanhasInput, ClienteUncheckedUpdateWithoutGoogleAdsCampanhasInput>
+    create: XOR<ClienteCreateWithoutGoogleAdsCampanhasInput, ClienteUncheckedCreateWithoutGoogleAdsCampanhasInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutGoogleAdsCampanhasInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutGoogleAdsCampanhasInput, ClienteUncheckedUpdateWithoutGoogleAdsCampanhasInput>
+  }
+
+  export type ClienteUpdateWithoutGoogleAdsCampanhasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
+    contas?: ContaUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
+    metas?: MetaUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutGoogleAdsCampanhasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
+    contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ContaUpsertWithoutGoogleAdsCampanhasInput = {
+    update: XOR<ContaUpdateWithoutGoogleAdsCampanhasInput, ContaUncheckedUpdateWithoutGoogleAdsCampanhasInput>
+    create: XOR<ContaCreateWithoutGoogleAdsCampanhasInput, ContaUncheckedCreateWithoutGoogleAdsCampanhasInput>
+    where?: ContaWhereInput
+  }
+
+  export type ContaUpdateToOneWithWhereWithoutGoogleAdsCampanhasInput = {
+    where?: ContaWhereInput
+    data: XOR<ContaUpdateWithoutGoogleAdsCampanhasInput, ContaUncheckedUpdateWithoutGoogleAdsCampanhasInput>
+  }
+
+  export type ContaUpdateWithoutGoogleAdsCampanhasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
+    fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutContaNestedInput
+  }
+
+  export type ContaUncheckedUpdateWithoutGoogleAdsCampanhasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
+    fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
   }
 
@@ -28202,6 +30572,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
@@ -28228,6 +30599,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
@@ -28250,6 +30622,7 @@ export namespace Prisma {
     cliente: ClienteCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
   }
 
@@ -28264,6 +30637,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutContaInput
   }
 
@@ -28303,6 +30677,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
@@ -28329,6 +30704,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
@@ -28357,6 +30733,7 @@ export namespace Prisma {
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
   }
 
@@ -28371,6 +30748,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
   }
 
@@ -28393,6 +30771,7 @@ export namespace Prisma {
     contas?: ContaCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -28419,6 +30798,7 @@ export namespace Prisma {
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -28441,6 +30821,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContasInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutContaInput
   }
@@ -28455,6 +30836,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutContaInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutContaInput
   }
@@ -28494,6 +30876,7 @@ export namespace Prisma {
     contas?: ContaUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -28520,6 +30903,7 @@ export namespace Prisma {
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -28548,6 +30932,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutContaNestedInput
   }
@@ -28562,6 +30947,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
   }
@@ -28585,6 +30971,7 @@ export namespace Prisma {
     contas?: ContaCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -28611,6 +30998,7 @@ export namespace Prisma {
     contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -28653,6 +31041,7 @@ export namespace Prisma {
     contas?: ContaUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -28679,6 +31068,7 @@ export namespace Prisma {
     contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -28706,6 +31096,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
@@ -28732,6 +31123,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
@@ -28774,6 +31166,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
@@ -28800,6 +31193,7 @@ export namespace Prisma {
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
     fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
@@ -28896,6 +31290,24 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     campaignName?: string
+  }
+
+  export type GoogleAdsCampanhaCreateManyClienteInput = {
+    id?: string
+    contaId?: string | null
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type GoogleAdsCriativoCreateManyClienteInput = {
@@ -29101,6 +31513,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutContaNestedInput
   }
@@ -29115,6 +31528,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
   }
@@ -29289,6 +31703,60 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GoogleAdsCampanhaUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conta?: ContaUpdateOneWithoutGoogleAdsCampanhasNestedInput
+  }
+
+  export type GoogleAdsCampanhaUncheckedUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contaId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    contaId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GoogleAdsCriativoUpdateWithoutClienteInput = {
@@ -29662,6 +32130,24 @@ export namespace Prisma {
     campaignName?: string
   }
 
+  export type GoogleAdsCampanhaCreateManyContaInput = {
+    id?: string
+    clienteId: string
+    campaignId: string
+    campaignName: string
+    campaignStatus?: string | null
+    campaignType?: string | null
+    data: Date | string
+    impressoes?: number
+    cliques?: number
+    custoMicros?: bigint | number
+    conversoes?: number
+    conversaoValorMicros?: bigint | number
+    alcance?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type GoogleAdsCriativoCreateManyContaInput = {
     id?: string
     clienteId: string
@@ -29849,6 +32335,60 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GoogleAdsCampanhaUpdateWithoutContaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutGoogleAdsCampanhasNestedInput
+  }
+
+  export type GoogleAdsCampanhaUncheckedUpdateWithoutContaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type GoogleAdsCampanhaUncheckedUpdateManyWithoutContaInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: StringFieldUpdateOperationsInput | string
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignType?: NullableStringFieldUpdateOperationsInput | string | null
+    data?: DateTimeFieldUpdateOperationsInput | Date | string
+    impressoes?: IntFieldUpdateOperationsInput | number
+    cliques?: IntFieldUpdateOperationsInput | number
+    custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    conversoes?: FloatFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type GoogleAdsCriativoUpdateWithoutContaInput = {

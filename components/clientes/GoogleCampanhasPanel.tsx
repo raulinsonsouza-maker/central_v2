@@ -22,10 +22,10 @@ function fmtBrl(v: number) { return "R$\u00a0" + fmt(v, 2); }
 function fmtPct(v: number) { return fmt(v, 2) + "%"; }
 
 interface Campanha {
-  nome: string; campaignId: string | null; campaignStatus: string | null;
+  nome: string; campaignId: string | null; campaignStatus: string | null; campaignType: string | null;
   investimento: number; impressoes: number; cliques: number; conversoes: number;
   conversaoValor: number;
-  grupoCount: number; adCount: number;
+  grupoCount?: number; adCount?: number;
   ctr: number | null; cpc: number | null; custoConversao: number | null; roas: number | null;
 }
 
@@ -73,15 +73,26 @@ const Td = ({ v, muted = false, highlight = false }: { v: string; muted?: boolea
 const dash = "—";
 const n = (v: number | null, fn: (x: number) => string) => v != null && v > 0 ? fn(v) : dash;
 
-function campTypeBadge(nome: string) {
+function campTypeBadge(nome: string, campaignType?: string | null) {
+  const type = (campaignType ?? "").toUpperCase();
+  if (type === "PERFORMANCE_MAX") return { label: "PMax", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
+  if (type === "SEARCH") {
+    const lower = nome.toLowerCase();
+    if (lower.includes("brand") || lower.includes("marca") || lower.includes("[ra]") || lower.includes("institucional")) return { label: "Brand", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
+    if (lower.includes("rmkt") || lower.includes("remarketing")) return { label: "Rmkt", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" };
+    return { label: "Search", color: "bg-sky-500/10 text-sky-400 border-sky-500/20" };
+  }
+  if (type === "DISPLAY") return { label: "Display", color: "bg-pink-500/10 text-pink-400 border-pink-500/20" };
+  if (type === "VIDEO") return { label: "Video", color: "bg-red-500/10 text-red-400 border-red-500/20" };
+  if (type === "SHOPPING") return { label: "Shopping", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" };
   const lower = nome.toLowerCase();
   if (lower.includes("brand") || lower.includes("marca")) return { label: "Brand", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
   if (lower.includes("rmkt") || lower.includes("remarketing") || lower.includes("retargeting")) return { label: "Rmkt", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" };
-  if (lower.includes("performance") || lower.includes("pmax") || lower.includes("p.max")) return { label: "PMax", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
-  if (lower.includes("search") || lower.includes("pesquisa") || lower.includes("rede de pesquisa")) return { label: "Search", color: "bg-sky-500/10 text-sky-400 border-sky-500/20" };
-  if (lower.includes("display") || lower.includes("rede de display")) return { label: "Display", color: "bg-pink-500/10 text-pink-400 border-pink-500/20" };
+  if (lower.includes("pmax") || lower.includes("p.max") || lower.includes("performance max")) return { label: "PMax", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
+  if (lower.includes("search") || lower.includes("pesquisa")) return { label: "Search", color: "bg-sky-500/10 text-sky-400 border-sky-500/20" };
+  if (lower.includes("display")) return { label: "Display", color: "bg-pink-500/10 text-pink-400 border-pink-500/20" };
   if (lower.includes("video") || lower.includes("youtube")) return { label: "Video", color: "bg-red-500/10 text-red-400 border-red-500/20" };
-  if (lower.includes("shopping") || lower.includes("google shopping")) return { label: "Shopping", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" };
+  if (lower.includes("shopping")) return { label: "Shopping", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" };
   return { label: "Google", color: "bg-[var(--primary)]/10 text-[var(--primary)] border-[var(--primary)]/20" };
 }
 
@@ -159,7 +170,7 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
             <tbody>
               {sorted.map((c, i) => {
                 const isTop = i === 0;
-                const badge = campTypeBadge(c.nome);
+                const badge = campTypeBadge(c.nome, c.campaignType);
                 return (
                   <tr
                     key={c.nome}

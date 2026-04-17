@@ -7,9 +7,11 @@ import {
 import {
   aggregateCampaignRowsByDate,
   mapAdCreativeRowToPayload,
+  mapCampaignRowToIndividualPayload,
 } from "@/lib/mappers/googleAdsToDomain";
 import { upsertFatoMidia } from "@/lib/repositories/fatosMidiaRepository";
 import { upsertGoogleAdsCriativo } from "@/lib/repositories/googleAdsCriativosRepository";
+import { upsertGoogleAdsCampanha } from "@/lib/repositories/googleAdsCampanhasRepository";
 import { findAllClientes } from "@/lib/repositories/clientesRepository";
 import { prisma } from "@/lib/db";
 
@@ -108,6 +110,16 @@ export async function syncGoogleAdsCliente(
         checkoutIniciado: Math.round(checkoutIniciado),
         contaId: conta?.id ?? undefined,
       });
+    }
+
+    for (const row of campaignRows) {
+      const campPayload = mapCampaignRowToIndividualPayload(row);
+      if (campPayload) {
+        await upsertGoogleAdsCampanha(clienteId, {
+          ...campPayload,
+          contaId: conta?.id ?? undefined,
+        });
+      }
     }
 
     for (const row of creativeRows) {

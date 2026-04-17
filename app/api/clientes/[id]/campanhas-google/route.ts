@@ -44,28 +44,26 @@ export async function GET(
 
   // ── Level 1: Campanhas ──────────────────────────────────────────────────────
   if (nivel === "campanhas") {
-    const rows = await prisma.googleAdsCriativo.findMany({
+    const rows = await prisma.googleAdsCampanha.findMany({
       where: {
         clienteId: id,
         data: { gte: dataInicio, lte: dataFim },
-        NOT: { campaignName: null },
       },
     });
 
     const byCamp = new Map<string, {
-      campaignId: string | null;
+      campaignId: string;
       campaignStatus: string | null;
+      campaignType: string | null;
       investimento: number;
       impressoes: number;
       cliques: number;
       conversoes: number;
       conversaoValor: number;
-      adGroupCount: Set<string>;
-      adCount: Set<string>;
     }>();
 
     for (const r of rows) {
-      const nome = r.campaignName ?? "Campanha sem nome";
+      const nome = r.campaignName;
       const ex = byCamp.get(nome);
       if (ex) {
         ex.investimento += Number(r.custoMicros) / 1_000_000;
@@ -74,23 +72,17 @@ export async function GET(
         ex.conversoes += r.conversoes;
         ex.conversaoValor += Number(r.conversaoValorMicros) / 1_000_000;
         if (r.campaignStatus) ex.campaignStatus = r.campaignStatus;
-        if (r.adGroupId) ex.adGroupCount.add(r.adGroupId);
-        ex.adCount.add(r.adResourceName);
+        if (r.campaignType) ex.campaignType = r.campaignType;
       } else {
-        const s = new Set<string>();
-        if (r.adGroupId) s.add(r.adGroupId);
-        const ads = new Set<string>();
-        ads.add(r.adResourceName);
         byCamp.set(nome, {
           campaignId: r.campaignId,
           campaignStatus: r.campaignStatus ?? null,
+          campaignType: r.campaignType ?? null,
           investimento: Number(r.custoMicros) / 1_000_000,
           impressoes: r.impressoes,
           cliques: r.cliques,
           conversoes: r.conversoes,
           conversaoValor: Number(r.conversaoValorMicros) / 1_000_000,
-          adGroupCount: s,
-          adCount: ads,
         });
       }
     }
@@ -100,13 +92,12 @@ export async function GET(
         nome,
         campaignId: v.campaignId,
         campaignStatus: v.campaignStatus,
+        campaignType: v.campaignType,
         investimento: v.investimento,
         impressoes: v.impressoes,
         cliques: v.cliques,
         conversoes: v.conversoes,
         conversaoValor: v.conversaoValor,
-        grupoCount: v.adGroupCount.size,
-        adCount: v.adCount.size,
         ctr: v.impressoes > 0 ? (v.cliques / v.impressoes) * 100 : null,
         cpc: v.cliques > 0 ? v.investimento / v.cliques : null,
         custoConversao: v.conversoes > 0 ? v.investimento / v.conversoes : null,

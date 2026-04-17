@@ -45,7 +45,7 @@ function createCustomer(client: GoogleAdsApi, params: {
 }
 
 export interface GoogleAdsCampaignRow {
-  campaign?: { id?: string; name?: string };
+  campaign?: { id?: string; name?: string; status?: string; advertising_channel_type?: string };
   segments?: { date?: string };
   metrics?: {
     impressions?: string | number;
@@ -117,6 +117,8 @@ export async function fetchCampaignMetrics(
     SELECT
       campaign.id,
       campaign.name,
+      campaign.status,
+      campaign.advertising_channel_type,
       segments.date,
       metrics.impressions,
       metrics.clicks,
@@ -128,6 +130,7 @@ export async function fetchCampaignMetrics(
       metrics.unique_users
     FROM campaign
     WHERE segments.date BETWEEN '${dateFrom}' AND '${dateTo}'
+      AND metrics.cost_micros > 0
     ORDER BY segments.date, metrics.impressions DESC
     LIMIT 10000
   `;
