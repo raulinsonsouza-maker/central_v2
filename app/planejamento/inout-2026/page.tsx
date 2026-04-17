@@ -734,56 +734,32 @@ export default function InoutPlano2026() {
           <div className="grid md:grid-cols-2 gap-6">
             <Card>
               <SectionLabel label="Índice de oportunidade" />
-              <h3 className="text-lg font-extrabold text-white mb-1">Score de atratividade por segmento</h3>
-              <p className="text-xs text-neutral-500 mb-5">
-                Score 0–100 = soma de 4 critérios (cada um 0–25): tamanho de mercado, capacidade de pagamento, brecha competitiva e urgência.
+              <h3 className="text-lg font-extrabold text-white mb-1">Score de atratividade</h3>
+              <p className="text-xs text-neutral-500 mb-6">
+                Score 0–100 baseado em tamanho, capacidade de pagamento, brecha competitiva e urgência.
               </p>
 
-              <div className="space-y-4">
+              <div className="space-y-5">
                 {[...segmentoScore].sort((a, b) => b.total - a.total).map((s) => {
-                  const tierColor = s.total >= 80 ? "emerald" : s.total >= 70 ? "orange" : s.total >= 60 ? "amber" : "neutral";
+                  const tierColor = s.total >= 80 ? "emerald" : s.total >= 70 ? "orange" : "amber";
                   const tierMap = {
-                    emerald: { bar: "bg-emerald-500", text: "text-emerald-400", bg: "bg-emerald-500/10" },
-                    orange:  { bar: "bg-orange-500",  text: "text-orange-400",  bg: "bg-orange-500/10" },
-                    amber:   { bar: "bg-amber-500",   text: "text-amber-400",   bg: "bg-amber-500/10" },
-                    neutral: { bar: "bg-neutral-500", text: "text-neutral-400", bg: "bg-neutral-500/10" },
+                    emerald: { bar: "bg-emerald-500", text: "text-emerald-400" },
+                    orange:  { bar: "bg-orange-500",  text: "text-orange-400" },
+                    amber:   { bar: "bg-amber-500",   text: "text-amber-400" },
                   } as const;
                   const ts = tierMap[tierColor];
                   return (
-                    <div key={s.name} className="rounded-xl bg-neutral-900 border border-neutral-800 p-4">
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-baseline gap-3">
-                          <p className="font-bold text-white text-sm">{s.name}</p>
-                          <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${ts.bg} ${ts.text}`}>
-                            {s.total >= 80 ? "Prioridade máxima" : s.total >= 70 ? "Alta" : s.total >= 60 ? "Média" : "Baixa"}
-                          </span>
-                        </div>
-                        <p className={`text-2xl font-extrabold tabular-nums ${ts.text}`}>
-                          {s.total}<span className="text-xs text-neutral-500 font-normal">/100</span>
+                    <div key={s.name}>
+                      <div className="flex items-baseline justify-between mb-2">
+                        <p className="font-bold text-white text-sm">{s.name}</p>
+                        <p className={`text-xl font-extrabold tabular-nums ${ts.text}`}>
+                          {s.total}<span className="text-xs text-neutral-600 font-normal">/100</span>
                         </p>
                       </div>
-
-                      {/* breakdown */}
-                      <div className="grid grid-cols-4 gap-2 mb-2">
-                        {[
-                          { label: "Tamanho", v: s.tamanho },
-                          { label: "Pagamento", v: s.pagamento },
-                          { label: "Brecha", v: s.brecha },
-                          { label: "Urgência", v: s.urgencia },
-                        ].map((c) => (
-                          <div key={c.label}>
-                            <div className="flex items-baseline justify-between mb-1">
-                              <span className="text-[9px] uppercase tracking-widest font-bold text-neutral-500">{c.label}</span>
-                              <span className="text-[10px] font-bold text-neutral-300 tabular-nums">{c.v}</span>
-                            </div>
-                            <div className="h-1.5 rounded-full bg-neutral-800 overflow-hidden">
-                              <div className={`h-full ${ts.bar}`} style={{ width: `${(c.v / 25) * 100}%` }} />
-                            </div>
-                          </div>
-                        ))}
+                      <div className="h-2 rounded-full bg-neutral-800 overflow-hidden">
+                        <div className={`h-full ${ts.bar} rounded-full`} style={{ width: `${s.total}%` }} />
                       </div>
-
-                      <p className="text-xs text-neutral-500 leading-snug pt-2">{s.insight}</p>
+                      <p className="text-xs text-neutral-500 leading-snug mt-2">{s.insight}</p>
                     </div>
                   );
                 })}
