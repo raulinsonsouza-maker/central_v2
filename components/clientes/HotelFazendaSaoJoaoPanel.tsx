@@ -67,6 +67,7 @@ type CampanhaCPV = {
 
 type PainelData = {
   periodo: string;
+  agrupamento?: "semanal" | "mensal";
   resumo: PainelResumo;
   series: PainelSerie[];
   campanhas: CampanhaCPV[];
@@ -233,6 +234,7 @@ export function HotelFazendaSaoJoaoPanel({
   data: PainelData;
   canalLabel: string;
 }) {
+  const isMensal = data.agrupamento === "mensal";
   const latestFiveSeries = data.series.slice(-5);
   const receitaPorLead = data.resumo.leads > 0 ? data.resumo.faturamento / data.resumo.leads : 0;
 
@@ -301,10 +303,12 @@ export function HotelFazendaSaoJoaoPanel({
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold tracking-tight text-[var(--foreground)]">
-                  Performance semanal de receita
+                  Performance de receita {isMensal ? "mensal" : "semanal"}
                 </h3>
                 <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
-                  Linha = faturamento (eixo esq.) · Barras = investimento em mídia (eixo dir.)
+                  {isMensal
+                    ? "Agrupado por mês · Linha = faturamento (eixo esq.) · Barras = investimento (eixo dir.)"
+                    : "Agrupado por semana · Linha = faturamento (eixo esq.) · Barras = investimento (eixo dir.)"}
                 </p>
               </div>
               <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
@@ -595,7 +599,7 @@ export function HotelFazendaSaoJoaoPanel({
                 <h3 className="text-xl font-black uppercase tracking-tight text-[var(--foreground)] sm:text-2xl">
                   Resultado comercial
                   <span className="ml-2 bg-[linear-gradient(90deg,var(--accent),var(--primary))] bg-clip-text text-transparent">
-                    Semana a semana
+                    {isMensal ? "Mês a mês" : "Semana a semana"}
                   </span>
                 </h3>
                 <p className="mt-1 text-sm text-[var(--muted-foreground)]">
@@ -603,7 +607,7 @@ export function HotelFazendaSaoJoaoPanel({
                 </p>
               </div>
               <span className="rounded-full border border-[var(--primary)]/25 bg-[var(--primary)]/12 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--foreground)]">
-                {latestFiveSeries.length} semanas
+                {latestFiveSeries.length} {isMensal ? "meses" : "semanas"}
               </span>
             </div>
           </CardHeader>

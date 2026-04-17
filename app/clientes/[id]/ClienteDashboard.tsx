@@ -77,10 +77,13 @@ async function fetchFinanceiro(id: string, canal: "geral" | "meta" | "google") {
 async function fetchPainelEspecial(
   id: string,
   canal: "geral" | "meta" | "google",
-  filter: DateFilter
+  filter: DateFilter,
+  preset?: string
 ) {
+  const agrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
   const params = new URLSearchParams(buildQueryParams(filter));
   params.set("canal", canal);
+  params.set("agrupamento", agrupamento);
   const res = await fetch(`/api/clientes/${id}/painel-especial?${params.toString()}`);
   if (!res.ok) throw new Error("Falha ao carregar painel especial");
   return res.json();
@@ -470,8 +473,8 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   , [isComprasPanel, isVisitasPanel, isMiguelImoveisPanel, isMiguelPanel, isClinicaESpaPanel]);
   const isSpecialPanel = isHotelPanel || isTertuliaPanel || isVarellaPanel;
   const { data: painelEspecial } = useQuery({
-    queryKey: ["painel-especial", id, canal, dateFilter.periodo, dateFilter.dataInicio, dateFilter.dataFim],
-    queryFn: () => fetchPainelEspecial(id, canal as "geral" | "meta" | "google", dateFilter),
+    queryKey: ["painel-especial", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim],
+    queryFn: () => fetchPainelEspecial(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo),
     enabled: !!id && isHotelPanel,
   });
   const { data: painelTertulia } = useQuery({
