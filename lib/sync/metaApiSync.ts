@@ -1,11 +1,11 @@
-import { fetchAccountInsights, fetchCampaignInsightsAggregatedByDay, fetchCampaignInsightsPerCampaign, fetchAdsWithCreatives } from "@/lib/meta/metaClient";
+import { fetchCampaignInsightsAggregatedByDay, fetchCampaignInsightsPerCampaign, fetchAdsWithCreatives } from "@/lib/meta/metaClient";
 import { mapMetaInsightToFatoPayload } from "@/lib/mappers/metaToDomain";
 import { upsertFatoMidia } from "@/lib/repositories/fatosMidiaRepository";
 import { upsertMetaAdsCriativo } from "@/lib/repositories/metaAdsCriativosRepository";
 import { findAllClientes } from "@/lib/repositories/clientesRepository";
 import { prisma } from "@/lib/db";
 import { getIntegrationsConfig } from "@/lib/config/integrations";
-import { isFlorien, isHotelFazendaSaoJoao } from "@/lib/clientProfiles";
+import { isFlorien } from "@/lib/clientProfiles";
 
 const DEFAULT_DATE_FROM = "2026-01-01";
 
@@ -64,20 +64,16 @@ export async function syncMetaCliente(
 
   try {
     const cliente = await prisma.cliente.findUnique({ where: { id: clienteId }, select: { nome: true, slug: true, perfilPanel: true } });
-    const useCampaignLevel = isFlorien(cliente);
-    const useCampaignPerRow = isHotelFazendaSaoJoao(cliente);
+    // Florien: campaign-level aggregated by day (profile visits metric, no per-campaign rows)
+    const useCampaignAggregated = isFlorien(cliente);
 
     let rows: Awaited<ReturnType<typeof fetchCampaignInsightsPerCampaign>>;
-    if (useCampaignPerRow) {
-      // Per-campaign rows: each row has campaign_name and is stored separately
-      rows = await fetchCampaignInsightsPerCampaign(accountId, token, dateFrom, dateTo);
-    } else if (useCampaignLevel) {
-      // Florien: campaign-level aggregated by day (no campaign name stored)
+    if (useCampaignAggregated) {
       const resp = await fetchCampaignInsightsAggregatedByDay(accountId, token, dateFrom, dateTo);
       rows = resp.data ?? [];
     } else {
-      const resp = await fetchAccountInsights(accountId, token, dateFrom, dateTo);
-      rows = resp.data ?? [];
+      // All other clients: per-campaign rows with campaign_name stored separately
+      rows = await fetchCampaignInsightsPerCampaign(accountId, token, dateFrom, dateTo);
     }
 
     let contaId: string | null = null;
@@ -86,10 +82,8 @@ export async function syncMetaCliente(
     });
     if (conta) contaId = conta.id;
 
-    // For per-campaign mode: remove ALL old aggregate rows (campaignName="") for this client.
-    // This covers data synced before per-campaign mode was enabled, preventing "Campanha sem nome"
-    // from appearing in the Campanhas com Vendas section.
-    if (useCampaignPerRow && rows.length > 0) {
+    // Remove ALL old aggregate rows (campaignName="") so they don't pollute campaign breakdowns.
+    if (!useCampaignAggregated && rows.length > 0) {
       await prisma.fatoMidiaDiario.deleteMany({
         where: { clienteId, canal: "META", campaignName: "" },
       });
@@ -137,6 +131,10 @@ export async function syncMetaCliente(
         creativeId: creative.id,
         adName: ad.name,
         effectiveStatus: ad.effective_status ?? null,
+        campaignId: ad.adset?.campaign?.id ?? null,
+        campaignName: ad.adset?.campaign?.name ?? null,
+        adsetId: ad.adset?.id ?? null,
+        adsetName: ad.adset?.name ?? null,
         campaignObjective: ad.adset?.campaign?.objective ?? null,
         mediaType: creative.video_source_url || creative.video_id ? "VIDEO" : "IMAGE",
         imageUrl: creative.image_url_full ?? creative.thumbnail_url ?? creative.image_url ?? null,

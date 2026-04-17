@@ -479,7 +479,7 @@ export interface MetaAd {
   id: string;
   name: string;
   effective_status?: string;
-  adset?: { campaign?: { objective?: string } };
+  adset?: { id?: string; name?: string; campaign?: { id?: string; name?: string; objective?: string } };
   adcreatives?: { data: MetaAdCreative[] };
   insights?: { data: MetaAdInsight[] };
 }
@@ -1187,7 +1187,7 @@ export async function fetchAdsWithCreatives(
         })}){spend,impressions,clicks,inline_link_clicks,ctr,cpc,frequency,actions,video_p100_watched_actions}`
       : "insights{spend,impressions,clicks,inline_link_clicks,ctr,cpc,frequency,actions,video_p100_watched_actions}";
   const fields =
-    `id,name,effective_status,adset{campaign{objective}},adcreatives{id,object_story_id,thumbnail_url,image_hash,video_id,body,title,object_story_spec,asset_feed_spec{videos{video_id,thumbnail_url},images{hash,url}}},${insightsField}`;
+    `id,name,effective_status,adset{id,name,campaign{id,name,objective}},adcreatives{id,object_story_id,thumbnail_url,image_hash,video_id,body,title,object_story_spec,asset_feed_spec{videos{video_id,thumbnail_url},images{hash,url}}},${insightsField}`;
   const filtering = JSON.stringify([
     { field: "effective_status", operator: "IN", value: [...DELIVERY_ACTIVE_STATUSES] },
   ]);

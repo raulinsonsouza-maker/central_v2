@@ -12484,6 +12484,10 @@ export namespace Prisma {
     creativeId: string | null
     adName: string | null
     effectiveStatus: string | null
+    campaignId: string | null
+    campaignName: string | null
+    adsetId: string | null
+    adsetName: string | null
     campaignObjective: string | null
     mediaType: string | null
     imageUrl: string | null
@@ -12512,6 +12516,10 @@ export namespace Prisma {
     creativeId: string | null
     adName: string | null
     effectiveStatus: string | null
+    campaignId: string | null
+    campaignName: string | null
+    adsetId: string | null
+    adsetName: string | null
     campaignObjective: string | null
     mediaType: string | null
     imageUrl: string | null
@@ -12540,6 +12548,10 @@ export namespace Prisma {
     creativeId: number
     adName: number
     effectiveStatus: number
+    campaignId: number
+    campaignName: number
+    adsetId: number
+    adsetName: number
     campaignObjective: number
     mediaType: number
     imageUrl: number
@@ -12586,6 +12598,10 @@ export namespace Prisma {
     creativeId?: true
     adName?: true
     effectiveStatus?: true
+    campaignId?: true
+    campaignName?: true
+    adsetId?: true
+    adsetName?: true
     campaignObjective?: true
     mediaType?: true
     imageUrl?: true
@@ -12614,6 +12630,10 @@ export namespace Prisma {
     creativeId?: true
     adName?: true
     effectiveStatus?: true
+    campaignId?: true
+    campaignName?: true
+    adsetId?: true
+    adsetName?: true
     campaignObjective?: true
     mediaType?: true
     imageUrl?: true
@@ -12642,6 +12662,10 @@ export namespace Prisma {
     creativeId?: true
     adName?: true
     effectiveStatus?: true
+    campaignId?: true
+    campaignName?: true
+    adsetId?: true
+    adsetName?: true
     campaignObjective?: true
     mediaType?: true
     imageUrl?: true
@@ -12757,6 +12781,10 @@ export namespace Prisma {
     creativeId: string | null
     adName: string
     effectiveStatus: string | null
+    campaignId: string | null
+    campaignName: string | null
+    adsetId: string | null
+    adsetName: string | null
     campaignObjective: string | null
     mediaType: string
     imageUrl: string | null
@@ -12804,6 +12832,10 @@ export namespace Prisma {
     creativeId?: boolean
     adName?: boolean
     effectiveStatus?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
     campaignObjective?: boolean
     mediaType?: boolean
     imageUrl?: boolean
@@ -12834,6 +12866,10 @@ export namespace Prisma {
     creativeId?: boolean
     adName?: boolean
     effectiveStatus?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
     campaignObjective?: boolean
     mediaType?: boolean
     imageUrl?: boolean
@@ -12864,6 +12900,10 @@ export namespace Prisma {
     creativeId?: boolean
     adName?: boolean
     effectiveStatus?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
     campaignObjective?: boolean
     mediaType?: boolean
     imageUrl?: boolean
@@ -12894,6 +12934,10 @@ export namespace Prisma {
     creativeId?: boolean
     adName?: boolean
     effectiveStatus?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
     campaignObjective?: boolean
     mediaType?: boolean
     imageUrl?: boolean
@@ -12913,7 +12957,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type MetaAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "adId" | "creativeId" | "adName" | "effectiveStatus" | "campaignObjective" | "mediaType" | "imageUrl" | "imageUrlFull" | "videoId" | "videoSourceUrl" | "videoPictureUrl" | "videoEmbedHtml" | "body" | "title" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "createdAt" | "updatedAt", ExtArgs["result"]["metaAdsCriativo"]>
+  export type MetaAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "adId" | "creativeId" | "adName" | "effectiveStatus" | "campaignId" | "campaignName" | "adsetId" | "adsetName" | "campaignObjective" | "mediaType" | "imageUrl" | "imageUrlFull" | "videoId" | "videoSourceUrl" | "videoPictureUrl" | "videoEmbedHtml" | "body" | "title" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "createdAt" | "updatedAt", ExtArgs["result"]["metaAdsCriativo"]>
   export type MetaAdsCriativoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
@@ -12942,6 +12986,10 @@ export namespace Prisma {
       creativeId: string | null
       adName: string
       effectiveStatus: string | null
+      campaignId: string | null
+      campaignName: string | null
+      adsetId: string | null
+      adsetName: string | null
       campaignObjective: string | null
       mediaType: string
       imageUrl: string | null
@@ -13392,6 +13440,10 @@ export namespace Prisma {
     readonly creativeId: FieldRef<"MetaAdsCriativo", 'String'>
     readonly adName: FieldRef<"MetaAdsCriativo", 'String'>
     readonly effectiveStatus: FieldRef<"MetaAdsCriativo", 'String'>
+    readonly campaignId: FieldRef<"MetaAdsCriativo", 'String'>
+    readonly campaignName: FieldRef<"MetaAdsCriativo", 'String'>
+    readonly adsetId: FieldRef<"MetaAdsCriativo", 'String'>
+    readonly adsetName: FieldRef<"MetaAdsCriativo", 'String'>
     readonly campaignObjective: FieldRef<"MetaAdsCriativo", 'String'>
     readonly mediaType: FieldRef<"MetaAdsCriativo", 'String'>
     readonly imageUrl: FieldRef<"MetaAdsCriativo", 'String'>
@@ -19701,6 +19753,10 @@ export namespace Prisma {
     creativeId: 'creativeId',
     adName: 'adName',
     effectiveStatus: 'effectiveStatus',
+    campaignId: 'campaignId',
+    campaignName: 'campaignName',
+    adsetId: 'adsetId',
+    adsetName: 'adsetName',
     campaignObjective: 'campaignObjective',
     mediaType: 'mediaType',
     imageUrl: 'imageUrl',
@@ -20836,6 +20892,10 @@ export namespace Prisma {
     creativeId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     adName?: StringFilter<"MetaAdsCriativo"> | string
     effectiveStatus?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     campaignObjective?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     mediaType?: StringFilter<"MetaAdsCriativo"> | string
     imageUrl?: StringNullableFilter<"MetaAdsCriativo"> | string | null
@@ -20866,6 +20926,10 @@ export namespace Prisma {
     creativeId?: SortOrderInput | SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrderInput | SortOrder
+    campaignId?: SortOrderInput | SortOrder
+    campaignName?: SortOrderInput | SortOrder
+    adsetId?: SortOrderInput | SortOrder
+    adsetName?: SortOrderInput | SortOrder
     campaignObjective?: SortOrderInput | SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
@@ -20900,6 +20964,10 @@ export namespace Prisma {
     creativeId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     adName?: StringFilter<"MetaAdsCriativo"> | string
     effectiveStatus?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     campaignObjective?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     mediaType?: StringFilter<"MetaAdsCriativo"> | string
     imageUrl?: StringNullableFilter<"MetaAdsCriativo"> | string | null
@@ -20930,6 +20998,10 @@ export namespace Prisma {
     creativeId?: SortOrderInput | SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrderInput | SortOrder
+    campaignId?: SortOrderInput | SortOrder
+    campaignName?: SortOrderInput | SortOrder
+    adsetId?: SortOrderInput | SortOrder
+    adsetName?: SortOrderInput | SortOrder
     campaignObjective?: SortOrderInput | SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
@@ -20966,6 +21038,10 @@ export namespace Prisma {
     creativeId?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
     adName?: StringWithAggregatesFilter<"MetaAdsCriativo"> | string
     effectiveStatus?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
+    campaignId?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
+    campaignName?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
+    adsetId?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
+    adsetName?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
     campaignObjective?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
     mediaType?: StringWithAggregatesFilter<"MetaAdsCriativo"> | string
     imageUrl?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
@@ -22417,6 +22493,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -22447,6 +22527,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -22473,6 +22557,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22503,6 +22591,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22531,6 +22623,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -22557,6 +22653,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -22585,6 +22685,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24057,6 +24161,10 @@ export namespace Prisma {
     creativeId?: SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
     campaignObjective?: SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrder
@@ -24093,6 +24201,10 @@ export namespace Prisma {
     creativeId?: SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
     campaignObjective?: SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrder
@@ -24121,6 +24233,10 @@ export namespace Prisma {
     creativeId?: SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
     campaignObjective?: SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrder
@@ -26011,6 +26127,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -26039,6 +26159,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -26481,6 +26605,10 @@ export namespace Prisma {
     creativeId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     adName?: StringFilter<"MetaAdsCriativo"> | string
     effectiveStatus?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     campaignObjective?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     mediaType?: StringFilter<"MetaAdsCriativo"> | string
     imageUrl?: StringNullableFilter<"MetaAdsCriativo"> | string | null
@@ -26804,6 +26932,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -26832,6 +26964,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -28609,6 +28745,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -29058,6 +29198,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29086,6 +29230,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29113,6 +29261,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29325,6 +29477,10 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    adsetId?: string | null
+    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -29546,6 +29702,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29574,6 +29734,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29601,6 +29765,10 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null

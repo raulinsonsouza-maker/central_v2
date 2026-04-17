@@ -12,6 +12,7 @@ import { LeadScoringPanel } from "@/components/clientes/LeadScoringPanel";
 import { HotelFazendaSaoJoaoPanel } from "@/components/clientes/HotelFazendaSaoJoaoPanel";
 import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
+import { CampanhasPanel } from "@/components/clientes/CampanhasPanel";
 import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci } from "@/lib/clientProfiles";
 import {
   Bar,
@@ -1112,6 +1113,15 @@ function formatPercentage(value: number) {
         <VarellaMotosPanel
           data={painelVarella}
           canalLabel={canal === "geral" ? "geral" : canal === "meta" ? "meta" : "google"}
+        />
+      )}
+
+      {/* ── Painel de Campanhas com drill-down (todos os clientes Meta exceto Florien) ── */}
+      {(canal === "geral" || canal === "meta") && !isFlorien(cliente) && (canal === "geral" || subView === "dados") && (
+        <CampanhasPanel
+          clienteId={id}
+          dateFilter={dateFilter}
+          canal={canal}
         />
       )}
 

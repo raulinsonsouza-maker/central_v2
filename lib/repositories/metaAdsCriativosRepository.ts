@@ -7,6 +7,10 @@ export interface UpsertMetaAdsCriativoPayload {
   creativeId?: string | null;
   adName: string;
   effectiveStatus?: string | null;
+  campaignId?: string | null;
+  campaignName?: string | null;
+  adsetId?: string | null;
+  adsetName?: string | null;
   campaignObjective?: string | null;
   mediaType: string;
   imageUrl?: string | null;
@@ -49,6 +53,10 @@ export async function upsertMetaAdsCriativo(
       creativeId: payload.creativeId ?? null,
       adName: payload.adName,
       effectiveStatus: payload.effectiveStatus ?? null,
+      campaignId: payload.campaignId ?? null,
+      campaignName: payload.campaignName ?? null,
+      adsetId: payload.adsetId ?? null,
+      adsetName: payload.adsetName ?? null,
       campaignObjective: payload.campaignObjective ?? null,
       mediaType: payload.mediaType,
       imageUrl: payload.imageUrl ?? null,
@@ -70,6 +78,10 @@ export async function upsertMetaAdsCriativo(
       creativeId: payload.creativeId ?? null,
       adName: payload.adName,
       effectiveStatus: payload.effectiveStatus ?? null,
+      campaignId: payload.campaignId ?? null,
+      campaignName: payload.campaignName ?? null,
+      adsetId: payload.adsetId ?? null,
+      adsetName: payload.adsetName ?? null,
       campaignObjective: payload.campaignObjective ?? null,
       mediaType: payload.mediaType,
       imageUrl: payload.imageUrl ?? null,

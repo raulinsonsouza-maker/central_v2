@@ -196,6 +196,10 @@ model MetaAdsCriativo {
   creativeId        String?
   adName            String
   effectiveStatus   String?
+  campaignId        String?
+  campaignName      String?
+  adsetId           String?
+  adsetName         String?
   campaignObjective String?
   mediaType         String
   imageUrl          String?
