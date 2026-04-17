@@ -108,17 +108,23 @@ export async function GET(
   }
 
   if (nivel === "conjuntos" && campanha) {
-    // Get the latest snapshot per ad (cumulative metrics) for this campaign.
-    // We use distinct on adId ordered by date desc so each ad contributes once
-    // with its most up-to-date purchase / revenue totals.
+    // Fetch all rows for this campaign (no date filter) and aggregate by adset.
+    // Using all rows means cumulative data across the full sync window.
     const criativos = await prisma.metaAdsCriativo.findMany({
       where: {
         clienteId: id,
         campaignName: campanha,
       },
       orderBy: { data: "desc" },
-      distinct: ["adId"],
     });
+
+    // De-dup to latest row per adId (sync stores cumulative rows daily —
+    // taking the most recent avoids double-counting).
+    const latestPerAd = new Map<string, typeof criativos[0]>();
+    for (const c of criativos) {
+      const prev = latestPerAd.get(c.adId);
+      if (!prev || c.data > prev.data) latestPerAd.set(c.adId, c);
+    }
 
     const byConjunto = new Map<string, {
       adsetId: string;
@@ -132,7 +138,7 @@ export async function GET(
       adCount: number;
     }>();
 
-    for (const c of criativos) {
+    for (const c of latestPerAd.values()) {
       const key = c.adsetId ?? "sem-conjunto";
       const existing = byConjunto.get(key);
       if (existing) {
@@ -174,8 +180,7 @@ export async function GET(
   }
 
   if (nivel === "criativos" && campanha && conjunto) {
-    // Get the latest snapshot per ad (cumulative metrics). Each ad appears once,
-    // with spend/impressions/purchases totalling the full sync window.
+    // Fetch all rows for this adset (no date filter) ordered by date desc.
     const rows = await prisma.metaAdsCriativo.findMany({
       where: {
         clienteId: id,
@@ -183,10 +188,16 @@ export async function GET(
         adsetId: conjunto,
       },
       orderBy: [{ data: "desc" }],
-      distinct: ["adId"],
     });
 
-    // Map by adId — with distinct, each ad appears exactly once
+    // De-dup to latest row per adId to avoid double-counting cumulative records.
+    const latestPerAd = new Map<string, typeof rows[0]>();
+    for (const r of rows) {
+      const prev = latestPerAd.get(r.adId);
+      if (!prev || r.data > prev.data) latestPerAd.set(r.adId, r);
+    }
+
+    // Map by adId — one entry per ad
     const byAd = new Map<string, {
       adId: string; adName: string; mediaType: string;
       imageUrl: string | null; videoId: string | null;
@@ -197,17 +208,10 @@ export async function GET(
       daysActive: number;
     }>();
 
-    for (const r of rows) {
+    for (const r of latestPerAd.values()) {
       const existing = byAd.get(r.adId);
       if (existing) {
-        existing.spend += Number(r.spend);
-        existing.impressions += r.impressions;
-        existing.clicks += r.clicks;
-        existing.leads += r.leads;
-        existing.purchases += r.purchases;
-        existing.faturamento += Number(r.websitePurchasesConversionValue);
-        existing.daysActive += 1;
-        // Keep most recent (first row due to desc order) creative metadata
+        // shouldn't happen since latestPerAd already has one entry per adId
       } else {
         byAd.set(r.adId, {
           adId: r.adId,
