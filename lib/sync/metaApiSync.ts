@@ -125,6 +125,32 @@ export async function syncMetaCliente(
       const insight = ad.insights?.data?.[0];
       if (!creative) continue;
 
+      // Extract conversion data from actions/action_values
+      const getAction = (arr: Array<{ action_type: string; value: string }> | undefined, type: string) =>
+        parseInt(arr?.find(a => a.action_type === type)?.value ?? "0", 10) || 0;
+      const getActionValue = (arr: Array<{ action_type: string; value: string }> | undefined, type: string) =>
+        parseFloat(arr?.find(a => a.action_type === type)?.value ?? "0") || 0;
+      const actions = insight?.actions ?? [];
+      const actionValues = insight?.action_values ?? [];
+
+      const leads =
+        getAction(actions, "lead") ||
+        getAction(actions, "onsite_conversion.lead_grouped") ||
+        getAction(actions, "offsite_conversion.fb_pixel_lead") ||
+        getAction(actions, "website_lead");
+
+      const purchases =
+        getAction(actions, "purchase") ||
+        getAction(actions, "omni_purchase") ||
+        getAction(actions, "offsite_conversion.fb_pixel_purchase") ||
+        getAction(actions, "website_purchase");
+
+      const revenue =
+        getActionValue(actionValues, "purchase") ||
+        getActionValue(actionValues, "omni_purchase") ||
+        getActionValue(actionValues, "offsite_conversion.fb_pixel_purchase") ||
+        getActionValue(actionValues, "website_purchase");
+
       await upsertMetaAdsCriativo(clienteId, {
         data: creativeSnapshotDate,
         adId: ad.id,
@@ -148,6 +174,9 @@ export async function syncMetaCliente(
         spend: insight?.spend ? parseFloat(insight.spend) : 0,
         impressions: insight?.impressions ? parseInt(insight.impressions, 10) : 0,
         clicks: insight?.clicks ? parseInt(insight.clicks, 10) : 0,
+        leads,
+        purchases,
+        websitePurchasesConversionValue: revenue,
         ctr: insight?.ctr ? parseFloat(insight.ctr) : null,
         cpc: insight?.cpc ? parseFloat(insight.cpc) : null,
         contaId,

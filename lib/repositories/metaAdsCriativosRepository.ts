@@ -24,6 +24,9 @@ export interface UpsertMetaAdsCriativoPayload {
   spend: number;
   impressions: number;
   clicks: number;
+  leads?: number;
+  purchases?: number;
+  websitePurchasesConversionValue?: number;
   ctr?: number | null;
   cpc?: number | null;
   contaId?: string | null;
@@ -36,6 +39,7 @@ export async function upsertMetaAdsCriativo(
   const spendDecimal = new Decimal(payload.spend);
   const ctrDecimal = payload.ctr != null ? new Decimal(payload.ctr) : null;
   const cpcDecimal = payload.cpc != null ? new Decimal(payload.cpc) : null;
+  const revenueDecimal = new Decimal(payload.websitePurchasesConversionValue ?? 0);
 
   return prisma.metaAdsCriativo.upsert({
     where: {
@@ -70,6 +74,9 @@ export async function upsertMetaAdsCriativo(
       spend: spendDecimal,
       impressions: payload.impressions,
       clicks: payload.clicks,
+      leads: payload.leads ?? 0,
+      purchases: payload.purchases ?? 0,
+      websitePurchasesConversionValue: revenueDecimal,
       ctr: ctrDecimal,
       cpc: cpcDecimal,
     },
@@ -95,6 +102,9 @@ export async function upsertMetaAdsCriativo(
       spend: spendDecimal,
       impressions: payload.impressions,
       clicks: payload.clicks,
+      leads: payload.leads ?? 0,
+      purchases: payload.purchases ?? 0,
+      websitePurchasesConversionValue: revenueDecimal,
       ctr: ctrDecimal,
       cpc: cpcDecimal,
     },

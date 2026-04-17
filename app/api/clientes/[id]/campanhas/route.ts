@@ -123,6 +123,9 @@ export async function GET(
       spend: number;
       impressions: number;
       clicks: number;
+      leads: number;
+      purchases: number;
+      faturamento: number;
       adCount: number;
     }>();
 
@@ -133,6 +136,9 @@ export async function GET(
         existing.spend += Number(c.spend);
         existing.impressions += c.impressions;
         existing.clicks += c.clicks;
+        existing.leads += c.leads;
+        existing.purchases += c.purchases;
+        existing.faturamento += Number(c.websitePurchasesConversionValue);
         existing.adCount += 1;
       } else {
         byConjunto.set(key, {
@@ -141,6 +147,9 @@ export async function GET(
           spend: Number(c.spend),
           impressions: c.impressions,
           clicks: c.clicks,
+          leads: c.leads,
+          purchases: c.purchases,
+          faturamento: Number(c.websitePurchasesConversionValue),
           adCount: 1,
         });
       }
@@ -151,6 +160,10 @@ export async function GET(
         ...v,
         ctr: v.impressions > 0 ? (v.clicks / v.impressions) * 100 : null,
         cpc: v.clicks > 0 ? v.spend / v.clicks : null,
+        cpl: v.leads > 0 ? v.spend / v.leads : null,
+        cpa: v.purchases > 0 ? v.spend / v.purchases : null,
+        ticketMedio: v.purchases > 0 ? v.faturamento / v.purchases : null,
+        roas: v.spend > 0 && v.faturamento > 0 ? v.faturamento / v.spend : null,
       }))
       .sort((a, b) => b.spend - a.spend);
 
@@ -176,6 +189,7 @@ export async function GET(
       videoSourceUrl: string | null; videoPictureUrl: string | null;
       videoEmbedHtml: string | null; body: string | null; title: string | null;
       effectiveStatus: string | null; spend: number; impressions: number; clicks: number;
+      leads: number; purchases: number; faturamento: number;
       daysActive: number;
     }>();
 
@@ -185,6 +199,9 @@ export async function GET(
         existing.spend += Number(r.spend);
         existing.impressions += r.impressions;
         existing.clicks += r.clicks;
+        existing.leads += r.leads;
+        existing.purchases += r.purchases;
+        existing.faturamento += Number(r.websitePurchasesConversionValue);
         existing.daysActive += 1;
         // Keep most recent (first row due to desc order) creative metadata
       } else {
@@ -203,6 +220,9 @@ export async function GET(
           spend: Number(r.spend),
           impressions: r.impressions,
           clicks: r.clicks,
+          leads: r.leads,
+          purchases: r.purchases,
+          faturamento: Number(r.websitePurchasesConversionValue),
           daysActive: 1,
         });
       }
@@ -214,6 +234,10 @@ export async function GET(
         ctr: v.impressions > 0 ? (v.clicks / v.impressions) * 100 : null,
         cpc: v.clicks > 0 ? v.spend / v.clicks : null,
         cpm: v.impressions > 0 ? (v.spend / v.impressions) * 1000 : null,
+        cpl: v.leads > 0 ? v.spend / v.leads : null,
+        cpa: v.purchases > 0 ? v.spend / v.purchases : null,
+        ticketMedio: v.purchases > 0 ? v.faturamento / v.purchases : null,
+        roas: v.spend > 0 && v.faturamento > 0 ? v.faturamento / v.spend : null,
       }))
       .sort((a, b) => b.spend - a.spend);
 

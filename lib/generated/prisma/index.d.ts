@@ -12463,6 +12463,9 @@ export namespace Prisma {
     spend: Decimal | null
     impressions: number | null
     clicks: number | null
+    leads: number | null
+    purchases: number | null
+    websitePurchasesConversionValue: Decimal | null
     ctr: Decimal | null
     cpc: Decimal | null
   }
@@ -12471,6 +12474,9 @@ export namespace Prisma {
     spend: Decimal | null
     impressions: number | null
     clicks: number | null
+    leads: number | null
+    purchases: number | null
+    websitePurchasesConversionValue: Decimal | null
     ctr: Decimal | null
     cpc: Decimal | null
   }
@@ -12501,6 +12507,9 @@ export namespace Prisma {
     spend: Decimal | null
     impressions: number | null
     clicks: number | null
+    leads: number | null
+    purchases: number | null
+    websitePurchasesConversionValue: Decimal | null
     ctr: Decimal | null
     cpc: Decimal | null
     createdAt: Date | null
@@ -12533,6 +12542,9 @@ export namespace Prisma {
     spend: Decimal | null
     impressions: number | null
     clicks: number | null
+    leads: number | null
+    purchases: number | null
+    websitePurchasesConversionValue: Decimal | null
     ctr: Decimal | null
     cpc: Decimal | null
     createdAt: Date | null
@@ -12565,6 +12577,9 @@ export namespace Prisma {
     spend: number
     impressions: number
     clicks: number
+    leads: number
+    purchases: number
+    websitePurchasesConversionValue: number
     ctr: number
     cpc: number
     createdAt: number
@@ -12577,6 +12592,9 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
+    leads?: true
+    purchases?: true
+    websitePurchasesConversionValue?: true
     ctr?: true
     cpc?: true
   }
@@ -12585,6 +12603,9 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
+    leads?: true
+    purchases?: true
+    websitePurchasesConversionValue?: true
     ctr?: true
     cpc?: true
   }
@@ -12615,6 +12636,9 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
+    leads?: true
+    purchases?: true
+    websitePurchasesConversionValue?: true
     ctr?: true
     cpc?: true
     createdAt?: true
@@ -12647,6 +12671,9 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
+    leads?: true
+    purchases?: true
+    websitePurchasesConversionValue?: true
     ctr?: true
     cpc?: true
     createdAt?: true
@@ -12679,6 +12706,9 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
+    leads?: true
+    purchases?: true
+    websitePurchasesConversionValue?: true
     ctr?: true
     cpc?: true
     createdAt?: true
@@ -12798,6 +12828,9 @@ export namespace Prisma {
     spend: Decimal
     impressions: number
     clicks: number
+    leads: number
+    purchases: number
+    websitePurchasesConversionValue: Decimal
     ctr: Decimal | null
     cpc: Decimal | null
     createdAt: Date
@@ -12849,6 +12882,9 @@ export namespace Prisma {
     spend?: boolean
     impressions?: boolean
     clicks?: boolean
+    leads?: boolean
+    purchases?: boolean
+    websitePurchasesConversionValue?: boolean
     ctr?: boolean
     cpc?: boolean
     createdAt?: boolean
@@ -12883,6 +12919,9 @@ export namespace Prisma {
     spend?: boolean
     impressions?: boolean
     clicks?: boolean
+    leads?: boolean
+    purchases?: boolean
+    websitePurchasesConversionValue?: boolean
     ctr?: boolean
     cpc?: boolean
     createdAt?: boolean
@@ -12917,6 +12956,9 @@ export namespace Prisma {
     spend?: boolean
     impressions?: boolean
     clicks?: boolean
+    leads?: boolean
+    purchases?: boolean
+    websitePurchasesConversionValue?: boolean
     ctr?: boolean
     cpc?: boolean
     createdAt?: boolean
@@ -12951,13 +12993,16 @@ export namespace Prisma {
     spend?: boolean
     impressions?: boolean
     clicks?: boolean
+    leads?: boolean
+    purchases?: boolean
+    websitePurchasesConversionValue?: boolean
     ctr?: boolean
     cpc?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MetaAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "adId" | "creativeId" | "adName" | "effectiveStatus" | "campaignId" | "campaignName" | "adsetId" | "adsetName" | "campaignObjective" | "mediaType" | "imageUrl" | "imageUrlFull" | "videoId" | "videoSourceUrl" | "videoPictureUrl" | "videoEmbedHtml" | "body" | "title" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "createdAt" | "updatedAt", ExtArgs["result"]["metaAdsCriativo"]>
+  export type MetaAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "adId" | "creativeId" | "adName" | "effectiveStatus" | "campaignId" | "campaignName" | "adsetId" | "adsetName" | "campaignObjective" | "mediaType" | "imageUrl" | "imageUrlFull" | "videoId" | "videoSourceUrl" | "videoPictureUrl" | "videoEmbedHtml" | "body" | "title" | "spend" | "impressions" | "clicks" | "leads" | "purchases" | "websitePurchasesConversionValue" | "ctr" | "cpc" | "createdAt" | "updatedAt", ExtArgs["result"]["metaAdsCriativo"]>
   export type MetaAdsCriativoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
@@ -13003,6 +13048,9 @@ export namespace Prisma {
       spend: Prisma.Decimal
       impressions: number
       clicks: number
+      leads: number
+      purchases: number
+      websitePurchasesConversionValue: Prisma.Decimal
       ctr: Prisma.Decimal | null
       cpc: Prisma.Decimal | null
       createdAt: Date
@@ -13457,6 +13505,9 @@ export namespace Prisma {
     readonly spend: FieldRef<"MetaAdsCriativo", 'Decimal'>
     readonly impressions: FieldRef<"MetaAdsCriativo", 'Int'>
     readonly clicks: FieldRef<"MetaAdsCriativo", 'Int'>
+    readonly leads: FieldRef<"MetaAdsCriativo", 'Int'>
+    readonly purchases: FieldRef<"MetaAdsCriativo", 'Int'>
+    readonly websitePurchasesConversionValue: FieldRef<"MetaAdsCriativo", 'Decimal'>
     readonly ctr: FieldRef<"MetaAdsCriativo", 'Decimal'>
     readonly cpc: FieldRef<"MetaAdsCriativo", 'Decimal'>
     readonly createdAt: FieldRef<"MetaAdsCriativo", 'DateTime'>
@@ -19770,6 +19821,9 @@ export namespace Prisma {
     spend: 'spend',
     impressions: 'impressions',
     clicks: 'clicks',
+    leads: 'leads',
+    purchases: 'purchases',
+    websitePurchasesConversionValue: 'websitePurchasesConversionValue',
     ctr: 'ctr',
     cpc: 'cpc',
     createdAt: 'createdAt',
@@ -20909,6 +20963,9 @@ export namespace Prisma {
     spend?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     impressions?: IntFilter<"MetaAdsCriativo"> | number
     clicks?: IntFilter<"MetaAdsCriativo"> | number
+    leads?: IntFilter<"MetaAdsCriativo"> | number
+    purchases?: IntFilter<"MetaAdsCriativo"> | number
+    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     ctr?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     cpc?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
@@ -20943,6 +21000,9 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrderInput | SortOrder
     cpc?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -20981,6 +21041,9 @@ export namespace Prisma {
     spend?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     impressions?: IntFilter<"MetaAdsCriativo"> | number
     clicks?: IntFilter<"MetaAdsCriativo"> | number
+    leads?: IntFilter<"MetaAdsCriativo"> | number
+    purchases?: IntFilter<"MetaAdsCriativo"> | number
+    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     ctr?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     cpc?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
@@ -21015,6 +21078,9 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrderInput | SortOrder
     cpc?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -21055,6 +21121,9 @@ export namespace Prisma {
     spend?: DecimalWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     impressions?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
     clicks?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
+    leads?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
+    purchases?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
+    websitePurchasesConversionValue?: DecimalWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     ctr?: DecimalNullableWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     cpc?: DecimalNullableWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MetaAdsCriativo"> | Date | string
@@ -22510,6 +22579,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -22544,6 +22616,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -22574,6 +22649,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22608,6 +22686,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22640,6 +22721,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -22670,6 +22754,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22702,6 +22789,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24178,6 +24268,9 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrder
     cpc?: SortOrder
     createdAt?: SortOrder
@@ -24188,6 +24281,9 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrder
     cpc?: SortOrder
   }
@@ -24218,6 +24314,9 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrder
     cpc?: SortOrder
     createdAt?: SortOrder
@@ -24250,6 +24349,9 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrder
     cpc?: SortOrder
     createdAt?: SortOrder
@@ -24260,6 +24362,9 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrder
     cpc?: SortOrder
   }
@@ -26144,6 +26249,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -26176,6 +26284,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -26622,6 +26733,9 @@ export namespace Prisma {
     spend?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     impressions?: IntFilter<"MetaAdsCriativo"> | number
     clicks?: IntFilter<"MetaAdsCriativo"> | number
+    leads?: IntFilter<"MetaAdsCriativo"> | number
+    purchases?: IntFilter<"MetaAdsCriativo"> | number
+    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     ctr?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     cpc?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
@@ -26949,6 +27063,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -26981,6 +27098,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -28762,6 +28882,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -29215,6 +29338,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29247,6 +29373,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29278,6 +29407,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29494,6 +29626,9 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
@@ -29719,6 +29854,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29751,6 +29889,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29782,6 +29923,9 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

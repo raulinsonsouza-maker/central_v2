@@ -210,15 +210,18 @@ model MetaAdsCriativo {
   videoEmbedHtml    String?
   body              String?
   title             String?
-  spend             Decimal  @default(0) @db.Decimal(14, 2)
-  impressions       Int      @default(0)
-  clicks            Int      @default(0)
-  ctr               Decimal? @db.Decimal(8, 4)
-  cpc               Decimal? @db.Decimal(14, 2)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-  cliente           Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-  conta             Conta?   @relation(fields: [contaId], references: [id])
+  spend                           Decimal  @default(0) @db.Decimal(14, 2)
+  impressions                     Int      @default(0)
+  clicks                          Int      @default(0)
+  leads                           Int      @default(0)
+  purchases                       Int      @default(0)
+  websitePurchasesConversionValue Decimal  @default(0) @db.Decimal(14, 2)
+  ctr                             Decimal? @db.Decimal(8, 4)
+  cpc                             Decimal? @db.Decimal(14, 2)
+  createdAt                       DateTime @default(now())
+  updatedAt                       DateTime @updatedAt
+  cliente                         Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  conta                           Conta?   @relation(fields: [contaId], references: [id])
 
   @@unique([clienteId, adId, data])
   @@index([clienteId, data])

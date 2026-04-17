@@ -472,6 +472,7 @@ export interface MetaAdInsight {
   cpc?: string;
   frequency?: string;
   actions?: Array<{ action_type: string; value: string }>;
+  action_values?: Array<{ action_type: string; value: string }>;
   video_p100_watched_actions?: Array<{ action_type: string; value: string }>;
 }
 
@@ -1184,8 +1185,8 @@ export async function fetchAdsWithCreatives(
       ? `insights.time_range(${JSON.stringify({
           since: options.dateFrom,
           until: options.dateTo,
-        })}){spend,impressions,clicks,inline_link_clicks,ctr,cpc,frequency,actions,video_p100_watched_actions}`
-      : "insights{spend,impressions,clicks,inline_link_clicks,ctr,cpc,frequency,actions,video_p100_watched_actions}";
+        })}){spend,impressions,clicks,inline_link_clicks,ctr,cpc,frequency,actions,action_values,video_p100_watched_actions}`
+      : "insights{spend,impressions,clicks,inline_link_clicks,ctr,cpc,frequency,actions,action_values,video_p100_watched_actions}";
   const fields =
     `id,name,effective_status,adset{id,name,campaign{id,name,objective}},adcreatives{id,object_story_id,thumbnail_url,image_hash,video_id,body,title,object_story_spec,asset_feed_spec{videos{video_id,thumbnail_url},images{hash,url}}},${insightsField}`;
   const filtering = JSON.stringify([

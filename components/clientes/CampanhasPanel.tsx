@@ -54,9 +54,16 @@ interface Conjunto {
   spend: number;
   impressions: number;
   clicks: number;
+  leads: number;
+  purchases: number;
+  faturamento: number;
   adCount: number;
   ctr: number | null;
   cpc: number | null;
+  cpl: number | null;
+  cpa: number | null;
+  ticketMedio: number | null;
+  roas: number | null;
 }
 
 interface Criativo {
@@ -73,9 +80,16 @@ interface Criativo {
   spend: number;
   impressions: number;
   clicks: number;
+  leads: number;
+  purchases: number;
+  faturamento: number;
   ctr: number | null;
   cpc: number | null;
   cpm: number | null;
+  cpl: number | null;
+  cpa: number | null;
+  ticketMedio: number | null;
+  roas: number | null;
   daysActive: number;
   effectiveStatus: string | null;
 }
@@ -400,17 +414,28 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
 }
 
 function ConjuntosTable({ conjuntos, onSelect }: { conjuntos: Conjunto[]; onSelect: (id: string) => void }) {
+  const hasLeads = conjuntos.some(c => c.leads > 0);
+  const hasSales = conjuntos.some(c => c.purchases > 0 || c.faturamento > 0);
+  const minW = hasSales ? 1120 : hasLeads ? 860 : 720;
+
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[680px] border-separate [border-spacing:0_6px]">
+      <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: minW }}>
         <thead>
           <tr>
-            <th className={`${thClass} text-left min-w-[280px]`}>Conjunto de Anúncios</th>
+            <th className={`${thClass} text-left min-w-[260px]`}>Conjunto de Anúncios</th>
             <th className={`${thClass} text-right`}>Investido</th>
             <th className={`${thClass} text-right`}>Impressões</th>
             <th className={`${thClass} text-right`}>Cliques</th>
             <th className={`${thClass} text-right`}>CTR</th>
             <th className={`${thClass} text-right`}>CPC</th>
+            {hasLeads && <th className={`${thClass} text-right`}>Leads</th>}
+            {hasLeads && <th className={`${thClass} text-right`}>CPL</th>}
+            {hasSales && <th className={`${thClass} text-right`}>Vendas</th>}
+            {hasSales && <th className={`${thClass} text-right`}>CPA</th>}
+            {hasSales && <th className={`${thClass} text-right`}>Faturado</th>}
+            {hasSales && <th className={`${thClass} text-right`}>Ticket</th>}
+            {hasSales && <th className={`${thClass} text-right`}>ROAS</th>}
             <th className={`${thClass} text-right`}>Anúncios</th>
             <th className="w-8" />
           </tr>
@@ -434,8 +459,45 @@ function ConjuntosTable({ conjuntos, onSelect }: { conjuntos: Conjunto[]; onSele
                 <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>{fmtBrl(c.spend)}</td>
                 <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>{fmt(c.impressions)}</td>
                 <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>{fmt(c.clicks)}</td>
-                <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>{c.ctr !== null ? fmtPct(c.ctr) : "—"}</td>
+                <td className={`px-4 py-4 text-right tabular-nums text-[13px] ${c.ctr !== null && c.ctr >= 1 ? "text-emerald-400 font-semibold" : "text-[var(--muted-foreground)]"} ${bg}`}>
+                  {c.ctr !== null ? fmtPct(c.ctr) : "—"}
+                </td>
                 <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>{c.cpc !== null ? fmtBrl(c.cpc) : "—"}</td>
+                {hasLeads && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] ${isTop && c.leads > 0 ? "text-[var(--primary)] font-bold text-[15px]" : "text-[var(--muted-foreground)]"} ${bg}`}>
+                    {c.leads > 0 ? fmt(c.leads) : "—"}
+                  </td>
+                )}
+                {hasLeads && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {c.cpl !== null ? fmtBrl(c.cpl) : "—"}
+                  </td>
+                )}
+                {hasSales && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] ${isTop && c.purchases > 0 ? "text-[var(--primary)] font-bold text-[15px]" : c.purchases > 0 ? "text-[var(--foreground)]" : "text-white/30"} ${bg}`}>
+                    {c.purchases > 0 ? fmt(c.purchases) : "—"}
+                  </td>
+                )}
+                {hasSales && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {c.cpa !== null ? fmtBrl(c.cpa) : "—"}
+                  </td>
+                )}
+                {hasSales && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {c.faturamento > 0 ? fmtBrl(c.faturamento) : "—"}
+                  </td>
+                )}
+                {hasSales && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {c.ticketMedio !== null ? fmtBrl(c.ticketMedio) : "—"}
+                  </td>
+                )}
+                {hasSales && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] font-semibold ${c.roas !== null && c.roas >= 1 ? "text-emerald-400" : "text-[var(--muted-foreground)]"} ${bg}`}>
+                    {c.roas !== null ? fmt(c.roas, 2) + "x" : "—"}
+                  </td>
+                )}
                 <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>{c.adCount}</td>
                 <td className={`rounded-r-2xl px-3 py-4 ${bg}`}>
                   <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-[var(--primary)] transition-colors ml-auto" />
@@ -576,12 +638,15 @@ function VideoModal({ c, onClose }: { c: Criativo; onClose: () => void }) {
 
 function CriativosTable({ criativos }: { criativos: Criativo[] }) {
   const [modalCriativo, setModalCriativo] = React.useState<Criativo | null>(null);
+  const hasLeads = criativos.some(c => c.leads > 0);
+  const hasSales = criativos.some(c => c.purchases > 0 || c.faturamento > 0);
+  const minW = hasSales ? 1080 : hasLeads ? 820 : 680;
 
   return (
     <>
       {modalCriativo && <VideoModal c={modalCriativo} onClose={() => setModalCriativo(null)} />}
       <div className="overflow-x-auto">
-        <table className="w-full min-w-[680px] border-separate [border-spacing:0_6px]">
+        <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: minW }}>
           <thead>
             <tr>
               <th className={`${thClass} text-left`}>Criativo</th>
@@ -591,6 +656,13 @@ function CriativosTable({ criativos }: { criativos: Criativo[] }) {
               <th className={`${thClass} text-right`}>CTR</th>
               <th className={`${thClass} text-right`}>CPC</th>
               <th className={`${thClass} text-right`}>CPM</th>
+              {hasLeads && <th className={`${thClass} text-right`}>Leads</th>}
+              {hasLeads && <th className={`${thClass} text-right`}>CPL</th>}
+              {hasSales && <th className={`${thClass} text-right`}>Vendas</th>}
+              {hasSales && <th className={`${thClass} text-right`}>CPA</th>}
+              {hasSales && <th className={`${thClass} text-right`}>Faturado</th>}
+              {hasSales && <th className={`${thClass} text-right`}>Ticket</th>}
+              {hasSales && <th className={`${thClass} text-right`}>ROAS</th>}
             </tr>
           </thead>
           <tbody>
@@ -689,9 +761,44 @@ function CriativosTable({ criativos }: { criativos: Criativo[] }) {
                   <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                     {c.cpc !== null ? fmtBrl(c.cpc) : "—"}
                   </td>
-                  <td className={`rounded-r-2xl px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                  <td className={`${!hasLeads && !hasSales ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                     {c.cpm !== null ? fmtBrl(c.cpm) : "—"}
                   </td>
+                  {hasLeads && (
+                    <td className={`px-4 py-3 text-right tabular-nums text-[13px] whitespace-nowrap ${isTop && c.leads > 0 ? "text-[var(--primary)] font-bold text-[15px]" : "text-[var(--muted-foreground)]"} ${bg}`}>
+                      {c.leads > 0 ? fmt(c.leads) : "—"}
+                    </td>
+                  )}
+                  {hasLeads && (
+                    <td className={`${!hasSales ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                      {c.cpl !== null ? fmtBrl(c.cpl) : "—"}
+                    </td>
+                  )}
+                  {hasSales && (
+                    <td className={`px-4 py-3 text-right tabular-nums text-[13px] whitespace-nowrap ${isTop && c.purchases > 0 ? "text-[var(--primary)] font-bold text-[15px]" : c.purchases > 0 ? "text-[var(--foreground)]" : "text-white/30"} ${bg}`}>
+                      {c.purchases > 0 ? fmt(c.purchases) : "—"}
+                    </td>
+                  )}
+                  {hasSales && (
+                    <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                      {c.cpa !== null ? fmtBrl(c.cpa) : "—"}
+                    </td>
+                  )}
+                  {hasSales && (
+                    <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                      {c.faturamento > 0 ? fmtBrl(c.faturamento) : "—"}
+                    </td>
+                  )}
+                  {hasSales && (
+                    <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                      {c.ticketMedio !== null ? fmtBrl(c.ticketMedio) : "—"}
+                    </td>
+                  )}
+                  {hasSales && (
+                    <td className={`rounded-r-2xl px-4 py-3 text-right tabular-nums text-[13px] font-semibold whitespace-nowrap ${c.roas !== null && c.roas >= 1 ? "text-emerald-400" : "text-[var(--muted-foreground)]"} ${bg}`}>
+                      {c.roas !== null ? fmt(c.roas, 2) + "x" : "—"}
+                    </td>
+                  )}
                 </tr>
               );
             })}
