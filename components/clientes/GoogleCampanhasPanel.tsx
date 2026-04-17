@@ -43,9 +43,9 @@ function useSortable<T>(data: T[], defaultKey: keyof T) {
     const bv = b[key] as number | null ?? (dir === "desc" ? -Infinity : Infinity);
     return dir === "desc" ? (bv as number) - (av as number) : (av as number) - (bv as number);
   }), [data, key, dir]);
-  function toggle(k: keyof T) {
-    if (k === key) setDir(d => d === "desc" ? "asc" : "desc");
-    else { setKey(k); setDir("desc"); }
+  function toggle(k: string) {
+    if (k === (key as string)) setDir(d => d === "desc" ? "asc" : "desc");
+    else { setKey(k as keyof T); setDir("desc"); }
   }
   return { sorted, key: key as string, dir, toggle };
 }
