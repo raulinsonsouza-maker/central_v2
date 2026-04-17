@@ -73,8 +73,19 @@ const Td = ({ v, muted = false, highlight = false }: { v: string; muted?: boolea
 const dash = "—";
 const n = (v: number | null, fn: (x: number) => string) => v != null && v > 0 ? fn(v) : dash;
 
+const CAMP_TYPE_MAP: Record<string, string> = {
+  "2": "SEARCH", "3": "DISPLAY", "4": "SHOPPING", "5": "HOTEL",
+  "6": "VIDEO", "9": "SMART", "10": "PERFORMANCE_MAX",
+  "12": "DISCOVERY", "14": "DEMAND_GEN",
+};
+function normCampType(raw: string | null | undefined): string {
+  if (!raw) return "";
+  const n = CAMP_TYPE_MAP[raw];
+  return n ?? raw.toUpperCase();
+}
+
 function campTypeBadge(nome: string, campaignType?: string | null) {
-  const type = (campaignType ?? "").toUpperCase();
+  const type = normCampType(campaignType);
   if (type === "PERFORMANCE_MAX") return { label: "PMax", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
   if (type === "SEARCH") {
     const lower = nome.toLowerCase();
@@ -85,6 +96,7 @@ function campTypeBadge(nome: string, campaignType?: string | null) {
   if (type === "DISPLAY") return { label: "Display", color: "bg-pink-500/10 text-pink-400 border-pink-500/20" };
   if (type === "VIDEO") return { label: "Video", color: "bg-red-500/10 text-red-400 border-red-500/20" };
   if (type === "SHOPPING") return { label: "Shopping", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" };
+  if (type === "DEMAND_GEN" || type === "DISCOVERY") return { label: "DemGen", color: "bg-violet-500/10 text-violet-400 border-violet-500/20" };
   const lower = nome.toLowerCase();
   if (lower.includes("brand") || lower.includes("marca")) return { label: "Brand", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
   if (lower.includes("rmkt") || lower.includes("remarketing") || lower.includes("retargeting")) return { label: "Rmkt", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" };
@@ -96,9 +108,14 @@ function campTypeBadge(nome: string, campaignType?: string | null) {
   return { label: "Google", color: "bg-[var(--primary)]/10 text-[var(--primary)] border-[var(--primary)]/20" };
 }
 
+const CAMP_STATUS_MAP: Record<string, string> = { "2": "ENABLED", "3": "PAUSED", "4": "REMOVED" };
+function normStatus(raw: string | null | undefined): string {
+  if (!raw) return "";
+  return CAMP_STATUS_MAP[raw] ?? raw.toUpperCase();
+}
 function statusBadge(status: string | null) {
   if (!status) return null;
-  const s = status.toUpperCase();
+  const s = normStatus(status);
   if (s === "ENABLED") return { label: "Ativa", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", dot: "bg-emerald-400" };
   if (s === "PAUSED") return { label: "Pausada", color: "bg-amber-500/10 text-amber-400 border-amber-500/20", dot: "bg-amber-400" };
   if (s === "REMOVED") return { label: "Removida", color: "bg-red-500/10 text-red-400 border-red-500/20", dot: "bg-red-400" };
