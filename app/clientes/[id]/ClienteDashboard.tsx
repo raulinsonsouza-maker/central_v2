@@ -405,10 +405,21 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     return day >= startSelected && day <= endSelected;
   };
 
-  const { data: cliente } = useQuery({
+  const { data: cliente, isLoading: clienteLoading } = useQuery({
     queryKey: ["cliente", id],
     queryFn: () => fetchCliente(id),
   });
+
+  // Controls the fullscreen loader: visible until first cliente data arrives
+  const [loaderVisible, setLoaderVisible] = React.useState(true);
+  const [loaderFading, setLoaderFading] = React.useState(false);
+  React.useEffect(() => {
+    if (!clienteLoading && cliente) {
+      setLoaderFading(true);
+      const t = setTimeout(() => setLoaderVisible(false), 450);
+      return () => clearTimeout(t);
+    }
+  }, [clienteLoading, cliente]);
   const { data: resumo } = useQuery({
     queryKey: ["resumo", id, canal, dateFilter.periodo, dateFilter.dataInicio, dateFilter.dataFim],
     queryFn: () => fetchResumo(id, canal as "geral" | "meta" | "google", dateFilter),
@@ -688,6 +699,35 @@ function formatPercentage(value: number) {
 
   return (
     <main className="space-y-8 pb-12">
+      {/* ── Fullscreen loading overlay ── */}
+      {loaderVisible && (
+        <div
+          className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-[var(--background)]"
+          style={{
+            opacity: loaderFading ? 0 : 1,
+            transition: "opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+            pointerEvents: loaderFading ? "none" : "all",
+          }}
+        >
+          {/* 2×2 grid of orange squares */}
+          <div className="grid grid-cols-2 gap-[10px]">
+            {[0, 1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="w-7 h-7 rounded-[6px] bg-[var(--primary)]"
+                style={{
+                  animation: "inout-square 1.1s ease-in-out infinite",
+                  animationDelay: `${i * 0.18}s`,
+                }}
+              />
+            ))}
+          </div>
+          <p className="mt-6 text-[11px] font-semibold uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
+            Carregando
+          </p>
+        </div>
+      )}
+
       {/* ── Breadcrumb + Title + Channel tabs ── */}
       <section className="space-y-5">
         {!portalMode && (

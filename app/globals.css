@@ -49,6 +49,11 @@
   }
 }
 
+@keyframes inout-square {
+  0%, 100% { opacity: 0.12; transform: scale(0.65); }
+  50%       { opacity: 1;    transform: scale(1);    }
+}
+
 @layer utilities {
   .card-hover {
     transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
