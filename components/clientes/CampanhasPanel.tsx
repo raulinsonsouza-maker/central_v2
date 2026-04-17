@@ -492,6 +492,107 @@ function VideoModal({ c, onClose }: { c: Criativo; onClose: () => void }) {
   );
 }
 
+function CriativosTable({ criativos }: { criativos: Criativo[] }) {
+  const [modalCriativo, setModalCriativo] = React.useState<Criativo | null>(null);
+
+  return (
+    <>
+      {modalCriativo && <VideoModal c={modalCriativo} onClose={() => setModalCriativo(null)} />}
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[620px] border-separate [border-spacing:0_6px]">
+          <thead>
+            <tr>
+              <th className={`${thClass} text-left`}>Criativo</th>
+              <th className={`${thClass} text-right`}>Invest.</th>
+              <th className={`${thClass} text-right`}>Impr.</th>
+              <th className={`${thClass} text-right`}>Cliques</th>
+              <th className={`${thClass} text-right`}>CTR</th>
+              <th className={`${thClass} text-right`}>CPC</th>
+            </tr>
+          </thead>
+          <tbody>
+            {criativos.map((c, i) => {
+              const isTop = i === 0;
+              const isVideo = c.mediaType === "VIDEO";
+              const isActive = c.effectiveStatus === "ACTIVE";
+              const bg = rowBg(isTop);
+              const thumb = c.videoPictureUrl ?? c.imageUrl;
+              const thumbUpgraded = thumb ? upgradeFbCdnImageUrl(thumb) : null;
+
+              return (
+                <tr
+                  key={c.adId}
+                  className="group cursor-pointer"
+                  onClick={() => setModalCriativo(c)}
+                >
+                  {/* Thumbnail + name */}
+                  <td className={`rounded-l-2xl px-4 py-3 ${bg}`}>
+                    <div className="flex items-center gap-3 min-w-0">
+                      {/* Thumbnail */}
+                      <div className="w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 bg-black/40 relative">
+                        {thumbUpgraded ? (
+                          <img
+                            src={thumbUpgraded}
+                            alt={c.adName}
+                            className="w-full h-full object-cover"
+                            onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            {isVideo
+                              ? <Play className="w-4 h-4 text-white/30" />
+                              : <Eye className="w-4 h-4 text-white/30" />}
+                          </div>
+                        )}
+                        {isVideo && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <Play className="w-4 h-4 text-white fill-white" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Name + meta */}
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[13px] font-semibold text-[var(--foreground)] leading-snug line-clamp-1">{c.adName}</p>
+                        <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5 flex items-center gap-1.5">
+                          {isVideo
+                            ? <><Play className="w-2.5 h-2.5" /> Vídeo</>
+                            : <><Eye className="w-2.5 h-2.5" /> Imagem</>
+                          }
+                          <span className="opacity-30">·</span>
+                          <span className={isActive ? "text-emerald-400" : ""}>{isActive ? "Ativo" : (c.effectiveStatus ?? "—")}</span>
+                          <span className="opacity-30">·</span>
+                          <span className="group-hover:text-[var(--primary)] transition-colors">Clique para ver</span>
+                        </p>
+                      </div>
+                    </div>
+                  </td>
+
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {fmtBrl(c.spend)}
+                  </td>
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {fmt(c.impressions)}
+                  </td>
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {fmt(c.clicks)}
+                  </td>
+                  <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {c.ctr !== null ? fmtPct(c.ctr) : "—"}
+                  </td>
+                  <td className={`rounded-r-2xl px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {c.cpc !== null ? fmtBrl(c.cpc) : "—"}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </>
+  );
+}
+
 function CriativoCard({ c }: { c: Criativo }) {
   const [showModal, setShowModal] = React.useState(false);
   const thumb = c.videoPictureUrl ?? c.imageUrl;
@@ -728,10 +829,8 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
             <p className="text-xs mt-1.5 opacity-60">Os criativos aparecem após o próximo sync.</p>
           </div>
         ) : (
-          <div className="p-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {criativos.map((c) => (
-              <CriativoCard key={c.adId} c={c} />
-            ))}
+          <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
+            <CriativosTable criativos={criativos} />
           </div>
         )
       )}
