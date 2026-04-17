@@ -1156,8 +1156,8 @@ function formatPercentage(value: number) {
         />
       )}
 
-      {/* ── Painel de Campanhas com drill-down (todos os clientes Meta exceto Florien) ── */}
-      {(canal === "geral" || canal === "meta") && !isFlorien(cliente) && (canal === "geral" || subView === "dados") && (
+      {/* ── Painel de Campanhas Meta (só na aba Meta > Análise) ── */}
+      {canal === "meta" && !isFlorien(cliente) && subView === "dados" && (
         <CampanhasPanel
           clienteId={id}
           dateFilter={dateFilter}

@@ -122,7 +122,7 @@ const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em]
 type SortCol = "nome" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
 type SortDir = "asc" | "desc";
 
-function SortIcon({ col, sortCol, sortDir }: { col: SortCol; sortCol: SortCol; sortDir: SortDir }) {
+function SortIcon({ col, sortCol, sortDir }: { col: string; sortCol: string; sortDir: SortDir }) {
   if (col !== sortCol) return <ChevronsUpDown className="w-3 h-3 opacity-30 ml-1 inline-block" />;
   return sortDir === "asc"
     ? <ChevronUp className="w-3 h-3 text-[var(--primary)] ml-1 inline-block" />
@@ -130,8 +130,8 @@ function SortIcon({ col, sortCol, sortDir }: { col: SortCol; sortCol: SortCol; s
 }
 
 function SortTh({ col, label, align = "right", sortCol, sortDir, onSort }: {
-  col: SortCol; label: string; align?: "left" | "right";
-  sortCol: SortCol; sortDir: SortDir; onSort: (col: SortCol) => void;
+  col: string; label: string; align?: "left" | "right";
+  sortCol: string; sortDir: SortDir; onSort: (col: string) => void;
 }) {
   const active = col === sortCol;
   return (
@@ -165,13 +165,13 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
   const [sortCol, setSortCol] = React.useState<SortCol>("investimento");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
 
-  function handleSort(col: SortCol) {
-    if (col === sortCol) setSortDir(d => d === "asc" ? "desc" : "asc");
+  function handleSort(col: string) {
+    const c = col as SortCol;
+    if (c === sortCol) setSortDir(d => d === "asc" ? "desc" : "asc");
     else {
-      setSortCol(col);
-      // Lower is better for cost metrics → default ascending
+      setSortCol(c);
       const defaultAsc: SortCol[] = ["nome", "cpl", "cpa"];
-      setSortDir(defaultAsc.includes(col) ? "asc" : "desc");
+      setSortDir(defaultAsc.includes(c) ? "asc" : "desc");
     }
   }
 
@@ -413,35 +413,65 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
   );
 }
 
+type ConjuntoSortCol = "adsetName" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas" | "adCount";
+
+function sortConjuntos(arr: Conjunto[], col: ConjuntoSortCol, dir: SortDir): Conjunto[] {
+  return [...arr].sort((a, b) => {
+    let va: number | string, vb: number | string;
+    if (col === "adsetName") { va = a.adsetName; vb = b.adsetName; }
+    else if (col === "ctr") { va = a.ctr ?? -Infinity; vb = b.ctr ?? -Infinity; }
+    else if (col === "cpc") { va = a.cpc ?? Infinity; vb = b.cpc ?? Infinity; }
+    else if (col === "cpl") { va = a.cpl ?? Infinity; vb = b.cpl ?? Infinity; }
+    else if (col === "cpa") { va = a.cpa ?? Infinity; vb = b.cpa ?? Infinity; }
+    else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
+    else if (col === "ticketMedio") { va = a.ticketMedio ?? -Infinity; vb = b.ticketMedio ?? -Infinity; }
+    else { va = a[col] as number; vb = b[col] as number; }
+    if (va < vb) return dir === "asc" ? -1 : 1;
+    if (va > vb) return dir === "asc" ? 1 : -1;
+    return 0;
+  });
+}
+
 function ConjuntosTable({ conjuntos, onSelect, parentCampType }: { conjuntos: Conjunto[]; onSelect: (id: string) => void; parentCampType?: CampType | null }) {
+  const [sortCol, setSortCol] = React.useState<ConjuntoSortCol>("spend");
+  const [sortDir, setSortDir] = React.useState<SortDir>("desc");
+
+  function handleSort(col: string) {
+    const c = col as ConjuntoSortCol;
+    if (c === sortCol) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortCol(c); setSortDir(["adsetName", "cpl", "cpa", "cpc"].includes(c) ? "asc" : "desc"); }
+  }
+
   const hasLeads = conjuntos.some(c => c.leads > 0) || parentCampType === "leads";
   const hasSales = conjuntos.some(c => c.purchases > 0 || c.faturamento > 0) || parentCampType === "vendas";
   const minW = hasSales ? 1120 : hasLeads ? 860 : 720;
+  const sorted = sortConjuntos(conjuntos, sortCol, sortDir);
+  const st = { sortCol, sortDir, onSort: handleSort };
 
   return (
     <div className="overflow-x-auto">
       <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: minW }}>
         <thead>
           <tr>
-            <th className={`${thClass} text-left min-w-[260px]`}>Conjunto de Anúncios</th>
-            <th className={`${thClass} text-right`}>Investido</th>
-            <th className={`${thClass} text-right`}>Impressões</th>
-            <th className={`${thClass} text-right`}>Cliques</th>
-            <th className={`${thClass} text-right`}>CTR</th>
-            <th className={`${thClass} text-right`}>CPC</th>
-            {hasLeads && <th className={`${thClass} text-right`}>Leads</th>}
-            {hasLeads && <th className={`${thClass} text-right`}>CPL</th>}
-            {hasSales && <th className={`${thClass} text-right`}>Vendas</th>}
-            {hasSales && <th className={`${thClass} text-right`}>CPA</th>}
-            {hasSales && <th className={`${thClass} text-right`}>Faturado</th>}
-            {hasSales && <th className={`${thClass} text-right`}>Ticket</th>}
-            {hasSales && <th className={`${thClass} text-right`}>ROAS</th>}
-            <th className={`${thClass} text-right`}>Anúncios</th>
+            <SortTh col="adsetName" label="Conjunto de Anúncios" align="left" {...st} />
+            <SortTh col="spend" label="Investido" {...st} />
+            <SortTh col="impressions" label="Impressões" {...st} />
+            <SortTh col="clicks" label="Cliques" {...st} />
+            <SortTh col="ctr" label="CTR" {...st} />
+            <SortTh col="cpc" label="CPC" {...st} />
+            {hasLeads && <SortTh col="leads" label="Leads" {...st} />}
+            {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
+            {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
+            {hasSales && <SortTh col="cpa" label="CPA" {...st} />}
+            {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
+            {hasSales && <SortTh col="ticketMedio" label="Ticket" {...st} />}
+            {hasSales && <SortTh col="roas" label="ROAS" {...st} />}
+            <SortTh col="adCount" label="Anúncios" {...st} />
             <th className="w-8" />
           </tr>
         </thead>
         <tbody>
-          {conjuntos.map((c, i) => {
+          {sorted.map((c, i) => {
             const isTop = i === 0;
             const bg = rowBg(isTop);
             return (
@@ -636,11 +666,42 @@ function VideoModal({ c, onClose }: { c: Criativo; onClose: () => void }) {
   );
 }
 
+type CriativoSortCol = "adName" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "cpm" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas" | "daysActive";
+
+function sortCriativos(arr: Criativo[], col: CriativoSortCol, dir: SortDir): Criativo[] {
+  return [...arr].sort((a, b) => {
+    let va: number | string, vb: number | string;
+    if (col === "adName") { va = a.adName; vb = b.adName; }
+    else if (col === "ctr") { va = a.ctr ?? -Infinity; vb = b.ctr ?? -Infinity; }
+    else if (col === "cpc") { va = a.cpc ?? Infinity; vb = b.cpc ?? Infinity; }
+    else if (col === "cpm") { va = a.cpm ?? Infinity; vb = b.cpm ?? Infinity; }
+    else if (col === "cpl") { va = a.cpl ?? Infinity; vb = b.cpl ?? Infinity; }
+    else if (col === "cpa") { va = a.cpa ?? Infinity; vb = b.cpa ?? Infinity; }
+    else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
+    else if (col === "ticketMedio") { va = a.ticketMedio ?? -Infinity; vb = b.ticketMedio ?? -Infinity; }
+    else { va = a[col] as number; vb = b[col] as number; }
+    if (va < vb) return dir === "asc" ? -1 : 1;
+    if (va > vb) return dir === "asc" ? 1 : -1;
+    return 0;
+  });
+}
+
 function CriativosTable({ criativos, parentCampType }: { criativos: Criativo[]; parentCampType?: CampType | null }) {
   const [modalCriativo, setModalCriativo] = React.useState<Criativo | null>(null);
+  const [sortCol, setSortCol] = React.useState<CriativoSortCol>("spend");
+  const [sortDir, setSortDir] = React.useState<SortDir>("desc");
+
+  function handleSort(col: string) {
+    const c = col as CriativoSortCol;
+    if (c === sortCol) setSortDir(d => d === "asc" ? "desc" : "asc");
+    else { setSortCol(c); setSortDir(["adName", "cpl", "cpa", "cpc", "cpm"].includes(c) ? "asc" : "desc"); }
+  }
+
   const hasLeads = criativos.some(c => c.leads > 0) || parentCampType === "leads";
   const hasSales = criativos.some(c => c.purchases > 0 || c.faturamento > 0) || parentCampType === "vendas";
   const minW = hasSales ? 1080 : hasLeads ? 820 : 680;
+  const sorted = sortCriativos(criativos, sortCol, sortDir);
+  const st = { sortCol, sortDir, onSort: handleSort };
 
   return (
     <>
@@ -649,24 +710,24 @@ function CriativosTable({ criativos, parentCampType }: { criativos: Criativo[]; 
         <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: minW }}>
           <thead>
             <tr>
-              <th className={`${thClass} text-left`}>Criativo</th>
-              <th className={`${thClass} text-right`}>Invest.</th>
-              <th className={`${thClass} text-right`}>Impr.</th>
-              <th className={`${thClass} text-right`}>Cliques</th>
-              <th className={`${thClass} text-right`}>CTR</th>
-              <th className={`${thClass} text-right`}>CPC</th>
-              <th className={`${thClass} text-right`}>CPM</th>
-              {hasLeads && <th className={`${thClass} text-right`}>Leads</th>}
-              {hasLeads && <th className={`${thClass} text-right`}>CPL</th>}
-              {hasSales && <th className={`${thClass} text-right`}>Vendas</th>}
-              {hasSales && <th className={`${thClass} text-right`}>CPA</th>}
-              {hasSales && <th className={`${thClass} text-right`}>Faturado</th>}
-              {hasSales && <th className={`${thClass} text-right`}>Ticket</th>}
-              {hasSales && <th className={`${thClass} text-right`}>ROAS</th>}
+              <SortTh col="adName" label="Criativo" align="left" {...st} />
+              <SortTh col="spend" label="Invest." {...st} />
+              <SortTh col="impressions" label="Impr." {...st} />
+              <SortTh col="clicks" label="Cliques" {...st} />
+              <SortTh col="ctr" label="CTR" {...st} />
+              <SortTh col="cpc" label="CPC" {...st} />
+              <SortTh col="cpm" label="CPM" {...st} />
+              {hasLeads && <SortTh col="leads" label="Leads" {...st} />}
+              {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
+              {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
+              {hasSales && <SortTh col="cpa" label="CPA" {...st} />}
+              {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
+              {hasSales && <SortTh col="ticketMedio" label="Ticket" {...st} />}
+              {hasSales && <SortTh col="roas" label="ROAS" {...st} />}
             </tr>
           </thead>
           <tbody>
-            {criativos.map((c, i) => {
+            {sorted.map((c, i) => {
               const isTop = i === 0;
               const isVideo = c.mediaType === "VIDEO";
               const isActive = c.effectiveStatus === "ACTIVE";
