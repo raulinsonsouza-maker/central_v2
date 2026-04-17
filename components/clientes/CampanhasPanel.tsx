@@ -413,9 +413,9 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
   );
 }
 
-function ConjuntosTable({ conjuntos, onSelect }: { conjuntos: Conjunto[]; onSelect: (id: string) => void }) {
-  const hasLeads = conjuntos.some(c => c.leads > 0);
-  const hasSales = conjuntos.some(c => c.purchases > 0 || c.faturamento > 0);
+function ConjuntosTable({ conjuntos, onSelect, parentCampType }: { conjuntos: Conjunto[]; onSelect: (id: string) => void; parentCampType?: CampType | null }) {
+  const hasLeads = conjuntos.some(c => c.leads > 0) || parentCampType === "leads";
+  const hasSales = conjuntos.some(c => c.purchases > 0 || c.faturamento > 0) || parentCampType === "vendas";
   const minW = hasSales ? 1120 : hasLeads ? 860 : 720;
 
   return (
@@ -636,10 +636,10 @@ function VideoModal({ c, onClose }: { c: Criativo; onClose: () => void }) {
   );
 }
 
-function CriativosTable({ criativos }: { criativos: Criativo[] }) {
+function CriativosTable({ criativos, parentCampType }: { criativos: Criativo[]; parentCampType?: CampType | null }) {
   const [modalCriativo, setModalCriativo] = React.useState<Criativo | null>(null);
-  const hasLeads = criativos.some(c => c.leads > 0);
-  const hasSales = criativos.some(c => c.purchases > 0 || c.faturamento > 0);
+  const hasLeads = criativos.some(c => c.leads > 0) || parentCampType === "leads";
+  const hasSales = criativos.some(c => c.purchases > 0 || c.faturamento > 0) || parentCampType === "vendas";
   const minW = hasSales ? 1080 : hasLeads ? 820 : 680;
 
   return (
@@ -896,6 +896,7 @@ interface Props {
 export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props) {
   const [selectedCampanha, setSelectedCampanha] = React.useState<string | null>(null);
   const [selectedConjunto, setSelectedConjunto] = React.useState<string | null>(null);
+  const selectedCampanhaObjRef = React.useRef<Campanha | null>(null);
 
   const nivel = selectedConjunto ? "criativos" : selectedCampanha ? "conjuntos" : "campanhas";
 
@@ -917,13 +918,23 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
 
   function goBack() {
     if (selectedConjunto) setSelectedConjunto(null);
-    else setSelectedCampanha(null);
+    else { setSelectedCampanha(null); selectedCampanhaObjRef.current = null; }
+  }
+
+  function handleSelectCampanha(nome: string) {
+    const obj = (data?.campanhas as Campanha[] ?? []).find(c => c.nome === nome);
+    if (obj) selectedCampanhaObjRef.current = obj;
+    setSelectedCampanha(nome);
   }
 
   const campanhas: Campanha[] = data?.campanhas ?? [];
   const conjuntos: Conjunto[] = data?.conjuntos ?? [];
   const criativos: Criativo[] = data?.criativos ?? [];
   const isRoot = nivel === "campanhas";
+
+  const parentCampType: CampType | null = selectedCampanhaObjRef.current
+    ? detectCampType(selectedCampanhaObjRef.current.nome, selectedCampanhaObjRef.current.leads, selectedCampanhaObjRef.current.purchases)
+    : null;
 
   const countLabel =
     nivel === "campanhas" && campanhas.length > 0
@@ -1018,7 +1029,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
           </div>
         ) : (
           <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-            <CampanhasTable campanhas={campanhas} onSelect={setSelectedCampanha} />
+            <CampanhasTable campanhas={campanhas} onSelect={handleSelectCampanha} />
           </div>
         )
       )}
@@ -1032,7 +1043,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
           </div>
         ) : (
           <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-            <ConjuntosTable conjuntos={conjuntos} onSelect={setSelectedConjunto} />
+            <ConjuntosTable conjuntos={conjuntos} onSelect={setSelectedConjunto} parentCampType={parentCampType} />
           </div>
         )
       )}
@@ -1046,7 +1057,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
           </div>
         ) : (
           <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-            <CriativosTable criativos={criativos} />
+            <CriativosTable criativos={criativos} parentCampType={parentCampType} />
           </div>
         )
       )}
