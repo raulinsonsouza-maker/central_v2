@@ -42,3 +42,7 @@ build = ["npm", "run", "build"]
 
 [userenv.shared]
 ADMIN_SECRET = "admin"
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 120000
