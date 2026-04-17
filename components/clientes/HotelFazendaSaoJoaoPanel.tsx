@@ -455,11 +455,6 @@ export function HotelFazendaSaoJoaoPanel({
               sub={`De cada 100 leads, ${data.resumo.taxaVendaLead.toFixed(1)} viraram reservas`}
             />
             <MetricCard
-              label="Conversão clique → venda"
-              value={formatPercentage(data.resumo.taxaVendaClique)}
-              sub="Eficiência do tráfego no fundo do funil"
-            />
-            <MetricCard
               label="CTR — taxa de clique"
               value={formatPercentage(data.resumo.ctr)}
               sub="% das impressões que geraram um clique no anúncio"
