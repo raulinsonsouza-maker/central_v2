@@ -161,27 +161,28 @@ model PautaReuniao {
 }
 
 model GoogleAdsCriativo {
-  id             String   @id @default(cuid())
-  clienteId      String
-  contaId        String?
-  adResourceName String
-  campaignId     String?
-  campaignName   String?
-  adGroupId      String?
-  adGroupName    String?
-  headline1      String?
-  headline2      String?
-  description    String?
-  finalUrls      String?
-  data           DateTime @db.Date
-  impressoes     Int      @default(0)
-  cliques        Int      @default(0)
-  custoMicros    BigInt   @default(0)
-  conversoes     Int      @default(0)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  cliente        Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-  conta          Conta?   @relation(fields: [contaId], references: [id])
+  id                   String   @id @default(cuid())
+  clienteId            String
+  contaId              String?
+  adResourceName       String
+  campaignId           String?
+  campaignName         String?
+  adGroupId            String?
+  adGroupName          String?
+  headline1            String?
+  headline2            String?
+  description          String?
+  finalUrls            String?
+  data                 DateTime @db.Date
+  impressoes           Int      @default(0)
+  cliques              Int      @default(0)
+  custoMicros          BigInt   @default(0)
+  conversoes           Int      @default(0)
+  conversaoValorMicros BigInt   @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  cliente              Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  conta                Conta?   @relation(fields: [contaId], references: [id])
 
   @@unique([clienteId, adResourceName, data])
   @@index([clienteId, data])

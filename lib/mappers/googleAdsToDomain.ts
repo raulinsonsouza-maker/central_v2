@@ -94,6 +94,7 @@ export interface GoogleAdsCriativoPayload {
   cliques: number;
   custoMicros: bigint;
   conversoes: number;
+  conversaoValorMicros: bigint;
 }
 
 /**
@@ -139,6 +140,10 @@ export function mapAdCreativeRowToPayload(row: GoogleAdsAdCreativeRow): GoogleAd
   const impressoes = parseNum(metrics?.impressions);
   const cliques = parseNum(metrics?.clicks);
   const conversoes = parseNum(metrics?.conversions);
+  const convValorRaw =
+    metrics?.conversions_value ?? (metrics as Record<string, unknown>)?.conversionsValue ??
+    metrics?.all_conversions_value ?? (metrics as Record<string, unknown>)?.allConversionsValue ?? 0;
+  const conversaoValorMicros = BigInt(Math.round(parseNum(convValorRaw) * 1_000_000));
 
   const dateStr = segments?.date;
   const data = dateStr ? new Date(String(dateStr) + "T12:00:00Z") : new Date();
@@ -163,5 +168,6 @@ export function mapAdCreativeRowToPayload(row: GoogleAdsAdCreativeRow): GoogleAd
     cliques,
     custoMicros,
     conversoes,
+    conversaoValorMicros,
   };
 }

@@ -24,8 +24,9 @@ function fmtPct(v: number) { return fmt(v, 2) + "%"; }
 interface Campanha {
   nome: string; campaignId: string | null;
   investimento: number; impressoes: number; cliques: number; conversoes: number;
+  conversaoValor: number;
   grupoCount: number; adCount: number;
-  ctr: number | null; cpc: number | null; custoConversao: number | null;
+  ctr: number | null; cpc: number | null; custoConversao: number | null; roas: number | null;
 }
 
 type SortDir = "asc" | "desc";
@@ -102,6 +103,7 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
   const campanhas = data?.campanhas ?? [];
   const { sorted, key, dir, toggle } = useSortable(campanhas, "investimento");
   const hasConv = campanhas.some(c => c.conversoes > 0);
+  const hasValorConv = campanhas.some(c => (c.conversaoValor ?? 0) > 0);
 
   return (
     <div className="space-y-4">
@@ -139,7 +141,9 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                 <Th label="CPC" col="cpc" sortKey={key} dir={dir} onSort={toggle} />
                 {hasConv && <>
                   <Th label="Conversões" col="conversoes" sortKey={key} dir={dir} onSort={toggle} />
-                  <Th label="Custo/Conv" col="custoConversao" sortKey={key} dir={dir} onSort={toggle} />
+                  {hasValorConv && <Th label="Valor Conv." col="conversaoValor" sortKey={key} dir={dir} onSort={toggle} />}
+                  <Th label="CPA médio" col="custoConversao" sortKey={key} dir={dir} onSort={toggle} />
+                  {hasValorConv && <Th label="ROAS" col="roas" sortKey={key} dir={dir} onSort={toggle} />}
                 </>}
               </tr>
             </thead>
@@ -170,7 +174,9 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                     <Td v={n(c.cpc, fmtBrl)} />
                     {hasConv && <>
                       <Td v={fmt(c.conversoes)} />
+                      {hasValorConv && <Td v={n(c.conversaoValor ?? 0, fmtBrl)} />}
                       <Td v={n(c.custoConversao, fmtBrl)} />
+                      {hasValorConv && <Td v={c.roas != null ? fmt(c.roas, 2) + "x" : dash} />}
                     </>}
                   </tr>
                 );

@@ -11151,6 +11151,7 @@ export namespace Prisma {
     cliques: number | null
     custoMicros: number | null
     conversoes: number | null
+    conversaoValorMicros: number | null
   }
 
   export type GoogleAdsCriativoSumAggregateOutputType = {
@@ -11158,6 +11159,7 @@ export namespace Prisma {
     cliques: number | null
     custoMicros: bigint | null
     conversoes: number | null
+    conversaoValorMicros: bigint | null
   }
 
   export type GoogleAdsCriativoMinAggregateOutputType = {
@@ -11178,6 +11180,7 @@ export namespace Prisma {
     cliques: number | null
     custoMicros: bigint | null
     conversoes: number | null
+    conversaoValorMicros: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11200,6 +11203,7 @@ export namespace Prisma {
     cliques: number | null
     custoMicros: bigint | null
     conversoes: number | null
+    conversaoValorMicros: bigint | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11222,6 +11226,7 @@ export namespace Prisma {
     cliques: number
     custoMicros: number
     conversoes: number
+    conversaoValorMicros: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11233,6 +11238,7 @@ export namespace Prisma {
     cliques?: true
     custoMicros?: true
     conversoes?: true
+    conversaoValorMicros?: true
   }
 
   export type GoogleAdsCriativoSumAggregateInputType = {
@@ -11240,6 +11246,7 @@ export namespace Prisma {
     cliques?: true
     custoMicros?: true
     conversoes?: true
+    conversaoValorMicros?: true
   }
 
   export type GoogleAdsCriativoMinAggregateInputType = {
@@ -11260,6 +11267,7 @@ export namespace Prisma {
     cliques?: true
     custoMicros?: true
     conversoes?: true
+    conversaoValorMicros?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11282,6 +11290,7 @@ export namespace Prisma {
     cliques?: true
     custoMicros?: true
     conversoes?: true
+    conversaoValorMicros?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11304,6 +11313,7 @@ export namespace Prisma {
     cliques?: true
     custoMicros?: true
     conversoes?: true
+    conversaoValorMicros?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11413,6 +11423,7 @@ export namespace Prisma {
     cliques: number
     custoMicros: bigint
     conversoes: number
+    conversaoValorMicros: bigint
     createdAt: Date
     updatedAt: Date
     _count: GoogleAdsCriativoCountAggregateOutputType | null
@@ -11454,6 +11465,7 @@ export namespace Prisma {
     cliques?: boolean
     custoMicros?: boolean
     conversoes?: boolean
+    conversaoValorMicros?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -11478,6 +11490,7 @@ export namespace Prisma {
     cliques?: boolean
     custoMicros?: boolean
     conversoes?: boolean
+    conversaoValorMicros?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -11502,6 +11515,7 @@ export namespace Prisma {
     cliques?: boolean
     custoMicros?: boolean
     conversoes?: boolean
+    conversaoValorMicros?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -11526,11 +11540,12 @@ export namespace Prisma {
     cliques?: boolean
     custoMicros?: boolean
     conversoes?: boolean
+    conversaoValorMicros?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type GoogleAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "adResourceName" | "campaignId" | "campaignName" | "adGroupId" | "adGroupName" | "headline1" | "headline2" | "description" | "finalUrls" | "data" | "impressoes" | "cliques" | "custoMicros" | "conversoes" | "createdAt" | "updatedAt", ExtArgs["result"]["googleAdsCriativo"]>
+  export type GoogleAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "adResourceName" | "campaignId" | "campaignName" | "adGroupId" | "adGroupName" | "headline1" | "headline2" | "description" | "finalUrls" | "data" | "impressoes" | "cliques" | "custoMicros" | "conversoes" | "conversaoValorMicros" | "createdAt" | "updatedAt", ExtArgs["result"]["googleAdsCriativo"]>
   export type GoogleAdsCriativoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | GoogleAdsCriativo$contaArgs<ExtArgs>
@@ -11568,6 +11583,7 @@ export namespace Prisma {
       cliques: number
       custoMicros: bigint
       conversoes: number
+      conversaoValorMicros: bigint
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["googleAdsCriativo"]>
@@ -12012,6 +12028,7 @@ export namespace Prisma {
     readonly cliques: FieldRef<"GoogleAdsCriativo", 'Int'>
     readonly custoMicros: FieldRef<"GoogleAdsCriativo", 'BigInt'>
     readonly conversoes: FieldRef<"GoogleAdsCriativo", 'Int'>
+    readonly conversaoValorMicros: FieldRef<"GoogleAdsCriativo", 'BigInt'>
     readonly createdAt: FieldRef<"GoogleAdsCriativo", 'DateTime'>
     readonly updatedAt: FieldRef<"GoogleAdsCriativo", 'DateTime'>
   }
@@ -19788,6 +19805,7 @@ export namespace Prisma {
     cliques: 'cliques',
     custoMicros: 'custoMicros',
     conversoes: 'conversoes',
+    conversaoValorMicros: 'conversaoValorMicros',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -20824,6 +20842,7 @@ export namespace Prisma {
     cliques?: IntFilter<"GoogleAdsCriativo"> | number
     custoMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     conversoes?: IntFilter<"GoogleAdsCriativo"> | number
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     createdAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -20848,6 +20867,7 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
@@ -20876,6 +20896,7 @@ export namespace Prisma {
     cliques?: IntFilter<"GoogleAdsCriativo"> | number
     custoMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     conversoes?: IntFilter<"GoogleAdsCriativo"> | number
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     createdAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -20900,6 +20921,7 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: GoogleAdsCriativoCountOrderByAggregateInput
@@ -20930,6 +20952,7 @@ export namespace Prisma {
     cliques?: IntWithAggregatesFilter<"GoogleAdsCriativo"> | number
     custoMicros?: BigIntWithAggregatesFilter<"GoogleAdsCriativo"> | bigint | number
     conversoes?: IntWithAggregatesFilter<"GoogleAdsCriativo"> | number
+    conversaoValorMicros?: BigIntWithAggregatesFilter<"GoogleAdsCriativo"> | bigint | number
     createdAt?: DateTimeWithAggregatesFilter<"GoogleAdsCriativo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GoogleAdsCriativo"> | Date | string
   }
@@ -22419,6 +22442,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutGoogleAdsCriativosInput
@@ -22443,6 +22467,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22463,6 +22488,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutGoogleAdsCriativosNestedInput
@@ -22487,6 +22513,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22509,6 +22536,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -22529,6 +22557,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -22551,6 +22580,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -24158,6 +24188,7 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24167,6 +24198,7 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
   }
 
   export type GoogleAdsCriativoMaxOrderByAggregateInput = {
@@ -24187,6 +24219,7 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24209,6 +24242,7 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -24218,6 +24252,7 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
+    conversaoValorMicros?: SortOrder
   }
 
   export type BigIntWithAggregatesFilter<$PrismaModel = never> = {
@@ -26155,6 +26190,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     conta?: ContaCreateNestedOneWithoutGoogleAdsCriativosInput
@@ -26177,6 +26213,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -26652,6 +26689,7 @@ export namespace Prisma {
     cliques?: IntFilter<"GoogleAdsCriativo"> | number
     custoMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     conversoes?: IntFilter<"GoogleAdsCriativo"> | number
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     createdAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
   }
@@ -27003,6 +27041,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutGoogleAdsCriativosInput
@@ -27025,6 +27064,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -28841,6 +28881,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29231,6 +29272,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conta?: ContaUpdateOneWithoutGoogleAdsCriativosNestedInput
@@ -29253,6 +29295,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29274,6 +29317,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29597,6 +29641,7 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
+    conversaoValorMicros?: bigint | number
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29783,6 +29828,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutGoogleAdsCriativosNestedInput
@@ -29805,6 +29851,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29826,6 +29873,7 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

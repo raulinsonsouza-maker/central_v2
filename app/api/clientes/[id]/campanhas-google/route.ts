@@ -58,6 +58,7 @@ export async function GET(
       impressoes: number;
       cliques: number;
       conversoes: number;
+      conversaoValor: number;
       adGroupCount: Set<string>;
       adCount: Set<string>;
     }>();
@@ -70,6 +71,7 @@ export async function GET(
         ex.impressoes += r.impressoes;
         ex.cliques += r.cliques;
         ex.conversoes += r.conversoes;
+        ex.conversaoValor += Number(r.conversaoValorMicros) / 1_000_000;
         if (r.adGroupId) ex.adGroupCount.add(r.adGroupId);
         ex.adCount.add(r.adResourceName);
       } else {
@@ -83,6 +85,7 @@ export async function GET(
           impressoes: r.impressoes,
           cliques: r.cliques,
           conversoes: r.conversoes,
+          conversaoValor: Number(r.conversaoValorMicros) / 1_000_000,
           adGroupCount: s,
           adCount: ads,
         });
@@ -97,11 +100,13 @@ export async function GET(
         impressoes: v.impressoes,
         cliques: v.cliques,
         conversoes: v.conversoes,
+        conversaoValor: v.conversaoValor,
         grupoCount: v.adGroupCount.size,
         adCount: v.adCount.size,
         ctr: v.impressoes > 0 ? (v.cliques / v.impressoes) * 100 : null,
         cpc: v.cliques > 0 ? v.investimento / v.cliques : null,
         custoConversao: v.conversoes > 0 ? v.investimento / v.conversoes : null,
+        roas: v.investimento > 0 && v.conversaoValor > 0 ? v.conversaoValor / v.investimento : null,
       }))
       .filter(c => c.investimento > 1)
       .sort((a, b) => b.investimento - a.investimento);

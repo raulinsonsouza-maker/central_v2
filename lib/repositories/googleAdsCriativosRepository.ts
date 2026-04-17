@@ -15,6 +15,7 @@ export interface UpsertGoogleAdsCriativoPayload {
   cliques: number;
   custoMicros: bigint;
   conversoes: number;
+  conversaoValorMicros?: bigint;
   contaId?: string | null;
 }
 
@@ -46,6 +47,7 @@ export async function upsertGoogleAdsCriativo(
       cliques: payload.cliques,
       custoMicros: payload.custoMicros,
       conversoes: payload.conversoes,
+      conversaoValorMicros: payload.conversaoValorMicros ?? BigInt(0),
       contaId: payload.contaId ?? null,
     },
     update: {
@@ -61,6 +63,7 @@ export async function upsertGoogleAdsCriativo(
       cliques: payload.cliques,
       custoMicros: payload.custoMicros,
       conversoes: payload.conversoes,
+      conversaoValorMicros: payload.conversaoValorMicros ?? BigInt(0),
     },
   });
 }
