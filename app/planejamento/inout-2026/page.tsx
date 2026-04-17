@@ -648,41 +648,49 @@ export default function InoutPlano2026() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
             {[
               {
-                icon: <Ico.CityBuilding c="w-8 h-8 text-orange-400" />, title: "Médio e Alto Padrão", cor: "from-orange-500/20 to-transparent", badge: "Maior margem",
+                icon: <Ico.CityBuilding c="w-8 h-8 text-orange-400" />, iconBg: "bg-orange-400/10",
+                badgeCls: "text-orange-400 bg-orange-400/10", ctaCls: "text-orange-500", checkCls: "text-orange-500",
+                title: "Médio e Alto Padrão", cor: "from-orange-500/20 to-transparent", badge: "Maior margem",
                 bullets: ["↑120% em lançamentos (Forbes)", "Ticket alto = mais verba de marketing", "Quem paga mais e exige mais resultado"],
                 cta: "Alta prioridade"
               },
               {
-                icon: <Ico.Home c="w-8 h-8 text-orange-400" />, title: "MCMV", cor: "from-orange-600/15 to-transparent", badge: "Volume",
+                icon: <Ico.Home c="w-8 h-8 text-sky-400" />, iconBg: "bg-sky-400/10",
+                badgeCls: "text-sky-400 bg-sky-400/10", ctaCls: "text-sky-400", checkCls: "text-sky-500",
+                title: "MCMV", cor: "from-sky-500/15 to-transparent", badge: "Volume",
                 bullets: ["Grande parte das vendas totais", "Incentivo governamental forte", "Giro rápido de estoque"],
                 cta: "Operação escala"
               },
               {
-                icon: <Ico.Leaf c="w-8 h-8 text-orange-400" />, title: "Interior", cor: "from-orange-700/15 to-transparent", badge: "Expansão",
+                icon: <Ico.Leaf c="w-8 h-8 text-emerald-400" />, iconBg: "bg-emerald-400/10",
+                badgeCls: "text-emerald-400 bg-emerald-400/10", ctaCls: "text-emerald-400", checkCls: "text-emerald-500",
+                title: "Interior", cor: "from-emerald-600/15 to-transparent", badge: "Expansão",
                 bullets: ["Interior SP: R$ 12,7B em VGV", "Menos concorrência de agências", "Custo de aquisição menor"],
                 cta: "Oportunidade imediata"
               },
               {
-                icon: <Ico.Bot c="w-8 h-8 text-orange-400" />, title: "Tecnologia + IA", cor: "from-orange-800/15 to-transparent", badge: "Crescimento",
+                icon: <Ico.Bot c="w-8 h-8 text-violet-400" />, iconBg: "bg-violet-400/10",
+                badgeCls: "text-violet-400 bg-violet-400/10", ctaCls: "text-violet-400", checkCls: "text-violet-500",
+                title: "Tecnologia + IA", cor: "from-violet-600/15 to-transparent", badge: "Crescimento",
                 bullets: ["R$ 12B em VGV impactado por IA", "Quem usa tech retém cliente", "Dashboards e automação = diferencial"],
                 cta: "Diferencial competitivo"
               },
-            ].map(({ icon, title, cor, badge, bullets, cta }) => (
+            ].map(({ icon, iconBg, badgeCls, ctaCls, checkCls, title, cor, badge, bullets, cta }) => (
               <Card key={title} className={`bg-gradient-to-b ${cor} relative`}>
-                <div className="mb-3">{icon}</div>
+                <div className={`inline-flex items-center justify-center w-14 h-14 rounded-2xl mb-4 ${iconBg}`}>{icon}</div>
                 <div className="flex items-start justify-between mb-3">
                   <h4 className="font-extrabold text-white text-base">{title}</h4>
-                  <span className="text-[9px] font-black uppercase tracking-widest text-orange-400 bg-orange-400/10 px-2 py-0.5 rounded-full ml-2 shrink-0">{badge}</span>
+                  <span className={`text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full ml-2 shrink-0 ${badgeCls}`}>{badge}</span>
                 </div>
                 <ul className="space-y-2 mb-4">
                   {bullets.map((b) => (
                     <li key={b} className="flex items-start gap-2 text-xs text-neutral-400">
-                      <Ico.Check c="w-3 h-3 text-orange-500 mt-0.5 shrink-0" />
+                      <Ico.Check c={`w-3 h-3 mt-0.5 shrink-0 ${checkCls}`} />
                       {b}
                     </li>
                   ))}
                 </ul>
-                <span className="text-[10px] font-black uppercase tracking-widest text-orange-500">{cta}</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest ${ctaCls}`}>{cta}</span>
               </Card>
             ))}
           </div>
