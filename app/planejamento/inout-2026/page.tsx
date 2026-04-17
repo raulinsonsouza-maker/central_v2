@@ -7,6 +7,7 @@ import {
   AreaChart, Area, BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, RadialBarChart, RadialBar, ReferenceLine,
 } from "recharts";
+import { AquisicaoQualificada } from "./AquisicaoQualificada";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 function fmt(v: number, decimals = 1): string {
@@ -388,7 +389,7 @@ export default function InoutPlano2026() {
   const [activeSection, setActiveSection] = useState("");
 
   useEffect(() => {
-    const ids = ["mercado", "dinheiro", "posicionamento", "icp", "simuladores", "meta"];
+    const ids = ["mercado", "dinheiro", "posicionamento", "icp", "aquisicao", "simuladores", "meta"];
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) if (e.isIntersecting) setActiveSection(e.target.id);
@@ -404,6 +405,7 @@ export default function InoutPlano2026() {
     { id: "dinheiro", label: "Oportunidade" },
     { id: "posicionamento", label: "Posicionamento" },
     { id: "icp", label: "ICP" },
+    { id: "aquisicao", label: "Aquisição" },
     { id: "simuladores", label: "Simuladores" },
     { id: "meta", label: "Meta 2026" },
   ];
@@ -907,6 +909,20 @@ export default function InoutPlano2026() {
               ))}
             </div>
           </Card>
+        </div>
+      </section>
+
+      {/* ── aquisição qualificada (nova) ── */}
+      <section id="aquisicao" className="py-24 border-b border-neutral-900">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <div className="text-center mb-14">
+            <SectionLabel label="Aquisição qualificada" />
+            <SectionTitle
+              title={<>Não precisamos de mais leads.<br />Precisamos dos <span className="bg-gradient-to-r from-orange-500 to-orange-300 bg-clip-text text-transparent">leads certos.</span></>}
+              sub="Estratégia profunda de unit economics, funil correto em 3 camadas, formulário inteligente com scoring automático e oferta dupla para monetizar quem hoje viraria descarte."
+            />
+          </div>
+          <AquisicaoQualificada />
         </div>
       </section>
 
