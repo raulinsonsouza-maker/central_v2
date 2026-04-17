@@ -766,7 +766,7 @@ export default function InoutPlano2026() {
               </div>
             </Card>
 
-            <Card className="flex flex-col justify-between">
+            <Card>
               <div>
                 <SectionLabel label="Oportunidade escondida" />
                 <h3 className="text-lg font-extrabold text-white mb-2">Estoque parado — a bomba silenciosa</h3>
