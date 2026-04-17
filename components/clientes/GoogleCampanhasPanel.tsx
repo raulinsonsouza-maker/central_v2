@@ -27,6 +27,7 @@ interface Campanha {
   conversaoValor: number;
   grupoCount?: number; adCount?: number;
   ctr: number | null; cpc: number | null; custoConversao: number | null; roas: number | null;
+  statusOrder?: number;
 }
 
 type SortDir = "asc" | "desc";
@@ -137,7 +138,11 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
     staleTime: 1000 * 60 * 2,
   });
 
-  const campanhas = data?.campanhas ?? [];
+  const statusOrderMap: Record<string, number> = { ENABLED: 1, PAUSED: 2, REMOVED: 3 };
+  const campanhas = (data?.campanhas ?? []).map(c => ({
+    ...c,
+    statusOrder: statusOrderMap[normStatus(c.campaignStatus)] ?? 9,
+  }));
   const { sorted, key, dir, toggle } = useSortable(campanhas, "investimento");
   const hasConv = campanhas.some(c => c.conversoes > 0);
   const hasValorConv = campanhas.some(c => (c.conversaoValor ?? 0) > 0);
@@ -171,6 +176,7 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
             <thead className="bg-white/[0.02]">
               <tr>
                 <Th label="Campanha" col="nome" sortKey={key} dir={dir} onSort={toggle} right={false} />
+                <Th label="Status" col="statusOrder" sortKey={key} dir={dir} onSort={toggle} right={false} />
                 <Th label="Investido" col="investimento" sortKey={key} dir={dir} onSort={toggle} />
                 <Th label="Impressões" col="impressoes" sortKey={key} dir={dir} onSort={toggle} />
                 <Th label="Cliques" col="cliques" sortKey={key} dir={dir} onSort={toggle} />
@@ -200,13 +206,15 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                         )}
                         <span className={`shrink-0 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border whitespace-nowrap ${badge.color}`}>{badge.label}</span>
                         <p className="text-sm font-semibold text-[var(--foreground)] truncate" title={c.nome}>{c.nome}</p>
-                        {(() => { const sb = statusBadge(c.campaignStatus); return sb ? (
-                          <span className={`shrink-0 inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border whitespace-nowrap ${sb.color}`}>
-                            <span className={`w-1.5 h-1.5 rounded-full ${sb.dot}`} />
-                            {sb.label}
-                          </span>
-                        ) : null; })()}
                       </div>
+                    </td>
+                    <td className="px-3 py-3">
+                      {(() => { const sb = statusBadge(c.campaignStatus); return sb ? (
+                        <span className={`inline-flex items-center gap-1 text-[9px] font-bold uppercase tracking-widest px-2 py-1 rounded-full border whitespace-nowrap ${sb.color}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${sb.dot}`} />
+                          {sb.label}
+                        </span>
+                      ) : <span className="text-xs text-[var(--muted-foreground)]">—</span>; })()}
                     </td>
                     <Td v={fmtBrl(c.investimento)} highlight />
                     <Td v={fmt(c.impressoes)} muted />
