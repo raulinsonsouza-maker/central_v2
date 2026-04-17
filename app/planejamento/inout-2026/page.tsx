@@ -8,6 +8,7 @@ import {
   ResponsiveContainer, PieChart, Pie, RadialBarChart, RadialBar, ReferenceLine,
 } from "recharts";
 import { AquisicaoQualificada } from "./AquisicaoQualificada";
+import { MixAquisicao } from "./MixAquisicao";
 
 // ─── helpers ──────────────────────────────────────────────────────────────────
 function fmt(v: number, decimals = 1): string {
@@ -388,8 +389,19 @@ function SimuladorICP() {
 export default function InoutPlano2026() {
   const [activeSection, setActiveSection] = useState("");
 
+  const navItems = [
+    { id: "mercado", label: "Mercado" },
+    { id: "dinheiro", label: "Oportunidade" },
+    { id: "posicionamento", label: "Posicionamento" },
+    { id: "icp", label: "ICP" },
+    { id: "mix-aquisicao", label: "Mix" },
+    { id: "aquisicao", label: "Aquisição" },
+    { id: "simuladores", label: "Simuladores" },
+    { id: "meta", label: "Meta 2026" },
+  ];
+
   useEffect(() => {
-    const ids = ["mercado", "dinheiro", "posicionamento", "icp", "aquisicao", "simuladores", "meta"];
+    const ids = navItems.map((n) => n.id);
     const obs = new IntersectionObserver(
       (entries) => {
         for (const e of entries) if (e.isIntersecting) setActiveSection(e.target.id);
@@ -398,17 +410,8 @@ export default function InoutPlano2026() {
     );
     ids.forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
     return () => obs.disconnect();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const navItems = [
-    { id: "mercado", label: "Mercado" },
-    { id: "dinheiro", label: "Oportunidade" },
-    { id: "posicionamento", label: "Posicionamento" },
-    { id: "icp", label: "ICP" },
-    { id: "aquisicao", label: "Aquisição" },
-    { id: "simuladores", label: "Simuladores" },
-    { id: "meta", label: "Meta 2026" },
-  ];
 
   const metaMensal = 2_500_000 / 12;
 
@@ -959,6 +962,20 @@ export default function InoutPlano2026() {
               ))}
             </div>
           </Card>
+        </div>
+      </section>
+
+      {/* ── mix de aquisição (3 canais) ── */}
+      <section id="mix-aquisicao" className="py-24 border-b border-neutral-900 bg-[#0d0d0f]">
+        <div className="max-w-7xl mx-auto px-6 md:px-10">
+          <div className="text-center mb-14">
+            <SectionLabel label="Mix de aquisição" />
+            <SectionTitle
+              title={<>Inbound não chega no <span className="bg-gradient-to-r from-orange-500 to-orange-300 bg-clip-text text-transparent">Tipo 3</span> sozinho.</>}
+              sub="A meta de R$ 2,5M depende dos clientes grandes — e clientes grandes não preenchem formulário. Aqui está o mix completo de canais que efetivamente abre essas portas."
+            />
+          </div>
+          <MixAquisicao />
         </div>
       </section>
 
