@@ -71,6 +71,26 @@ const Ico = {
       <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
     </svg>
   ),
+  CityBuilding: ({ c = "w-5 h-5" }) => (
+    <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="7" width="9" height="14"/><rect x="11" y="3" width="9" height="18"/><path d="M2 21h20"/><path d="M5 10h3M5 14h3M5 18h3"/><path d="M14 6h3M14 10h3M14 14h3M14 18h3"/>
+    </svg>
+  ),
+  Home: ({ c = "w-5 h-5" }) => (
+    <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 9.5 12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1Z"/><polyline points="9 21 9 12 15 12 15 21"/>
+    </svg>
+  ),
+  Leaf: ({ c = "w-5 h-5" }) => (
+    <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+    </svg>
+  ),
+  Bot: ({ c = "w-5 h-5" }) => (
+    <svg className={c} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="11" width="18" height="10" rx="2"/><path d="M12 11V7"/><circle cx="12" cy="5" r="2"/><path d="M8 15h.01M16 15h.01M8 19h8"/>
+    </svg>
+  ),
 };
 
 // ─── section title ─────────────────────────────────────────────────────────────
@@ -628,28 +648,28 @@ export default function InoutPlano2026() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-12">
             {[
               {
-                emoji: "🏙️", title: "Médio e Alto Padrão", cor: "from-orange-500/20 to-transparent", badge: "Maior margem",
+                icon: <Ico.CityBuilding c="w-8 h-8 text-orange-400" />, title: "Médio e Alto Padrão", cor: "from-orange-500/20 to-transparent", badge: "Maior margem",
                 bullets: ["↑120% em lançamentos (Forbes)", "Ticket alto = mais verba de marketing", "Quem paga mais e exige mais resultado"],
                 cta: "Alta prioridade"
               },
               {
-                emoji: "🏠", title: "MCMV", cor: "from-orange-600/15 to-transparent", badge: "Volume",
+                icon: <Ico.Home c="w-8 h-8 text-orange-400" />, title: "MCMV", cor: "from-orange-600/15 to-transparent", badge: "Volume",
                 bullets: ["Grande parte das vendas totais", "Incentivo governamental forte", "Giro rápido de estoque"],
                 cta: "Operação escala"
               },
               {
-                emoji: "🌿", title: "Interior", cor: "from-orange-700/15 to-transparent", badge: "Expansão",
+                icon: <Ico.Leaf c="w-8 h-8 text-orange-400" />, title: "Interior", cor: "from-orange-700/15 to-transparent", badge: "Expansão",
                 bullets: ["Interior SP: R$ 12,7B em VGV", "Menos concorrência de agências", "Custo de aquisição menor"],
                 cta: "Oportunidade imediata"
               },
               {
-                emoji: "🤖", title: "Tecnologia + IA", cor: "from-orange-800/15 to-transparent", badge: "Crescimento",
+                icon: <Ico.Bot c="w-8 h-8 text-orange-400" />, title: "Tecnologia + IA", cor: "from-orange-800/15 to-transparent", badge: "Crescimento",
                 bullets: ["R$ 12B em VGV impactado por IA", "Quem usa tech retém cliente", "Dashboards e automação = diferencial"],
                 cta: "Diferencial competitivo"
               },
-            ].map(({ emoji, title, cor, badge, bullets, cta }) => (
+            ].map(({ icon, title, cor, badge, bullets, cta }) => (
               <Card key={title} className={`bg-gradient-to-b ${cor} relative`}>
-                <div className="text-3xl mb-3">{emoji}</div>
+                <div className="mb-3">{icon}</div>
                 <div className="flex items-start justify-between mb-3">
                   <h4 className="font-extrabold text-white text-base">{title}</h4>
                   <span className="text-[9px] font-black uppercase tracking-widest text-orange-400 bg-orange-400/10 px-2 py-0.5 rounded-full ml-2 shrink-0">{badge}</span>
