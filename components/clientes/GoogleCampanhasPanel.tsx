@@ -177,22 +177,18 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                     className={`border-t border-[var(--border)] ${isTop ? "bg-[var(--primary)]/[0.05]" : "bg-white/[0.02]"}`}
                   >
                     <td className="px-3 py-3">
-                      <div className="flex items-start gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
                         {isTop && (
-                          <span className="shrink-0 mt-0.5 rounded-full bg-[var(--primary)]/10 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-[var(--primary)]">#1</span>
+                          <span className="shrink-0 rounded-full bg-[var(--primary)]/10 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-widest text-[var(--primary)]">#1</span>
                         )}
-                        <div className="min-w-0">
-                          <p className="text-sm font-semibold text-[var(--foreground)] truncate max-w-xs" title={c.nome}>{c.nome}</p>
-                          <div className="mt-0.5 flex items-center gap-1 flex-wrap">
-                            <span className={`inline-block text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border ${badge.color}`}>{badge.label}</span>
-                            {(() => { const sb = statusBadge(c.campaignStatus); return sb ? (
-                              <span className={`inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border ${sb.color}`}>
-                                <span className={`w-1.5 h-1.5 rounded-full ${sb.dot}`} />
-                                {sb.label}
-                              </span>
-                            ) : null; })()}
-                          </div>
-                        </div>
+                        <span className={`shrink-0 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border whitespace-nowrap ${badge.color}`}>{badge.label}</span>
+                        <p className="text-sm font-semibold text-[var(--foreground)] truncate" title={c.nome}>{c.nome}</p>
+                        {(() => { const sb = statusBadge(c.campaignStatus); return sb ? (
+                          <span className={`shrink-0 inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border whitespace-nowrap ${sb.color}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${sb.dot}`} />
+                            {sb.label}
+                          </span>
+                        ) : null; })()}
                       </div>
                     </td>
                     <Td v={fmtBrl(c.investimento)} highlight />
