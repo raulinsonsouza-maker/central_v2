@@ -98,6 +98,7 @@ export async function GET(
         faturamento: v.faturamento,
         cpl: v.leads > 0 ? v.investimento / v.leads : null,
         cpa: v.purchases > 0 ? v.investimento / v.purchases : null,
+        ticketMedio: v.purchases > 0 ? v.faturamento / v.purchases : null,
         roas: v.investimento > 0 && v.faturamento > 0 ? v.faturamento / v.investimento : null,
         ctr: v.impressoes > 0 ? (v.cliques / v.impressoes) * 100 : null,
       }))

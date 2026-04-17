@@ -43,6 +43,7 @@ interface Campanha {
   faturamento: number;
   cpl: number | null;
   cpa: number | null;
+  ticketMedio: number | null;
   roas: number | null;
   ctr: number | null;
 }
@@ -104,7 +105,7 @@ const CAMP_TYPE_META: Record<CampType, { label: string; color: string }> = {
 };
 const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 
-type SortCol = "nome" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "faturamento" | "roas";
+type SortCol = "nome" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
 type SortDir = "asc" | "desc";
 
 function SortIcon({ col, sortCol, sortDir }: { col: SortCol; sortCol: SortCol; sortDir: SortDir }) {
@@ -135,8 +136,10 @@ function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] 
     let va: number | string, vb: number | string;
     if (col === "nome") { va = a.nome; vb = b.nome; }
     else if (col === "cpl") { va = a.cpl ?? Infinity; vb = b.cpl ?? Infinity; }
+    else if (col === "cpa") { va = a.cpa ?? Infinity; vb = b.cpa ?? Infinity; }
     else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
     else if (col === "ctr") { va = a.ctr ?? -Infinity; vb = b.ctr ?? -Infinity; }
+    else if (col === "ticketMedio") { va = a.ticketMedio ?? -Infinity; vb = b.ticketMedio ?? -Infinity; }
     else { va = a[col] as number; vb = b[col] as number; }
     if (va < vb) return dir === "asc" ? -1 : 1;
     if (va > vb) return dir === "asc" ? 1 : -1;
@@ -150,7 +153,12 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
 
   function handleSort(col: SortCol) {
     if (col === sortCol) setSortDir(d => d === "asc" ? "desc" : "asc");
-    else { setSortCol(col); setSortDir(col === "nome" ? "asc" : "desc"); }
+    else {
+      setSortCol(col);
+      // Lower is better for cost metrics → default ascending
+      const defaultAsc: SortCol[] = ["nome", "cpl", "cpa"];
+      setSortDir(defaultAsc.includes(col) ? "asc" : "desc");
+    }
   }
 
   const sorted = sortCampanhas(campanhas, sortCol, sortDir);
@@ -174,7 +182,7 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: hasSales ? 960 : hasLeads ? 820 : 700 }}>
+      <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: hasSales ? 1120 : hasLeads ? 820 : 700 }}>
         <thead>
           <tr>
             <SortTh col="nome" label="Campanha" align="left" {...st} />
@@ -185,7 +193,9 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
             {hasLeads && <SortTh col="leads" label="Leads" {...st} />}
             {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
             {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
+            {hasSales && <SortTh col="cpa" label="CPA" {...st} />}
             {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
+            {hasSales && <SortTh col="ticketMedio" label="Ticket Médio" {...st} />}
             {hasSales && <SortTh col="roas" label="ROAS" {...st} />}
             <th className="w-8" />
           </tr>
@@ -285,6 +295,13 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
                   </td>
                 )}
 
+                {/* CPA */}
+                {hasSales && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {isNonConversion ? <span className="text-white/20">—</span> : (c.cpa !== null ? fmtBrl(c.cpa) : "—")}
+                  </td>
+                )}
+
                 {/* Faturado */}
                 {hasSales && (
                   <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
@@ -295,6 +312,13 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
                         {c.faturamento > 0 ? fmtBrl(c.faturamento) : "—"}
                       </span>
                     )}
+                  </td>
+                )}
+
+                {/* Ticket Médio */}
+                {hasSales && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {isNonConversion ? <span className="text-white/20">—</span> : (c.ticketMedio !== null ? fmtBrl(c.ticketMedio) : "—")}
                   </td>
                 )}
 
@@ -348,8 +372,18 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
               </td>
             )}
             {hasSales && (
+              <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
+                {totals.purchases > 0 ? fmtBrl(totals.investimento / totals.purchases) : "—"}
+              </td>
+            )}
+            {hasSales && (
               <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-bold text-[var(--primary)]">
                 {totals.faturamento > 0 ? fmtBrl(totals.faturamento) : "—"}
+              </td>
+            )}
+            {hasSales && (
+              <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
+                {totals.purchases > 0 && totals.faturamento > 0 ? fmtBrl(totals.faturamento / totals.purchases) : "—"}
               </td>
             )}
             {hasSales && (
