@@ -1255,6 +1255,73 @@ function formatPercentage(value: number) {
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
+
+            {/* ── Pace do mês atual ── */}
+            {(() => {
+              const today = new Date();
+              const currentMonth = today.getMonth() + 1;
+              const currentYear = today.getFullYear();
+              const cmd = (financeiro.meses as Array<{ ano: number; mes: number; planejadoTotal: number; realizadoTotal: number }>)
+                .find(m => m.mes === currentMonth && m.ano === currentYear);
+              if (!cmd || cmd.planejadoTotal <= 0) return null;
+              const daysInMonth = new Date(currentYear, currentMonth, 0).getDate();
+              const dayOfMonth = today.getDate();
+              const paceIdeal = (cmd.planejadoTotal / daysInMonth) * dayOfMonth;
+              const delta = cmd.realizadoTotal - paceIdeal;
+              const deltaPercent = paceIdeal > 0 ? (delta / paceIdeal) * 100 : 0;
+              const isAhead = delta >= 0;
+              const pctRealizado = Math.min(100, (cmd.realizadoTotal / cmd.planejadoTotal) * 100);
+              const pctEsperado = Math.min(100, (paceIdeal / cmd.planejadoTotal) * 100);
+              const monthName = new Date(currentYear, currentMonth - 1, 1)
+                .toLocaleString("pt-BR", { month: "long" });
+              const monthLabel = monthName.charAt(0).toUpperCase() + monthName.slice(1);
+              return (
+                <div className="mt-5 rounded-2xl border border-[var(--border)]/60 bg-white/[0.025] p-4">
+                  <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+                    <p className="text-[11px] font-semibold uppercase tracking-widest text-[var(--muted-foreground)]">
+                      Ritmo do mês · {monthLabel} — dia {dayOfMonth} de {daysInMonth}
+                    </p>
+                    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-[11px] font-bold ${isAhead ? "bg-emerald-500/10 text-emerald-400" : "bg-rose-500/10 text-rose-400"}`}>
+                      {isAhead ? "▲" : "▼"} {Math.abs(deltaPercent).toFixed(1)}% {isAhead ? "acima do ritmo" : "abaixo do ritmo"}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+                    <div className="rounded-xl bg-white/[0.04] p-3">
+                      <p className="mb-1 text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">Orçado no mês</p>
+                      <p className="text-[15px] font-bold text-[var(--foreground)]">{formatCurrency(cmd.planejadoTotal)}</p>
+                    </div>
+                    <div className="rounded-xl bg-[var(--primary)]/[0.06] p-3">
+                      <p className="mb-1 text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">Realizado até hoje</p>
+                      <p className="text-[15px] font-bold text-[var(--primary)]">{formatCurrency(cmd.realizadoTotal)}</p>
+                    </div>
+                    <div className="rounded-xl bg-white/[0.04] p-3">
+                      <p className="mb-1 text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">Ritmo esperado (dia {dayOfMonth})</p>
+                      <p className="text-[15px] font-bold text-[var(--foreground)]">{formatCurrency(paceIdeal)}</p>
+                    </div>
+                    <div className={`rounded-xl p-3 ${isAhead ? "bg-emerald-500/[0.07]" : "bg-rose-500/[0.07]"}`}>
+                      <p className="mb-1 text-[10px] uppercase tracking-wider text-[var(--muted-foreground)]">Diferença do ritmo</p>
+                      <p className={`text-[15px] font-bold ${isAhead ? "text-emerald-400" : "text-rose-400"}`}>
+                        {isAhead ? "+" : ""}{formatCurrency(delta)}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-3 relative h-2 overflow-hidden rounded-full bg-white/[0.06]">
+                    <div className="absolute top-0 bottom-0 w-0.5 bg-white/30 z-10" style={{ left: `${pctEsperado}%` }} />
+                    <div
+                      className={`absolute inset-y-0 left-0 rounded-full transition-all ${isAhead ? "bg-emerald-500/70" : "bg-[var(--primary)]/70"}`}
+                      style={{ width: `${pctRealizado}%` }}
+                    />
+                  </div>
+                  <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-4 text-[10px] text-[var(--muted-foreground)]">
+                    <span>{pctRealizado.toFixed(0)}% realizado do mês</span>
+                    <span className="text-white/20">|</span>
+                    <span>Ritmo esperado: {pctEsperado.toFixed(0)}%</span>
+                    <span className="text-white/20">|</span>
+                    <span>{(100 - pctRealizado).toFixed(0)}% restante para fechar o mês</span>
+                  </div>
+                </div>
+              );
+            })()}
           </CardContent>
         </Card>
       )}
