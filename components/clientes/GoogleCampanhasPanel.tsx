@@ -88,19 +88,12 @@ function normCampType(raw: string | null | undefined): string {
 function campTypeBadge(nome: string, campaignType?: string | null) {
   const type = normCampType(campaignType);
   if (type === "PERFORMANCE_MAX") return { label: "PMax", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
-  if (type === "SEARCH") {
-    const lower = nome.toLowerCase();
-    if (lower.includes("brand") || lower.includes("marca") || lower.includes("[ra]") || lower.includes("institucional")) return { label: "Brand", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
-    if (lower.includes("rmkt") || lower.includes("remarketing")) return { label: "Rmkt", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" };
-    return { label: "Search", color: "bg-sky-500/10 text-sky-400 border-sky-500/20" };
-  }
+  if (type === "SEARCH") return { label: "Search", color: "bg-sky-500/10 text-sky-400 border-sky-500/20" };
   if (type === "DISPLAY") return { label: "Display", color: "bg-pink-500/10 text-pink-400 border-pink-500/20" };
   if (type === "VIDEO") return { label: "Video", color: "bg-red-500/10 text-red-400 border-red-500/20" };
   if (type === "SHOPPING") return { label: "Shopping", color: "bg-yellow-500/10 text-yellow-400 border-yellow-500/20" };
   if (type === "DEMAND_GEN" || type === "DISCOVERY") return { label: "DemGen", color: "bg-violet-500/10 text-violet-400 border-violet-500/20" };
   const lower = nome.toLowerCase();
-  if (lower.includes("brand") || lower.includes("marca")) return { label: "Brand", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" };
-  if (lower.includes("rmkt") || lower.includes("remarketing") || lower.includes("retargeting")) return { label: "Rmkt", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" };
   if (lower.includes("pmax") || lower.includes("p.max") || lower.includes("performance max")) return { label: "PMax", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" };
   if (lower.includes("search") || lower.includes("pesquisa")) return { label: "Search", color: "bg-sky-500/10 text-sky-400 border-sky-500/20" };
   if (lower.includes("display")) return { label: "Display", color: "bg-pink-500/10 text-pink-400 border-pink-500/20" };
