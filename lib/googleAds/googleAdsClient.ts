@@ -65,7 +65,7 @@ export interface GoogleAdsBeginCheckoutRow {
 }
 
 export interface GoogleAdsAdCreativeRow {
-  campaign?: { id?: string; name?: string };
+  campaign?: { id?: string; name?: string; status?: string };
   ad_group?: { id?: string; name?: string };
   ad_group_ad?: {
     resource_name?: string;
@@ -263,6 +263,7 @@ export async function fetchAdCreatives(
     SELECT
       campaign.id,
       campaign.name,
+      campaign.status,
       ad_group.id,
       ad_group.name,
       ad_group_ad.resource_name,
@@ -282,8 +283,8 @@ export async function fetchAdCreatives(
       metrics.conversions_value,
       metrics.all_conversions_value
     FROM ad_group_ad
-    WHERE ad_group_ad.status = 'ENABLED'
-      AND segments.date BETWEEN '${dateFrom}' AND '${dateTo}'
+    WHERE segments.date BETWEEN '${dateFrom}' AND '${dateTo}'
+      AND metrics.cost_micros > 0
     ORDER BY segments.date, metrics.impressions DESC
     LIMIT 10000
   `;

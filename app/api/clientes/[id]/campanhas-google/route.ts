@@ -54,6 +54,7 @@ export async function GET(
 
     const byCamp = new Map<string, {
       campaignId: string | null;
+      campaignStatus: string | null;
       investimento: number;
       impressoes: number;
       cliques: number;
@@ -72,6 +73,7 @@ export async function GET(
         ex.cliques += r.cliques;
         ex.conversoes += r.conversoes;
         ex.conversaoValor += Number(r.conversaoValorMicros) / 1_000_000;
+        if (r.campaignStatus) ex.campaignStatus = r.campaignStatus;
         if (r.adGroupId) ex.adGroupCount.add(r.adGroupId);
         ex.adCount.add(r.adResourceName);
       } else {
@@ -81,6 +83,7 @@ export async function GET(
         ads.add(r.adResourceName);
         byCamp.set(nome, {
           campaignId: r.campaignId,
+          campaignStatus: r.campaignStatus ?? null,
           investimento: Number(r.custoMicros) / 1_000_000,
           impressoes: r.impressoes,
           cliques: r.cliques,
@@ -96,6 +99,7 @@ export async function GET(
       .map(([nome, v]) => ({
         nome,
         campaignId: v.campaignId,
+        campaignStatus: v.campaignStatus,
         investimento: v.investimento,
         impressoes: v.impressoes,
         cliques: v.cliques,

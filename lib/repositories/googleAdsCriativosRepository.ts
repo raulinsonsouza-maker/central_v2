@@ -4,6 +4,7 @@ export interface UpsertGoogleAdsCriativoPayload {
   adResourceName: string;
   campaignId?: string | null;
   campaignName?: string | null;
+  campaignStatus?: string | null;
   adGroupId?: string | null;
   adGroupName?: string | null;
   headline1?: string | null;
@@ -36,6 +37,7 @@ export async function upsertGoogleAdsCriativo(
       adResourceName: payload.adResourceName,
       campaignId: payload.campaignId ?? null,
       campaignName: payload.campaignName ?? null,
+      campaignStatus: payload.campaignStatus ?? null,
       adGroupId: payload.adGroupId ?? null,
       adGroupName: payload.adGroupName ?? null,
       headline1: payload.headline1 ?? null,
@@ -53,6 +55,7 @@ export async function upsertGoogleAdsCriativo(
     update: {
       campaignId: payload.campaignId ?? null,
       campaignName: payload.campaignName ?? null,
+      campaignStatus: payload.campaignStatus ?? null,
       adGroupId: payload.adGroupId ?? null,
       adGroupName: payload.adGroupName ?? null,
       headline1: payload.headline1 ?? null,

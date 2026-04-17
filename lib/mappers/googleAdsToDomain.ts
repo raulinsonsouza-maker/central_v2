@@ -83,6 +83,7 @@ export interface GoogleAdsCriativoPayload {
   adResourceName: string;
   campaignId: string | null;
   campaignName: string | null;
+  campaignStatus: string | null;
   adGroupId: string | null;
   adGroupName: string | null;
   headline1: string | null;
@@ -150,6 +151,7 @@ export function mapAdCreativeRowToPayload(row: GoogleAdsAdCreativeRow): GoogleAd
 
   const campaignId = campaign?.id != null ? String(campaign.id) : null;
   const campaignName = campaign?.name != null ? String(campaign.name) : null;
+  const campaignStatus = campaign?.status != null ? String(campaign.status) : null;
   const adGroupId = adGroup?.id != null ? String(adGroup.id) : null;
   const adGroupName = adGroup?.name != null ? String(adGroup.name) : null;
 
@@ -157,6 +159,7 @@ export function mapAdCreativeRowToPayload(row: GoogleAdsAdCreativeRow): GoogleAd
     adResourceName: String(resourceName),
     campaignId,
     campaignName,
+    campaignStatus,
     adGroupId,
     adGroupName,
     headline1,

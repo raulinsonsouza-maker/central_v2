@@ -22,7 +22,7 @@ function fmtBrl(v: number) { return "R$\u00a0" + fmt(v, 2); }
 function fmtPct(v: number) { return fmt(v, 2) + "%"; }
 
 interface Campanha {
-  nome: string; campaignId: string | null;
+  nome: string; campaignId: string | null; campaignStatus: string | null;
   investimento: number; impressoes: number; cliques: number; conversoes: number;
   conversaoValor: number;
   grupoCount: number; adCount: number;
@@ -85,6 +85,15 @@ function campTypeBadge(nome: string) {
   return { label: "Google", color: "bg-[var(--primary)]/10 text-[var(--primary)] border-[var(--primary)]/20" };
 }
 
+function statusBadge(status: string | null) {
+  if (!status) return null;
+  const s = status.toUpperCase();
+  if (s === "ENABLED") return { label: "Ativa", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", dot: "bg-emerald-400" };
+  if (s === "PAUSED") return { label: "Pausada", color: "bg-amber-500/10 text-amber-400 border-amber-500/20", dot: "bg-amber-400" };
+  if (s === "REMOVED") return { label: "Removida", color: "bg-red-500/10 text-red-400 border-red-500/20", dot: "bg-red-400" };
+  return null;
+}
+
 interface Props { clienteId: string; filter: DateFilter; }
 
 export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
@@ -141,8 +150,8 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                 <Th label="CPC" col="cpc" sortKey={key} dir={dir} onSort={toggle} />
                 {hasConv && <>
                   <Th label="Conversões" col="conversoes" sortKey={key} dir={dir} onSort={toggle} />
-                  {hasValorConv && <Th label="Valor Conv." col="conversaoValor" sortKey={key} dir={dir} onSort={toggle} />}
                   <Th label="CPA médio" col="custoConversao" sortKey={key} dir={dir} onSort={toggle} />
+                  {hasValorConv && <Th label="Valor Conv." col="conversaoValor" sortKey={key} dir={dir} onSort={toggle} />}
                   {hasValorConv && <Th label="ROAS" col="roas" sortKey={key} dir={dir} onSort={toggle} />}
                 </>}
               </tr>
@@ -163,7 +172,15 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                         )}
                         <div className="min-w-0">
                           <p className="text-sm font-semibold text-[var(--foreground)] truncate max-w-xs" title={c.nome}>{c.nome}</p>
-                          <span className={`mt-0.5 inline-block text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border ${badge.color}`}>{badge.label}</span>
+                          <div className="mt-0.5 flex items-center gap-1 flex-wrap">
+                            <span className={`inline-block text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border ${badge.color}`}>{badge.label}</span>
+                            {(() => { const sb = statusBadge(c.campaignStatus); return sb ? (
+                              <span className={`inline-flex items-center gap-0.5 text-[9px] font-bold uppercase tracking-widest px-1.5 py-0.5 rounded-full border ${sb.color}`}>
+                                <span className={`w-1.5 h-1.5 rounded-full ${sb.dot}`} />
+                                {sb.label}
+                              </span>
+                            ) : null; })()}
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -174,8 +191,8 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                     <Td v={n(c.cpc, fmtBrl)} />
                     {hasConv && <>
                       <Td v={fmt(c.conversoes)} />
-                      {hasValorConv && <Td v={n(c.conversaoValor ?? 0, fmtBrl)} />}
                       <Td v={n(c.custoConversao, fmtBrl)} />
+                      {hasValorConv && <Td v={n(c.conversaoValor ?? 0, fmtBrl)} />}
                       {hasValorConv && <Td v={c.roas != null ? fmt(c.roas, 2) + "x" : dash} />}
                     </>}
                   </tr>
