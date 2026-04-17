@@ -68,6 +68,7 @@ type ChannelMixItem = {
 
 type PainelData = {
   periodo: string;
+  agrupamento?: "semanal" | "mensal";
   resumo: PainelResumo;
   series: PainelSerie[];
   channelMix: {
@@ -186,6 +187,7 @@ export function VarellaMotosPanel({
   data: PainelData;
   canalLabel: string;
 }) {
+  const isMensal = data.agrupamento === "mensal";
   const latestFiveSeries = data.series.slice(-5);
   const chartData = data.series.map((item) => ({
     periodo: item.periodo,
@@ -251,7 +253,9 @@ export function VarellaMotosPanel({
                   Performance de e-commerce
                 </h3>
                 <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
-                  Comparativo semanal entre investimento e faturamento, com destaque para compras.
+                  {isMensal
+                    ? "Comparativo mensal entre investimento e faturamento, com destaque para compras."
+                    : "Comparativo semanal entre investimento e faturamento, com destaque para compras."}
                 </p>
               </div>
             </div>
@@ -316,7 +320,7 @@ export function VarellaMotosPanel({
             <div className="grid gap-3 md:grid-cols-3">
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                  Maior faturamento semanal
+                  {isMensal ? "Maior faturamento mensal" : "Maior faturamento semanal"}
                 </p>
                 <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
                   {topRevenueWeek ? formatCurrency(topRevenueWeek.faturamento) : "—"}
@@ -327,7 +331,7 @@ export function VarellaMotosPanel({
               </div>
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                  Melhor ROAS semanal
+                  {isMensal ? "Melhor ROAS mensal" : "Melhor ROAS semanal"}
                 </p>
                 <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
                   {topRoasWeek

@@ -92,10 +92,13 @@ async function fetchPainelEspecial(
 async function fetchPainelTertulia(
   id: string,
   canal: "geral" | "meta" | "google",
-  filter: DateFilter
+  filter: DateFilter,
+  preset?: string
 ) {
+  const agrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
   const params = new URLSearchParams(buildQueryParams(filter));
   params.set("canal", canal);
+  params.set("agrupamento", agrupamento);
   const res = await fetch(`/api/clientes/${id}/painel-tertulia?${params.toString()}`);
   if (!res.ok) throw new Error("Falha ao carregar painel da Tertúlia");
   return res.json();
@@ -104,10 +107,13 @@ async function fetchPainelTertulia(
 async function fetchPainelVarella(
   id: string,
   canal: "geral" | "meta" | "google",
-  filter: DateFilter
+  filter: DateFilter,
+  preset?: string
 ) {
+  const agrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
   const params = new URLSearchParams(buildQueryParams(filter));
   params.set("canal", canal);
+  params.set("agrupamento", agrupamento);
   const res = await fetch(`/api/clientes/${id}/painel-varella?${params.toString()}`);
   if (!res.ok) throw new Error("Falha ao carregar painel da Varella Motos");
   return res.json();
@@ -478,13 +484,13 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     enabled: !!id && isHotelPanel,
   });
   const { data: painelTertulia } = useQuery({
-    queryKey: ["painel-tertulia", id, canal, dateFilter.periodo, dateFilter.dataInicio, dateFilter.dataFim],
-    queryFn: () => fetchPainelTertulia(id, canal as "geral" | "meta" | "google", dateFilter),
+    queryKey: ["painel-tertulia", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim],
+    queryFn: () => fetchPainelTertulia(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo),
     enabled: !!id && isTertuliaPanel,
   });
   const { data: painelVarella } = useQuery({
-    queryKey: ["painel-varella", id, canal, dateFilter.periodo, dateFilter.dataInicio, dateFilter.dataFim],
-    queryFn: () => fetchPainelVarella(id, canal as "geral" | "meta" | "google", dateFilter),
+    queryKey: ["painel-varella", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim],
+    queryFn: () => fetchPainelVarella(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo),
     enabled: !!id && isVarellaPanel,
   });
 

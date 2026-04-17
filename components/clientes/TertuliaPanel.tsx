@@ -54,6 +54,7 @@ type PainelSerie = {
 
 type PainelData = {
   periodo: string;
+  agrupamento?: "semanal" | "mensal";
   resumo: PainelResumo;
   series: PainelSerie[];
 };
@@ -172,6 +173,7 @@ export function TertuliaPanel({
   data: PainelData;
   canalLabel: string;
 }) {
+  const isMensal = data.agrupamento === "mensal";
   const latestFiveSeries = data.series.slice(-5);
   const chartData = data.series.map((item) => ({
     periodo: item.periodo,
@@ -231,7 +233,9 @@ export function TertuliaPanel({
                   Intenção de pedido
                 </h3>
                 <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
-                  Leitura semanal de cliques para delivery e conversas que viram pedidos via WhatsApp.
+                  {isMensal
+                    ? "Leitura mensal de cliques para delivery e conversas que viram pedidos via WhatsApp."
+                    : "Leitura semanal de cliques para delivery e conversas que viram pedidos via WhatsApp."}
                 </p>
               </div>
             </div>

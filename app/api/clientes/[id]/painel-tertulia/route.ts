@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { endOfWeek, getISOWeek, getYear, startOfWeek } from "date-fns";
+import { endOfWeek, format, getISOWeek, getYear, startOfWeek } from "date-fns";
+import { ptBR } from "date-fns/locale";
 import { findClienteById } from "@/lib/repositories/clientesRepository";
 import { findFatosByClienteAndPeriod } from "@/lib/repositories/fatosMidiaRepository";
 import { isTertulia } from "@/lib/clientProfiles";
@@ -36,6 +37,7 @@ export async function GET(
 ) {
   const { id } = await params;
   const canal = request.nextUrl.searchParams.get("canal") ?? "geral";
+  const agrupamento = request.nextUrl.searchParams.get("agrupamento") ?? "semanal";
   const periodo = request.nextUrl.searchParams.get("periodo") ?? "90";
   const dataInicioParam = request.nextUrl.searchParams.get("dataInicio");
   const dataFimParam = request.nextUrl.searchParams.get("dataFim");
@@ -86,27 +88,37 @@ export async function GET(
     }
   );
 
-  const byWeek = new Map<
-    string,
-    {
-      periodo: string;
-      inicio: Date;
-      investimento: number;
-      impressoes: number;
-      cliquesDelivery: number;
-      conversasWhatsapp: number;
-      leadsFormulario: number;
-      intencoesPedido: number;
-    }
-  >();
+  type BucketEntry = {
+    periodo: string;
+    inicio: Date;
+    investimento: number;
+    impressoes: number;
+    cliquesDelivery: number;
+    conversasWhatsapp: number;
+    leadsFormulario: number;
+    intencoesPedido: number;
+  };
+
+  const byBucket = new Map<string, BucketEntry>();
 
   for (const fato of fatos) {
     const data = new Date(fato.data);
-    const inicio = startOfWeek(data, { weekStartsOn: 1 });
-    const fim = endOfWeek(data, { weekStartsOn: 1 });
-    const key = `${getYear(inicio)}-W${getISOWeek(inicio)}`;
-    const existing = byWeek.get(key);
+    let key: string;
+    let periodoLabel: string;
+    let inicio: Date;
 
+    if (agrupamento === "mensal") {
+      inicio = new Date(data.getFullYear(), data.getMonth(), 1);
+      key = format(inicio, "yyyy-MM");
+      periodoLabel = format(inicio, "MMM/yy", { locale: ptBR });
+    } else {
+      inicio = startOfWeek(data, { weekStartsOn: 1 });
+      const fim = endOfWeek(data, { weekStartsOn: 1 });
+      key = `${getYear(inicio)}-W${getISOWeek(inicio)}`;
+      periodoLabel = `${inicio.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}-${fim.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}`;
+    }
+
+    const existing = byBucket.get(key);
     if (existing) {
       existing.investimento += Number(fato.investimento);
       existing.impressoes += fato.impressoes;
@@ -114,29 +126,25 @@ export async function GET(
       existing.conversasWhatsapp += fato.messagingConversationsStarted;
       existing.leadsFormulario += fato.onFacebookLeads + fato.websiteLeads;
       existing.intencoesPedido += fato.cliques + fato.messagingConversationsStarted;
-      continue;
+    } else {
+      byBucket.set(key, {
+        periodo: periodoLabel,
+        inicio,
+        investimento: Number(fato.investimento),
+        impressoes: fato.impressoes,
+        cliquesDelivery: fato.cliques,
+        conversasWhatsapp: fato.messagingConversationsStarted,
+        leadsFormulario: fato.onFacebookLeads + fato.websiteLeads,
+        intencoesPedido: fato.cliques + fato.messagingConversationsStarted,
+      });
     }
-
-    byWeek.set(key, {
-      periodo: `${inicio.toLocaleDateString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-      })}-${fim.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}`,
-      inicio,
-      investimento: Number(fato.investimento),
-      impressoes: fato.impressoes,
-      cliquesDelivery: fato.cliques,
-      conversasWhatsapp: fato.messagingConversationsStarted,
-      leadsFormulario: fato.onFacebookLeads + fato.websiteLeads,
-      intencoesPedido: fato.cliques + fato.messagingConversationsStarted,
-    });
   }
 
-  const series = Array.from(byWeek.values())
+  const series = Array.from(byBucket.values())
     .sort((a, b) => a.inicio.getTime() - b.inicio.getTime())
-    .map((week) => ({
-      ...week,
-      ...buildDerivedMetrics(week),
+    .map((bucket) => ({
+      ...bucket,
+      ...buildDerivedMetrics(bucket),
     }));
 
   const diasSelecionados = Math.max(
@@ -147,6 +155,7 @@ export async function GET(
   return NextResponse.json({
     clienteId: id,
     canal,
+    agrupamento,
     periodo: `${diasSelecionados} dias`,
     resumo: {
       ...resumo,
