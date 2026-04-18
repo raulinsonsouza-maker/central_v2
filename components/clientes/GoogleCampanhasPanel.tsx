@@ -140,6 +140,21 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
   const hasConv = campanhas.some(c => c.conversoes > 0);
   const hasValorConv = campanhas.some(c => (c.conversaoValor ?? 0) > 0);
 
+  const totais = campanhas.reduce(
+    (acc, c) => ({
+      investimento: acc.investimento + c.investimento,
+      impressoes:   acc.impressoes   + c.impressoes,
+      cliques:      acc.cliques      + c.cliques,
+      conversoes:   acc.conversoes   + c.conversoes,
+      conversaoValor: acc.conversaoValor + (c.conversaoValor ?? 0),
+    }),
+    { investimento: 0, impressoes: 0, cliques: 0, conversoes: 0, conversaoValor: 0 }
+  );
+  const ctrTotal  = totais.impressoes > 0 ? (totais.cliques / totais.impressoes) * 100 : null;
+  const cpcTotal  = totais.cliques > 0    ? totais.investimento / totais.cliques : null;
+  const cpaTotal  = totais.conversoes > 0 ? totais.investimento / totais.conversoes : null;
+  const roasTotal = totais.investimento > 0 && totais.conversaoValor > 0 ? totais.conversaoValor / totais.investimento : null;
+
   return (
     <div className="space-y-4">
       {/* header */}
@@ -224,6 +239,42 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                 );
               })}
             </tbody>
+            <tfoot>
+              <tr className="border-t-2 border-[var(--primary)]/30 bg-[var(--primary)]/[0.06]">
+                <td className="px-3 py-3" colSpan={2}>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[var(--primary)]">Total · {campanhas.length} campanhas</span>
+                </td>
+                <td className="px-3 py-3 text-right">
+                  <span className="text-sm font-extrabold text-[var(--foreground)]">{fmtBrl(totais.investimento)}</span>
+                </td>
+                <td className="px-3 py-3 text-right">
+                  <span className="text-sm font-bold text-[var(--muted-foreground)]">{fmt(totais.impressoes)}</span>
+                </td>
+                <td className="px-3 py-3 text-right">
+                  <span className="text-sm font-bold text-[var(--foreground)]">{fmt(totais.cliques)}</span>
+                </td>
+                <td className="px-3 py-3 text-right">
+                  <span className="text-sm font-bold text-[var(--muted-foreground)]">{ctrTotal != null ? fmtPct(ctrTotal) : dash}</span>
+                </td>
+                <td className="px-3 py-3 text-right">
+                  <span className="text-sm font-bold text-[var(--foreground)]">{cpcTotal != null ? fmtBrl(cpcTotal) : dash}</span>
+                </td>
+                {hasConv && <>
+                  <td className="px-3 py-3 text-right">
+                    <span className="text-sm font-bold text-[var(--foreground)]">{fmt(totais.conversoes, 0)}</span>
+                  </td>
+                  <td className="px-3 py-3 text-right">
+                    <span className="text-sm font-bold text-[var(--foreground)]">{cpaTotal != null ? fmtBrl(cpaTotal) : dash}</span>
+                  </td>
+                  {hasValorConv && <td className="px-3 py-3 text-right">
+                    <span className="text-sm font-extrabold text-[var(--primary)]">{fmtBrl(totais.conversaoValor)}</span>
+                  </td>}
+                  {hasValorConv && <td className="px-3 py-3 text-right">
+                    <span className="text-sm font-extrabold text-[var(--primary)]">{roasTotal != null ? fmt(roasTotal, 2) + "x" : dash}</span>
+                  </td>}
+                </>}
+              </tr>
+            </tfoot>
           </table>
         </div>
       )}
