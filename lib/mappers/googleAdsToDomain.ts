@@ -31,9 +31,11 @@ export function mapCampaignRowToFatoPayload(row: GoogleAdsCampaignRow): GoogleAd
   const impressoes = parseNum(metrics?.impressions);
   const cliques = parseNum(metrics?.clicks);
   const conversoes = parseNum(metrics?.conversions);
+  // Use only conversions_value (real tracked revenue). Never fall back to
+  // all_conversions_value — it includes estimated view-through, cross-device
+  // and store-visit attribution that inflates numbers significantly for PMax.
   const faturamento =
-    parseNum(metrics?.conversions_value ?? (metrics as Record<string, unknown>)?.conversionsValue) ||
-    parseNum(metrics?.all_conversions_value ?? (metrics as Record<string, unknown>)?.allConversionsValue);
+    parseNum(metrics?.conversions_value ?? (metrics as Record<string, unknown>)?.conversionsValue);
   const alcance = parseNum(metrics?.unique_users ?? (metrics as Record<string, unknown>)?.uniqueUsers);
 
   const dateStr = segments?.date;
@@ -119,9 +121,11 @@ export function mapCampaignRowToIndividualPayload(row: GoogleAdsCampaignRow): Go
   const impressoes = parseNum(metrics?.impressions);
   const cliques = parseNum(metrics?.clicks);
   const conversoes = parseNum(metrics?.conversions);
+  // Use only conversions_value (real tracked revenue). Never fall back to
+  // all_conversions_value — it includes estimated view-through, cross-device
+  // and store-visit attribution that inflates numbers significantly for PMax.
   const faturamento =
-    parseNum(metrics?.conversions_value ?? (metrics as Record<string, unknown>)?.conversionsValue) ||
-    parseNum(metrics?.all_conversions_value ?? (metrics as Record<string, unknown>)?.allConversionsValue);
+    parseNum(metrics?.conversions_value ?? (metrics as Record<string, unknown>)?.conversionsValue);
   const alcance = parseNum(metrics?.unique_users ?? (metrics as Record<string, unknown>)?.uniqueUsers);
 
   const dateStr = segments?.date;
@@ -204,9 +208,9 @@ export function mapAdCreativeRowToPayload(row: GoogleAdsAdCreativeRow): GoogleAd
   const impressoes = parseNum(metrics?.impressions);
   const cliques = parseNum(metrics?.clicks);
   const conversoes = parseNum(metrics?.conversions);
+  // Use only conversions_value (real tracked revenue).
   const convValorRaw =
-    metrics?.conversions_value ?? (metrics as Record<string, unknown>)?.conversionsValue ??
-    metrics?.all_conversions_value ?? (metrics as Record<string, unknown>)?.allConversionsValue ?? 0;
+    metrics?.conversions_value ?? (metrics as Record<string, unknown>)?.conversionsValue ?? 0;
   const conversaoValorMicros = BigInt(Math.round(parseNum(convValorRaw) * 1_000_000));
 
   const dateStr = segments?.date;
