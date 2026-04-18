@@ -214,8 +214,8 @@ export async function fetchPurchaseConversions(
     SELECT
       segments.date,
       segments.conversion_action_category,
-      metrics.all_conversions,
-      metrics.all_conversions_value
+      metrics.conversions,
+      metrics.conversions_value
     FROM campaign
     WHERE segments.date BETWEEN '${dateFrom}' AND '${dateTo}'
       AND segments.conversion_action_category = 'PURCHASE'
@@ -228,8 +228,8 @@ export async function fetchPurchaseConversions(
       const segments = row.segments as Record<string, unknown> | undefined;
       const metrics = row.metrics as Record<string, unknown> | undefined;
       const dateStr = segments?.date ? String(segments.date) : null;
-      const count = parseFloat(String(metrics?.all_conversions ?? 0));
-      const value = parseFloat(String(metrics?.all_conversions_value ?? 0));
+      const count = parseFloat(String(metrics?.conversions ?? 0));
+      const value = parseFloat(String(metrics?.conversions_value ?? 0));
       if (dateStr && Number.isFinite(count)) {
         const existing = byDate.get(dateStr) ?? { count: 0, value: 0 };
         byDate.set(dateStr, {
