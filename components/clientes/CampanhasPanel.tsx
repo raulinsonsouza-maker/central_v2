@@ -103,9 +103,11 @@ function detectCampType(nome: string, leads: number, purchases: number): CampTyp
   if (purchases > 0) return "vendas";
   if (leads > 0) return "leads";
   const n = nome.toLowerCase();
+  if (/\[venda\]|\bvenda\b|cat[aá]logo|catalog|convers[aã]o|conversion|purchase/.test(n)) return "vendas";
   if (/engajamento|engagement|alcance|reach|awareness|reconhecimento/.test(n)) return "alcance";
   if (/rmkt|retargeting|remarketing|reengaj/.test(n)) return "rmkt";
   if (/evento|events?\b/.test(n)) return "eventos";
+  if (/mensagem|message|whatsapp|lead/.test(n)) return "leads";
   return "outro";
 }
 
@@ -177,8 +179,8 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
 
   const sorted = sortCampanhas(campanhas, sortCol, sortDir);
 
-  const hasLeads = campanhas.some(c => c.leads > 0);
-  const hasSales = campanhas.some(c => c.purchases > 0 || c.faturamento > 0);
+  const hasLeads = campanhas.some(c => c.leads > 0 || detectCampType(c.nome, c.leads, c.purchases) === "leads");
+  const hasSales = campanhas.some(c => c.purchases > 0 || c.faturamento > 0 || detectCampType(c.nome, c.leads, c.purchases) === "vendas");
 
   const totals = {
     investimento: sum(campanhas.map(c => c.investimento)),
