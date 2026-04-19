@@ -121,8 +121,10 @@ type DefaultPanelProps = {
   visitasMode?: boolean;
   /** Quando true (e-commerce no Google), exibe ROAS, compras, faturamento e ticket médio */
   ecommerceGoogleMode?: boolean;
-  /** "semanal" (padrão) ou "mensal" — controla títulos do gráfico e da tabela */
-  agrupamento?: "semanal" | "mensal";
+  /** "diario", "semanal" (padrão) ou "mensal" — controla títulos do gráfico e da tabela */
+  agrupamento?: "diario" | "semanal" | "mensal";
+  /** Callback para alternar agrupamento (não disponível em modo mensal) */
+  onAgrupamentoChange?: (ag: "diario" | "semanal") => void;
   /** Chave de faturamento no chartData (ex.: "Faturamento"). Quando definido, adiciona linha verde ao gráfico. */
   chartRevenueKey?: string;
   /** Quando true (Clínica e Spa), exibe 2ª linha de KPIs com Cliques e Taxa Conversa (engajamento). */
@@ -150,6 +152,7 @@ export function DefaultPanel({
   visitasMode = false,
   ecommerceGoogleMode = false,
   agrupamento = "semanal",
+  onAgrupamentoChange,
   chartRevenueKey,
   conversasEngajamentoMode = false,
   miguelImoveisMode = false,
@@ -157,6 +160,7 @@ export function DefaultPanel({
   academyEngajamentoMode = false,
 }: DefaultPanelProps) {
   const isMensal = agrupamento === "mensal";
+  const isDiario = agrupamento === "diario";
   const latestPeriod = latestFiveSeries[latestFiveSeries.length - 1]?.periodo;
   const cplLabel = visitasMode ? "Custo/Visita" : comprasMode ? "Custo/Compra" : miguelImoveisMode ? "Custo/Result." : conversasMode ? "Custo/Conv." : "CPL";
 
@@ -375,26 +379,49 @@ export function DefaultPanel({
         <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
           <CardHeader className="pb-2">
             <div className="flex items-start justify-between">
-              <SectionHeader
-                title={canal === "google" ? "Performance Google" : "Volume geral de performance"}
-                subtitle={
-                  ecommerceGoogleMode
-                    ? `Investimento e compras por ${isMensal ? "mês" : "semana"}`
-                    : canal === "google"
-                    ? `Investimento e conversões por ${isMensal ? "mês" : "semana"}`
-                    : visitasMode
-                      ? `Investimento e visitas ao perfil por ${isMensal ? "mês" : "semana"}`
-                      : comprasMode
-                        ? `Investimento e compras por ${isMensal ? "mês" : "semana"}`
-                        : miguelImoveisMode
-                          ? `Investimento e resultados por ${isMensal ? "mês" : "semana"}`
-                          : conversasMode
-                          ? `Investimento e conversas por ${isMensal ? "mês" : "semana"}`
-                          : `Investimento e leads por ${isMensal ? "mês" : "semana"}`
-                }
-              />
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
-                <TrendingUp className="h-4 w-4" />
+              {(() => {
+                const periodoLabel = isMensal ? "mês" : isDiario ? "dia" : "semana";
+                return (
+                  <SectionHeader
+                    title={canal === "google" ? "Performance Google" : "Volume geral de performance"}
+                    subtitle={
+                      ecommerceGoogleMode
+                        ? `Investimento e compras por ${periodoLabel}`
+                        : canal === "google"
+                        ? `Investimento e conversões por ${periodoLabel}`
+                        : visitasMode
+                          ? `Investimento e visitas ao perfil por ${periodoLabel}`
+                          : comprasMode
+                            ? `Investimento e compras por ${periodoLabel}`
+                            : miguelImoveisMode
+                              ? `Investimento e resultados por ${periodoLabel}`
+                              : conversasMode
+                              ? `Investimento e conversas por ${periodoLabel}`
+                              : `Investimento e leads por ${periodoLabel}`
+                    }
+                  />
+                );
+              })()}
+              <div className="flex items-center gap-2">
+                {!isMensal && onAgrupamentoChange && (
+                  <div className="flex overflow-hidden rounded-lg border border-[var(--border)] text-xs">
+                    <button
+                      onClick={() => onAgrupamentoChange("diario")}
+                      className={`px-2.5 py-1.5 font-semibold transition-colors ${isDiario ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
+                    >
+                      Diário
+                    </button>
+                    <button
+                      onClick={() => onAgrupamentoChange("semanal")}
+                      className={`px-2.5 py-1.5 font-semibold transition-colors ${!isDiario ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
+                    >
+                      Semanal
+                    </button>
+                  </div>
+                )}
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
+                  <TrendingUp className="h-4 w-4" />
+                </div>
               </div>
             </div>
           </CardHeader>
@@ -496,7 +523,7 @@ export function DefaultPanel({
                     <h3 className="text-xl font-black uppercase tracking-tight text-[var(--foreground)] sm:text-2xl">
                       {canal === "google" ? "Resultado Google" : `Resultado ${canalLabels[canal] ?? canal}`}
                       <span className="ml-2 bg-[linear-gradient(90deg,var(--accent),var(--primary))] bg-clip-text text-transparent">
-                        {isMensal ? "Mês a mês" : "Semana a semana"}
+                        {isMensal ? "Mês a mês" : isDiario ? "Dia a dia" : "Semana a semana"}
                       </span>
                     </h3>
                     <span className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--muted-foreground)]">
@@ -504,14 +531,14 @@ export function DefaultPanel({
                     </span>
                   </div>
                   <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-                    Visão comparativa com leitura rápida das principais métricas por {isMensal ? "mês" : "semana"}.
+                    Visão comparativa com leitura rápida das principais métricas por {isMensal ? "mês" : isDiario ? "dia" : "semana"}.
                   </p>
                 </div>
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
                 <span className="rounded-full border border-[var(--border)] bg-white/[0.02] px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--muted-foreground)]">
-                  {latestFiveSeries.length} {isMensal ? "meses" : "semanas"}
+                  {latestFiveSeries.length} {isMensal ? "meses" : isDiario ? "dias" : "semanas"}
                 </span>
                 {latestPeriod && (
                   <span className="rounded-full border border-[var(--primary)]/25 bg-[var(--primary)]/12 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--foreground)]">

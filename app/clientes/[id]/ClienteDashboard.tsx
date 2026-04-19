@@ -58,9 +58,10 @@ async function fetchResumo(id: string, canal: "geral" | "meta" | "google", filte
   return res.json();
 }
 
-async function fetchMidia(id: string, canal: string, filter: DateFilter, preset?: string) {
+async function fetchMidia(id: string, canal: string, filter: DateFilter, preset?: string, agrupamentoOverride?: string) {
   const params = buildQueryParams(filter);
-  const agrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
+  const autoAgrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
+  const agrupamento = agrupamentoOverride ?? autoAgrupamento;
   const res = await fetch(
     `/api/clientes/${id}/midia?canal=${canal}&agrupamento=${agrupamento}&${params}`
   );
@@ -331,6 +332,7 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const [subView, setSubView] = React.useState<"dados" | "criativos">("dados");
   const [saldoVisible, setSaldoVisible] = React.useState(false);
   const [presetPeriodo, setPresetPeriodo] = React.useState<PresetPeriodo>("mesAtual");
+  const [chartAgrupamento, setChartAgrupamento] = React.useState<"diario" | "semanal" | "mensal">("semanal");
   const [customInicio, setCustomInicio] = React.useState("");
   const [customFim, setCustomFim] = React.useState("");
 
@@ -356,6 +358,16 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
       localStorage.setItem("inout-date-custom-fim", customFim);
     }
   }, [presetPeriodo, customInicio, customFim]);
+
+  const isLongPeriod = presetPeriodo === "ytd" || presetPeriodo === "365d" || presetPeriodo === "semestreAtual";
+  React.useEffect(() => {
+    if (isLongPeriod) {
+      setChartAgrupamento("mensal");
+    } else if (chartAgrupamento === "mensal") {
+      setChartAgrupamento("semanal");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [presetPeriodo]);
 
   const dateFilter = React.useMemo(
     () => getDateFilterFromPreset(presetPeriodo, customInicio, customFim),
@@ -436,8 +448,8 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     enabled: !!id && canal !== "imoveis",
   });
   const { data: midia } = useQuery({
-    queryKey: ["midia", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim],
-    queryFn: () => fetchMidia(id, canal as string, dateFilter, presetPeriodo),
+    queryKey: ["midia", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim, chartAgrupamento],
+    queryFn: () => fetchMidia(id, canal as string, dateFilter, presetPeriodo, isLongPeriod ? undefined : chartAgrupamento),
     enabled: !!id && canal !== "imoveis",
   });
 
@@ -1137,7 +1149,8 @@ function formatPercentage(value: number) {
           comprasMode={isComprasPanel}
           visitasMode={isVisitasPanel}
           ecommerceGoogleMode={isEcommerceMode}
-          agrupamento={midia?.agrupamento ?? "semanal"}
+          agrupamento={chartAgrupamento}
+          onAgrupamentoChange={isLongPeriod ? undefined : (ag) => setChartAgrupamento(ag)}
           chartRevenueKey={chartRevenueKey}
           conversasEngajamentoMode={isClinicaESpaPanel}
           academyEngajamentoMode={isAcademyPanel}

@@ -192,16 +192,67 @@ export async function GET(
     });
   }
 
+  // agrupamento === "diario": aggregate by day (multiple fato rows can exist per day)
+  const byDay = new Map<
+    string,
+    {
+      periodo: string;
+      investimento: number;
+      leads: number;
+      conversas: number;
+      impressoes: number;
+      cliques: number;
+      purchases: number;
+      valorConversao: number;
+      inicio: Date;
+    }
+  >();
+  for (const f of fatos) {
+    const d = new Date(f.data);
+    const key = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+    const label = `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
+    const existing = byDay.get(key);
+    const inv = Number(f.investimento);
+    const conversas = (f as { messagingConversationsStarted?: number }).messagingConversationsStarted ?? 0;
+    const leads = getLeads(f);
+    const purchases = (f as { purchases?: number }).purchases ?? 0;
+    const valorConversao = Number((f as { websitePurchasesConversionValue?: unknown }).websitePurchasesConversionValue ?? 0);
+    if (existing) {
+      existing.investimento += inv;
+      existing.leads += leads;
+      existing.conversas += conversas;
+      existing.impressoes += f.impressoes;
+      existing.cliques += f.cliques;
+      existing.purchases += purchases;
+      existing.valorConversao += valorConversao;
+    } else {
+      byDay.set(key, {
+        periodo: label,
+        investimento: inv,
+        leads,
+        conversas,
+        impressoes: f.impressoes,
+        cliques: f.cliques,
+        purchases,
+        valorConversao,
+        inicio: d,
+      });
+    }
+  }
+  const series = Array.from(byDay.entries())
+    .map(([k, v]) => ({ key: k, ...v }))
+    .sort((a, b) => a.inicio.getTime() - b.inicio.getTime());
   return NextResponse.json({
     clienteId: id,
     canal,
     agrupamento: "diario",
-    diario: fatos.map((f) => ({
-      data: f.data,
-      investimento: Number(f.investimento),
-      leads: getLeads(f),
-      impressoes: f.impressoes,
-      cliques: f.cliques,
+    series,
+    diario: series.map((s) => ({
+      data: s.inicio,
+      investimento: s.investimento,
+      leads: s.leads,
+      impressoes: s.impressoes,
+      cliques: s.cliques,
     })),
   });
 }
