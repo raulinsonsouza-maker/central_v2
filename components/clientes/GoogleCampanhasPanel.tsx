@@ -230,7 +230,7 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                     <Td v={n(c.ctr, fmtPct)} muted />
                     <Td v={n(c.cpc, fmtBrl)} />
                     {hasConv && <>
-                      <Td v={fmt(c.conversoes)} />
+                      <Td v={fmt(c.conversoes, 1)} />
                       <Td v={n(c.custoConversao, fmtBrl)} />
                       {hasValorConv && <Td v={n(c.conversaoValor ?? 0, fmtBrl)} />}
                       {hasValorConv && <Td v={c.roas != null ? fmt(c.roas, 2) + "x" : dash} />}
@@ -261,7 +261,7 @@ export function GoogleCampanhasPanel({ clienteId, filter }: Props) {
                 </td>
                 {hasConv && <>
                   <td className="px-3 py-3 text-right">
-                    <span className="text-sm font-bold text-[var(--foreground)]">{fmt(totais.conversoes, 0)}</span>
+                    <span className="text-sm font-bold text-[var(--foreground)]">{fmt(totais.conversoes, 1)}</span>
                   </td>
                   <td className="px-3 py-3 text-right">
                     <span className="text-sm font-bold text-[var(--foreground)]">{cpaTotal != null ? fmtBrl(cpaTotal) : dash}</span>
