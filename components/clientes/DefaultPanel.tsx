@@ -442,6 +442,10 @@ export function DefaultPanel({
                     fontSize={11}
                     tickLine={false}
                     axisLine={false}
+                    interval={isDiario && chartData.length > 14 ? Math.ceil(chartData.length / 14) - 1 : 0}
+                    angle={isDiario && chartData.length > 14 ? -45 : 0}
+                    textAnchor={isDiario && chartData.length > 14 ? "end" : "middle"}
+                    height={isDiario && chartData.length > 14 ? 50 : 30}
                   />
                   <YAxis
                     yAxisId="left"
