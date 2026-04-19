@@ -674,7 +674,17 @@ export function LeadScoringPanel({ clienteId, dateFilter }: Props) {
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.5} />
-                  <XAxis dataKey="periodo" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                  <XAxis
+                    dataKey="periodo"
+                    stroke="var(--muted-foreground)"
+                    fontSize={11}
+                    tickLine={false}
+                    axisLine={false}
+                    interval={chartData.length > 14 ? Math.ceil(chartData.length / 14) - 1 : 0}
+                    angle={chartData.length > 14 ? -45 : 0}
+                    textAnchor={chartData.length > 14 ? "end" : "middle"}
+                    height={chartData.length > 14 ? 50 : 30}
+                  />
                   <YAxis yAxisId="left" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
                   <YAxis yAxisId="right" orientation="right" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} tickFormatter={(v) => `R$${v}`} />
                   <Tooltip
@@ -1038,7 +1048,17 @@ export function LeadScoringPanel({ clienteId, dateFilter }: Props) {
                       <ResponsiveContainer width="100%" height="100%">
                         <ComposedChart data={chartData.map((d) => ({ ...d, Média: Math.round(avgLeadsPorMes) }))}>
                           <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.4} vertical={false} />
-                          <XAxis dataKey="periodo" stroke="var(--muted-foreground)" fontSize={10} tickLine={false} axisLine={false} />
+                          <XAxis
+                            dataKey="periodo"
+                            stroke="var(--muted-foreground)"
+                            fontSize={10}
+                            tickLine={false}
+                            axisLine={false}
+                            interval={chartData.length > 14 ? Math.ceil(chartData.length / 14) - 1 : 0}
+                            angle={chartData.length > 14 ? -45 : 0}
+                            textAnchor={chartData.length > 14 ? "end" : "middle"}
+                            height={chartData.length > 14 ? 50 : 30}
+                          />
                           <YAxis stroke="var(--muted-foreground)" fontSize={10} tickLine={false} axisLine={false} width={28} />
                           <Tooltip {...tooltipStyle} />
                           <Bar dataKey="Total" fill="var(--primary)" radius={[5, 5, 0, 0]} maxBarSize={48} />

@@ -168,6 +168,10 @@ export function AnalyticsGA4Section({ data }: { data: AnalyticsGA4Data }) {
                   fontSize={11}
                   tickLine={false}
                   axisLine={false}
+                  interval={data.series.length > 14 ? Math.ceil(data.series.length / 14) - 1 : 0}
+                  angle={data.series.length > 14 ? -45 : 0}
+                  textAnchor={data.series.length > 14 ? "end" : "middle"}
+                  height={data.series.length > 14 ? 50 : 30}
                 />
                 <YAxis
                   yAxisId="left"

@@ -284,6 +284,10 @@ export function VarellaMotosPanel({
                     fontSize={11}
                     tickLine={false}
                     axisLine={false}
+                    interval={chartData.length > 14 ? Math.ceil(chartData.length / 14) - 1 : 0}
+                    angle={chartData.length > 14 ? -45 : 0}
+                    textAnchor={chartData.length > 14 ? "end" : "middle"}
+                    height={chartData.length > 14 ? 50 : 30}
                   />
                   <YAxis
                     yAxisId="money"
