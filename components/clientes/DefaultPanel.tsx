@@ -571,7 +571,7 @@ export function DefaultPanel({
                                 isLatest ? "text-[var(--primary)]" : "text-[var(--muted-foreground)]"
                               }`}
                             >
-                              {isLatest ? "Atual" : "Semana"}
+                              {isLatest ? "Atual" : isMensal ? "Mês" : isDiario ? "Dia" : "Semana"}
                             </span>
                             <span className="text-sm font-semibold whitespace-nowrap">{s.periodo}</span>
                           </div>
