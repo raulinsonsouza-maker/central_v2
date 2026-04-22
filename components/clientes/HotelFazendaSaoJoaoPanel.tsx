@@ -67,7 +67,7 @@ type CampanhaCPV = {
 
 type PainelData = {
   periodo: string;
-  agrupamento?: "semanal" | "mensal";
+  agrupamento?: "semanal" | "mensal" | "diario";
   resumo: PainelResumo;
   series: PainelSerie[];
   campanhas: CampanhaCPV[];
@@ -230,11 +230,14 @@ function MetricCard({
 export function HotelFazendaSaoJoaoPanel({
   data,
   canalLabel,
+  onAgrupamentoChange,
 }: {
   data: PainelData;
   canalLabel: string;
+  onAgrupamentoChange?: (ag: "diario" | "semanal") => void;
 }) {
   const isMensal = data.agrupamento === "mensal";
+  const isDiario = data.agrupamento === "diario";
   const latestFiveSeries = data.series.slice(-5);
   const receitaPorLead = data.resumo.leads > 0 ? data.resumo.faturamento / data.resumo.leads : 0;
 
@@ -303,16 +306,36 @@ export function HotelFazendaSaoJoaoPanel({
             <div className="flex items-start justify-between gap-4">
               <div>
                 <h3 className="text-lg font-bold tracking-tight text-[var(--foreground)]">
-                  Performance de receita {isMensal ? "mensal" : "semanal"}
+                  Performance de receita {isMensal ? "mensal" : isDiario ? "diária" : "semanal"}
                 </h3>
                 <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
                   {isMensal
                     ? "Agrupado por mês · Linha = faturamento (eixo esq.) · Barras = investimento (eixo dir.)"
-                    : "Agrupado por semana · Linha = faturamento (eixo esq.) · Barras = investimento (eixo dir.)"}
+                    : isDiario
+                      ? "Agrupado por dia · Linha = faturamento (eixo esq.) · Barras = investimento (eixo dir.)"
+                      : "Agrupado por semana · Linha = faturamento (eixo esq.) · Barras = investimento (eixo dir.)"}
                 </p>
               </div>
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
-                <ReceiptText className="h-4 w-4" />
+              <div className="flex items-center gap-2">
+                {!isMensal && onAgrupamentoChange && (
+                  <div className="flex overflow-hidden rounded-lg border border-[var(--border)] text-xs">
+                    <button
+                      onClick={() => onAgrupamentoChange("diario")}
+                      className={`px-2.5 py-1.5 font-semibold transition-colors ${isDiario ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
+                    >
+                      Diário
+                    </button>
+                    <button
+                      onClick={() => onAgrupamentoChange("semanal")}
+                      className={`px-2.5 py-1.5 font-semibold transition-colors ${!isDiario ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
+                    >
+                      Semanal
+                    </button>
+                  </div>
+                )}
+                <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)]">
+                  <ReceiptText className="h-4 w-4" />
+                </div>
               </div>
             </div>
           </CardHeader>
@@ -340,10 +363,10 @@ export function HotelFazendaSaoJoaoPanel({
                     fontSize={11}
                     tickLine={false}
                     axisLine={false}
-                    interval={chartData.length > 14 ? Math.ceil(chartData.length / 14) - 1 : 0}
-                    angle={chartData.length > 14 ? -45 : 0}
-                    textAnchor={chartData.length > 14 ? "end" : "middle"}
-                    height={chartData.length > 14 ? 50 : 30}
+                    interval={isDiario && chartData.length > 14 ? Math.ceil(chartData.length / 14) - 1 : 0}
+                    angle={isDiario && chartData.length > 14 ? -45 : 0}
+                    textAnchor={isDiario && chartData.length > 14 ? "end" : "middle"}
+                    height={isDiario && chartData.length > 14 ? 50 : 30}
                   />
                   {/* Left axis: faturamento */}
                   <YAxis
@@ -393,7 +416,7 @@ export function HotelFazendaSaoJoaoPanel({
             <div className="grid gap-3 md:grid-cols-3">
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                  Melhor semana de receita
+                  {isMensal ? "Maior receita mensal" : isDiario ? "Maior receita diária" : "Melhor semana de receita"}
                 </p>
                 <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
                   {topFaturamentoWeek ? formatCurrency(topFaturamentoWeek.faturamento) : "—"}
@@ -404,7 +427,7 @@ export function HotelFazendaSaoJoaoPanel({
               </div>
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                  Melhor ROAS semanal
+                  {isMensal ? "Melhor ROAS mensal" : isDiario ? "Melhor ROAS diário" : "Melhor ROAS semanal"}
                 </p>
                 <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
                   {topRoasWeek
@@ -420,7 +443,7 @@ export function HotelFazendaSaoJoaoPanel({
               </div>
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
                 <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                  Pico de vendas semanais
+                  {isMensal ? "Pico de vendas mensal" : isDiario ? "Pico de vendas diário" : "Pico de vendas semanais"}
                 </p>
                 <p className="mt-2 text-lg font-bold text-[var(--foreground)]">
                   {topSalesWeek ? formatInteger(topSalesWeek.purchases) : "—"}
@@ -598,7 +621,7 @@ export function HotelFazendaSaoJoaoPanel({
                 <h3 className="text-xl font-black uppercase tracking-tight text-[var(--foreground)] sm:text-2xl">
                   Resultado comercial
                   <span className="ml-2 bg-[linear-gradient(90deg,var(--accent),var(--primary))] bg-clip-text text-transparent">
-                    {isMensal ? "Mês a mês" : "Semana a semana"}
+                    {isMensal ? "Mês a mês" : isDiario ? "Dia a dia" : "Semana a semana"}
                   </span>
                 </h3>
                 <p className="mt-1 text-sm text-[var(--muted-foreground)]">
@@ -606,7 +629,7 @@ export function HotelFazendaSaoJoaoPanel({
                 </p>
               </div>
               <span className="rounded-full border border-[var(--primary)]/25 bg-[var(--primary)]/12 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--foreground)]">
-                {latestFiveSeries.length} {isMensal ? "meses" : "semanas"}
+                {latestFiveSeries.length} {isMensal ? "meses" : isDiario ? "dias" : "semanas"}
               </span>
             </div>
           </CardHeader>
@@ -633,7 +656,7 @@ export function HotelFazendaSaoJoaoPanel({
                                 isLatest ? "text-[var(--primary)]" : "text-[var(--muted-foreground)]"
                               }`}
                             >
-                              {isLatest ? "Atual" : "Semana"}
+                              {isLatest ? "Atual" : isDiario ? "Dia" : isMensal ? "Mês" : "Semana"}
                             </span>
                             <span className="text-sm font-semibold whitespace-nowrap">{item.periodo}</span>
                           </div>

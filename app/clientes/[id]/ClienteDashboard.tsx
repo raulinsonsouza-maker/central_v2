@@ -79,9 +79,11 @@ async function fetchPainelEspecial(
   id: string,
   canal: "geral" | "meta" | "google",
   filter: DateFilter,
-  preset?: string
+  preset?: string,
+  agrupamentoOverride?: string
 ) {
-  const agrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
+  const autoAgrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
+  const agrupamento = agrupamentoOverride ?? autoAgrupamento;
   const params = new URLSearchParams(buildQueryParams(filter));
   params.set("canal", canal);
   params.set("agrupamento", agrupamento);
@@ -94,9 +96,11 @@ async function fetchPainelTertulia(
   id: string,
   canal: "geral" | "meta" | "google",
   filter: DateFilter,
-  preset?: string
+  preset?: string,
+  agrupamentoOverride?: string
 ) {
-  const agrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
+  const autoAgrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
+  const agrupamento = agrupamentoOverride ?? autoAgrupamento;
   const params = new URLSearchParams(buildQueryParams(filter));
   params.set("canal", canal);
   params.set("agrupamento", agrupamento);
@@ -109,9 +113,11 @@ async function fetchPainelVarella(
   id: string,
   canal: "geral" | "meta" | "google",
   filter: DateFilter,
-  preset?: string
+  preset?: string,
+  agrupamentoOverride?: string
 ) {
-  const agrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
+  const autoAgrupamento = (preset === "ytd" || preset === "365d" || preset === "semestreAtual") ? "mensal" : "semanal";
+  const agrupamento = agrupamentoOverride ?? autoAgrupamento;
   const params = new URLSearchParams(buildQueryParams(filter));
   params.set("canal", canal);
   params.set("agrupamento", agrupamento);
@@ -491,18 +497,18 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   , [isComprasPanel, isVisitasPanel, isMiguelImoveisPanel, isMiguelPanel, isClinicaESpaPanel]);
   const isSpecialPanel = isHotelPanel || isTertuliaPanel || isVarellaPanel;
   const { data: painelEspecial } = useQuery({
-    queryKey: ["painel-especial", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim],
-    queryFn: () => fetchPainelEspecial(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo),
+    queryKey: ["painel-especial", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim, chartAgrupamento],
+    queryFn: () => fetchPainelEspecial(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo, isLongPeriod ? undefined : chartAgrupamento),
     enabled: !!id && isHotelPanel,
   });
   const { data: painelTertulia } = useQuery({
-    queryKey: ["painel-tertulia", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim],
-    queryFn: () => fetchPainelTertulia(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo),
+    queryKey: ["painel-tertulia", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim, chartAgrupamento],
+    queryFn: () => fetchPainelTertulia(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo, isLongPeriod ? undefined : chartAgrupamento),
     enabled: !!id && isTertuliaPanel,
   });
   const { data: painelVarella } = useQuery({
-    queryKey: ["painel-varella", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim],
-    queryFn: () => fetchPainelVarella(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo),
+    queryKey: ["painel-varella", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim, chartAgrupamento],
+    queryFn: () => fetchPainelVarella(id, canal as "geral" | "meta" | "google", dateFilter, presetPeriodo, isLongPeriod ? undefined : chartAgrupamento),
     enabled: !!id && isVarellaPanel,
   });
 
@@ -1161,6 +1167,7 @@ function formatPercentage(value: number) {
         <HotelFazendaSaoJoaoPanel
           data={painelEspecial}
           canalLabel={canal === "geral" ? "geral" : canal === "meta" ? "meta" : "google"}
+          onAgrupamentoChange={isLongPeriod ? undefined : (ag) => setChartAgrupamento(ag)}
         />
       )}
 
@@ -1168,6 +1175,7 @@ function formatPercentage(value: number) {
         <TertuliaPanel
           data={painelTertulia}
           canalLabel={canal === "geral" ? "geral" : canal === "meta" ? "meta" : "google"}
+          onAgrupamentoChange={isLongPeriod ? undefined : (ag) => setChartAgrupamento(ag)}
         />
       )}
 
@@ -1175,6 +1183,7 @@ function formatPercentage(value: number) {
         <VarellaMotosPanel
           data={painelVarella}
           canalLabel={canal === "geral" ? "geral" : canal === "meta" ? "meta" : "google"}
+          onAgrupamentoChange={isLongPeriod ? undefined : (ag) => setChartAgrupamento(ag)}
         />
       )}
 

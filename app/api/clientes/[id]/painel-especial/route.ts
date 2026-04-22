@@ -128,6 +128,10 @@ export async function GET(
       inicio = new Date(data.getFullYear(), data.getMonth(), 1);
       key = format(inicio, "yyyy-MM");
       periodo = format(inicio, "MMM/yy", { locale: ptBR });
+    } else if (agrupamento === "diario") {
+      inicio = new Date(data.getFullYear(), data.getMonth(), data.getDate());
+      key = format(inicio, "yyyy-MM-dd");
+      periodo = `${String(data.getDate()).padStart(2, "0")}/${String(data.getMonth() + 1).padStart(2, "0")}`;
     } else {
       inicio = startOfWeek(data, { weekStartsOn: 1 });
       const fim = endOfWeek(data, { weekStartsOn: 1 });
