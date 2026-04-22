@@ -87,9 +87,32 @@ export async function GET(
       }
     }
 
+    // Derive campaign status from the most recent MetaAdsCriativo effectiveStatus per campaign.
+    // "ACTIVE" means at least one ad is currently running; anything else is treated as paused.
+    const latestCreatives = await prisma.metaAdsCriativo.findMany({
+      where: { clienteId: id },
+      select: { campaignName: true, effectiveStatus: true, data: true },
+      orderBy: { data: "desc" },
+    });
+
+    // Keep only the most recent record per (campaignName, adId) then derive campaign status.
+    const campaignStatusMap = new Map<string, string>();
+    for (const c of latestCreatives) {
+      const name = (c.campaignName ?? "").trim();
+      if (!name) continue;
+      const prev = campaignStatusMap.get(name);
+      // Mark campaign as ATIVA if any ad has ACTIVE status
+      if (c.effectiveStatus === "ACTIVE") {
+        campaignStatusMap.set(name, "ATIVA");
+      } else if (!prev) {
+        campaignStatusMap.set(name, "PAUSADA");
+      }
+    }
+
     const campanhas = Array.from(byCampanha.entries())
       .map(([nome, v]) => ({
         nome,
+        status: campaignStatusMap.get(nome) ?? null,
         investimento: v.investimento,
         impressoes: v.impressoes,
         cliques: v.cliques,

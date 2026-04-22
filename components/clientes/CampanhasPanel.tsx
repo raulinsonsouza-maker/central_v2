@@ -35,6 +35,7 @@ function sum(arr: number[]): number {
 
 interface Campanha {
   nome: string;
+  status: "ATIVA" | "PAUSADA" | null;
   investimento: number;
   impressoes: number;
   cliques: number;
@@ -121,7 +122,7 @@ const CAMP_TYPE_META: Record<CampType, { label: string; color: string }> = {
 };
 const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 
-type SortCol = "nome" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
+type SortCol = "nome" | "status" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
 type SortDir = "asc" | "desc";
 
 function SortIcon({ col, sortCol, sortDir }: { col: string; sortCol: string; sortDir: SortDir }) {
@@ -151,6 +152,11 @@ function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] 
   return [...arr].sort((a, b) => {
     let va: number | string, vb: number | string;
     if (col === "nome") { va = a.nome; vb = b.nome; }
+    else if (col === "status") {
+      // ATIVA sorts before PAUSADA; null last
+      const rank = (s: string | null) => s === "ATIVA" ? 0 : s === "PAUSADA" ? 1 : 2;
+      va = rank(a.status); vb = rank(b.status);
+    }
     else if (col === "cpl") { va = a.cpl ?? Infinity; vb = b.cpl ?? Infinity; }
     else if (col === "cpa") { va = a.cpa ?? Infinity; vb = b.cpa ?? Infinity; }
     else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
@@ -198,10 +204,11 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: hasSales ? 1120 : hasLeads ? 820 : 700 }}>
+      <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: hasSales ? 1180 : hasLeads ? 880 : 760 }}>
         <thead>
           <tr>
             <SortTh col="nome" label="Campanha" align="left" {...st} />
+            <SortTh col="status" label="Status" align="left" {...st} />
             <SortTh col="investimento" label="Investido" {...st} />
             <SortTh col="impressoes" label="Impressões" {...st} />
             <SortTh col="cliques" label="Cliques" {...st} />
@@ -256,6 +263,23 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
                       )}
                     </div>
                   </div>
+                </td>
+
+                {/* Status */}
+                <td className={`px-4 py-4 ${bg}`}>
+                  {c.status === "ATIVA" ? (
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-400">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" />
+                      Ativa
+                    </span>
+                  ) : c.status === "PAUSADA" ? (
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-white/30">
+                      <span className="w-1.5 h-1.5 rounded-full bg-white/20 shrink-0" />
+                      Pausada
+                    </span>
+                  ) : (
+                    <span className="text-[11px] text-white/20">—</span>
+                  )}
                 </td>
 
                 {/* Investido */}
@@ -360,6 +384,7 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
             <td className="rounded-l-2xl bg-white/[0.06] px-4 py-3">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--foreground)]">Total</p>
             </td>
+            <td className="bg-white/[0.06] px-4 py-3" />
             <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
               {fmtBrl(totals.investimento)}
             </td>
