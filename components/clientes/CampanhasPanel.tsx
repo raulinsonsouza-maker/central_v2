@@ -36,6 +36,7 @@ function sum(arr: number[]): number {
 interface Campanha {
   nome: string;
   status: "ATIVA" | "PAUSADA" | null;
+  diasAtivos: number;
   investimento: number;
   impressoes: number;
   cliques: number;
@@ -122,7 +123,7 @@ const CAMP_TYPE_META: Record<CampType, { label: string; color: string }> = {
 };
 const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 
-type SortCol = "nome" | "status" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
+type SortCol = "nome" | "status" | "diasAtivos" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
 type SortDir = "asc" | "desc";
 
 function SortIcon({ col, sortCol, sortDir }: { col: string; sortCol: string; sortDir: SortDir }) {
@@ -157,6 +158,7 @@ function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] 
       const rank = (s: string | null) => s === "ATIVA" ? 0 : s === "PAUSADA" ? 1 : 2;
       va = rank(a.status); vb = rank(b.status);
     }
+    else if (col === "diasAtivos") { va = a.diasAtivos; vb = b.diasAtivos; }
     else if (col === "cpl") { va = a.cpl ?? Infinity; vb = b.cpl ?? Infinity; }
     else if (col === "cpa") { va = a.cpa ?? Infinity; vb = b.cpa ?? Infinity; }
     else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
@@ -209,6 +211,7 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
           <tr>
             <SortTh col="nome" label="Campanha" align="left" {...st} />
             <SortTh col="status" label="Status" align="left" {...st} />
+            <SortTh col="diasAtivos" label="Dias" {...st} />
             <SortTh col="investimento" label="Investido" {...st} />
             <SortTh col="impressoes" label="Impressões" {...st} />
             <SortTh col="cliques" label="Cliques" {...st} />
@@ -279,6 +282,18 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
                     </span>
                   ) : (
                     <span className="text-[11px] text-white/20">—</span>
+                  )}
+                </td>
+
+                {/* Dias ativos */}
+                <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
+                  <span className="text-[13px] font-semibold text-[var(--foreground)]">
+                    {c.diasAtivos > 0 ? c.diasAtivos : "—"}
+                  </span>
+                  {c.diasAtivos > 0 && (
+                    <span className="block text-[10px] text-[var(--muted-foreground)] leading-none mt-0.5">
+                      {c.diasAtivos === 1 ? "dia" : "dias"}
+                    </span>
                   )}
                 </td>
 
@@ -384,6 +399,7 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
             <td className="rounded-l-2xl bg-white/[0.06] px-4 py-3">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--foreground)]">Total</p>
             </td>
+            <td className="bg-white/[0.06] px-4 py-3" />
             <td className="bg-white/[0.06] px-4 py-3" />
             <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
               {fmtBrl(totals.investimento)}

@@ -63,10 +63,12 @@ export async function GET(
       leads: number;
       purchases: number;
       faturamento: number;
+      diasAtivos: Set<string>;
     }>();
 
     for (const fato of fatos) {
       const nome = fato.campaignName.trim() || "Campanha sem nome";
+      const dateKey = fato.data.toISOString().slice(0, 10);
       const existing = byCampanha.get(nome);
       if (existing) {
         existing.investimento += Number(fato.investimento);
@@ -75,6 +77,7 @@ export async function GET(
         existing.leads += fato.leads;
         existing.purchases += fato.purchases;
         existing.faturamento += Number(fato.websitePurchasesConversionValue);
+        if (Number(fato.investimento) > 0) existing.diasAtivos.add(dateKey);
       } else {
         byCampanha.set(nome, {
           investimento: Number(fato.investimento),
@@ -83,6 +86,7 @@ export async function GET(
           leads: fato.leads,
           purchases: fato.purchases,
           faturamento: Number(fato.websitePurchasesConversionValue),
+          diasAtivos: Number(fato.investimento) > 0 ? new Set([dateKey]) : new Set(),
         });
       }
     }
@@ -113,6 +117,7 @@ export async function GET(
       .map(([nome, v]) => ({
         nome,
         status: campaignStatusMap.get(nome) ?? null,
+        diasAtivos: v.diasAtivos.size,
         investimento: v.investimento,
         impressoes: v.impressoes,
         cliques: v.cliques,
