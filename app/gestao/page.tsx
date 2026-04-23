@@ -204,12 +204,11 @@ function PaceTable({ clientes, expectedPacePct }: { clientes: PaceCliente[]; exp
     : clientes;
 
   const sorted = [...filtered].sort((a, b) => {
-    let va: number, vb: number;
     if (sortCol === "nome") {
       return sortDir === "asc" ? a.nome.localeCompare(b.nome) : b.nome.localeCompare(a.nome);
     }
-    va = (a[sortCol] as number | null) ?? (sortDir === "asc" ? Infinity : -Infinity);
-    vb = (b[sortCol] as number | null) ?? (sortDir === "asc" ? Infinity : -Infinity);
+    const va = (a[sortCol] as number | null) ?? (sortDir === "asc" ? Infinity : -Infinity);
+    const vb = (b[sortCol] as number | null) ?? (sortDir === "asc" ? Infinity : -Infinity);
     return sortDir === "asc" ? va - vb : vb - va;
   });
 
