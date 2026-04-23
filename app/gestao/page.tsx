@@ -8,6 +8,7 @@ import {
   AlertTriangle,
   ArrowUpRight,
   BarChart3,
+  CalendarCheck2,
   ChevronDown,
   ChevronUp,
   ChevronsUpDown,
@@ -738,6 +739,10 @@ export default function GestaoPage() {
       ? (totalSpend / ((totalBudget * paceData.expectedPacePct) / 100)) * 100
       : null;
 
+  const totalProjecao = paceData
+    ? paceData.clientes.reduce((s, c) => s + (c.projecaoTotal ?? 0), 0)
+    : 0;
+
   const alertasSaldo = saldosData?.contas.filter(
     (c) => c.diasRestantes !== null && c.diasRestantes < 7
   ).length ?? 0;
@@ -777,9 +782,9 @@ export default function GestaoPage() {
         </div>
 
         {/* KPI Cards */}
-        <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
           {paceQ.isLoading ? (
-            Array.from({ length: 4 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-2xl" />)
+            Array.from({ length: 5 }).map((_, i) => <Skeleton key={i} className="h-24 rounded-2xl" />)
           ) : (
             <>
               <KpiCard
@@ -818,6 +823,27 @@ export default function GestaoPage() {
                 sub={`${alertasSaldo} saldo baixo · ${alertasAnomalia} anomali${alertasAnomalia === 1 ? "a" : "as"}`}
                 icon={AlertTriangle}
                 color={totalAlertas > 0 ? "text-amber-400" : "text-emerald-400"}
+              />
+              <KpiCard
+                label="Projeção do Mês"
+                value={paceData ? fmtBrl(totalProjecao) : "—"}
+                sub={
+                  paceData && totalBudget > 0
+                    ? totalProjecao > totalBudget
+                      ? `acima do budget em ${fmtBrl(totalProjecao - totalBudget)}`
+                      : `abaixo do budget em ${fmtBrl(totalBudget - totalProjecao)}`
+                    : undefined
+                }
+                icon={CalendarCheck2}
+                color={
+                  !paceData || totalBudget === 0
+                    ? "text-white/30"
+                    : totalProjecao > totalBudget * 1.1
+                    ? "text-red-400"
+                    : totalProjecao > totalBudget
+                    ? "text-orange-400"
+                    : "text-emerald-400"
+                }
               />
             </>
           )}
