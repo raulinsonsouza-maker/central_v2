@@ -375,7 +375,7 @@ function SaldosPanel({ contas }: { contas: SaldoConta[] }) {
                 <div className="min-w-0">
                   <p className="text-[12px] font-semibold text-[var(--foreground)] truncate">{c.nome}</p>
                   {c.erro ? (
-                    <p className="text-[10px] text-red-400 truncate">{c.erro}</p>
+                    <p className="text-[10px] text-white/30">Sem dados disponíveis</p>
                   ) : (
                     <p className="text-[10px] text-[var(--muted-foreground)]">
                       Burn médio: {fmtBrl(c.burnDiario7d)}/dia
@@ -385,6 +385,11 @@ function SaldosPanel({ contas }: { contas: SaldoConta[] }) {
               </div>
 
               <div className="flex items-center gap-3 shrink-0">
+                {c.erro && (
+                  <span className="rounded-full bg-white/[0.05] px-2 py-0.5 text-[10px] text-white/30">
+                    sem dados
+                  </span>
+                )}
                 {!c.erro && c.saldo !== null && (
                   <div className="text-right">
                     <p className="text-[13px] font-bold text-[var(--foreground)]">
@@ -572,7 +577,7 @@ export default function GestaoPage() {
       setTokenLoaded(true);
       return;
     }
-    fetch("/api/gestao/pace", { headers: { "x-admin-token": saved } })
+    fetch("/api/admin/clientes", { headers: { "x-admin-token": saved } })
       .then((res) => {
         if (res.status === 401) {
           localStorage.removeItem("adminToken");
