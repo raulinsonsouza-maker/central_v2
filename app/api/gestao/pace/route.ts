@@ -72,6 +72,19 @@ export async function GET(request: NextRequest) {
     const expectedTotal = budgetTotal > 0 ? (budgetTotal * expectedPacePct) / 100 : 0;
     const paceTotal = budgetTotal > 0 && expectedTotal > 0 ? (spendTotal / expectedTotal) * 100 : null;
 
+    const projecaoMeta =
+      budgetMeta != null && diasDecorridos > 0
+        ? (spend.meta / diasDecorridos) * diasNoMes
+        : null;
+    const projecaoGoogle =
+      budgetGoogle != null && diasDecorridos > 0
+        ? (spend.google / diasDecorridos) * diasNoMes
+        : null;
+    const projecaoTotal =
+      budgetTotal > 0 && diasDecorridos > 0
+        ? (spendTotal / diasDecorridos) * diasNoMes
+        : null;
+
     return {
       id: c.id,
       nome: c.nome,
@@ -85,6 +98,9 @@ export async function GET(request: NextRequest) {
       paceMeta,
       paceGoogle,
       paceTotal,
+      projecaoMeta,
+      projecaoGoogle,
+      projecaoTotal,
       hasBudget: budgetMeta != null || budgetGoogle != null,
     };
   });

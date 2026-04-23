@@ -104,7 +104,8 @@ type PaceSortCol =
   | "budgetGoogle"
   | "spendGoogle"
   | "paceGoogle"
-  | "paceTotal";
+  | "paceTotal"
+  | "projecaoTotal";
 
 function SortIcon({ col, active, dir }: { col: string; active: boolean; dir: SortDir }) {
   if (!active) return <ChevronsUpDown className="inline-block ml-1 h-3 w-3 opacity-30" />;
@@ -157,6 +158,27 @@ interface PaceCliente {
   paceMeta: number | null;
   paceGoogle: number | null;
   paceTotal: number | null;
+  projecaoMeta: number | null;
+  projecaoGoogle: number | null;
+  projecaoTotal: number | null;
+}
+
+function ProjecaoBadge({ projecao, budget }: { projecao: number | null; budget: number | null }) {
+  if (projecao === null || budget === null) {
+    return <span className="rounded-full bg-white/[0.05] px-2.5 py-0.5 text-[10px] text-white/30">—</span>;
+  }
+  const ratio = projecao / budget;
+  const colorClass =
+    ratio > 1.0
+      ? "text-red-400 bg-red-500/15"
+      : ratio > 0.9
+      ? "text-orange-400 bg-orange-500/15"
+      : "text-emerald-400 bg-emerald-500/15";
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-[10px] font-bold tabular-nums ${colorClass}`}>
+      {fmtBrl(projecao)}
+    </span>
+  );
 }
 
 function PaceTable({ clientes, expectedPacePct }: { clientes: PaceCliente[]; expectedPacePct: number }) {
@@ -213,7 +235,7 @@ function PaceTable({ clientes, expectedPacePct }: { clientes: PaceCliente[]; exp
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border-separate [border-spacing:0_4px]" style={{ minWidth: 860 }}>
+        <table className="w-full border-separate [border-spacing:0_4px]" style={{ minWidth: 1020 }}>
           <thead>
             <tr>
               <SortTh col="nome" label="Cliente" align="left" {...st} />
@@ -224,6 +246,7 @@ function PaceTable({ clientes, expectedPacePct }: { clientes: PaceCliente[]; exp
               <SortTh col="spendGoogle" label="Investido Google" {...st} />
               <SortTh col="paceGoogle" label="Pace Google" {...st} />
               <SortTh col="paceTotal" label="Pace Total" {...st} />
+              <SortTh col="projecaoTotal" label="Projeção" {...st} />
               <th className="w-8" />
             </tr>
           </thead>
@@ -289,6 +312,16 @@ function PaceTable({ clientes, expectedPacePct }: { clientes: PaceCliente[]; exp
                   </td>
                   <td className={`px-3 py-3 text-right ${rowBg}`}>
                     <PaceBadge pct={c.paceTotal} />
+                  </td>
+                  <td className={`px-3 py-3 text-right ${rowBg}`}>
+                    <ProjecaoBadge
+                      projecao={c.projecaoTotal}
+                      budget={
+                        (c.budgetMeta ?? 0) + (c.budgetGoogle ?? 0) > 0
+                          ? (c.budgetMeta ?? 0) + (c.budgetGoogle ?? 0)
+                          : null
+                      }
+                    />
                   </td>
                   <td className={`rounded-r-xl px-2 py-3 ${rowBg}`}>
                     <Link
