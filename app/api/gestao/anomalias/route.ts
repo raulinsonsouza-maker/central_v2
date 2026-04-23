@@ -70,7 +70,7 @@ export async function GET(request: NextRequest) {
       .filter((d) => d.data < cutoff2 && d.data >= day9)
       .reduce((s, d) => s + d.spend, 0);
 
-    if (spendAnterior > 5 && spendUlt2 === 0) {
+    if (spendAnterior > 0 && spendUlt2 === 0) {
       const withSpend = days
         .filter((d) => d.spend > 0)
         .sort((a, b) => b.data.getTime() - a.data.getTime());

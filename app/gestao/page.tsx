@@ -46,7 +46,7 @@ const PACE_COLORS: Record<PaceStatus, string> = {
   critico_baixo: "text-red-400 bg-red-500/15",
   baixo: "text-amber-400 bg-amber-500/15",
   ok: "text-emerald-400 bg-emerald-500/15",
-  alto: "text-[var(--primary)] bg-[var(--primary)]/15",
+  alto: "text-orange-400 bg-orange-500/15",
   sem_dado: "text-white/30 bg-white/[0.05]",
 };
 
@@ -446,7 +446,7 @@ function AnomaliasPanel({
           )}
         </div>
         <p className="mb-3 text-[11px] text-[var(--muted-foreground)]">
-          Clientes com gasto nos últimos 7–9 dias mas R$ 0 nos últimos 2 dias — provável pausa acidental.
+          Clientes com gasto nos dias 3–9 atrás mas R$ 0 nos últimos 2 dias — provável pausa acidental.
         </p>
         <div className="space-y-2">
           {anomalias.map((a) => (
