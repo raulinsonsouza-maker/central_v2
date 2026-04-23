@@ -9,6 +9,13 @@ const KEYS = {
   googleClientSecret: "google_ads_client_secret",
   googleLoginCustomerId: "google_ads_login_customer_id",
   googleAnalyticsCredentials: "google_analytics_credentials",
+  alertNotificationEmail: "alert_notification_email",
+  alertWebhookUrl: "alert_webhook_url",
+  alertSmtpHost: "alert_smtp_host",
+  alertSmtpPort: "alert_smtp_port",
+  alertSmtpUser: "alert_smtp_user",
+  alertSmtpPass: "alert_smtp_pass",
+  alertSmtpFrom: "alert_smtp_from",
 } as const;
 
 export interface IntegrationsConfig {
@@ -20,6 +27,13 @@ export interface IntegrationsConfig {
   googleClientSecret: string | null;
   googleLoginCustomerId: string | null;
   googleAnalyticsCredentials: string | null;
+  alertNotificationEmail: string | null;
+  alertWebhookUrl: string | null;
+  alertSmtpHost: string | null;
+  alertSmtpPort: string | null;
+  alertSmtpUser: string | null;
+  alertSmtpPass: string | null;
+  alertSmtpFrom: string | null;
 }
 
 export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
@@ -35,6 +49,13 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
           KEYS.googleClientSecret,
           KEYS.googleLoginCustomerId,
           KEYS.googleAnalyticsCredentials,
+          KEYS.alertNotificationEmail,
+          KEYS.alertWebhookUrl,
+          KEYS.alertSmtpHost,
+          KEYS.alertSmtpPort,
+          KEYS.alertSmtpUser,
+          KEYS.alertSmtpPass,
+          KEYS.alertSmtpFrom,
         ],
       },
     },
@@ -53,6 +74,13 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
       map.get(KEYS.googleLoginCustomerId) ?? process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID ?? null,
     googleAnalyticsCredentials:
       process.env.GOOGLE_ANALYTICS_CREDENTIALS ?? map.get(KEYS.googleAnalyticsCredentials) ?? null,
+    alertNotificationEmail: map.get(KEYS.alertNotificationEmail) ?? null,
+    alertWebhookUrl: map.get(KEYS.alertWebhookUrl) ?? null,
+    alertSmtpHost: map.get(KEYS.alertSmtpHost) ?? null,
+    alertSmtpPort: map.get(KEYS.alertSmtpPort) ?? null,
+    alertSmtpUser: map.get(KEYS.alertSmtpUser) ?? null,
+    alertSmtpPass: map.get(KEYS.alertSmtpPass) ?? null,
+    alertSmtpFrom: map.get(KEYS.alertSmtpFrom) ?? null,
   };
 }
 
@@ -65,6 +93,13 @@ export async function updateIntegrationsConfig(data: {
   googleClientSecret?: string;
   googleLoginCustomerId?: string;
   googleAnalyticsCredentials?: string;
+  alertNotificationEmail?: string;
+  alertWebhookUrl?: string;
+  alertSmtpHost?: string;
+  alertSmtpPort?: string;
+  alertSmtpUser?: string;
+  alertSmtpPass?: string;
+  alertSmtpFrom?: string;
 }) {
   const ops = [];
 
@@ -147,6 +182,76 @@ export async function updateIntegrationsConfig(data: {
           value: data.googleAnalyticsCredentials.trim(),
         },
         update: { value: data.googleAnalyticsCredentials.trim() },
+      })
+    );
+  }
+
+  if (data.alertNotificationEmail !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertNotificationEmail },
+        create: { key: KEYS.alertNotificationEmail, value: data.alertNotificationEmail.trim() },
+        update: { value: data.alertNotificationEmail.trim() },
+      })
+    );
+  }
+
+  if (data.alertWebhookUrl !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertWebhookUrl },
+        create: { key: KEYS.alertWebhookUrl, value: data.alertWebhookUrl.trim() },
+        update: { value: data.alertWebhookUrl.trim() },
+      })
+    );
+  }
+
+  if (data.alertSmtpHost !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertSmtpHost },
+        create: { key: KEYS.alertSmtpHost, value: data.alertSmtpHost.trim() },
+        update: { value: data.alertSmtpHost.trim() },
+      })
+    );
+  }
+
+  if (data.alertSmtpPort !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertSmtpPort },
+        create: { key: KEYS.alertSmtpPort, value: data.alertSmtpPort.trim() },
+        update: { value: data.alertSmtpPort.trim() },
+      })
+    );
+  }
+
+  if (data.alertSmtpUser !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertSmtpUser },
+        create: { key: KEYS.alertSmtpUser, value: data.alertSmtpUser.trim() },
+        update: { value: data.alertSmtpUser.trim() },
+      })
+    );
+  }
+
+  if (data.alertSmtpPass !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertSmtpPass },
+        create: { key: KEYS.alertSmtpPass, value: data.alertSmtpPass.trim() },
+        update: { value: data.alertSmtpPass.trim() },
+      })
+    );
+  }
+
+  if (data.alertSmtpFrom !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertSmtpFrom },
+        create: { key: KEYS.alertSmtpFrom, value: data.alertSmtpFrom.trim() },
+        update: { value: data.alertSmtpFrom.trim() },
       })
     );
   }

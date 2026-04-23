@@ -17,6 +17,13 @@ function buildResponse(config: Awaited<ReturnType<typeof getIntegrationsConfig>>
     hasGoogleClientId: !!config.googleClientId,
     hasGoogleClientSecret: !!config.googleClientSecret,
     googleLoginCustomerId: config.googleLoginCustomerId ?? "",
+    alertNotificationEmail: config.alertNotificationEmail ?? "",
+    alertWebhookUrl: config.alertWebhookUrl ?? "",
+    alertSmtpHost: config.alertSmtpHost ?? "",
+    alertSmtpPort: config.alertSmtpPort ?? "",
+    alertSmtpUser: config.alertSmtpUser ?? "",
+    hasAlertSmtpPass: !!config.alertSmtpPass,
+    alertSmtpFrom: config.alertSmtpFrom ?? "",
   };
 }
 
@@ -47,6 +54,13 @@ export async function PATCH(request: NextRequest) {
     googleClientId?: string;
     googleClientSecret?: string;
     googleLoginCustomerId?: string;
+    alertNotificationEmail?: string;
+    alertWebhookUrl?: string;
+    alertSmtpHost?: string;
+    alertSmtpPort?: string;
+    alertSmtpUser?: string;
+    alertSmtpPass?: string;
+    alertSmtpFrom?: string;
   };
 
   try {

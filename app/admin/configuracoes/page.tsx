@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, CheckCircle2, FileSpreadsheet, KeyRound, RefreshCw, Shield, Upload } from "lucide-react";
+import { AlertTriangle, Bell, CheckCircle2, FileSpreadsheet, KeyRound, RefreshCw, Shield, Upload } from "lucide-react";
 
 function getHeaders(token?: string, includeJson = false): HeadersInit {
   const headers: HeadersInit = {};
@@ -26,6 +26,13 @@ async function fetchIntegrationsConfig(token?: string) {
     hasGoogleClientId: boolean;
     hasGoogleClientSecret: boolean;
     googleLoginCustomerId: string;
+    alertNotificationEmail: string;
+    alertWebhookUrl: string;
+    alertSmtpHost: string;
+    alertSmtpPort: string;
+    alertSmtpUser: string;
+    hasAlertSmtpPass: boolean;
+    alertSmtpFrom: string;
   }>;
 }
 
@@ -38,6 +45,13 @@ async function updateIntegrationsConfigApi(
     googleClientId?: string;
     googleClientSecret?: string;
     googleLoginCustomerId?: string;
+    alertNotificationEmail?: string;
+    alertWebhookUrl?: string;
+    alertSmtpHost?: string;
+    alertSmtpPort?: string;
+    alertSmtpUser?: string;
+    alertSmtpPass?: string;
+    alertSmtpFrom?: string;
   },
   token?: string
 ) {
@@ -58,6 +72,13 @@ async function updateIntegrationsConfigApi(
     hasGoogleClientId: boolean;
     hasGoogleClientSecret: boolean;
     googleLoginCustomerId: string;
+    alertNotificationEmail: string;
+    alertWebhookUrl: string;
+    alertSmtpHost: string;
+    alertSmtpPort: string;
+    alertSmtpUser: string;
+    hasAlertSmtpPass: boolean;
+    alertSmtpFrom: string;
   };
 }
 
@@ -82,8 +103,17 @@ export default function AdminIntegrationsConfigPage() {
   const [googleDeveloperToken, setGoogleDeveloperToken] = useState("");
   const [googleRefreshToken, setGoogleRefreshToken] = useState("");
   const [googleLoginCustomerId, setGoogleLoginCustomerId] = useState("");
+  const [alertNotificationEmail, setAlertNotificationEmail] = useState("");
+  const [alertWebhookUrl, setAlertWebhookUrl] = useState("");
+  const [alertSmtpHost, setAlertSmtpHost] = useState("");
+  const [alertSmtpPort, setAlertSmtpPort] = useState("");
+  const [alertSmtpUser, setAlertSmtpUser] = useState("");
+  const [alertSmtpPass, setAlertSmtpPass] = useState("");
+  const [alertSmtpFrom, setAlertSmtpFrom] = useState("");
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
+  const [testAlertLoading, setTestAlertLoading] = useState(false);
+  const [testAlertResult, setTestAlertResult] = useState<{ ok: boolean; message: string } | null>(null);
 
   // CSV Import state
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -112,6 +142,13 @@ export default function AdminIntegrationsConfigPage() {
       googleClientId?: string;
       googleClientSecret?: string;
       googleLoginCustomerId?: string;
+      alertNotificationEmail?: string;
+      alertWebhookUrl?: string;
+      alertSmtpHost?: string;
+      alertSmtpPort?: string;
+      alertSmtpUser?: string;
+      alertSmtpPass?: string;
+      alertSmtpFrom?: string;
     }) => updateIntegrationsConfigApi(body, adminToken || undefined),
     onSuccess: () => {
       setFormError("");
@@ -122,6 +159,7 @@ export default function AdminIntegrationsConfigPage() {
       setGoogleDeveloperToken("");
       setGoogleRefreshToken("");
       setGoogleLoginCustomerId("");
+      setAlertSmtpPass("");
     },
     onError: (e: Error) => {
       setFormError(e.message);
@@ -130,6 +168,24 @@ export default function AdminIntegrationsConfigPage() {
   });
 
   const unauthorized = error instanceof Error && error.message === "Unauthorized";
+
+  async function handleTestAlert() {
+    setTestAlertLoading(true);
+    setTestAlertResult(null);
+    try {
+      const res = await fetch("/api/gestao/alertas", {
+        headers: getHeaders(adminToken || undefined),
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || res.statusText);
+      const msg = `${json.saldosBaixosCount} saldo(s) baixo(s), ${json.anomaliasCount} anomalia(s). Email: ${json.emailEnviado ? "enviado" : "não enviado"}. Webhook: ${json.webhookEnviado ? "enviado" : "não enviado"}.${json.erros?.length ? " Erros: " + json.erros.join("; ") : ""}`;
+      setTestAlertResult({ ok: true, message: msg });
+    } catch (e) {
+      setTestAlertResult({ ok: false, message: e instanceof Error ? e.message : String(e) });
+    } finally {
+      setTestAlertLoading(false);
+    }
+  }
 
   async function handleImportFile() {
     if (!selectedFile) return;
@@ -382,6 +438,13 @@ export default function AdminIntegrationsConfigPage() {
               googleClientId?: string;
               googleClientSecret?: string;
               googleLoginCustomerId?: string;
+              alertNotificationEmail?: string;
+              alertWebhookUrl?: string;
+              alertSmtpHost?: string;
+              alertSmtpPort?: string;
+              alertSmtpUser?: string;
+              alertSmtpPass?: string;
+              alertSmtpFrom?: string;
             } = {};
 
             if (metaAccessToken.trim()) body.metaAccessToken = metaAccessToken.trim();
@@ -391,6 +454,13 @@ export default function AdminIntegrationsConfigPage() {
             if (googleDeveloperToken.trim()) body.googleDeveloperToken = googleDeveloperToken.trim();
             if (googleRefreshToken.trim()) body.googleRefreshToken = googleRefreshToken.trim();
             if (googleLoginCustomerId.trim()) body.googleLoginCustomerId = googleLoginCustomerId.trim();
+            if (alertNotificationEmail.trim()) body.alertNotificationEmail = alertNotificationEmail.trim();
+            if (alertWebhookUrl.trim()) body.alertWebhookUrl = alertWebhookUrl.trim();
+            if (alertSmtpHost.trim()) body.alertSmtpHost = alertSmtpHost.trim();
+            if (alertSmtpPort.trim()) body.alertSmtpPort = alertSmtpPort.trim();
+            if (alertSmtpUser.trim()) body.alertSmtpUser = alertSmtpUser.trim();
+            if (alertSmtpPass.trim()) body.alertSmtpPass = alertSmtpPass.trim();
+            if (alertSmtpFrom.trim()) body.alertSmtpFrom = alertSmtpFrom.trim();
 
             if (Object.keys(body).length === 0) {
               setFormError("Preencha ao menos um campo para atualizar.");
@@ -404,6 +474,166 @@ export default function AdminIntegrationsConfigPage() {
           className="rounded-xl bg-[var(--primary)] px-6 py-2.5 text-sm font-semibold text-[var(--primary-foreground)] transition hover:opacity-90 disabled:opacity-50"
         >
           {mutation.isPending ? "Salvando..." : "Salvar alterações"}
+        </button>
+      </section>
+
+      {/* ── Alertas automáticos ── */}
+      <section className="space-y-3">
+        <h2 className="text-lg font-bold tracking-tight text-[var(--foreground)]">
+          Alertas automáticos
+        </h2>
+        <p className="text-sm text-[var(--muted-foreground)]">
+          Configure como o sistema deve notificar a equipe quando houver contas com saldo baixo ou anomalias de gasto.
+          O endpoint <code className="rounded bg-white/5 px-1 py-0.5 font-mono text-xs">/api/gestao/alertas</code> pode ser chamado por um agendador diário (cron).
+        </p>
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-2">
+        <Card className="rounded-2xl border-[var(--border)]">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Bell className="h-4 w-4 text-[var(--primary)]" />
+              Destino das notificações
+            </CardTitle>
+            <p className="mt-1 text-xs text-[var(--muted-foreground)]">
+              E-mail de destino e URL de webhook (Slack, Google Chat, Zapier, etc.).
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                E-mail de notificação
+              </label>
+              <input
+                type="email"
+                value={alertNotificationEmail}
+                onChange={(e) => setAlertNotificationEmail(e.target.value)}
+                placeholder={data?.alertNotificationEmail || "equipe@empresa.com.br"}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+              />
+              {data?.alertNotificationEmail && (
+                <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                  Atual: <span className="text-[var(--primary)]">{data.alertNotificationEmail}</span>
+                </p>
+              )}
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                URL do webhook
+              </label>
+              <input
+                type="url"
+                value={alertWebhookUrl}
+                onChange={(e) => setAlertWebhookUrl(e.target.value)}
+                placeholder={data?.alertWebhookUrl || "https://hooks.slack.com/services/..."}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+              />
+              {data?.alertWebhookUrl && (
+                <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                  Atual: <span className="text-[var(--primary)]">{data.alertWebhookUrl.slice(0, 40)}…</span>
+                </p>
+              )}
+              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                Compatível com Slack Incoming Webhooks, Google Chat, Discord e qualquer serviço que aceite JSON.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl border-[var(--border)]">
+          <CardHeader>
+            <CardTitle className="text-base">Configuração SMTP (e-mail)</CardTitle>
+            <p className="mt-1 text-xs text-[var(--muted-foreground)]">
+              Servidor de envio de e-mail. Obrigatório para envio de alertas por e-mail.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  Host SMTP
+                </label>
+                <input
+                  value={alertSmtpHost}
+                  onChange={(e) => setAlertSmtpHost(e.target.value)}
+                  placeholder={data?.alertSmtpHost || "smtp.gmail.com"}
+                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+                />
+              </div>
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  Porta
+                </label>
+                <input
+                  value={alertSmtpPort}
+                  onChange={(e) => setAlertSmtpPort(e.target.value)}
+                  placeholder={data?.alertSmtpPort || "587"}
+                  className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Usuário SMTP
+              </label>
+              <input
+                value={alertSmtpUser}
+                onChange={(e) => setAlertSmtpUser(e.target.value)}
+                placeholder={data?.alertSmtpUser || "remetente@empresa.com.br"}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                Senha SMTP
+              </label>
+              <input
+                type="password"
+                value={alertSmtpPass}
+                onChange={(e) => setAlertSmtpPass(e.target.value)}
+                placeholder={data?.hasAlertSmtpPass ? "••••••••••••••••••••" : "Senha ou app password"}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+              />
+              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                Por segurança, o valor atual não é exibido. Preencha apenas se quiser atualizar.
+              </p>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+                E-mail remetente (From)
+              </label>
+              <input
+                value={alertSmtpFrom}
+                onChange={(e) => setAlertSmtpFrom(e.target.value)}
+                placeholder={data?.alertSmtpFrom || "Alertas Inout <alertas@empresa.com.br>"}
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+              />
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      <section className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-col gap-1">
+          <p className="text-xs text-[var(--muted-foreground)]">
+            Dispare um alerta agora para testar as configurações.
+          </p>
+          {testAlertResult && (
+            <div className={`flex items-center gap-2 text-xs ${testAlertResult.ok ? "text-[var(--success)]" : "text-red-400"}`}>
+              {testAlertResult.ok
+                ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+                : <AlertTriangle className="h-3.5 w-3.5 shrink-0" />}
+              {testAlertResult.message}
+            </div>
+          )}
+        </div>
+        <button
+          disabled={testAlertLoading}
+          onClick={handleTestAlert}
+          className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-[var(--foreground)] transition hover:bg-white/[0.06] disabled:opacity-40"
+        >
+          {testAlertLoading ? <RefreshCw className="h-4 w-4 animate-spin" /> : <Bell className="h-4 w-4" />}
+          {testAlertLoading ? "Executando..." : "Disparar alerta agora"}
         </button>
       </section>
 
