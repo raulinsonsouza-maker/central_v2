@@ -105,6 +105,8 @@ type PaceSortCol =
   | "spendGoogle"
   | "paceGoogle"
   | "paceTotal"
+  | "projecaoMeta"
+  | "projecaoGoogle"
   | "projecaoTotal";
 
 function SortIcon({ col, active, dir }: { col: string; active: boolean; dir: SortDir }) {
@@ -235,7 +237,7 @@ function PaceTable({ clientes, expectedPacePct }: { clientes: PaceCliente[]; exp
       </div>
 
       <div className="overflow-x-auto">
-        <table className="w-full border-separate [border-spacing:0_4px]" style={{ minWidth: 1020 }}>
+        <table className="w-full border-separate [border-spacing:0_4px]" style={{ minWidth: 1220 }}>
           <thead>
             <tr>
               <SortTh col="nome" label="Cliente" align="left" {...st} />
@@ -246,7 +248,9 @@ function PaceTable({ clientes, expectedPacePct }: { clientes: PaceCliente[]; exp
               <SortTh col="spendGoogle" label="Investido Google" {...st} />
               <SortTh col="paceGoogle" label="Pace Google" {...st} />
               <SortTh col="paceTotal" label="Pace Total" {...st} />
-              <SortTh col="projecaoTotal" label="Projeção" {...st} />
+              <SortTh col="projecaoMeta" label="Proj. Meta" {...st} />
+              <SortTh col="projecaoGoogle" label="Proj. Google" {...st} />
+              <SortTh col="projecaoTotal" label="Projeção Total" {...st} />
               <th className="w-8" />
             </tr>
           </thead>
@@ -312,6 +316,12 @@ function PaceTable({ clientes, expectedPacePct }: { clientes: PaceCliente[]; exp
                   </td>
                   <td className={`px-3 py-3 text-right ${rowBg}`}>
                     <PaceBadge pct={c.paceTotal} />
+                  </td>
+                  <td className={`px-3 py-3 text-right ${rowBg}`}>
+                    <ProjecaoBadge projecao={c.projecaoMeta} budget={c.budgetMeta} />
+                  </td>
+                  <td className={`px-3 py-3 text-right ${rowBg}`}>
+                    <ProjecaoBadge projecao={c.projecaoGoogle} budget={c.budgetGoogle} />
                   </td>
                   <td className={`px-3 py-3 text-right ${rowBg}`}>
                     <ProjecaoBadge
