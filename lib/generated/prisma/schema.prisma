@@ -82,6 +82,7 @@ model FatoMidiaDiario {
   checkoutIniciado                Int      @default(0)
   profileVisits                   Int      @default(0)
   campaignName                    String   @default("")
+  campaignId                      String   @default("")
   cliente                         Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
   conta                           Conta?   @relation(fields: [contaId], references: [id])
 

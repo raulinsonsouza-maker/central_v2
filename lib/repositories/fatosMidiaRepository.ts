@@ -26,6 +26,7 @@ export async function upsertFatoMidia(
     rawRowHash?: string | null;
     contaId?: string | null;
     campaignName?: string;
+    campaignId?: string;
   }
 ) {
   const investimentoDecimal = new Decimal(payload.investimento);
@@ -38,6 +39,7 @@ export async function upsertFatoMidia(
     payload.websitePurchasesConversionValue ?? 0
   );
   const campaignName = payload.campaignName ?? "";
+  const campaignId = payload.campaignId ?? "";
 
   return prisma.fatoMidiaDiario.upsert({
     where: {
@@ -48,6 +50,7 @@ export async function upsertFatoMidia(
       data,
       canal,
       campaignName,
+      campaignId,
       impressoes: payload.impressoes,
       cliques: payload.cliques,
       leads: payload.leads,
@@ -69,6 +72,7 @@ export async function upsertFatoMidia(
       contaId: payload.contaId ?? null,
     },
     update: {
+      campaignId,
       impressoes: payload.impressoes,
       cliques: payload.cliques,
       leads: payload.leads,

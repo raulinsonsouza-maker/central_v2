@@ -106,6 +106,43 @@ export async function syncMetaCliente(
       });
     }
 
+    // Detect renamed campaigns: build a map of campaignId → latest campaignName from the API response.
+    // If a campaign was renamed, its old-name rows still exist in DB; we delete them before upserting new ones.
+    if (!useCampaignAggregated && rows.length > 0) {
+      const idToNewName = new Map<string, string>();
+      for (const row of rows) {
+        const cid = row.campaign_id?.trim();
+        const cname = row.campaign_name?.trim() ?? "";
+        if (cid) idToNewName.set(cid, cname);
+      }
+
+      if (idToNewName.size > 0) {
+        const campaignIds = [...idToNewName.keys()];
+        // Find rows whose campaignId is known but campaignName differs from the current API value
+        const staleRows = await prisma.fatoMidiaDiario.findMany({
+          where: {
+            clienteId,
+            canal: "META",
+            campaignId: { in: campaignIds, not: "" },
+          },
+          select: { id: true, campaignId: true, campaignName: true },
+        });
+
+        const staleIds: string[] = [];
+        for (const row of staleRows) {
+          const currentName = idToNewName.get(row.campaignId);
+          if (currentName !== undefined && row.campaignName !== currentName) {
+            staleIds.push(row.id);
+          }
+        }
+
+        if (staleIds.length > 0) {
+          console.log(`[syncMetaCliente] Limpando ${staleIds.length} linhas com nomes de campanha desatualizados (campanhas renomeadas)`);
+          await prisma.fatoMidiaDiario.deleteMany({ where: { id: { in: staleIds } } });
+        }
+      }
+    }
+
     for (const row of rows) {
       const payload = mapMetaInsightToFatoPayload(row);
       await upsertFatoMidia(clienteId, payload.data, "META", {
@@ -128,6 +165,7 @@ export async function syncMetaCliente(
         profileVisits: payload.profileVisits,
         contaId: contaId ?? undefined,
         campaignName: payload.campaignName,
+        campaignId: payload.campaignId,
       });
     }
 

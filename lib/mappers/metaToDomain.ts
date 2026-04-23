@@ -48,6 +48,7 @@ export interface MetaInsightPayload {
   checkoutIniciado: number;
   profileVisits: number;
   campaignName: string;
+  campaignId: string;
 }
 
 /**
@@ -141,5 +142,6 @@ export function mapMetaInsightToFatoPayload(row: MetaInsightRow): MetaInsightPay
     checkoutIniciado,
     profileVisits,
     campaignName: row.campaign_name?.trim() ?? "",
+    campaignId: row.campaign_id?.trim() ?? "",
   };
 }
