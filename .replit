@@ -35,7 +35,7 @@ externalPort = 80
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["bash", "-c", "next start -p ${PORT:-8080} -H 0.0.0.0"]
+run = ["npm", "start"]
 build = ["npm", "run", "build"]
 
 [userenv]
