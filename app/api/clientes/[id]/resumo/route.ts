@@ -96,9 +96,16 @@ export async function GET(
     Math.floor((dataFim.getTime() - dataInicio.getTime()) / (24 * 60 * 60 * 1000)) + 1
   );
 
+  const lastFatoRow = await prisma.fatoMidiaDiario.findFirst({
+    where: { clienteId: id },
+    orderBy: { data: "desc" },
+    select: { data: true },
+  });
+
   return NextResponse.json({
     clienteId: id,
     periodo: `${diasSelecionados} dias`,
+    lastFatoDate: lastFatoRow?.data ?? null,
     investimento: Math.round(totalInvestimento * 100) / 100,
     leads: totalLeads,
     impressoes: totalImpressoes,

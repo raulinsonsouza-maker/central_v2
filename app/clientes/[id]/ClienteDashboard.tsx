@@ -25,7 +25,7 @@ import {
   ResponsiveContainer,
   ComposedChart,
 } from "recharts";
-import { ArrowLeft, CalendarDays, ChevronLeft, ChevronRight, SlidersHorizontal, BarChart3, Play, TrendingUp, X, Wallet, AlertTriangle, Zap, Target, Film, MousePointerClick, Eye, EyeOff, CheckCircle2, Circle, Trash2, Flag, Clock, ChevronDown } from "lucide-react";
+import { ArrowLeft, CalendarDays, ChevronLeft, ChevronRight, SlidersHorizontal, BarChart3, Play, TrendingUp, X, Wallet, AlertTriangle, Zap, Target, Film, MousePointerClick, Eye, EyeOff, CheckCircle2, Circle, Trash2, Flag, Clock, ChevronDown, RefreshCw } from "lucide-react";
 import { upgradeFbCdnImageUrl } from "@/lib/utils";
 
 /* ─── data fetchers (unchanged) ─── */
@@ -357,6 +357,30 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   });
   const filterRef = React.useRef<HTMLDivElement | null>(null);
 
+  // ── Sync state ──
+  const [syncStatus, setSyncStatus] = React.useState<"idle" | "syncing" | "done" | "error">("idle");
+  const [lastSyncedLabel, setLastSyncedLabel] = React.useState<string | null>(null);
+  const queryClient = useQueryClient();
+
+  const triggerSync = React.useCallback(async () => {
+    if (syncStatus === "syncing") return;
+    setSyncStatus("syncing");
+    try {
+      const res = await fetch(`/api/clientes/${id}/sync`, { method: "POST" });
+      if (res.ok) {
+        setSyncStatus("done");
+        setLastSyncedLabel(`agora mesmo`);
+        await queryClient.invalidateQueries({ queryKey: ["resumo", id] });
+        await queryClient.invalidateQueries({ queryKey: ["midia", id] });
+        await queryClient.invalidateQueries({ queryKey: ["campanhas", id] });
+      } else {
+        setSyncStatus("error");
+      }
+    } catch {
+      setSyncStatus("error");
+    }
+  }, [id, syncStatus, queryClient]);
+
   React.useEffect(() => {
     localStorage.setItem("inout-date-preset", presetPeriodo);
     if (presetPeriodo === "custom") {
@@ -453,6 +477,34 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     queryFn: () => fetchResumo(id, canal as "geral" | "meta" | "google", dateFilter),
     enabled: !!id && canal !== "imoveis",
   });
+
+  // Auto-sync when data is stale (last fato more than 24h behind today)
+  const autoSyncFiredRef = React.useRef(false);
+  React.useEffect(() => {
+    if (autoSyncFiredRef.current) return;
+    const lastFatoDate = (resumo as { lastFatoDate?: string | null })?.lastFatoDate;
+    if (!lastFatoDate) return;
+    const last = new Date(lastFatoDate);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+    if (last < yesterday) {
+      autoSyncFiredRef.current = true;
+      triggerSync();
+    } else {
+      const diffDays = Math.floor((today.getTime() - last.getTime()) / (24 * 60 * 60 * 1000));
+      if (diffDays === 0) {
+        setLastSyncedLabel("hoje");
+      } else if (diffDays === 1) {
+        setLastSyncedLabel("ontem");
+      } else {
+        setLastSyncedLabel(`${last.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" })}`);
+      }
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [resumo]);
+
   const { data: midia } = useQuery({
     queryKey: ["midia", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim, chartAgrupamento],
     queryFn: () => fetchMidia(id, canal as string, dateFilter, presetPeriodo, isLongPeriod ? undefined : chartAgrupamento),
@@ -869,6 +921,33 @@ function formatPercentage(value: number) {
               </div>
             );
           })()}
+
+          {/* Sync chip */}
+          {!portalMode && (
+            <button
+              onClick={() => triggerSync()}
+              disabled={syncStatus === "syncing"}
+              title={syncStatus === "syncing" ? "Sincronizando…" : "Sincronizar dados agora"}
+              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs transition-all ${
+                syncStatus === "syncing"
+                  ? "border-[var(--primary)]/40 bg-[var(--primary)]/8 text-[var(--primary)] cursor-wait"
+                  : syncStatus === "error"
+                    ? "border-red-500/40 bg-red-500/8 text-red-400 hover:bg-red-500/12"
+                    : "border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:bg-[var(--muted)]/60 hover:text-[var(--foreground)]"
+              }`}
+            >
+              <RefreshCw className={`h-3.5 w-3.5 shrink-0 ${syncStatus === "syncing" ? "animate-spin" : ""}`} />
+              <span className="hidden sm:inline">
+                {syncStatus === "syncing"
+                  ? "Sincronizando…"
+                  : syncStatus === "error"
+                    ? "Erro ao sincronizar"
+                    : lastSyncedLabel
+                      ? `Atualizado ${lastSyncedLabel}`
+                      : "Sincronizar"}
+              </span>
+            </button>
+          )}
 
           {/* Filtro de data — direita */}
           <div className="ml-auto">
