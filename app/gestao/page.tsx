@@ -568,8 +568,22 @@ export default function GestaoPage() {
 
   useEffect(() => {
     const saved = localStorage.getItem("adminToken");
-    if (saved) setAdminToken(saved);
-    setTokenLoaded(true);
+    if (!saved) {
+      setTokenLoaded(true);
+      return;
+    }
+    fetch("/api/gestao/pace", { headers: { "x-admin-token": saved } })
+      .then((res) => {
+        if (res.status === 401) {
+          localStorage.removeItem("adminToken");
+        } else {
+          setAdminToken(saved);
+        }
+      })
+      .catch(() => {
+        setAdminToken(saved);
+      })
+      .finally(() => setTokenLoaded(true));
   }, []);
 
   function makeHeaders(token: string): HeadersInit {

@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
   }
 
   const cutoff2 = new Date(now);
-  cutoff2.setDate(cutoff2.getDate() - 2);
+  cutoff2.setDate(cutoff2.getDate() - 1);
   cutoff2.setHours(0, 0, 0, 0);
 
   const anomalias: Array<{
