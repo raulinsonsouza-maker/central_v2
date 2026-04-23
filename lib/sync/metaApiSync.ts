@@ -57,9 +57,26 @@ export async function syncMetaCliente(
   }
 
   const today = formatDate(new Date());
-  const dateFrom = options?.dateFrom ?? DEFAULT_DATE_FROM;
+
+  // Sync incremental: detectar última data salva no banco para não rebuscar tudo desde jan/01
+  let smartDateFrom = DEFAULT_DATE_FROM;
+  if (!options?.dateFrom) {
+    const lastFato = await prisma.fatoMidiaDiario.findFirst({
+      where: { clienteId, canal: "META" },
+      orderBy: { data: "desc" },
+      select: { data: true },
+    });
+    if (lastFato?.data) {
+      // Volta 2 dias atrás para garantir que dados atrasados da Meta sejam capturados
+      const d = new Date(lastFato.data);
+      d.setDate(d.getDate() - 2);
+      smartDateFrom = formatDate(d);
+    }
+  }
+
+  const dateFrom = options?.dateFrom ?? smartDateFrom;
   const dateTo = options?.dateTo ?? today;
-  const creativeDateFrom = options?.creativeDateFrom ?? DEFAULT_DATE_FROM;
+  const creativeDateFrom = options?.creativeDateFrom ?? smartDateFrom;
   const creativeDateTo = options?.creativeDateTo ?? today;
 
   try {
@@ -211,8 +228,6 @@ export async function syncMetaTodosClientes(options?: { dateFrom?: string; dateT
 
   const clientes = await findAllClientes(true);
   const today = formatDate(new Date());
-  const dateFrom = options?.dateFrom ?? DEFAULT_DATE_FROM;
-  const dateTo = options?.dateTo ?? today;
   const results: MetaSyncAllResult[] = [];
 
   for (const cliente of clientes) {
@@ -225,12 +240,12 @@ export async function syncMetaTodosClientes(options?: { dateFrom?: string; dateT
       continue;
     }
 
+    // Se um dateFrom global foi passado (ex: force-resync), usa ele.
+    // Caso contrário, o syncMetaCliente detecta automaticamente a data incremental.
     const result = await syncMetaCliente(cliente.id, {
-      dateFrom,
-      dateTo,
+      ...(options?.dateFrom ? { dateFrom: options.dateFrom, creativeDateFrom: options.dateFrom } : {}),
+      dateTo: options?.dateTo ?? today,
       accountId,
-      creativeDateFrom: dateFrom,
-      creativeDateTo: dateTo,
     });
     results.push({
       clienteId: cliente.id,

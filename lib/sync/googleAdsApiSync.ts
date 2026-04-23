@@ -70,7 +70,24 @@ export async function syncGoogleAdsCliente(
   }
 
   const today = formatDate(new Date());
-  const dateFrom = options?.dateFrom ?? getDefaultDateFrom();
+
+  // Sync incremental: detectar última data salva no banco para não rebuscar 90 dias sempre
+  let smartDateFrom = getDefaultDateFrom();
+  if (!options?.dateFrom) {
+    const lastFato = await prisma.fatoMidiaDiario.findFirst({
+      where: { clienteId, canal: "GOOGLE" },
+      orderBy: { data: "desc" },
+      select: { data: true },
+    });
+    if (lastFato?.data) {
+      // Volta 2 dias atrás para capturar dados com processamento atrasado
+      const d = new Date(lastFato.data);
+      d.setDate(d.getDate() - 2);
+      smartDateFrom = formatDate(d);
+    }
+  }
+
+  const dateFrom = options?.dateFrom ?? smartDateFrom;
   const dateTo = options?.dateTo ?? today;
 
   try {
@@ -143,15 +160,16 @@ export interface GoogleAdsSyncAllResult {
   error?: string;
 }
 
-export async function syncGoogleAdsTodosClientes(): Promise<GoogleAdsSyncAllResult[]> {
+export async function syncGoogleAdsTodosClientes(options?: { dateFrom?: string; dateTo?: string }): Promise<GoogleAdsSyncAllResult[]> {
   const clientes = await findAllClientes(true);
   const today = formatDate(new Date());
   const results: GoogleAdsSyncAllResult[] = [];
 
   for (const cliente of clientes) {
+    // Sem dateFrom explícito → cada cliente detecta sua própria data incremental
     const result = await syncGoogleAdsCliente(cliente.id, {
-      dateFrom: getDefaultDateFrom(),
-      dateTo: today,
+      ...(options?.dateFrom ? { dateFrom: options.dateFrom } : {}),
+      dateTo: options?.dateTo ?? today,
     });
     results.push({
       clienteId: cliente.id,
