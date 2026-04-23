@@ -3,12 +3,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { KeyRound, Settings } from "lucide-react";
+import { KeyRound, LayoutDashboard, Settings } from "lucide-react";
 
 export function Header() {
   const pathname = usePathname();
   const isAdminClientes = pathname.startsWith("/admin/clientes");
   const isAdminConfig = pathname.startsWith("/admin/configuracoes");
+  const isGestao = pathname.startsWith("/gestao");
   const isPortal = pathname.startsWith("/portal");
 
   if (isPortal) return null;
@@ -34,6 +35,13 @@ export function Header() {
         </Link>
 
         <nav className="flex items-center gap-1">
+          <Link
+            href="/gestao"
+            title="Painel de gestão"
+            className={iconClass(isGestao)}
+          >
+            <LayoutDashboard className="h-5 w-5" />
+          </Link>
           <Link
             href="/admin/clientes"
             title="Configurações de clientes"
