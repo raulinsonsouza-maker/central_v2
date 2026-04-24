@@ -1,10 +1,10 @@
 "use client";
 
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import {
   BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, FunnelChart, Funnel, LabelList,
+  ResponsiveContainer,
 } from "recharts";
 
 // ─── accent color ──────────────────────────────────────────────────────────────
@@ -106,9 +106,9 @@ const Ico = {
 };
 
 // ─── primitives ────────────────────────────────────────────────────────────────
-function Card({ children, className = "" }: { children: React.ReactNode; className?: string }) {
+function Card({ children, className = "", style }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   return (
-    <div className={`rounded-2xl border border-neutral-800 bg-[#18181b] p-6 ${className}`}>
+    <div className={`rounded-2xl border border-neutral-800 bg-[#18181b] p-6 ${className}`} style={style}>
       {children}
     </div>
   );
