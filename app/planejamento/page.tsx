@@ -30,6 +30,14 @@ const PLANOS: Plano[] = [
     tag: "Meta Ads",
     updatedAt: "Abr 2026",
   },
+  {
+    slug: "assumindo-riscos",
+    nome: "Assumindo Riscos",
+    cliente: "Inout",
+    descricao: "Modelo de parceria com skin in the game — fee fixo + variável atrelado a vendas. Operação diária no comercial do cliente, gestão de funil e resultado compartilhado.",
+    tag: "Estratégia",
+    updatedAt: "Abr 2026",
+  },
 ];
 
 function normalizeForSearch(text: string): string {
