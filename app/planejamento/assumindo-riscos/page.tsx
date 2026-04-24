@@ -8,10 +8,10 @@ import {
 } from "recharts";
 
 // ─── accent color ──────────────────────────────────────────────────────────────
-const RED = "#dc2626";
-const RED_SOFT = "#ef4444";
-const RED_DIM = "rgba(220,38,38,0.12)";
-const RED_BORDER = "rgba(220,38,38,0.25)";
+const RED = "#ff6a00";
+const RED_SOFT = "#ff9a40";
+const RED_DIM = "rgba(255,106,0,0.12)";
+const RED_BORDER = "rgba(255,106,0,0.25)";
 
 // ─── helpers ───────────────────────────────────────────────────────────────────
 function fmt(v: number, d = 1): string {
@@ -509,7 +509,7 @@ export default function AssumindoRiscosPage() {
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tight leading-[1.05] mb-6">
                 <span className="text-white">Assumindo</span>
                 <br />
-                <span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(135deg, ${RED}, #f87171)` }}>
+                <span className="bg-clip-text text-transparent" style={{ backgroundImage: `linear-gradient(135deg, ${RED}, #ff9a40)` }}>
                   Riscos
                 </span>
               </h1>
@@ -560,7 +560,7 @@ export default function AssumindoRiscosPage() {
               </ul>
             </Card>
 
-            <Card style={{ border: `1px solid ${RED_BORDER}`, background: "#1a1010" }}>
+            <Card style={{ border: `1px solid ${RED_BORDER}`, background: "#141008" }}>
               <div className="flex items-center gap-2 mb-4">
                 <div className="w-8 h-8 rounded-lg flex items-center justify-center text-white" style={{ background: RED }}>
                   <Ico.Rocket />
@@ -796,7 +796,7 @@ export default function AssumindoRiscosPage() {
             ))}
           </div>
 
-          <Card style={{ border: `1px solid ${RED_BORDER}`, background: "#1a1010" }}>
+          <Card style={{ border: `1px solid ${RED_BORDER}`, background: "#141008" }}>
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center shrink-0" style={{ background: RED }}>
                 <Ico.Alert />
@@ -966,7 +966,7 @@ export default function AssumindoRiscosPage() {
             </Card>
 
             <div className="space-y-4">
-              <Card style={{ border: `1px solid ${RED_BORDER}`, background: "#1a1010" }}>
+              <Card style={{ border: `1px solid ${RED_BORDER}`, background: "#141008" }}>
                 <div className="flex items-center gap-2 mb-4">
                   <div className="w-9 h-9 rounded-xl flex items-center justify-center" style={{ background: RED }}>
                     <Ico.Alert />
@@ -1014,7 +1014,7 @@ export default function AssumindoRiscosPage() {
           </div>
 
           {/* CTA final */}
-          <div className="relative overflow-hidden rounded-3xl text-center px-8 py-14" style={{ background: "linear-gradient(135deg, #1a0808, #1f1010)" }}>
+          <div className="relative overflow-hidden rounded-3xl text-center px-8 py-14" style={{ background: "linear-gradient(135deg, #140a00, #1a0f00)" }}>
             <div className="pointer-events-none absolute inset-0 rounded-3xl border" style={{ borderColor: RED_BORDER }} />
             <div className="pointer-events-none absolute -right-10 -top-10 h-48 w-48 rounded-full opacity-15 blur-3xl" style={{ background: RED }} />
 
