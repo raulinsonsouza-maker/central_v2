@@ -14,7 +14,7 @@ import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
 import { CampanhasPanel } from "@/components/clientes/CampanhasPanel";
 import { GoogleCampanhasPanel } from "@/components/clientes/GoogleCampanhasPanel";
-import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci } from "@/lib/clientProfiles";
+import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci, isKombucha } from "@/lib/clientProfiles";
 import {
   Bar,
   XAxis,
@@ -536,6 +536,7 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const isComprasPanel = (isDor(cliente) || isGranarolo(cliente) || isVitoBalducci(cliente)) && canal !== "google";
   const isVisitasPanel = isFlorien(cliente) && canal !== "google";
   const isAcademyPanel = isAcademyAmericana(cliente) && canal !== "google";
+  const isKombuchaPanel = isKombucha(cliente) && canal !== "google";
   const isEcommerceMode = isGranarolo(cliente) || isDor(cliente) || isVitoBalducci(cliente);
   const convLabels = React.useMemo(() => isComprasPanel
     ? { singular: "compra", plural: "compras", metric: "Custo/Compra", metricFull: "Custo / Compra", kpi: "Meta Custo/Compra", dbKey: "COMPRAS", taxa: "TAXA COMPRA", cust: "CUSTO / COMPRA", semResult: "sem compras", crLabel: "CR (clique→compra)", chartKey: "Compras", sub: "Total do período" }
@@ -545,8 +546,10 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     ? { singular: "resultado", plural: "resultados", metric: "Custo/Result.", metricFull: "Custo / Resultado", kpi: "Meta Custo/Result.", dbKey: "RESULTADOS", taxa: "TAXA RESULT.", cust: "CUSTO / RESULT.", semResult: "sem resultados", crLabel: "CR (clique→result.)", chartKey: "Resultados", sub: "Total de conversas iniciadas e cadastros no período" }
     : (isMiguelPanel || isClinicaESpaPanel)
     ? { singular: "conv.", plural: "conversas", metric: "Custo/conv.", metricFull: "Custo / Conversa", kpi: "Meta Custo/Conv.", dbKey: "CONVERSAS", taxa: "TAXA CONVERSA", cust: "CUSTO / CONVERSA", semResult: "sem conversas", crLabel: "CR (clique→conv.)", chartKey: "Conversas", sub: "Conversas por mensagem iniciadas no período" }
+    : isKombuchaPanel
+    ? { singular: "carrinho", plural: "carrinhos", metric: "Custo/Carrinho", metricFull: "Custo / Carrinho", kpi: "Meta Custo/Carrinho", dbKey: "CARRINHOS", taxa: "TAXA CARRINHO", cust: "CUSTO / CARRINHO", semResult: "sem carrinhos", crLabel: "CR (clique→carrinho)", chartKey: "Carrinhos", sub: "Adições ao carrinho no período" }
     : { singular: "lead", plural: "leads", metric: "CPL", metricFull: "CPL", kpi: "CPL Alvo", dbKey: "LEADS", taxa: "TAXA CONV.", cust: "CPL", semResult: "sem leads", crLabel: "CR (clique→lead)", chartKey: "Leads", sub: "Total do período" }
-  , [isComprasPanel, isVisitasPanel, isMiguelImoveisPanel, isMiguelPanel, isClinicaESpaPanel]);
+  , [isComprasPanel, isVisitasPanel, isMiguelImoveisPanel, isMiguelPanel, isClinicaESpaPanel, isKombuchaPanel]);
   const isSpecialPanel = isHotelPanel || isTertuliaPanel || isVarellaPanel;
   const { data: painelEspecial } = useQuery({
     queryKey: ["painel-especial", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim, chartAgrupamento],
@@ -1218,6 +1221,12 @@ function formatPercentage(value: number) {
                   leads: (resumo as { messagingConversationsStarted?: number }).messagingConversationsStarted ?? resumo.leads,
                   cpl: (resumo as { custoPorConversa?: number }).custoPorConversa ?? resumo.cpl,
                 }
+              : isKombuchaPanel
+              ? {
+                  ...resumo,
+                  conversasB2b: (resumo as { messagingConversationsStarted?: number }).messagingConversationsStarted ?? 0,
+                  custoPorConversaB2b: (resumo as { custoPorConversa?: number }).custoPorConversa ?? 0,
+                }
               : resumo
           }
           chartData={chartData}
@@ -1239,6 +1248,7 @@ function formatPercentage(value: number) {
           chartRevenueKey={chartRevenueKey}
           conversasEngajamentoMode={isClinicaESpaPanel}
           academyEngajamentoMode={isAcademyPanel}
+          kombuchaMode={isKombuchaPanel}
         />
       )}
 

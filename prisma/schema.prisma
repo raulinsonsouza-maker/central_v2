@@ -19,7 +19,7 @@ model Cliente {
   segmento                   String?
   orcamentoMidiaGoogleMensal Decimal?                @db.Decimal(14, 2)
   orcamentoMidiaMetaMensal   Decimal?                @db.Decimal(14, 2)
-  portalToken                String?                 @unique @default(dbgenerated("gen_random_uuid()::text"))
+  portalToken                String?                 @unique @default(dbgenerated("(gen_random_uuid())::text"))
   leadScoringEnabled         Boolean                 @default(false)
   perfilPanel                String?
   agregadosMensal            AgregadoMidiaMensal[]
@@ -81,6 +81,7 @@ model FatoMidiaDiario {
   alcance                         Int      @default(0)
   checkoutIniciado                Int      @default(0)
   profileVisits                   Int      @default(0)
+  addToCart                       Int      @default(0)
   campaignName                    String   @default("")
   campaignId                      String   @default("")
   cliente                         Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
@@ -153,10 +154,10 @@ model PautaReuniao {
   titulo     String
   descricao  String?
   status     String    @default("ABERTA")
-  prioridade String    @default("MEDIA")
-  dataFim    DateTime?
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  dataFim    DateTime?
+  prioridade String    @default("MEDIA")
   cliente    Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
 
   @@index([clienteId, ano, semanaIso])
@@ -164,29 +165,29 @@ model PautaReuniao {
 }
 
 model GoogleAdsCriativo {
-  id             String   @id @default(cuid())
-  clienteId      String
-  contaId        String?
-  adResourceName String
-  campaignId     String?
-  campaignName   String?
-  adGroupId      String?
-  adGroupName    String?
-  headline1      String?
-  headline2      String?
-  description    String?
-  finalUrls      String?
-  data           DateTime @db.Date
-  impressoes              Int      @default(0)
-  cliques                 Int      @default(0)
-  custoMicros             BigInt   @default(0)
-  conversoes              Int      @default(0)
-  conversaoValorMicros    BigInt   @default(0)
-  campaignStatus          String?
-  createdAt               DateTime @default(now())
-  updatedAt               DateTime @updatedAt
-  cliente                 Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
-  conta                   Conta?   @relation(fields: [contaId], references: [id])
+  id                   String   @id @default(cuid())
+  clienteId            String
+  contaId              String?
+  adResourceName       String
+  campaignId           String?
+  campaignName         String?
+  adGroupId            String?
+  adGroupName          String?
+  headline1            String?
+  headline2            String?
+  description          String?
+  finalUrls            String?
+  data                 DateTime @db.Date
+  impressoes           Int      @default(0)
+  cliques              Int      @default(0)
+  custoMicros          BigInt   @default(0)
+  conversoes           Int      @default(0)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+  conversaoValorMicros BigInt   @default(0)
+  campaignStatus       String?
+  cliente              Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  conta                Conta?   @relation(fields: [contaId], references: [id])
 
   @@unique([clienteId, adResourceName, data])
   @@index([clienteId, data])
@@ -217,38 +218,38 @@ model GoogleAdsCampanha {
 }
 
 model MetaAdsCriativo {
-  id                String   @id @default(cuid())
-  clienteId         String
-  contaId           String?
-  data              DateTime @db.Date
-  adId              String
-  creativeId        String?
-  adName            String
-  effectiveStatus   String?
-  campaignId        String?
-  campaignName      String?
-  adsetId           String?
-  adsetName         String?
-  campaignObjective String?
-  mediaType         String
-  imageUrl          String?
-  imageUrlFull      String?
-  videoId           String?
-  videoSourceUrl    String?
-  videoPictureUrl   String?
-  videoEmbedHtml    String?
-  body              String?
-  title             String?
+  id                              String   @id @default(cuid())
+  clienteId                       String
+  contaId                         String?
+  data                            DateTime @db.Date
+  adId                            String
+  creativeId                      String?
+  adName                          String
+  effectiveStatus                 String?
+  campaignObjective               String?
+  mediaType                       String
+  imageUrl                        String?
+  imageUrlFull                    String?
+  videoId                         String?
+  videoSourceUrl                  String?
+  videoPictureUrl                 String?
+  videoEmbedHtml                  String?
+  body                            String?
+  title                           String?
   spend                           Decimal  @default(0) @db.Decimal(14, 2)
   impressions                     Int      @default(0)
   clicks                          Int      @default(0)
-  leads                           Int      @default(0)
-  purchases                       Int      @default(0)
-  websitePurchasesConversionValue Decimal  @default(0) @db.Decimal(14, 2)
   ctr                             Decimal? @db.Decimal(8, 4)
   cpc                             Decimal? @db.Decimal(14, 2)
   createdAt                       DateTime @default(now())
   updatedAt                       DateTime @updatedAt
+  adsetId                         String?
+  adsetName                       String?
+  campaignId                      String?
+  campaignName                    String?
+  leads                           Int      @default(0)
+  purchases                       Int      @default(0)
+  websitePurchasesConversionValue Decimal  @default(0) @db.Decimal(14, 2)
   cliente                         Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
   conta                           Conta?   @relation(fields: [contaId], references: [id])
 

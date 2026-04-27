@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { findFatosByClienteAndPeriod } from "@/lib/repositories/fatosMidiaRepository";
 import { findClienteById } from "@/lib/repositories/clientesRepository";
 import { outcomeCountForFato } from "@/lib/metrics/fatoMidiaOutcome";
-import { isFlorien, isDor, isGranarolo } from "@/lib/clientProfiles";
+import { isFlorien, isDor, isGranarolo, isKombucha } from "@/lib/clientProfiles";
 import { startOfWeek, endOfWeek, getISOWeek, getYear } from "date-fns";
 
 const MONTH_ABBR = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
@@ -54,10 +54,13 @@ export async function GET(
   // For profile-visit clients, use profileVisits as the primary outcome metric
   const usesProfileVisits = isFlorien(cliente);
   const isComprasCliente = isDor(cliente) || isGranarolo(cliente);
+  const isKombuchaCliente = isKombucha(cliente);
   const getLeads = (f: (typeof fatos)[number]) =>
     usesProfileVisits && f.canal !== "GOOGLE"
       ? ((f as { profileVisits?: number }).profileVisits ?? 0)
-      : outcomeCountForFato(f.canal, f.leads, f.conversoes, undefined, isComprasCliente && f.canal !== "GOOGLE");
+      : isKombuchaCliente && f.canal !== "GOOGLE"
+        ? ((f as { addToCart?: number }).addToCart ?? 0)
+        : outcomeCountForFato(f.canal, f.leads, f.conversoes, undefined, isComprasCliente && f.canal !== "GOOGLE");
 
   if (agrupamento === "semanal") {
     const byWeek = new Map<

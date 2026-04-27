@@ -103,6 +103,8 @@ type DefaultPanelProps = {
     leadsForm?: number;
     profileVisits?: number;
     custoPorVisita?: number;
+    conversasB2b?: number;
+    custoPorConversaB2b?: number;
   };
   chartData: Record<string, string | number>[];
   /** Nome da série de conversões/leads no gráfico (ex.: "Conversões" no Google). */
@@ -135,6 +137,8 @@ type DefaultPanelProps = {
   miguelGoogleMode?: boolean;
   /** Quando true (Academy Americana), exibe linha extra de engajamento com Visitas ao Perfil e Custo por Visita. */
   academyEngajamentoMode?: boolean;
+  /** Quando true (Kombucha da Cá), usa labels de "Carrinho" e mostra card secundário de Conversas B2B. */
+  kombuchaMode?: boolean;
 };
 
 export function DefaultPanel({
@@ -158,11 +162,12 @@ export function DefaultPanel({
   miguelImoveisMode = false,
   miguelGoogleMode = false,
   academyEngajamentoMode = false,
+  kombuchaMode = false,
 }: DefaultPanelProps) {
   const isMensal = agrupamento === "mensal";
   const isDiario = agrupamento === "diario";
   const latestPeriod = latestFiveSeries[latestFiveSeries.length - 1]?.periodo;
-  const cplLabel = visitasMode ? "Custo/Visita" : comprasMode ? "Custo/Compra" : miguelImoveisMode ? "Custo/Result." : conversasMode ? "Custo/Conv." : "CPL";
+  const cplLabel = visitasMode ? "Custo/Visita" : comprasMode ? "Custo/Compra" : miguelImoveisMode ? "Custo/Result." : conversasMode ? "Custo/Conv." : kombuchaMode ? "Custo/Carrinho" : "CPL";
 
   const purchases = resumo.purchases ?? 0;
   const valorConversao = resumo.valorConversao ?? 0;
@@ -227,7 +232,7 @@ export function DefaultPanel({
             icon={DollarSign}
           />
           <KpiCard
-            title={canal === "google" ? "Conversões (Google Ads)" : comprasMode ? "Compras" : visitasMode ? "Visitas ao perfil" : miguelImoveisMode ? "Resultados (Total)" : conversasMode ? "Conversas" : "Leads"}
+            title={canal === "google" ? "Conversões (Google Ads)" : comprasMode ? "Compras" : visitasMode ? "Visitas ao perfil" : miguelImoveisMode ? "Resultados (Total)" : conversasMode ? "Conversas" : kombuchaMode ? "Adições ao Carrinho" : "Leads"}
             value={resumo.leads.toLocaleString("pt-BR")}
             sub={
               canal === "google"
@@ -240,14 +245,16 @@ export function DefaultPanel({
                       ? "Conversas iniciadas + cadastros via formulário no período"
                       : conversasMode
                         ? "Conversas por mensagem iniciadas no período"
-                        : "Total do período"
+                        : kombuchaMode
+                          ? "Adições ao carrinho atribuídas ao período"
+                          : "Total do período"
             }
             icon={Users}
           />
           <KpiCard
-            title={canal === "google" ? "Custo / conversão" : comprasMode ? "Custo / Compra" : visitasMode ? "Custo / Visita" : miguelImoveisMode ? "Custo / Resultado" : conversasMode ? "Custo / Conversa" : "CPL"}
+            title={canal === "google" ? "Custo / conversão" : comprasMode ? "Custo / Compra" : visitasMode ? "Custo / Visita" : miguelImoveisMode ? "Custo / Resultado" : conversasMode ? "Custo / Conversa" : kombuchaMode ? "Custo / Carrinho" : "CPL"}
             value={formatCurrency(resumo.cpl)}
-            sub={canal === "google" ? "Investimento ÷ conversões" : comprasMode ? "Investimento ÷ compras no site" : visitasMode ? "Investimento ÷ visitas ao perfil" : miguelImoveisMode ? "Investimento ÷ total de resultados (conversas + cadastros)" : conversasMode ? "Investimento ÷ conversas iniciadas" : "Custo por lead"}
+            sub={canal === "google" ? "Investimento ÷ conversões" : comprasMode ? "Investimento ÷ compras no site" : visitasMode ? "Investimento ÷ visitas ao perfil" : miguelImoveisMode ? "Investimento ÷ total de resultados (conversas + cadastros)" : conversasMode ? "Investimento ÷ conversas iniciadas" : kombuchaMode ? "Investimento ÷ adições ao carrinho" : "Custo por lead"}
             icon={Target}
             accentValue
           />
@@ -370,6 +377,28 @@ export function DefaultPanel({
             }
             sub="Taxa de entrega de visitas por mil impressões (eficiência de engajamento)"
             icon={TrendingUp}
+          />
+        </section>
+      )}
+
+      {/* KPI row extra — Conversas B2B (Kombucha da Cá) */}
+      {!ecommerceGoogleMode && kombuchaMode && (resumo.conversasB2b ?? 0) > 0 && (
+        <section className="grid gap-4 sm:grid-cols-2">
+          <KpiCard
+            title="Conversas B2B (Mensagem)"
+            value={(resumo.conversasB2b ?? 0).toLocaleString("pt-BR")}
+            sub="Conversas iniciadas via mensagem pelas campanhas B2B no período"
+            icon={MessageCircle}
+          />
+          <KpiCard
+            title="Custo / Conversa B2B"
+            value={
+              (resumo.conversasB2b ?? 0) > 0
+                ? formatCurrency(resumo.custoPorConversaB2b ?? 0)
+                : "—"
+            }
+            sub="Investimento ÷ conversas B2B iniciadas"
+            icon={Target}
           />
         </section>
       )}

@@ -5120,6 +5120,7 @@ export namespace Prisma {
     alcance: number | null
     checkoutIniciado: number | null
     profileVisits: number | null
+    addToCart: number | null
   }
 
   export type FatoMidiaDiarioSumAggregateOutputType = {
@@ -5140,6 +5141,7 @@ export namespace Prisma {
     alcance: number | null
     checkoutIniciado: number | null
     profileVisits: number | null
+    addToCart: number | null
   }
 
   export type FatoMidiaDiarioMinAggregateOutputType = {
@@ -5168,6 +5170,7 @@ export namespace Prisma {
     alcance: number | null
     checkoutIniciado: number | null
     profileVisits: number | null
+    addToCart: number | null
     campaignName: string | null
     campaignId: string | null
   }
@@ -5198,6 +5201,7 @@ export namespace Prisma {
     alcance: number | null
     checkoutIniciado: number | null
     profileVisits: number | null
+    addToCart: number | null
     campaignName: string | null
     campaignId: string | null
   }
@@ -5228,6 +5232,7 @@ export namespace Prisma {
     alcance: number
     checkoutIniciado: number
     profileVisits: number
+    addToCart: number
     campaignName: number
     campaignId: number
     _all: number
@@ -5252,6 +5257,7 @@ export namespace Prisma {
     alcance?: true
     checkoutIniciado?: true
     profileVisits?: true
+    addToCart?: true
   }
 
   export type FatoMidiaDiarioSumAggregateInputType = {
@@ -5272,6 +5278,7 @@ export namespace Prisma {
     alcance?: true
     checkoutIniciado?: true
     profileVisits?: true
+    addToCart?: true
   }
 
   export type FatoMidiaDiarioMinAggregateInputType = {
@@ -5300,6 +5307,7 @@ export namespace Prisma {
     alcance?: true
     checkoutIniciado?: true
     profileVisits?: true
+    addToCart?: true
     campaignName?: true
     campaignId?: true
   }
@@ -5330,6 +5338,7 @@ export namespace Prisma {
     alcance?: true
     checkoutIniciado?: true
     profileVisits?: true
+    addToCart?: true
     campaignName?: true
     campaignId?: true
   }
@@ -5360,6 +5369,7 @@ export namespace Prisma {
     alcance?: true
     checkoutIniciado?: true
     profileVisits?: true
+    addToCart?: true
     campaignName?: true
     campaignId?: true
     _all?: true
@@ -5477,6 +5487,7 @@ export namespace Prisma {
     alcance: number
     checkoutIniciado: number
     profileVisits: number
+    addToCart: number
     campaignName: string
     campaignId: string
     _count: FatoMidiaDiarioCountAggregateOutputType | null
@@ -5526,6 +5537,7 @@ export namespace Prisma {
     alcance?: boolean
     checkoutIniciado?: boolean
     profileVisits?: boolean
+    addToCart?: boolean
     campaignName?: boolean
     campaignId?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -5558,6 +5570,7 @@ export namespace Prisma {
     alcance?: boolean
     checkoutIniciado?: boolean
     profileVisits?: boolean
+    addToCart?: boolean
     campaignName?: boolean
     campaignId?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -5590,6 +5603,7 @@ export namespace Prisma {
     alcance?: boolean
     checkoutIniciado?: boolean
     profileVisits?: boolean
+    addToCart?: boolean
     campaignName?: boolean
     campaignId?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -5622,11 +5636,12 @@ export namespace Prisma {
     alcance?: boolean
     checkoutIniciado?: boolean
     profileVisits?: boolean
+    addToCart?: boolean
     campaignName?: boolean
     campaignId?: boolean
   }
 
-  export type FatoMidiaDiarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "canal" | "impressoes" | "cliques" | "leads" | "conversoes" | "investimento" | "cpl" | "rawRowHash" | "createdAt" | "updatedAt" | "contacts" | "costPerPurchase" | "messagingConversationsStarted" | "onFacebookLeads" | "purchases" | "websiteLeads" | "websitePurchaseRoas" | "websitePurchasesConversionValue" | "alcance" | "checkoutIniciado" | "profileVisits" | "campaignName" | "campaignId", ExtArgs["result"]["fatoMidiaDiario"]>
+  export type FatoMidiaDiarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "canal" | "impressoes" | "cliques" | "leads" | "conversoes" | "investimento" | "cpl" | "rawRowHash" | "createdAt" | "updatedAt" | "contacts" | "costPerPurchase" | "messagingConversationsStarted" | "onFacebookLeads" | "purchases" | "websiteLeads" | "websitePurchaseRoas" | "websitePurchasesConversionValue" | "alcance" | "checkoutIniciado" | "profileVisits" | "addToCart" | "campaignName" | "campaignId", ExtArgs["result"]["fatoMidiaDiario"]>
   export type FatoMidiaDiarioInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | FatoMidiaDiario$contaArgs<ExtArgs>
@@ -5672,6 +5687,7 @@ export namespace Prisma {
       alcance: number
       checkoutIniciado: number
       profileVisits: number
+      addToCart: number
       campaignName: string
       campaignId: string
     }, ExtArgs["result"]["fatoMidiaDiario"]>
@@ -6124,6 +6140,7 @@ export namespace Prisma {
     readonly alcance: FieldRef<"FatoMidiaDiario", 'Int'>
     readonly checkoutIniciado: FieldRef<"FatoMidiaDiario", 'Int'>
     readonly profileVisits: FieldRef<"FatoMidiaDiario", 'Int'>
+    readonly addToCart: FieldRef<"FatoMidiaDiario", 'Int'>
     readonly campaignName: FieldRef<"FatoMidiaDiario", 'String'>
     readonly campaignId: FieldRef<"FatoMidiaDiario", 'String'>
   }
@@ -10168,10 +10185,10 @@ export namespace Prisma {
     titulo: string | null
     descricao: string | null
     status: string | null
-    prioridade: string | null
-    dataFim: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    dataFim: Date | null
+    prioridade: string | null
   }
 
   export type PautaReuniaoMaxAggregateOutputType = {
@@ -10182,10 +10199,10 @@ export namespace Prisma {
     titulo: string | null
     descricao: string | null
     status: string | null
-    prioridade: string | null
-    dataFim: Date | null
     createdAt: Date | null
     updatedAt: Date | null
+    dataFim: Date | null
+    prioridade: string | null
   }
 
   export type PautaReuniaoCountAggregateOutputType = {
@@ -10196,10 +10213,10 @@ export namespace Prisma {
     titulo: number
     descricao: number
     status: number
-    prioridade: number
-    dataFim: number
     createdAt: number
     updatedAt: number
+    dataFim: number
+    prioridade: number
     _all: number
   }
 
@@ -10222,10 +10239,10 @@ export namespace Prisma {
     titulo?: true
     descricao?: true
     status?: true
-    prioridade?: true
-    dataFim?: true
     createdAt?: true
     updatedAt?: true
+    dataFim?: true
+    prioridade?: true
   }
 
   export type PautaReuniaoMaxAggregateInputType = {
@@ -10236,10 +10253,10 @@ export namespace Prisma {
     titulo?: true
     descricao?: true
     status?: true
-    prioridade?: true
-    dataFim?: true
     createdAt?: true
     updatedAt?: true
+    dataFim?: true
+    prioridade?: true
   }
 
   export type PautaReuniaoCountAggregateInputType = {
@@ -10250,10 +10267,10 @@ export namespace Prisma {
     titulo?: true
     descricao?: true
     status?: true
-    prioridade?: true
-    dataFim?: true
     createdAt?: true
     updatedAt?: true
+    dataFim?: true
+    prioridade?: true
     _all?: true
   }
 
@@ -10351,10 +10368,10 @@ export namespace Prisma {
     titulo: string
     descricao: string | null
     status: string
-    prioridade: string
-    dataFim: Date | null
     createdAt: Date
     updatedAt: Date
+    dataFim: Date | null
+    prioridade: string
     _count: PautaReuniaoCountAggregateOutputType | null
     _avg: PautaReuniaoAvgAggregateOutputType | null
     _sum: PautaReuniaoSumAggregateOutputType | null
@@ -10384,10 +10401,10 @@ export namespace Prisma {
     titulo?: boolean
     descricao?: boolean
     status?: boolean
-    prioridade?: boolean
-    dataFim?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dataFim?: boolean
+    prioridade?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pautaReuniao"]>
 
@@ -10399,10 +10416,10 @@ export namespace Prisma {
     titulo?: boolean
     descricao?: boolean
     status?: boolean
-    prioridade?: boolean
-    dataFim?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dataFim?: boolean
+    prioridade?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pautaReuniao"]>
 
@@ -10414,10 +10431,10 @@ export namespace Prisma {
     titulo?: boolean
     descricao?: boolean
     status?: boolean
-    prioridade?: boolean
-    dataFim?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dataFim?: boolean
+    prioridade?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["pautaReuniao"]>
 
@@ -10429,13 +10446,13 @@ export namespace Prisma {
     titulo?: boolean
     descricao?: boolean
     status?: boolean
-    prioridade?: boolean
-    dataFim?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    dataFim?: boolean
+    prioridade?: boolean
   }
 
-  export type PautaReuniaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "semanaIso" | "ano" | "titulo" | "descricao" | "status" | "prioridade" | "dataFim" | "createdAt" | "updatedAt", ExtArgs["result"]["pautaReuniao"]>
+  export type PautaReuniaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "semanaIso" | "ano" | "titulo" | "descricao" | "status" | "createdAt" | "updatedAt" | "dataFim" | "prioridade", ExtArgs["result"]["pautaReuniao"]>
   export type PautaReuniaoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
   }
@@ -10459,10 +10476,10 @@ export namespace Prisma {
       titulo: string
       descricao: string | null
       status: string
-      prioridade: string
-      dataFim: Date | null
       createdAt: Date
       updatedAt: Date
+      dataFim: Date | null
+      prioridade: string
     }, ExtArgs["result"]["pautaReuniao"]>
     composites: {}
   }
@@ -10894,10 +10911,10 @@ export namespace Prisma {
     readonly titulo: FieldRef<"PautaReuniao", 'String'>
     readonly descricao: FieldRef<"PautaReuniao", 'String'>
     readonly status: FieldRef<"PautaReuniao", 'String'>
-    readonly prioridade: FieldRef<"PautaReuniao", 'String'>
-    readonly dataFim: FieldRef<"PautaReuniao", 'DateTime'>
     readonly createdAt: FieldRef<"PautaReuniao", 'DateTime'>
     readonly updatedAt: FieldRef<"PautaReuniao", 'DateTime'>
+    readonly dataFim: FieldRef<"PautaReuniao", 'DateTime'>
+    readonly prioridade: FieldRef<"PautaReuniao", 'String'>
   }
     
 
@@ -11358,10 +11375,10 @@ export namespace Prisma {
     cliques: number | null
     custoMicros: bigint | null
     conversoes: number | null
-    conversaoValorMicros: bigint | null
-    campaignStatus: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    conversaoValorMicros: bigint | null
+    campaignStatus: string | null
   }
 
   export type GoogleAdsCriativoMaxAggregateOutputType = {
@@ -11382,10 +11399,10 @@ export namespace Prisma {
     cliques: number | null
     custoMicros: bigint | null
     conversoes: number | null
-    conversaoValorMicros: bigint | null
-    campaignStatus: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    conversaoValorMicros: bigint | null
+    campaignStatus: string | null
   }
 
   export type GoogleAdsCriativoCountAggregateOutputType = {
@@ -11406,10 +11423,10 @@ export namespace Prisma {
     cliques: number
     custoMicros: number
     conversoes: number
-    conversaoValorMicros: number
-    campaignStatus: number
     createdAt: number
     updatedAt: number
+    conversaoValorMicros: number
+    campaignStatus: number
     _all: number
   }
 
@@ -11448,10 +11465,10 @@ export namespace Prisma {
     cliques?: true
     custoMicros?: true
     conversoes?: true
-    conversaoValorMicros?: true
-    campaignStatus?: true
     createdAt?: true
     updatedAt?: true
+    conversaoValorMicros?: true
+    campaignStatus?: true
   }
 
   export type GoogleAdsCriativoMaxAggregateInputType = {
@@ -11472,10 +11489,10 @@ export namespace Prisma {
     cliques?: true
     custoMicros?: true
     conversoes?: true
-    conversaoValorMicros?: true
-    campaignStatus?: true
     createdAt?: true
     updatedAt?: true
+    conversaoValorMicros?: true
+    campaignStatus?: true
   }
 
   export type GoogleAdsCriativoCountAggregateInputType = {
@@ -11496,10 +11513,10 @@ export namespace Prisma {
     cliques?: true
     custoMicros?: true
     conversoes?: true
-    conversaoValorMicros?: true
-    campaignStatus?: true
     createdAt?: true
     updatedAt?: true
+    conversaoValorMicros?: true
+    campaignStatus?: true
     _all?: true
   }
 
@@ -11607,10 +11624,10 @@ export namespace Prisma {
     cliques: number
     custoMicros: bigint
     conversoes: number
-    conversaoValorMicros: bigint
-    campaignStatus: string | null
     createdAt: Date
     updatedAt: Date
+    conversaoValorMicros: bigint
+    campaignStatus: string | null
     _count: GoogleAdsCriativoCountAggregateOutputType | null
     _avg: GoogleAdsCriativoAvgAggregateOutputType | null
     _sum: GoogleAdsCriativoSumAggregateOutputType | null
@@ -11650,10 +11667,10 @@ export namespace Prisma {
     cliques?: boolean
     custoMicros?: boolean
     conversoes?: boolean
-    conversaoValorMicros?: boolean
-    campaignStatus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    conversaoValorMicros?: boolean
+    campaignStatus?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | GoogleAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["googleAdsCriativo"]>
@@ -11676,10 +11693,10 @@ export namespace Prisma {
     cliques?: boolean
     custoMicros?: boolean
     conversoes?: boolean
-    conversaoValorMicros?: boolean
-    campaignStatus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    conversaoValorMicros?: boolean
+    campaignStatus?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | GoogleAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["googleAdsCriativo"]>
@@ -11702,10 +11719,10 @@ export namespace Prisma {
     cliques?: boolean
     custoMicros?: boolean
     conversoes?: boolean
-    conversaoValorMicros?: boolean
-    campaignStatus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    conversaoValorMicros?: boolean
+    campaignStatus?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | GoogleAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["googleAdsCriativo"]>
@@ -11728,13 +11745,13 @@ export namespace Prisma {
     cliques?: boolean
     custoMicros?: boolean
     conversoes?: boolean
-    conversaoValorMicros?: boolean
-    campaignStatus?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    conversaoValorMicros?: boolean
+    campaignStatus?: boolean
   }
 
-  export type GoogleAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "adResourceName" | "campaignId" | "campaignName" | "adGroupId" | "adGroupName" | "headline1" | "headline2" | "description" | "finalUrls" | "data" | "impressoes" | "cliques" | "custoMicros" | "conversoes" | "conversaoValorMicros" | "campaignStatus" | "createdAt" | "updatedAt", ExtArgs["result"]["googleAdsCriativo"]>
+  export type GoogleAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "adResourceName" | "campaignId" | "campaignName" | "adGroupId" | "adGroupName" | "headline1" | "headline2" | "description" | "finalUrls" | "data" | "impressoes" | "cliques" | "custoMicros" | "conversoes" | "createdAt" | "updatedAt" | "conversaoValorMicros" | "campaignStatus", ExtArgs["result"]["googleAdsCriativo"]>
   export type GoogleAdsCriativoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | GoogleAdsCriativo$contaArgs<ExtArgs>
@@ -11772,10 +11789,10 @@ export namespace Prisma {
       cliques: number
       custoMicros: bigint
       conversoes: number
-      conversaoValorMicros: bigint
-      campaignStatus: string | null
       createdAt: Date
       updatedAt: Date
+      conversaoValorMicros: bigint
+      campaignStatus: string | null
     }, ExtArgs["result"]["googleAdsCriativo"]>
     composites: {}
   }
@@ -12218,10 +12235,10 @@ export namespace Prisma {
     readonly cliques: FieldRef<"GoogleAdsCriativo", 'Int'>
     readonly custoMicros: FieldRef<"GoogleAdsCriativo", 'BigInt'>
     readonly conversoes: FieldRef<"GoogleAdsCriativo", 'Int'>
-    readonly conversaoValorMicros: FieldRef<"GoogleAdsCriativo", 'BigInt'>
-    readonly campaignStatus: FieldRef<"GoogleAdsCriativo", 'String'>
     readonly createdAt: FieldRef<"GoogleAdsCriativo", 'DateTime'>
     readonly updatedAt: FieldRef<"GoogleAdsCriativo", 'DateTime'>
+    readonly conversaoValorMicros: FieldRef<"GoogleAdsCriativo", 'BigInt'>
+    readonly campaignStatus: FieldRef<"GoogleAdsCriativo", 'String'>
   }
     
 
@@ -13953,22 +13970,22 @@ export namespace Prisma {
     spend: Decimal | null
     impressions: number | null
     clicks: number | null
+    ctr: Decimal | null
+    cpc: Decimal | null
     leads: number | null
     purchases: number | null
     websitePurchasesConversionValue: Decimal | null
-    ctr: Decimal | null
-    cpc: Decimal | null
   }
 
   export type MetaAdsCriativoSumAggregateOutputType = {
     spend: Decimal | null
     impressions: number | null
     clicks: number | null
+    ctr: Decimal | null
+    cpc: Decimal | null
     leads: number | null
     purchases: number | null
     websitePurchasesConversionValue: Decimal | null
-    ctr: Decimal | null
-    cpc: Decimal | null
   }
 
   export type MetaAdsCriativoMinAggregateOutputType = {
@@ -13980,10 +13997,6 @@ export namespace Prisma {
     creativeId: string | null
     adName: string | null
     effectiveStatus: string | null
-    campaignId: string | null
-    campaignName: string | null
-    adsetId: string | null
-    adsetName: string | null
     campaignObjective: string | null
     mediaType: string | null
     imageUrl: string | null
@@ -13997,13 +14010,17 @@ export namespace Prisma {
     spend: Decimal | null
     impressions: number | null
     clicks: number | null
-    leads: number | null
-    purchases: number | null
-    websitePurchasesConversionValue: Decimal | null
     ctr: Decimal | null
     cpc: Decimal | null
     createdAt: Date | null
     updatedAt: Date | null
+    adsetId: string | null
+    adsetName: string | null
+    campaignId: string | null
+    campaignName: string | null
+    leads: number | null
+    purchases: number | null
+    websitePurchasesConversionValue: Decimal | null
   }
 
   export type MetaAdsCriativoMaxAggregateOutputType = {
@@ -14015,10 +14032,6 @@ export namespace Prisma {
     creativeId: string | null
     adName: string | null
     effectiveStatus: string | null
-    campaignId: string | null
-    campaignName: string | null
-    adsetId: string | null
-    adsetName: string | null
     campaignObjective: string | null
     mediaType: string | null
     imageUrl: string | null
@@ -14032,13 +14045,17 @@ export namespace Prisma {
     spend: Decimal | null
     impressions: number | null
     clicks: number | null
-    leads: number | null
-    purchases: number | null
-    websitePurchasesConversionValue: Decimal | null
     ctr: Decimal | null
     cpc: Decimal | null
     createdAt: Date | null
     updatedAt: Date | null
+    adsetId: string | null
+    adsetName: string | null
+    campaignId: string | null
+    campaignName: string | null
+    leads: number | null
+    purchases: number | null
+    websitePurchasesConversionValue: Decimal | null
   }
 
   export type MetaAdsCriativoCountAggregateOutputType = {
@@ -14050,10 +14067,6 @@ export namespace Prisma {
     creativeId: number
     adName: number
     effectiveStatus: number
-    campaignId: number
-    campaignName: number
-    adsetId: number
-    adsetName: number
     campaignObjective: number
     mediaType: number
     imageUrl: number
@@ -14067,13 +14080,17 @@ export namespace Prisma {
     spend: number
     impressions: number
     clicks: number
-    leads: number
-    purchases: number
-    websitePurchasesConversionValue: number
     ctr: number
     cpc: number
     createdAt: number
     updatedAt: number
+    adsetId: number
+    adsetName: number
+    campaignId: number
+    campaignName: number
+    leads: number
+    purchases: number
+    websitePurchasesConversionValue: number
     _all: number
   }
 
@@ -14082,22 +14099,22 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
+    ctr?: true
+    cpc?: true
     leads?: true
     purchases?: true
     websitePurchasesConversionValue?: true
-    ctr?: true
-    cpc?: true
   }
 
   export type MetaAdsCriativoSumAggregateInputType = {
     spend?: true
     impressions?: true
     clicks?: true
+    ctr?: true
+    cpc?: true
     leads?: true
     purchases?: true
     websitePurchasesConversionValue?: true
-    ctr?: true
-    cpc?: true
   }
 
   export type MetaAdsCriativoMinAggregateInputType = {
@@ -14109,10 +14126,6 @@ export namespace Prisma {
     creativeId?: true
     adName?: true
     effectiveStatus?: true
-    campaignId?: true
-    campaignName?: true
-    adsetId?: true
-    adsetName?: true
     campaignObjective?: true
     mediaType?: true
     imageUrl?: true
@@ -14126,13 +14139,17 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
-    leads?: true
-    purchases?: true
-    websitePurchasesConversionValue?: true
     ctr?: true
     cpc?: true
     createdAt?: true
     updatedAt?: true
+    adsetId?: true
+    adsetName?: true
+    campaignId?: true
+    campaignName?: true
+    leads?: true
+    purchases?: true
+    websitePurchasesConversionValue?: true
   }
 
   export type MetaAdsCriativoMaxAggregateInputType = {
@@ -14144,10 +14161,6 @@ export namespace Prisma {
     creativeId?: true
     adName?: true
     effectiveStatus?: true
-    campaignId?: true
-    campaignName?: true
-    adsetId?: true
-    adsetName?: true
     campaignObjective?: true
     mediaType?: true
     imageUrl?: true
@@ -14161,13 +14174,17 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
-    leads?: true
-    purchases?: true
-    websitePurchasesConversionValue?: true
     ctr?: true
     cpc?: true
     createdAt?: true
     updatedAt?: true
+    adsetId?: true
+    adsetName?: true
+    campaignId?: true
+    campaignName?: true
+    leads?: true
+    purchases?: true
+    websitePurchasesConversionValue?: true
   }
 
   export type MetaAdsCriativoCountAggregateInputType = {
@@ -14179,10 +14196,6 @@ export namespace Prisma {
     creativeId?: true
     adName?: true
     effectiveStatus?: true
-    campaignId?: true
-    campaignName?: true
-    adsetId?: true
-    adsetName?: true
     campaignObjective?: true
     mediaType?: true
     imageUrl?: true
@@ -14196,13 +14209,17 @@ export namespace Prisma {
     spend?: true
     impressions?: true
     clicks?: true
-    leads?: true
-    purchases?: true
-    websitePurchasesConversionValue?: true
     ctr?: true
     cpc?: true
     createdAt?: true
     updatedAt?: true
+    adsetId?: true
+    adsetName?: true
+    campaignId?: true
+    campaignName?: true
+    leads?: true
+    purchases?: true
+    websitePurchasesConversionValue?: true
     _all?: true
   }
 
@@ -14301,10 +14318,6 @@ export namespace Prisma {
     creativeId: string | null
     adName: string
     effectiveStatus: string | null
-    campaignId: string | null
-    campaignName: string | null
-    adsetId: string | null
-    adsetName: string | null
     campaignObjective: string | null
     mediaType: string
     imageUrl: string | null
@@ -14318,13 +14331,17 @@ export namespace Prisma {
     spend: Decimal
     impressions: number
     clicks: number
-    leads: number
-    purchases: number
-    websitePurchasesConversionValue: Decimal
     ctr: Decimal | null
     cpc: Decimal | null
     createdAt: Date
     updatedAt: Date
+    adsetId: string | null
+    adsetName: string | null
+    campaignId: string | null
+    campaignName: string | null
+    leads: number
+    purchases: number
+    websitePurchasesConversionValue: Decimal
     _count: MetaAdsCriativoCountAggregateOutputType | null
     _avg: MetaAdsCriativoAvgAggregateOutputType | null
     _sum: MetaAdsCriativoSumAggregateOutputType | null
@@ -14355,10 +14372,6 @@ export namespace Prisma {
     creativeId?: boolean
     adName?: boolean
     effectiveStatus?: boolean
-    campaignId?: boolean
-    campaignName?: boolean
-    adsetId?: boolean
-    adsetName?: boolean
     campaignObjective?: boolean
     mediaType?: boolean
     imageUrl?: boolean
@@ -14372,13 +14385,17 @@ export namespace Prisma {
     spend?: boolean
     impressions?: boolean
     clicks?: boolean
-    leads?: boolean
-    purchases?: boolean
-    websitePurchasesConversionValue?: boolean
     ctr?: boolean
     cpc?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    leads?: boolean
+    purchases?: boolean
+    websitePurchasesConversionValue?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["metaAdsCriativo"]>
@@ -14392,10 +14409,6 @@ export namespace Prisma {
     creativeId?: boolean
     adName?: boolean
     effectiveStatus?: boolean
-    campaignId?: boolean
-    campaignName?: boolean
-    adsetId?: boolean
-    adsetName?: boolean
     campaignObjective?: boolean
     mediaType?: boolean
     imageUrl?: boolean
@@ -14409,13 +14422,17 @@ export namespace Prisma {
     spend?: boolean
     impressions?: boolean
     clicks?: boolean
-    leads?: boolean
-    purchases?: boolean
-    websitePurchasesConversionValue?: boolean
     ctr?: boolean
     cpc?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    leads?: boolean
+    purchases?: boolean
+    websitePurchasesConversionValue?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["metaAdsCriativo"]>
@@ -14429,10 +14446,6 @@ export namespace Prisma {
     creativeId?: boolean
     adName?: boolean
     effectiveStatus?: boolean
-    campaignId?: boolean
-    campaignName?: boolean
-    adsetId?: boolean
-    adsetName?: boolean
     campaignObjective?: boolean
     mediaType?: boolean
     imageUrl?: boolean
@@ -14446,13 +14459,17 @@ export namespace Prisma {
     spend?: boolean
     impressions?: boolean
     clicks?: boolean
-    leads?: boolean
-    purchases?: boolean
-    websitePurchasesConversionValue?: boolean
     ctr?: boolean
     cpc?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    leads?: boolean
+    purchases?: boolean
+    websitePurchasesConversionValue?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["metaAdsCriativo"]>
@@ -14466,10 +14483,6 @@ export namespace Prisma {
     creativeId?: boolean
     adName?: boolean
     effectiveStatus?: boolean
-    campaignId?: boolean
-    campaignName?: boolean
-    adsetId?: boolean
-    adsetName?: boolean
     campaignObjective?: boolean
     mediaType?: boolean
     imageUrl?: boolean
@@ -14483,16 +14496,20 @@ export namespace Prisma {
     spend?: boolean
     impressions?: boolean
     clicks?: boolean
-    leads?: boolean
-    purchases?: boolean
-    websitePurchasesConversionValue?: boolean
     ctr?: boolean
     cpc?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    leads?: boolean
+    purchases?: boolean
+    websitePurchasesConversionValue?: boolean
   }
 
-  export type MetaAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "adId" | "creativeId" | "adName" | "effectiveStatus" | "campaignId" | "campaignName" | "adsetId" | "adsetName" | "campaignObjective" | "mediaType" | "imageUrl" | "imageUrlFull" | "videoId" | "videoSourceUrl" | "videoPictureUrl" | "videoEmbedHtml" | "body" | "title" | "spend" | "impressions" | "clicks" | "leads" | "purchases" | "websitePurchasesConversionValue" | "ctr" | "cpc" | "createdAt" | "updatedAt", ExtArgs["result"]["metaAdsCriativo"]>
+  export type MetaAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "adId" | "creativeId" | "adName" | "effectiveStatus" | "campaignObjective" | "mediaType" | "imageUrl" | "imageUrlFull" | "videoId" | "videoSourceUrl" | "videoPictureUrl" | "videoEmbedHtml" | "body" | "title" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "createdAt" | "updatedAt" | "adsetId" | "adsetName" | "campaignId" | "campaignName" | "leads" | "purchases" | "websitePurchasesConversionValue", ExtArgs["result"]["metaAdsCriativo"]>
   export type MetaAdsCriativoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
@@ -14521,10 +14538,6 @@ export namespace Prisma {
       creativeId: string | null
       adName: string
       effectiveStatus: string | null
-      campaignId: string | null
-      campaignName: string | null
-      adsetId: string | null
-      adsetName: string | null
       campaignObjective: string | null
       mediaType: string
       imageUrl: string | null
@@ -14538,13 +14551,17 @@ export namespace Prisma {
       spend: Prisma.Decimal
       impressions: number
       clicks: number
-      leads: number
-      purchases: number
-      websitePurchasesConversionValue: Prisma.Decimal
       ctr: Prisma.Decimal | null
       cpc: Prisma.Decimal | null
       createdAt: Date
       updatedAt: Date
+      adsetId: string | null
+      adsetName: string | null
+      campaignId: string | null
+      campaignName: string | null
+      leads: number
+      purchases: number
+      websitePurchasesConversionValue: Prisma.Decimal
     }, ExtArgs["result"]["metaAdsCriativo"]>
     composites: {}
   }
@@ -14978,10 +14995,6 @@ export namespace Prisma {
     readonly creativeId: FieldRef<"MetaAdsCriativo", 'String'>
     readonly adName: FieldRef<"MetaAdsCriativo", 'String'>
     readonly effectiveStatus: FieldRef<"MetaAdsCriativo", 'String'>
-    readonly campaignId: FieldRef<"MetaAdsCriativo", 'String'>
-    readonly campaignName: FieldRef<"MetaAdsCriativo", 'String'>
-    readonly adsetId: FieldRef<"MetaAdsCriativo", 'String'>
-    readonly adsetName: FieldRef<"MetaAdsCriativo", 'String'>
     readonly campaignObjective: FieldRef<"MetaAdsCriativo", 'String'>
     readonly mediaType: FieldRef<"MetaAdsCriativo", 'String'>
     readonly imageUrl: FieldRef<"MetaAdsCriativo", 'String'>
@@ -14995,13 +15008,17 @@ export namespace Prisma {
     readonly spend: FieldRef<"MetaAdsCriativo", 'Decimal'>
     readonly impressions: FieldRef<"MetaAdsCriativo", 'Int'>
     readonly clicks: FieldRef<"MetaAdsCriativo", 'Int'>
-    readonly leads: FieldRef<"MetaAdsCriativo", 'Int'>
-    readonly purchases: FieldRef<"MetaAdsCriativo", 'Int'>
-    readonly websitePurchasesConversionValue: FieldRef<"MetaAdsCriativo", 'Decimal'>
     readonly ctr: FieldRef<"MetaAdsCriativo", 'Decimal'>
     readonly cpc: FieldRef<"MetaAdsCriativo", 'Decimal'>
     readonly createdAt: FieldRef<"MetaAdsCriativo", 'DateTime'>
     readonly updatedAt: FieldRef<"MetaAdsCriativo", 'DateTime'>
+    readonly adsetId: FieldRef<"MetaAdsCriativo", 'String'>
+    readonly adsetName: FieldRef<"MetaAdsCriativo", 'String'>
+    readonly campaignId: FieldRef<"MetaAdsCriativo", 'String'>
+    readonly campaignName: FieldRef<"MetaAdsCriativo", 'String'>
+    readonly leads: FieldRef<"MetaAdsCriativo", 'Int'>
+    readonly purchases: FieldRef<"MetaAdsCriativo", 'Int'>
+    readonly websitePurchasesConversionValue: FieldRef<"MetaAdsCriativo", 'Decimal'>
   }
     
 
@@ -21185,6 +21202,7 @@ export namespace Prisma {
     alcance: 'alcance',
     checkoutIniciado: 'checkoutIniciado',
     profileVisits: 'profileVisits',
+    addToCart: 'addToCart',
     campaignName: 'campaignName',
     campaignId: 'campaignId'
   };
@@ -21252,10 +21270,10 @@ export namespace Prisma {
     titulo: 'titulo',
     descricao: 'descricao',
     status: 'status',
-    prioridade: 'prioridade',
-    dataFim: 'dataFim',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    dataFim: 'dataFim',
+    prioridade: 'prioridade'
   };
 
   export type PautaReuniaoScalarFieldEnum = (typeof PautaReuniaoScalarFieldEnum)[keyof typeof PautaReuniaoScalarFieldEnum]
@@ -21279,10 +21297,10 @@ export namespace Prisma {
     cliques: 'cliques',
     custoMicros: 'custoMicros',
     conversoes: 'conversoes',
-    conversaoValorMicros: 'conversaoValorMicros',
-    campaignStatus: 'campaignStatus',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    conversaoValorMicros: 'conversaoValorMicros',
+    campaignStatus: 'campaignStatus'
   };
 
   export type GoogleAdsCriativoScalarFieldEnum = (typeof GoogleAdsCriativoScalarFieldEnum)[keyof typeof GoogleAdsCriativoScalarFieldEnum]
@@ -21319,10 +21337,6 @@ export namespace Prisma {
     creativeId: 'creativeId',
     adName: 'adName',
     effectiveStatus: 'effectiveStatus',
-    campaignId: 'campaignId',
-    campaignName: 'campaignName',
-    adsetId: 'adsetId',
-    adsetName: 'adsetName',
     campaignObjective: 'campaignObjective',
     mediaType: 'mediaType',
     imageUrl: 'imageUrl',
@@ -21336,13 +21350,17 @@ export namespace Prisma {
     spend: 'spend',
     impressions: 'impressions',
     clicks: 'clicks',
-    leads: 'leads',
-    purchases: 'purchases',
-    websitePurchasesConversionValue: 'websitePurchasesConversionValue',
     ctr: 'ctr',
     cpc: 'cpc',
     createdAt: 'createdAt',
-    updatedAt: 'updatedAt'
+    updatedAt: 'updatedAt',
+    adsetId: 'adsetId',
+    adsetName: 'adsetName',
+    campaignId: 'campaignId',
+    campaignName: 'campaignName',
+    leads: 'leads',
+    purchases: 'purchases',
+    websitePurchasesConversionValue: 'websitePurchasesConversionValue'
   };
 
   export type MetaAdsCriativoScalarFieldEnum = (typeof MetaAdsCriativoScalarFieldEnum)[keyof typeof MetaAdsCriativoScalarFieldEnum]
@@ -21832,6 +21850,7 @@ export namespace Prisma {
     alcance?: IntFilter<"FatoMidiaDiario"> | number
     checkoutIniciado?: IntFilter<"FatoMidiaDiario"> | number
     profileVisits?: IntFilter<"FatoMidiaDiario"> | number
+    addToCart?: IntFilter<"FatoMidiaDiario"> | number
     campaignName?: StringFilter<"FatoMidiaDiario"> | string
     campaignId?: StringFilter<"FatoMidiaDiario"> | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -21864,6 +21883,7 @@ export namespace Prisma {
     alcance?: SortOrder
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
+    addToCart?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
@@ -21900,6 +21920,7 @@ export namespace Prisma {
     alcance?: IntFilter<"FatoMidiaDiario"> | number
     checkoutIniciado?: IntFilter<"FatoMidiaDiario"> | number
     profileVisits?: IntFilter<"FatoMidiaDiario"> | number
+    addToCart?: IntFilter<"FatoMidiaDiario"> | number
     campaignName?: StringFilter<"FatoMidiaDiario"> | string
     campaignId?: StringFilter<"FatoMidiaDiario"> | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -21932,6 +21953,7 @@ export namespace Prisma {
     alcance?: SortOrder
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
+    addToCart?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
     _count?: FatoMidiaDiarioCountOrderByAggregateInput
@@ -21970,6 +21992,7 @@ export namespace Prisma {
     alcance?: IntWithAggregatesFilter<"FatoMidiaDiario"> | number
     checkoutIniciado?: IntWithAggregatesFilter<"FatoMidiaDiario"> | number
     profileVisits?: IntWithAggregatesFilter<"FatoMidiaDiario"> | number
+    addToCart?: IntWithAggregatesFilter<"FatoMidiaDiario"> | number
     campaignName?: StringWithAggregatesFilter<"FatoMidiaDiario"> | string
     campaignId?: StringWithAggregatesFilter<"FatoMidiaDiario"> | string
   }
@@ -22253,10 +22276,10 @@ export namespace Prisma {
     titulo?: StringFilter<"PautaReuniao"> | string
     descricao?: StringNullableFilter<"PautaReuniao"> | string | null
     status?: StringFilter<"PautaReuniao"> | string
-    prioridade?: StringFilter<"PautaReuniao"> | string
-    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
     createdAt?: DateTimeFilter<"PautaReuniao"> | Date | string
     updatedAt?: DateTimeFilter<"PautaReuniao"> | Date | string
+    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
+    prioridade?: StringFilter<"PautaReuniao"> | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
   }
 
@@ -22268,10 +22291,10 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrderInput | SortOrder
     status?: SortOrder
-    prioridade?: SortOrder
-    dataFim?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dataFim?: SortOrderInput | SortOrder
+    prioridade?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
   }
 
@@ -22286,10 +22309,10 @@ export namespace Prisma {
     titulo?: StringFilter<"PautaReuniao"> | string
     descricao?: StringNullableFilter<"PautaReuniao"> | string | null
     status?: StringFilter<"PautaReuniao"> | string
-    prioridade?: StringFilter<"PautaReuniao"> | string
-    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
     createdAt?: DateTimeFilter<"PautaReuniao"> | Date | string
     updatedAt?: DateTimeFilter<"PautaReuniao"> | Date | string
+    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
+    prioridade?: StringFilter<"PautaReuniao"> | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
   }, "id">
 
@@ -22301,10 +22324,10 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrderInput | SortOrder
     status?: SortOrder
-    prioridade?: SortOrder
-    dataFim?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dataFim?: SortOrderInput | SortOrder
+    prioridade?: SortOrder
     _count?: PautaReuniaoCountOrderByAggregateInput
     _avg?: PautaReuniaoAvgOrderByAggregateInput
     _max?: PautaReuniaoMaxOrderByAggregateInput
@@ -22323,10 +22346,10 @@ export namespace Prisma {
     titulo?: StringWithAggregatesFilter<"PautaReuniao"> | string
     descricao?: StringNullableWithAggregatesFilter<"PautaReuniao"> | string | null
     status?: StringWithAggregatesFilter<"PautaReuniao"> | string
-    prioridade?: StringWithAggregatesFilter<"PautaReuniao"> | string
-    dataFim?: DateTimeNullableWithAggregatesFilter<"PautaReuniao"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"PautaReuniao"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"PautaReuniao"> | Date | string
+    dataFim?: DateTimeNullableWithAggregatesFilter<"PautaReuniao"> | Date | string | null
+    prioridade?: StringWithAggregatesFilter<"PautaReuniao"> | string
   }
 
   export type GoogleAdsCriativoWhereInput = {
@@ -22350,10 +22373,10 @@ export namespace Prisma {
     cliques?: IntFilter<"GoogleAdsCriativo"> | number
     custoMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     conversoes?: IntFilter<"GoogleAdsCriativo"> | number
-    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
-    campaignStatus?: StringNullableFilter<"GoogleAdsCriativo"> | string | null
     createdAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
+    campaignStatus?: StringNullableFilter<"GoogleAdsCriativo"> | string | null
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     conta?: XOR<ContaNullableScalarRelationFilter, ContaWhereInput> | null
   }
@@ -22376,10 +22399,10 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
-    conversaoValorMicros?: SortOrder
-    campaignStatus?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    conversaoValorMicros?: SortOrder
+    campaignStatus?: SortOrderInput | SortOrder
     cliente?: ClienteOrderByWithRelationInput
     conta?: ContaOrderByWithRelationInput
   }
@@ -22406,10 +22429,10 @@ export namespace Prisma {
     cliques?: IntFilter<"GoogleAdsCriativo"> | number
     custoMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     conversoes?: IntFilter<"GoogleAdsCriativo"> | number
-    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
-    campaignStatus?: StringNullableFilter<"GoogleAdsCriativo"> | string | null
     createdAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
+    campaignStatus?: StringNullableFilter<"GoogleAdsCriativo"> | string | null
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     conta?: XOR<ContaNullableScalarRelationFilter, ContaWhereInput> | null
   }, "id" | "clienteId_adResourceName_data">
@@ -22432,10 +22455,10 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
-    conversaoValorMicros?: SortOrder
-    campaignStatus?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    conversaoValorMicros?: SortOrder
+    campaignStatus?: SortOrderInput | SortOrder
     _count?: GoogleAdsCriativoCountOrderByAggregateInput
     _avg?: GoogleAdsCriativoAvgOrderByAggregateInput
     _max?: GoogleAdsCriativoMaxOrderByAggregateInput
@@ -22464,10 +22487,10 @@ export namespace Prisma {
     cliques?: IntWithAggregatesFilter<"GoogleAdsCriativo"> | number
     custoMicros?: BigIntWithAggregatesFilter<"GoogleAdsCriativo"> | bigint | number
     conversoes?: IntWithAggregatesFilter<"GoogleAdsCriativo"> | number
-    conversaoValorMicros?: BigIntWithAggregatesFilter<"GoogleAdsCriativo"> | bigint | number
-    campaignStatus?: StringNullableWithAggregatesFilter<"GoogleAdsCriativo"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"GoogleAdsCriativo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GoogleAdsCriativo"> | Date | string
+    conversaoValorMicros?: BigIntWithAggregatesFilter<"GoogleAdsCriativo"> | bigint | number
+    campaignStatus?: StringNullableWithAggregatesFilter<"GoogleAdsCriativo"> | string | null
   }
 
   export type GoogleAdsCampanhaWhereInput = {
@@ -22598,10 +22621,6 @@ export namespace Prisma {
     creativeId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     adName?: StringFilter<"MetaAdsCriativo"> | string
     effectiveStatus?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     campaignObjective?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     mediaType?: StringFilter<"MetaAdsCriativo"> | string
     imageUrl?: StringNullableFilter<"MetaAdsCriativo"> | string | null
@@ -22615,13 +22634,17 @@ export namespace Prisma {
     spend?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     impressions?: IntFilter<"MetaAdsCriativo"> | number
     clicks?: IntFilter<"MetaAdsCriativo"> | number
-    leads?: IntFilter<"MetaAdsCriativo"> | number
-    purchases?: IntFilter<"MetaAdsCriativo"> | number
-    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     ctr?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     cpc?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
+    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    leads?: IntFilter<"MetaAdsCriativo"> | number
+    purchases?: IntFilter<"MetaAdsCriativo"> | number
+    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     conta?: XOR<ContaNullableScalarRelationFilter, ContaWhereInput> | null
   }
@@ -22635,10 +22658,6 @@ export namespace Prisma {
     creativeId?: SortOrderInput | SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrderInput | SortOrder
-    campaignId?: SortOrderInput | SortOrder
-    campaignName?: SortOrderInput | SortOrder
-    adsetId?: SortOrderInput | SortOrder
-    adsetName?: SortOrderInput | SortOrder
     campaignObjective?: SortOrderInput | SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
@@ -22652,13 +22671,17 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
-    leads?: SortOrder
-    purchases?: SortOrder
-    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrderInput | SortOrder
     cpc?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    adsetId?: SortOrderInput | SortOrder
+    adsetName?: SortOrderInput | SortOrder
+    campaignId?: SortOrderInput | SortOrder
+    campaignName?: SortOrderInput | SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
     conta?: ContaOrderByWithRelationInput
   }
@@ -22676,10 +22699,6 @@ export namespace Prisma {
     creativeId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     adName?: StringFilter<"MetaAdsCriativo"> | string
     effectiveStatus?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     campaignObjective?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     mediaType?: StringFilter<"MetaAdsCriativo"> | string
     imageUrl?: StringNullableFilter<"MetaAdsCriativo"> | string | null
@@ -22693,13 +22712,17 @@ export namespace Prisma {
     spend?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     impressions?: IntFilter<"MetaAdsCriativo"> | number
     clicks?: IntFilter<"MetaAdsCriativo"> | number
-    leads?: IntFilter<"MetaAdsCriativo"> | number
-    purchases?: IntFilter<"MetaAdsCriativo"> | number
-    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     ctr?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     cpc?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
+    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    leads?: IntFilter<"MetaAdsCriativo"> | number
+    purchases?: IntFilter<"MetaAdsCriativo"> | number
+    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     conta?: XOR<ContaNullableScalarRelationFilter, ContaWhereInput> | null
   }, "id" | "clienteId_adId_data">
@@ -22713,10 +22736,6 @@ export namespace Prisma {
     creativeId?: SortOrderInput | SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrderInput | SortOrder
-    campaignId?: SortOrderInput | SortOrder
-    campaignName?: SortOrderInput | SortOrder
-    adsetId?: SortOrderInput | SortOrder
-    adsetName?: SortOrderInput | SortOrder
     campaignObjective?: SortOrderInput | SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrderInput | SortOrder
@@ -22730,13 +22749,17 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
-    leads?: SortOrder
-    purchases?: SortOrder
-    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrderInput | SortOrder
     cpc?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    adsetId?: SortOrderInput | SortOrder
+    adsetName?: SortOrderInput | SortOrder
+    campaignId?: SortOrderInput | SortOrder
+    campaignName?: SortOrderInput | SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
     _count?: MetaAdsCriativoCountOrderByAggregateInput
     _avg?: MetaAdsCriativoAvgOrderByAggregateInput
     _max?: MetaAdsCriativoMaxOrderByAggregateInput
@@ -22756,10 +22779,6 @@ export namespace Prisma {
     creativeId?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
     adName?: StringWithAggregatesFilter<"MetaAdsCriativo"> | string
     effectiveStatus?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
-    campaignId?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
-    campaignName?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
-    adsetId?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
-    adsetName?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
     campaignObjective?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
     mediaType?: StringWithAggregatesFilter<"MetaAdsCriativo"> | string
     imageUrl?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
@@ -22773,13 +22792,17 @@ export namespace Prisma {
     spend?: DecimalWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     impressions?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
     clicks?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
-    leads?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
-    purchases?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
-    websitePurchasesConversionValue?: DecimalWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     ctr?: DecimalNullableWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     cpc?: DecimalNullableWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MetaAdsCriativo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MetaAdsCriativo"> | Date | string
+    adsetId?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
+    adsetName?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
+    campaignId?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
+    campaignName?: StringNullableWithAggregatesFilter<"MetaAdsCriativo"> | string | null
+    leads?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
+    purchases?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
+    websitePurchasesConversionValue?: DecimalWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
   }
 
   export type FatoAnalyticsDiarioWhereInput = {
@@ -23491,6 +23514,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
     cliente: ClienteCreateNestedOneWithoutFatosMidiaInput
@@ -23523,6 +23547,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
   }
@@ -23551,6 +23576,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
     cliente?: ClienteUpdateOneRequiredWithoutFatosMidiaNestedInput
@@ -23583,6 +23609,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -23613,6 +23640,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
   }
@@ -23641,6 +23669,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -23671,6 +23700,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -23980,10 +24010,10 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
-    prioridade?: string
-    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dataFim?: Date | string | null
+    prioridade?: string
     cliente: ClienteCreateNestedOneWithoutPautasReuniaoInput
   }
 
@@ -23995,10 +24025,10 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
-    prioridade?: string
-    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dataFim?: Date | string | null
+    prioridade?: string
   }
 
   export type PautaReuniaoUpdateInput = {
@@ -24008,10 +24038,10 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    prioridade?: StringFieldUpdateOperationsInput | string
-    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    prioridade?: StringFieldUpdateOperationsInput | string
     cliente?: ClienteUpdateOneRequiredWithoutPautasReuniaoNestedInput
   }
 
@@ -24023,10 +24053,10 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    prioridade?: StringFieldUpdateOperationsInput | string
-    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    prioridade?: StringFieldUpdateOperationsInput | string
   }
 
   export type PautaReuniaoCreateManyInput = {
@@ -24037,10 +24067,10 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
-    prioridade?: string
-    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dataFim?: Date | string | null
+    prioridade?: string
   }
 
   export type PautaReuniaoUpdateManyMutationInput = {
@@ -24050,10 +24080,10 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    prioridade?: StringFieldUpdateOperationsInput | string
-    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    prioridade?: StringFieldUpdateOperationsInput | string
   }
 
   export type PautaReuniaoUncheckedUpdateManyInput = {
@@ -24064,10 +24094,10 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    prioridade?: StringFieldUpdateOperationsInput | string
-    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    prioridade?: StringFieldUpdateOperationsInput | string
   }
 
   export type GoogleAdsCriativoCreateInput = {
@@ -24086,10 +24116,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
     cliente: ClienteCreateNestedOneWithoutGoogleAdsCriativosInput
     conta?: ContaCreateNestedOneWithoutGoogleAdsCriativosInput
   }
@@ -24112,10 +24142,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
   }
 
   export type GoogleAdsCriativoUpdateInput = {
@@ -24134,10 +24164,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     cliente?: ClienteUpdateOneRequiredWithoutGoogleAdsCriativosNestedInput
     conta?: ContaUpdateOneWithoutGoogleAdsCriativosNestedInput
   }
@@ -24160,10 +24190,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoogleAdsCriativoCreateManyInput = {
@@ -24184,10 +24214,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
   }
 
   export type GoogleAdsCriativoUpdateManyMutationInput = {
@@ -24206,10 +24236,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoogleAdsCriativoUncheckedUpdateManyInput = {
@@ -24230,10 +24260,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoogleAdsCampanhaCreateInput = {
@@ -24374,10 +24404,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -24391,13 +24417,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     cliente: ClienteCreateNestedOneWithoutMetaAdsCriativosInput
     conta?: ContaCreateNestedOneWithoutMetaAdsCriativosInput
   }
@@ -24411,10 +24441,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -24428,13 +24454,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
   }
 
   export type MetaAdsCriativoUpdateInput = {
@@ -24444,10 +24474,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24461,13 +24487,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cliente?: ClienteUpdateOneRequiredWithoutMetaAdsCriativosNestedInput
     conta?: ContaUpdateOneWithoutMetaAdsCriativosNestedInput
   }
@@ -24481,10 +24511,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24498,13 +24524,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type MetaAdsCriativoCreateManyInput = {
@@ -24516,10 +24546,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -24533,13 +24559,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
   }
 
   export type MetaAdsCriativoUpdateManyMutationInput = {
@@ -24549,10 +24579,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24566,13 +24592,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type MetaAdsCriativoUncheckedUpdateManyInput = {
@@ -24584,10 +24614,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -24601,13 +24627,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type FatoAnalyticsDiarioCreateInput = {
@@ -25513,6 +25543,7 @@ export namespace Prisma {
     alcance?: SortOrder
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
+    addToCart?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
   }
@@ -25535,6 +25566,7 @@ export namespace Prisma {
     alcance?: SortOrder
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
+    addToCart?: SortOrder
   }
 
   export type FatoMidiaDiarioMaxOrderByAggregateInput = {
@@ -25563,6 +25595,7 @@ export namespace Prisma {
     alcance?: SortOrder
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
+    addToCart?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
   }
@@ -25593,6 +25626,7 @@ export namespace Prisma {
     alcance?: SortOrder
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
+    addToCart?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
   }
@@ -25615,6 +25649,7 @@ export namespace Prisma {
     alcance?: SortOrder
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
+    addToCart?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -25890,10 +25925,10 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrder
     status?: SortOrder
-    prioridade?: SortOrder
-    dataFim?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dataFim?: SortOrder
+    prioridade?: SortOrder
   }
 
   export type PautaReuniaoAvgOrderByAggregateInput = {
@@ -25909,10 +25944,10 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrder
     status?: SortOrder
-    prioridade?: SortOrder
-    dataFim?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dataFim?: SortOrder
+    prioridade?: SortOrder
   }
 
   export type PautaReuniaoMinOrderByAggregateInput = {
@@ -25923,10 +25958,10 @@ export namespace Prisma {
     titulo?: SortOrder
     descricao?: SortOrder
     status?: SortOrder
-    prioridade?: SortOrder
-    dataFim?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    dataFim?: SortOrder
+    prioridade?: SortOrder
   }
 
   export type PautaReuniaoSumOrderByAggregateInput = {
@@ -25983,10 +26018,10 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
-    conversaoValorMicros?: SortOrder
-    campaignStatus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    conversaoValorMicros?: SortOrder
+    campaignStatus?: SortOrder
   }
 
   export type GoogleAdsCriativoAvgOrderByAggregateInput = {
@@ -26015,10 +26050,10 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
-    conversaoValorMicros?: SortOrder
-    campaignStatus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    conversaoValorMicros?: SortOrder
+    campaignStatus?: SortOrder
   }
 
   export type GoogleAdsCriativoMinOrderByAggregateInput = {
@@ -26039,10 +26074,10 @@ export namespace Prisma {
     cliques?: SortOrder
     custoMicros?: SortOrder
     conversoes?: SortOrder
-    conversaoValorMicros?: SortOrder
-    campaignStatus?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    conversaoValorMicros?: SortOrder
+    campaignStatus?: SortOrder
   }
 
   export type GoogleAdsCriativoSumOrderByAggregateInput = {
@@ -26192,10 +26227,6 @@ export namespace Prisma {
     creativeId?: SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrder
-    campaignId?: SortOrder
-    campaignName?: SortOrder
-    adsetId?: SortOrder
-    adsetName?: SortOrder
     campaignObjective?: SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrder
@@ -26209,24 +26240,28 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
-    leads?: SortOrder
-    purchases?: SortOrder
-    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrder
     cpc?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
   }
 
   export type MetaAdsCriativoAvgOrderByAggregateInput = {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    ctr?: SortOrder
+    cpc?: SortOrder
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
-    ctr?: SortOrder
-    cpc?: SortOrder
   }
 
   export type MetaAdsCriativoMaxOrderByAggregateInput = {
@@ -26238,10 +26273,6 @@ export namespace Prisma {
     creativeId?: SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrder
-    campaignId?: SortOrder
-    campaignName?: SortOrder
-    adsetId?: SortOrder
-    adsetName?: SortOrder
     campaignObjective?: SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrder
@@ -26255,13 +26286,17 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
-    leads?: SortOrder
-    purchases?: SortOrder
-    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrder
     cpc?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
   }
 
   export type MetaAdsCriativoMinOrderByAggregateInput = {
@@ -26273,10 +26308,6 @@ export namespace Prisma {
     creativeId?: SortOrder
     adName?: SortOrder
     effectiveStatus?: SortOrder
-    campaignId?: SortOrder
-    campaignName?: SortOrder
-    adsetId?: SortOrder
-    adsetName?: SortOrder
     campaignObjective?: SortOrder
     mediaType?: SortOrder
     imageUrl?: SortOrder
@@ -26290,24 +26321,28 @@ export namespace Prisma {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
-    leads?: SortOrder
-    purchases?: SortOrder
-    websitePurchasesConversionValue?: SortOrder
     ctr?: SortOrder
     cpc?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    leads?: SortOrder
+    purchases?: SortOrder
+    websitePurchasesConversionValue?: SortOrder
   }
 
   export type MetaAdsCriativoSumOrderByAggregateInput = {
     spend?: SortOrder
     impressions?: SortOrder
     clicks?: SortOrder
+    ctr?: SortOrder
+    cpc?: SortOrder
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
-    ctr?: SortOrder
-    cpc?: SortOrder
   }
 
   export type FatoAnalyticsDiarioClienteIdDataCompoundUniqueInput = {
@@ -28178,6 +28213,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
     conta?: ContaCreateNestedOneWithoutFatosMidiaInput
@@ -28208,6 +28244,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
   }
@@ -28284,10 +28321,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
     conta?: ContaCreateNestedOneWithoutGoogleAdsCriativosInput
   }
 
@@ -28308,10 +28345,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
   }
 
   export type GoogleAdsCriativoCreateOrConnectWithoutClienteInput = {
@@ -28365,10 +28402,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -28382,13 +28415,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     conta?: ContaCreateNestedOneWithoutMetaAdsCriativosInput
   }
 
@@ -28400,10 +28437,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -28417,13 +28450,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
   }
 
   export type MetaAdsCriativoCreateOrConnectWithoutClienteInput = {
@@ -28507,10 +28544,10 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
-    prioridade?: string
-    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dataFim?: Date | string | null
+    prioridade?: string
   }
 
   export type PautaReuniaoUncheckedCreateWithoutClienteInput = {
@@ -28520,10 +28557,10 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
-    prioridade?: string
-    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dataFim?: Date | string | null
+    prioridade?: string
   }
 
   export type PautaReuniaoCreateOrConnectWithoutClienteInput = {
@@ -28745,6 +28782,7 @@ export namespace Prisma {
     alcance?: IntFilter<"FatoMidiaDiario"> | number
     checkoutIniciado?: IntFilter<"FatoMidiaDiario"> | number
     profileVisits?: IntFilter<"FatoMidiaDiario"> | number
+    addToCart?: IntFilter<"FatoMidiaDiario"> | number
     campaignName?: StringFilter<"FatoMidiaDiario"> | string
     campaignId?: StringFilter<"FatoMidiaDiario"> | string
   }
@@ -28824,10 +28862,10 @@ export namespace Prisma {
     cliques?: IntFilter<"GoogleAdsCriativo"> | number
     custoMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
     conversoes?: IntFilter<"GoogleAdsCriativo"> | number
-    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
-    campaignStatus?: StringNullableFilter<"GoogleAdsCriativo"> | string | null
     createdAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"GoogleAdsCriativo"> | Date | string
+    conversaoValorMicros?: BigIntFilter<"GoogleAdsCriativo"> | bigint | number
+    campaignStatus?: StringNullableFilter<"GoogleAdsCriativo"> | string | null
   }
 
   export type MetaUpsertWithWhereUniqueWithoutClienteInput = {
@@ -28890,10 +28928,6 @@ export namespace Prisma {
     creativeId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     adName?: StringFilter<"MetaAdsCriativo"> | string
     effectiveStatus?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
-    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     campaignObjective?: StringNullableFilter<"MetaAdsCriativo"> | string | null
     mediaType?: StringFilter<"MetaAdsCriativo"> | string
     imageUrl?: StringNullableFilter<"MetaAdsCriativo"> | string | null
@@ -28907,13 +28941,17 @@ export namespace Prisma {
     spend?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     impressions?: IntFilter<"MetaAdsCriativo"> | number
     clicks?: IntFilter<"MetaAdsCriativo"> | number
-    leads?: IntFilter<"MetaAdsCriativo"> | number
-    purchases?: IntFilter<"MetaAdsCriativo"> | number
-    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
     ctr?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     cpc?: DecimalNullableFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
     updatedAt?: DateTimeFilter<"MetaAdsCriativo"> | Date | string
+    adsetId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    adsetName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignId?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    campaignName?: StringNullableFilter<"MetaAdsCriativo"> | string | null
+    leads?: IntFilter<"MetaAdsCriativo"> | number
+    purchases?: IntFilter<"MetaAdsCriativo"> | number
+    websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
   }
 
   export type MetaLeadIndividualUpsertWithWhereUniqueWithoutClienteInput = {
@@ -28990,10 +29028,10 @@ export namespace Prisma {
     titulo?: StringFilter<"PautaReuniao"> | string
     descricao?: StringNullableFilter<"PautaReuniao"> | string | null
     status?: StringFilter<"PautaReuniao"> | string
-    prioridade?: StringFilter<"PautaReuniao"> | string
-    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
     createdAt?: DateTimeFilter<"PautaReuniao"> | Date | string
     updatedAt?: DateTimeFilter<"PautaReuniao"> | Date | string
+    dataFim?: DateTimeNullableFilter<"PautaReuniao"> | Date | string | null
+    prioridade?: StringFilter<"PautaReuniao"> | string
   }
 
   export type ClienteCreateWithoutContasInput = {
@@ -29121,6 +29159,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
     cliente: ClienteCreateNestedOneWithoutFatosMidiaInput
@@ -29151,6 +29190,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
   }
@@ -29227,10 +29267,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
     cliente: ClienteCreateNestedOneWithoutGoogleAdsCriativosInput
   }
 
@@ -29251,10 +29291,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
   }
 
   export type GoogleAdsCriativoCreateOrConnectWithoutContaInput = {
@@ -29274,10 +29314,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -29291,13 +29327,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     cliente: ClienteCreateNestedOneWithoutMetaAdsCriativosInput
   }
 
@@ -29309,10 +29349,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -29326,13 +29362,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
   }
 
   export type MetaAdsCriativoCreateOrConnectWithoutContaInput = {
@@ -31323,6 +31363,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
   }
@@ -31362,10 +31403,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
   }
 
   export type MetaCreateManyClienteInput = {
@@ -31388,10 +31429,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -31405,13 +31442,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
   }
 
   export type MetaLeadIndividualCreateManyClienteInput = {
@@ -31448,10 +31489,10 @@ export namespace Prisma {
     titulo: string
     descricao?: string | null
     status?: string
-    prioridade?: string
-    dataFim?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    dataFim?: Date | string | null
+    prioridade?: string
   }
 
   export type AgregadoMidiaMensalUpdateWithoutClienteInput = {
@@ -31680,6 +31721,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
     conta?: ContaUpdateOneWithoutFatosMidiaNestedInput
@@ -31710,6 +31752,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -31739,6 +31782,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -31813,10 +31857,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     conta?: ContaUpdateOneWithoutGoogleAdsCriativosNestedInput
   }
 
@@ -31837,10 +31881,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoogleAdsCriativoUncheckedUpdateManyWithoutClienteInput = {
@@ -31860,10 +31904,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MetaUpdateWithoutClienteInput = {
@@ -31909,10 +31953,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31926,13 +31966,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     conta?: ContaUpdateOneWithoutMetaAdsCriativosNestedInput
   }
 
@@ -31944,10 +31988,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31961,13 +32001,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type MetaAdsCriativoUncheckedUpdateManyWithoutClienteInput = {
@@ -31978,10 +32022,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31995,13 +32035,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type MetaLeadIndividualUpdateWithoutClienteInput = {
@@ -32092,10 +32136,10 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    prioridade?: StringFieldUpdateOperationsInput | string
-    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    prioridade?: StringFieldUpdateOperationsInput | string
   }
 
   export type PautaReuniaoUncheckedUpdateWithoutClienteInput = {
@@ -32105,10 +32149,10 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    prioridade?: StringFieldUpdateOperationsInput | string
-    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    prioridade?: StringFieldUpdateOperationsInput | string
   }
 
   export type PautaReuniaoUncheckedUpdateManyWithoutClienteInput = {
@@ -32118,10 +32162,10 @@ export namespace Prisma {
     titulo?: StringFieldUpdateOperationsInput | string
     descricao?: NullableStringFieldUpdateOperationsInput | string | null
     status?: StringFieldUpdateOperationsInput | string
-    prioridade?: StringFieldUpdateOperationsInput | string
-    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    prioridade?: StringFieldUpdateOperationsInput | string
   }
 
   export type FatoAnalyticsDiarioCreateManyContaInput = {
@@ -32165,6 +32209,7 @@ export namespace Prisma {
     alcance?: number
     checkoutIniciado?: number
     profileVisits?: number
+    addToCart?: number
     campaignName?: string
     campaignId?: string
   }
@@ -32204,10 +32249,10 @@ export namespace Prisma {
     cliques?: number
     custoMicros?: bigint | number
     conversoes?: number
-    conversaoValorMicros?: bigint | number
-    campaignStatus?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conversaoValorMicros?: bigint | number
+    campaignStatus?: string | null
   }
 
   export type MetaAdsCriativoCreateManyContaInput = {
@@ -32218,10 +32263,6 @@ export namespace Prisma {
     creativeId?: string | null
     adName: string
     effectiveStatus?: string | null
-    campaignId?: string | null
-    campaignName?: string | null
-    adsetId?: string | null
-    adsetName?: string | null
     campaignObjective?: string | null
     mediaType: string
     imageUrl?: string | null
@@ -32235,13 +32276,17 @@ export namespace Prisma {
     spend?: Decimal | DecimalJsLike | number | string
     impressions?: number
     clicks?: number
-    leads?: number
-    purchases?: number
-    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
     ctr?: Decimal | DecimalJsLike | number | string | null
     cpc?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    adsetId?: string | null
+    adsetName?: string | null
+    campaignId?: string | null
+    campaignName?: string | null
+    leads?: number
+    purchases?: number
+    websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
   }
 
   export type FatoAnalyticsDiarioUpdateWithoutContaInput = {
@@ -32316,6 +32361,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
     cliente?: ClienteUpdateOneRequiredWithoutFatosMidiaNestedInput
@@ -32346,6 +32392,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -32375,6 +32422,7 @@ export namespace Prisma {
     alcance?: IntFieldUpdateOperationsInput | number
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
+    addToCart?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -32449,10 +32497,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     cliente?: ClienteUpdateOneRequiredWithoutGoogleAdsCriativosNestedInput
   }
 
@@ -32473,10 +32521,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type GoogleAdsCriativoUncheckedUpdateManyWithoutContaInput = {
@@ -32496,10 +32544,10 @@ export namespace Prisma {
     cliques?: IntFieldUpdateOperationsInput | number
     custoMicros?: BigIntFieldUpdateOperationsInput | bigint | number
     conversoes?: IntFieldUpdateOperationsInput | number
-    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
-    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversaoValorMicros?: BigIntFieldUpdateOperationsInput | bigint | number
+    campaignStatus?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type MetaAdsCriativoUpdateWithoutContaInput = {
@@ -32509,10 +32557,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32526,13 +32570,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     cliente?: ClienteUpdateOneRequiredWithoutMetaAdsCriativosNestedInput
   }
 
@@ -32544,10 +32592,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32561,13 +32605,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
   export type MetaAdsCriativoUncheckedUpdateManyWithoutContaInput = {
@@ -32578,10 +32626,6 @@ export namespace Prisma {
     creativeId?: NullableStringFieldUpdateOperationsInput | string | null
     adName?: StringFieldUpdateOperationsInput | string
     effectiveStatus?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
-    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
-    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
     campaignObjective?: NullableStringFieldUpdateOperationsInput | string | null
     mediaType?: StringFieldUpdateOperationsInput | string
     imageUrl?: NullableStringFieldUpdateOperationsInput | string | null
@@ -32595,13 +32639,17 @@ export namespace Prisma {
     spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     impressions?: IntFieldUpdateOperationsInput | number
     clicks?: IntFieldUpdateOperationsInput | number
-    leads?: IntFieldUpdateOperationsInput | number
-    purchases?: IntFieldUpdateOperationsInput | number
-    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     ctr?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     cpc?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    adsetId?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignId?: NullableStringFieldUpdateOperationsInput | string | null
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    leads?: IntFieldUpdateOperationsInput | number
+    purchases?: IntFieldUpdateOperationsInput | number
+    websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
 

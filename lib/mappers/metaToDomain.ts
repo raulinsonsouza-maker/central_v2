@@ -47,6 +47,7 @@ export interface MetaInsightPayload {
   alcance: number;
   checkoutIniciado: number;
   profileVisits: number;
+  addToCart: number;
   campaignName: string;
   campaignId: string;
 }
@@ -80,6 +81,7 @@ export function mapMetaInsightToFatoPayload(row: MetaInsightRow): MetaInsightPay
   );
   const contacts = getActionExact(actions, "onsite_conversion.messaging_conversation_started_7d");
   const checkoutIniciado = getActionExact(actions, "initiate_checkout");
+  const addToCart = getActionExact(actions, "add_to_cart") || getActionExact(actions, "offsite_conversion.fb_pixel_add_to_cart");
   const uniqueActions = row.unique_actions ?? [];
   const getUniqueAction = (type: string) => getActionExact(uniqueActions, type);
 
@@ -141,6 +143,7 @@ export function mapMetaInsightToFatoPayload(row: MetaInsightRow): MetaInsightPay
     alcance,
     checkoutIniciado,
     profileVisits,
+    addToCart,
     campaignName: row.campaign_name?.trim() ?? "",
     campaignId: row.campaign_id?.trim() ?? "",
   };
