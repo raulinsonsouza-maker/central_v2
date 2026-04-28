@@ -139,6 +139,8 @@ type DefaultPanelProps = {
   academyEngajamentoMode?: boolean;
   /** Quando true (Kombucha da Cá), usa labels de "Carrinho" e mostra card secundário de Conversas B2B. */
   kombuchaMode?: boolean;
+  /** Quando true (Be Blue School), usa labels de "View de LP" e mostra custo por view de LP. */
+  lpViewsMode?: boolean;
 };
 
 export function DefaultPanel({
@@ -163,11 +165,12 @@ export function DefaultPanel({
   miguelGoogleMode = false,
   academyEngajamentoMode = false,
   kombuchaMode = false,
+  lpViewsMode = false,
 }: DefaultPanelProps) {
   const isMensal = agrupamento === "mensal";
   const isDiario = agrupamento === "diario";
   const latestPeriod = latestFiveSeries[latestFiveSeries.length - 1]?.periodo;
-  const cplLabel = visitasMode ? "Custo/Visita" : comprasMode ? "Custo/Compra" : miguelImoveisMode ? "Custo/Result." : conversasMode ? "Custo/Conv." : kombuchaMode ? "Custo/Carrinho" : "CPL";
+  const cplLabel = visitasMode ? "Custo/Visita" : comprasMode ? "Custo/Compra" : miguelImoveisMode ? "Custo/Result." : conversasMode ? "Custo/Conv." : kombuchaMode ? "Custo/Carrinho" : lpViewsMode ? "Custo/View LP" : "CPL";
 
   const purchases = resumo.purchases ?? 0;
   const valorConversao = resumo.valorConversao ?? 0;
@@ -232,7 +235,7 @@ export function DefaultPanel({
             icon={DollarSign}
           />
           <KpiCard
-            title={canal === "google" ? "Conversões (Google Ads)" : comprasMode ? "Compras" : visitasMode ? "Visitas ao perfil" : miguelImoveisMode ? "Resultados (Total)" : conversasMode ? "Conversas" : kombuchaMode ? "Adições ao Carrinho" : "Leads"}
+            title={canal === "google" ? "Conversões (Google Ads)" : comprasMode ? "Compras" : visitasMode ? "Visitas ao perfil" : miguelImoveisMode ? "Resultados (Total)" : conversasMode ? "Conversas" : kombuchaMode ? "Adições ao Carrinho" : lpViewsMode ? "Views de LP" : "Leads"}
             value={resumo.leads.toLocaleString("pt-BR")}
             sub={
               canal === "google"
@@ -247,14 +250,16 @@ export function DefaultPanel({
                         ? "Conversas por mensagem iniciadas no período"
                         : kombuchaMode
                           ? "Adições ao carrinho atribuídas ao período"
-                          : "Total do período"
+                          : lpViewsMode
+                            ? "Visualizações da página de destino no período"
+                            : "Total do período"
             }
             icon={Users}
           />
           <KpiCard
-            title={canal === "google" ? "Custo / conversão" : comprasMode ? "Custo / Compra" : visitasMode ? "Custo / Visita" : miguelImoveisMode ? "Custo / Resultado" : conversasMode ? "Custo / Conversa" : kombuchaMode ? "Custo / Carrinho" : "CPL"}
+            title={canal === "google" ? "Custo / conversão" : comprasMode ? "Custo / Compra" : visitasMode ? "Custo / Visita" : miguelImoveisMode ? "Custo / Resultado" : conversasMode ? "Custo / Conversa" : kombuchaMode ? "Custo / Carrinho" : lpViewsMode ? "Custo / View LP" : "CPL"}
             value={formatCurrency(resumo.cpl)}
-            sub={canal === "google" ? "Investimento ÷ conversões" : comprasMode ? "Investimento ÷ compras no site" : visitasMode ? "Investimento ÷ visitas ao perfil" : miguelImoveisMode ? "Investimento ÷ total de resultados (conversas + cadastros)" : conversasMode ? "Investimento ÷ conversas iniciadas" : kombuchaMode ? "Investimento ÷ adições ao carrinho" : "Custo por lead"}
+            sub={canal === "google" ? "Investimento ÷ conversões" : comprasMode ? "Investimento ÷ compras no site" : visitasMode ? "Investimento ÷ visitas ao perfil" : miguelImoveisMode ? "Investimento ÷ total de resultados (conversas + cadastros)" : conversasMode ? "Investimento ÷ conversas iniciadas" : kombuchaMode ? "Investimento ÷ adições ao carrinho" : lpViewsMode ? "Investimento ÷ views da página de destino" : "Custo por lead"}
             icon={Target}
             accentValue
           />
@@ -426,6 +431,10 @@ export function DefaultPanel({
                               ? `Investimento e resultados por ${periodoLabel}`
                               : conversasMode
                               ? `Investimento e conversas por ${periodoLabel}`
+                              : kombuchaMode
+                              ? `Investimento e adições ao carrinho por ${periodoLabel}`
+                              : lpViewsMode
+                              ? `Investimento e views de LP por ${periodoLabel}`
                               : `Investimento e leads por ${periodoLabel}`
                     }
                   />

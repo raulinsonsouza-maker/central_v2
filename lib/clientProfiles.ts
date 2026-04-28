@@ -10,6 +10,7 @@ export const FLORIEN_SLUG = "florien-fitoativos";
 export const ACADEMY_AMERICANA_SLUG = "academy-americana";
 export const VITO_BALDUCCI_SLUG = "vito-balducci";
 export const KOMBUCHA_DA_CA_SLUG = "kombucha-da-ca";
+export const BE_BLUE_SCHOOL_SLUG = "be-blue-school";
 
 export type ClientIdentity = {
   nome?: string | null;
@@ -194,5 +195,18 @@ export function isKombucha(client?: ClientIdentity | null) {
     slug === KOMBUCHA_DA_CA_SLUG ||
     nome === "kombucha da ca" ||
     nome === "kombucha da cá"
+  );
+}
+
+export function isBeBlueSchool(client?: ClientIdentity | null) {
+  if (!client) return false;
+  if (client.perfilPanel === "beblue") return true;
+
+  const slug = normalizeText(client.slug);
+  const nome = normalizeText(client.nome);
+
+  return (
+    slug === BE_BLUE_SCHOOL_SLUG ||
+    nome === "be blue school"
   );
 }

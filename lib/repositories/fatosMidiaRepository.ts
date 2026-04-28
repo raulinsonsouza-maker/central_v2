@@ -24,6 +24,7 @@ export async function upsertFatoMidia(
     checkoutIniciado?: number;
     profileVisits?: number;
     addToCart?: number;
+    landingPageViews?: number;
     rawRowHash?: string | null;
     contaId?: string | null;
     campaignName?: string;
@@ -65,6 +66,7 @@ export async function upsertFatoMidia(
       checkoutIniciado: payload.checkoutIniciado ?? 0,
       profileVisits: payload.profileVisits ?? 0,
       addToCart: payload.addToCart ?? 0,
+      landingPageViews: payload.landingPageViews ?? 0,
       investimento: investimentoDecimal,
       cpl: cplDecimal,
       costPerPurchase: costPerPurchaseDecimal,
@@ -88,6 +90,7 @@ export async function upsertFatoMidia(
       checkoutIniciado: payload.checkoutIniciado ?? 0,
       profileVisits: payload.profileVisits ?? 0,
       addToCart: payload.addToCart ?? 0,
+      landingPageViews: payload.landingPageViews ?? 0,
       investimento: investimentoDecimal,
       cpl: cplDecimal,
       costPerPurchase: costPerPurchaseDecimal,

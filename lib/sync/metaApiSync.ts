@@ -164,6 +164,7 @@ export async function syncMetaCliente(
         checkoutIniciado: payload.checkoutIniciado,
         profileVisits: payload.profileVisits,
         addToCart: payload.addToCart,
+        landingPageViews: payload.landingPageViews,
         contaId: contaId ?? undefined,
         campaignName: payload.campaignName,
         campaignId: payload.campaignId,

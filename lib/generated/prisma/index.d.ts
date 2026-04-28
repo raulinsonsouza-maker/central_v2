@@ -5121,6 +5121,7 @@ export namespace Prisma {
     checkoutIniciado: number | null
     profileVisits: number | null
     addToCart: number | null
+    landingPageViews: number | null
   }
 
   export type FatoMidiaDiarioSumAggregateOutputType = {
@@ -5142,6 +5143,7 @@ export namespace Prisma {
     checkoutIniciado: number | null
     profileVisits: number | null
     addToCart: number | null
+    landingPageViews: number | null
   }
 
   export type FatoMidiaDiarioMinAggregateOutputType = {
@@ -5171,6 +5173,7 @@ export namespace Prisma {
     checkoutIniciado: number | null
     profileVisits: number | null
     addToCart: number | null
+    landingPageViews: number | null
     campaignName: string | null
     campaignId: string | null
   }
@@ -5202,6 +5205,7 @@ export namespace Prisma {
     checkoutIniciado: number | null
     profileVisits: number | null
     addToCart: number | null
+    landingPageViews: number | null
     campaignName: string | null
     campaignId: string | null
   }
@@ -5233,6 +5237,7 @@ export namespace Prisma {
     checkoutIniciado: number
     profileVisits: number
     addToCart: number
+    landingPageViews: number
     campaignName: number
     campaignId: number
     _all: number
@@ -5258,6 +5263,7 @@ export namespace Prisma {
     checkoutIniciado?: true
     profileVisits?: true
     addToCart?: true
+    landingPageViews?: true
   }
 
   export type FatoMidiaDiarioSumAggregateInputType = {
@@ -5279,6 +5285,7 @@ export namespace Prisma {
     checkoutIniciado?: true
     profileVisits?: true
     addToCart?: true
+    landingPageViews?: true
   }
 
   export type FatoMidiaDiarioMinAggregateInputType = {
@@ -5308,6 +5315,7 @@ export namespace Prisma {
     checkoutIniciado?: true
     profileVisits?: true
     addToCart?: true
+    landingPageViews?: true
     campaignName?: true
     campaignId?: true
   }
@@ -5339,6 +5347,7 @@ export namespace Prisma {
     checkoutIniciado?: true
     profileVisits?: true
     addToCart?: true
+    landingPageViews?: true
     campaignName?: true
     campaignId?: true
   }
@@ -5370,6 +5379,7 @@ export namespace Prisma {
     checkoutIniciado?: true
     profileVisits?: true
     addToCart?: true
+    landingPageViews?: true
     campaignName?: true
     campaignId?: true
     _all?: true
@@ -5488,6 +5498,7 @@ export namespace Prisma {
     checkoutIniciado: number
     profileVisits: number
     addToCart: number
+    landingPageViews: number
     campaignName: string
     campaignId: string
     _count: FatoMidiaDiarioCountAggregateOutputType | null
@@ -5538,6 +5549,7 @@ export namespace Prisma {
     checkoutIniciado?: boolean
     profileVisits?: boolean
     addToCart?: boolean
+    landingPageViews?: boolean
     campaignName?: boolean
     campaignId?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -5571,6 +5583,7 @@ export namespace Prisma {
     checkoutIniciado?: boolean
     profileVisits?: boolean
     addToCart?: boolean
+    landingPageViews?: boolean
     campaignName?: boolean
     campaignId?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -5604,6 +5617,7 @@ export namespace Prisma {
     checkoutIniciado?: boolean
     profileVisits?: boolean
     addToCart?: boolean
+    landingPageViews?: boolean
     campaignName?: boolean
     campaignId?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -5637,11 +5651,12 @@ export namespace Prisma {
     checkoutIniciado?: boolean
     profileVisits?: boolean
     addToCart?: boolean
+    landingPageViews?: boolean
     campaignName?: boolean
     campaignId?: boolean
   }
 
-  export type FatoMidiaDiarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "canal" | "impressoes" | "cliques" | "leads" | "conversoes" | "investimento" | "cpl" | "rawRowHash" | "createdAt" | "updatedAt" | "contacts" | "costPerPurchase" | "messagingConversationsStarted" | "onFacebookLeads" | "purchases" | "websiteLeads" | "websitePurchaseRoas" | "websitePurchasesConversionValue" | "alcance" | "checkoutIniciado" | "profileVisits" | "addToCart" | "campaignName" | "campaignId", ExtArgs["result"]["fatoMidiaDiario"]>
+  export type FatoMidiaDiarioOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "canal" | "impressoes" | "cliques" | "leads" | "conversoes" | "investimento" | "cpl" | "rawRowHash" | "createdAt" | "updatedAt" | "contacts" | "costPerPurchase" | "messagingConversationsStarted" | "onFacebookLeads" | "purchases" | "websiteLeads" | "websitePurchaseRoas" | "websitePurchasesConversionValue" | "alcance" | "checkoutIniciado" | "profileVisits" | "addToCart" | "landingPageViews" | "campaignName" | "campaignId", ExtArgs["result"]["fatoMidiaDiario"]>
   export type FatoMidiaDiarioInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | FatoMidiaDiario$contaArgs<ExtArgs>
@@ -5688,6 +5703,7 @@ export namespace Prisma {
       checkoutIniciado: number
       profileVisits: number
       addToCart: number
+      landingPageViews: number
       campaignName: string
       campaignId: string
     }, ExtArgs["result"]["fatoMidiaDiario"]>
@@ -6141,6 +6157,7 @@ export namespace Prisma {
     readonly checkoutIniciado: FieldRef<"FatoMidiaDiario", 'Int'>
     readonly profileVisits: FieldRef<"FatoMidiaDiario", 'Int'>
     readonly addToCart: FieldRef<"FatoMidiaDiario", 'Int'>
+    readonly landingPageViews: FieldRef<"FatoMidiaDiario", 'Int'>
     readonly campaignName: FieldRef<"FatoMidiaDiario", 'String'>
     readonly campaignId: FieldRef<"FatoMidiaDiario", 'String'>
   }
@@ -21203,6 +21220,7 @@ export namespace Prisma {
     checkoutIniciado: 'checkoutIniciado',
     profileVisits: 'profileVisits',
     addToCart: 'addToCart',
+    landingPageViews: 'landingPageViews',
     campaignName: 'campaignName',
     campaignId: 'campaignId'
   };
@@ -21851,6 +21869,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFilter<"FatoMidiaDiario"> | number
     profileVisits?: IntFilter<"FatoMidiaDiario"> | number
     addToCart?: IntFilter<"FatoMidiaDiario"> | number
+    landingPageViews?: IntFilter<"FatoMidiaDiario"> | number
     campaignName?: StringFilter<"FatoMidiaDiario"> | string
     campaignId?: StringFilter<"FatoMidiaDiario"> | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -21884,6 +21903,7 @@ export namespace Prisma {
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
     addToCart?: SortOrder
+    landingPageViews?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
@@ -21921,6 +21941,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFilter<"FatoMidiaDiario"> | number
     profileVisits?: IntFilter<"FatoMidiaDiario"> | number
     addToCart?: IntFilter<"FatoMidiaDiario"> | number
+    landingPageViews?: IntFilter<"FatoMidiaDiario"> | number
     campaignName?: StringFilter<"FatoMidiaDiario"> | string
     campaignId?: StringFilter<"FatoMidiaDiario"> | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -21954,6 +21975,7 @@ export namespace Prisma {
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
     addToCart?: SortOrder
+    landingPageViews?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
     _count?: FatoMidiaDiarioCountOrderByAggregateInput
@@ -21993,6 +22015,7 @@ export namespace Prisma {
     checkoutIniciado?: IntWithAggregatesFilter<"FatoMidiaDiario"> | number
     profileVisits?: IntWithAggregatesFilter<"FatoMidiaDiario"> | number
     addToCart?: IntWithAggregatesFilter<"FatoMidiaDiario"> | number
+    landingPageViews?: IntWithAggregatesFilter<"FatoMidiaDiario"> | number
     campaignName?: StringWithAggregatesFilter<"FatoMidiaDiario"> | string
     campaignId?: StringWithAggregatesFilter<"FatoMidiaDiario"> | string
   }
@@ -23515,6 +23538,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
     cliente: ClienteCreateNestedOneWithoutFatosMidiaInput
@@ -23548,6 +23572,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
   }
@@ -23577,6 +23602,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
     cliente?: ClienteUpdateOneRequiredWithoutFatosMidiaNestedInput
@@ -23610,6 +23636,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -23641,6 +23668,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
   }
@@ -23670,6 +23698,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -23701,6 +23730,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -25544,6 +25574,7 @@ export namespace Prisma {
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
     addToCart?: SortOrder
+    landingPageViews?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
   }
@@ -25567,6 +25598,7 @@ export namespace Prisma {
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
     addToCart?: SortOrder
+    landingPageViews?: SortOrder
   }
 
   export type FatoMidiaDiarioMaxOrderByAggregateInput = {
@@ -25596,6 +25628,7 @@ export namespace Prisma {
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
     addToCart?: SortOrder
+    landingPageViews?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
   }
@@ -25627,6 +25660,7 @@ export namespace Prisma {
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
     addToCart?: SortOrder
+    landingPageViews?: SortOrder
     campaignName?: SortOrder
     campaignId?: SortOrder
   }
@@ -25650,6 +25684,7 @@ export namespace Prisma {
     checkoutIniciado?: SortOrder
     profileVisits?: SortOrder
     addToCart?: SortOrder
+    landingPageViews?: SortOrder
   }
 
   export type IntWithAggregatesFilter<$PrismaModel = never> = {
@@ -28214,6 +28249,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
     conta?: ContaCreateNestedOneWithoutFatosMidiaInput
@@ -28245,6 +28281,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
   }
@@ -28783,6 +28820,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFilter<"FatoMidiaDiario"> | number
     profileVisits?: IntFilter<"FatoMidiaDiario"> | number
     addToCart?: IntFilter<"FatoMidiaDiario"> | number
+    landingPageViews?: IntFilter<"FatoMidiaDiario"> | number
     campaignName?: StringFilter<"FatoMidiaDiario"> | string
     campaignId?: StringFilter<"FatoMidiaDiario"> | string
   }
@@ -29160,6 +29198,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
     cliente: ClienteCreateNestedOneWithoutFatosMidiaInput
@@ -29191,6 +29230,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
   }
@@ -31364,6 +31404,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
   }
@@ -31722,6 +31763,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
     conta?: ContaUpdateOneWithoutFatosMidiaNestedInput
@@ -31753,6 +31795,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -31783,6 +31826,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -32210,6 +32254,7 @@ export namespace Prisma {
     checkoutIniciado?: number
     profileVisits?: number
     addToCart?: number
+    landingPageViews?: number
     campaignName?: string
     campaignId?: string
   }
@@ -32362,6 +32407,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
     cliente?: ClienteUpdateOneRequiredWithoutFatosMidiaNestedInput
@@ -32393,6 +32439,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }
@@ -32423,6 +32470,7 @@ export namespace Prisma {
     checkoutIniciado?: IntFieldUpdateOperationsInput | number
     profileVisits?: IntFieldUpdateOperationsInput | number
     addToCart?: IntFieldUpdateOperationsInput | number
+    landingPageViews?: IntFieldUpdateOperationsInput | number
     campaignName?: StringFieldUpdateOperationsInput | string
     campaignId?: StringFieldUpdateOperationsInput | string
   }

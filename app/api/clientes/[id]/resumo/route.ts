@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { findClienteById } from "@/lib/repositories/clientesRepository";
 import { outcomeCountForFato } from "@/lib/metrics/fatoMidiaOutcome";
-import { isFlorien, isDor, isGranarolo, isKombucha } from "@/lib/clientProfiles";
+import { isFlorien, isDor, isGranarolo, isKombucha, isBeBlueSchool } from "@/lib/clientProfiles";
 
 export async function GET(
   request: NextRequest,
@@ -59,12 +59,14 @@ export async function GET(
       purchases: true,
       websitePurchasesConversionValue: true,
       addToCart: true,
+      landingPageViews: true,
     },
   });
 
   const isVisitasCliente = isFlorien(cliente);
   const isComprasCliente = isDor(cliente) || isGranarolo(cliente);
   const isKombuchaCliente = isKombucha(cliente);
+  const isBeBlueCliente = isBeBlueSchool(cliente);
 
   let totalInvestimento = 0;
   let totalLeads = 0;
@@ -75,16 +77,20 @@ export async function GET(
   let totalValorConversao = 0;
   let totalProfileVisits = 0;
   let totalAddToCart = 0;
+  let totalLandingPageViews = 0;
   for (const r of rows) {
     totalInvestimento += Number(r.investimento);
     totalConversas += r.messagingConversationsStarted ?? 0;
     totalProfileVisits += r.profileVisits ?? 0;
     totalAddToCart += (r as { addToCart?: number }).addToCart ?? 0;
+    totalLandingPageViews += (r as { landingPageViews?: number }).landingPageViews ?? 0;
     totalLeads += isVisitasCliente
       ? (r.profileVisits ?? 0)
       : isKombuchaCliente
         ? ((r as { addToCart?: number }).addToCart ?? 0)
-        : outcomeCountForFato(r.canal, r.leads, r.conversoes, undefined, isComprasCliente && r.canal !== "GOOGLE");
+        : isBeBlueCliente
+          ? ((r as { landingPageViews?: number }).landingPageViews ?? 0)
+          : outcomeCountForFato(r.canal, r.leads, r.conversoes, undefined, isComprasCliente && r.canal !== "GOOGLE");
     totalImpressoes += r.impressoes;
     totalCliques += r.cliques;
     totalPurchases += r.purchases ?? 0;
@@ -128,5 +134,6 @@ export async function GET(
     profileVisits: totalProfileVisits,
     custoPorVisita: Math.round(custoPorVisita * 100) / 100,
     addToCart: totalAddToCart,
+    landingPageViews: totalLandingPageViews,
   });
 }

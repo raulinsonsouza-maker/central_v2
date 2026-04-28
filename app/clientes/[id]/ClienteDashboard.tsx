@@ -14,7 +14,7 @@ import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
 import { CampanhasPanel } from "@/components/clientes/CampanhasPanel";
 import { GoogleCampanhasPanel } from "@/components/clientes/GoogleCampanhasPanel";
-import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci, isKombucha } from "@/lib/clientProfiles";
+import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci, isKombucha, isBeBlueSchool } from "@/lib/clientProfiles";
 import {
   Bar,
   XAxis,
@@ -537,6 +537,7 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const isVisitasPanel = isFlorien(cliente) && canal !== "google";
   const isAcademyPanel = isAcademyAmericana(cliente) && canal !== "google";
   const isKombuchaPanel = isKombucha(cliente) && canal !== "google";
+  const isBeBluePanel = isBeBlueSchool(cliente) && canal !== "google";
   const isEcommerceMode = isGranarolo(cliente) || isDor(cliente) || isVitoBalducci(cliente);
   const convLabels = React.useMemo(() => isComprasPanel
     ? { singular: "compra", plural: "compras", metric: "Custo/Compra", metricFull: "Custo / Compra", kpi: "Meta Custo/Compra", dbKey: "COMPRAS", taxa: "TAXA COMPRA", cust: "CUSTO / COMPRA", semResult: "sem compras", crLabel: "CR (clique→compra)", chartKey: "Compras", sub: "Total do período" }
@@ -548,8 +549,10 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     ? { singular: "conv.", plural: "conversas", metric: "Custo/conv.", metricFull: "Custo / Conversa", kpi: "Meta Custo/Conv.", dbKey: "CONVERSAS", taxa: "TAXA CONVERSA", cust: "CUSTO / CONVERSA", semResult: "sem conversas", crLabel: "CR (clique→conv.)", chartKey: "Conversas", sub: "Conversas por mensagem iniciadas no período" }
     : isKombuchaPanel
     ? { singular: "carrinho", plural: "carrinhos", metric: "Custo/Carrinho", metricFull: "Custo / Carrinho", kpi: "Meta Custo/Carrinho", dbKey: "CARRINHOS", taxa: "TAXA CARRINHO", cust: "CUSTO / CARRINHO", semResult: "sem carrinhos", crLabel: "CR (clique→carrinho)", chartKey: "Carrinhos", sub: "Adições ao carrinho no período" }
+    : isBeBluePanel
+    ? { singular: "view de LP", plural: "views de LP", metric: "Custo/View LP", metricFull: "Custo / View LP", kpi: "Meta Custo/View LP", dbKey: "VIEWS LP", taxa: "VIEWS / 1K", cust: "CUSTO / VIEW LP", semResult: "sem views de LP", crLabel: "Views LP/1k impr.", chartKey: "Views LP", sub: "Visualizações da página de destino no período" }
     : { singular: "lead", plural: "leads", metric: "CPL", metricFull: "CPL", kpi: "CPL Alvo", dbKey: "LEADS", taxa: "TAXA CONV.", cust: "CPL", semResult: "sem leads", crLabel: "CR (clique→lead)", chartKey: "Leads", sub: "Total do período" }
-  , [isComprasPanel, isVisitasPanel, isMiguelImoveisPanel, isMiguelPanel, isClinicaESpaPanel, isKombuchaPanel]);
+  , [isComprasPanel, isVisitasPanel, isMiguelImoveisPanel, isMiguelPanel, isClinicaESpaPanel, isKombuchaPanel, isBeBluePanel]);
   const isSpecialPanel = isHotelPanel || isTertuliaPanel || isVarellaPanel;
   const { data: painelEspecial } = useQuery({
     queryKey: ["painel-especial", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim, chartAgrupamento],
@@ -1249,6 +1252,7 @@ function formatPercentage(value: number) {
           conversasEngajamentoMode={isClinicaESpaPanel}
           academyEngajamentoMode={isAcademyPanel}
           kombuchaMode={isKombuchaPanel}
+          lpViewsMode={isBeBluePanel}
         />
       )}
 
