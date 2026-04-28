@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { findClienteById } from "@/lib/repositories/clientesRepository";
 import { outcomeCountForFato } from "@/lib/metrics/fatoMidiaOutcome";
-import { isFlorien, isDor, isGranarolo, isKombucha, isBeBlueSchool } from "@/lib/clientProfiles";
+import { isFlorien, isDor, isGranarolo, isKombucha, isBeBlueSchool, isAcademyAmericana } from "@/lib/clientProfiles";
 
 export async function GET(
   request: NextRequest,
@@ -67,6 +67,7 @@ export async function GET(
   const isComprasCliente = isDor(cliente) || isGranarolo(cliente);
   const isKombuchaCliente = isKombucha(cliente);
   const isBeBlueCliente = isBeBlueSchool(cliente);
+  const isAcademyCliente = isAcademyAmericana(cliente);
 
   let totalInvestimento = 0;
   let totalLeads = 0;
@@ -78,14 +79,23 @@ export async function GET(
   let totalProfileVisits = 0;
   let totalAddToCart = 0;
   let totalLandingPageViews = 0;
+  // Academy: track investment per objective to avoid mixing budgets across campaigns
+  let investimentoLeads = 0;
+  let investimentoProfileVisits = 0;
   for (const r of rows) {
-    totalInvestimento += Number(r.investimento);
+    const inv = Number(r.investimento);
+    totalInvestimento += inv;
     totalConversas += r.messagingConversationsStarted ?? 0;
-    totalProfileVisits += r.profileVisits ?? 0;
+    const pv = r.profileVisits ?? 0;
+    totalProfileVisits += pv;
     totalAddToCart += (r as { addToCart?: number }).addToCart ?? 0;
     totalLandingPageViews += (r as { landingPageViews?: number }).landingPageViews ?? 0;
+    if (isAcademyCliente) {
+      if (r.leads > 0) investimentoLeads += inv;
+      if (pv > 0) investimentoProfileVisits += inv;
+    }
     totalLeads += isVisitasCliente
-      ? (r.profileVisits ?? 0)
+      ? pv
       : isKombuchaCliente
         ? ((r as { addToCart?: number }).addToCart ?? 0)
         : isBeBlueCliente
@@ -96,8 +106,11 @@ export async function GET(
     totalPurchases += r.purchases ?? 0;
     totalValorConversao += Number(r.websitePurchasesConversionValue ?? 0);
   }
-  const cpl = totalLeads > 0 ? totalInvestimento / totalLeads : 0;
-  const custoPorVisita = totalProfileVisits > 0 ? totalInvestimento / totalProfileVisits : 0;
+  // For Academy: use per-objective investment so CPL and custoPorVisita reflect actual campaign costs
+  const investimentoParaCpl = isAcademyCliente && investimentoLeads > 0 ? investimentoLeads : totalInvestimento;
+  const investimentoParaVisita = isAcademyCliente && investimentoProfileVisits > 0 ? investimentoProfileVisits : totalInvestimento;
+  const cpl = totalLeads > 0 ? investimentoParaCpl / totalLeads : 0;
+  const custoPorVisita = totalProfileVisits > 0 ? investimentoParaVisita / totalProfileVisits : 0;
   const cpm = totalImpressoes > 0 ? (totalInvestimento / totalImpressoes) * 1000 : 0;
   const custoPorConversa = totalConversas > 0 ? totalInvestimento / totalConversas : 0;
   const custoPorCompra = totalPurchases > 0 ? totalInvestimento / totalPurchases : 0;
