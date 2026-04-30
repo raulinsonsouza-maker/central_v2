@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { findClienteById } from "@/lib/repositories/clientesRepository";
 import { outcomeCountForFato } from "@/lib/metrics/fatoMidiaOutcome";
-import { isFlorien, isDor, isGranarolo, isKombucha, isBeBlueSchool, isAcademyAmericana } from "@/lib/clientProfiles";
+import { isFlorien, isDor, isGranarolo, isKombucha, isBeBlueSchool, isAcademyAmericana, isClinicaESpa } from "@/lib/clientProfiles";
 
 export async function GET(
   request: NextRequest,
@@ -69,6 +69,7 @@ export async function GET(
   const isKombuchaCliente = isKombucha(cliente);
   const isBeBlueCliente = isBeBlueSchool(cliente);
   const isAcademyCliente = isAcademyAmericana(cliente);
+  const isConversasCliente = isClinicaESpa(cliente);
 
   let totalInvestimento = 0;
   let totalLeads = 0;
@@ -81,26 +82,29 @@ export async function GET(
   let totalAddToCart = 0;
   let totalLandingPageViews = 0;
 
-  // Academy: 2-pass grouping by campaign to correctly attribute investment per objective.
-  // A campaign is a "lead campaign" if it has ANY leads in the period; "profile visit campaign" if ANY profileVisits.
-  // This ensures days with R$0 leads still count toward CPL (campaign always spends even on zero-lead days).
+  // 2-pass grouping by campaign to correctly attribute investment per objective.
+  // Applies to all clients: a campaign is classified by its primary result type.
+  // This ensures days with $0 results still count toward cost-per-result (campaigns spend on zero-result days).
   let investimentoLeads = 0;
   let investimentoProfileVisits = 0;
-  if (isAcademyCliente) {
-    type CampAgg = { leads: number; pv: number; inv: number };
+  let investimentoConversas = 0;
+  {
+    type CampAgg = { leads: number; pv: number; conversas: number; inv: number };
     const bycamp = new Map<string, CampAgg>();
     for (const r of rows) {
       const cn = (r as { campaignName?: string }).campaignName ?? "";
-      const existing = bycamp.get(cn) ?? { leads: 0, pv: 0, inv: 0 };
+      const existing = bycamp.get(cn) ?? { leads: 0, pv: 0, conversas: 0, inv: 0 };
       bycamp.set(cn, {
         leads: existing.leads + r.leads,
         pv: existing.pv + ((r as { profileVisits?: number }).profileVisits ?? 0),
+        conversas: existing.conversas + (r.messagingConversationsStarted ?? 0),
         inv: existing.inv + Number(r.investimento),
       });
     }
     for (const totals of bycamp.values()) {
       if (totals.leads > 0) investimentoLeads += totals.inv;
       if (totals.pv > 0) investimentoProfileVisits += totals.inv;
+      if (totals.conversas > 0) investimentoConversas += totals.inv;
     }
   }
 
@@ -118,19 +122,24 @@ export async function GET(
         ? ((r as { addToCart?: number }).addToCart ?? 0)
         : isBeBlueCliente
           ? ((r as { landingPageViews?: number }).landingPageViews ?? 0)
-          : outcomeCountForFato(r.canal, r.leads, r.conversoes, undefined, isComprasCliente && r.canal !== "GOOGLE");
+          : isConversasCliente
+            ? (r.messagingConversationsStarted ?? 0)
+            : outcomeCountForFato(r.canal, r.leads, r.conversoes, undefined, isComprasCliente && r.canal !== "GOOGLE");
     totalImpressoes += r.impressoes;
     totalCliques += r.cliques;
     totalPurchases += r.purchases ?? 0;
     totalValorConversao += Number(r.websitePurchasesConversionValue ?? 0);
   }
-  // For Academy: use per-objective investment so CPL and custoPorVisita reflect actual campaign costs
-  const investimentoParaCpl = isAcademyCliente && investimentoLeads > 0 ? investimentoLeads : totalInvestimento;
-  const investimentoParaVisita = isAcademyCliente && investimentoProfileVisits > 0 ? investimentoProfileVisits : totalInvestimento;
+  // Use per-objective investment for all clients to avoid cross-campaign cost dilution
+  const investimentoParaCpl = isConversasCliente
+    ? (investimentoConversas > 0 ? investimentoConversas : totalInvestimento)
+    : (investimentoLeads > 0 ? investimentoLeads : totalInvestimento);
+  const investimentoParaVisita = investimentoProfileVisits > 0 ? investimentoProfileVisits : totalInvestimento;
+  const investimentoParaConversa = investimentoConversas > 0 ? investimentoConversas : totalInvestimento;
   const cpl = totalLeads > 0 ? investimentoParaCpl / totalLeads : 0;
   const custoPorVisita = totalProfileVisits > 0 ? investimentoParaVisita / totalProfileVisits : 0;
   const cpm = totalImpressoes > 0 ? (totalInvestimento / totalImpressoes) * 1000 : 0;
-  const custoPorConversa = totalConversas > 0 ? totalInvestimento / totalConversas : 0;
+  const custoPorConversa = totalConversas > 0 ? investimentoParaConversa / totalConversas : 0;
   const custoPorCompra = totalPurchases > 0 ? totalInvestimento / totalPurchases : 0;
   const roas = totalInvestimento > 0 ? totalValorConversao / totalInvestimento : 0;
   const ticketMedio = totalPurchases > 0 ? totalValorConversao / totalPurchases : 0;

@@ -33,6 +33,8 @@ function sum(arr: number[]): number {
   return arr.reduce((a, b) => a + b, 0);
 }
 
+type ResultType = "vendas" | "leads" | "conversas" | "visitas" | "alcance";
+
 interface Campanha {
   nome: string;
   status: "ATIVA" | "PAUSADA" | null;
@@ -43,6 +45,11 @@ interface Campanha {
   leads: number;
   purchases: number;
   faturamento: number;
+  conversas?: number;
+  profileVisits?: number;
+  resultType?: ResultType;
+  resultados?: number | null;
+  custoResultado?: number | null;
   cpl: number | null;
   cpa: number | null;
   ticketMedio: number | null;
@@ -99,31 +106,36 @@ interface Criativo {
 const rowBg = (isTop: boolean) => isTop ? "bg-[var(--primary)]/[0.07]" : "bg-white/[0.03]";
 
 // ── Campaign type detection ─────────────────────────────────────────────────
-type CampType = "vendas" | "leads" | "alcance" | "rmkt" | "eventos" | "outro";
+type CampType = "vendas" | "leads" | "conversas" | "visitas" | "alcance" | "rmkt" | "eventos" | "outro";
 
-function detectCampType(nome: string, leads: number, purchases: number): CampType {
+function detectCampType(nome: string, leads: number, purchases: number, c?: Campanha): CampType {
+  if (c?.resultType && c.resultType !== "alcance") return c.resultType as CampType;
   if (purchases > 0) return "vendas";
   if (leads > 0) return "leads";
+  if ((c?.conversas ?? 0) > 0) return "conversas";
+  if ((c?.profileVisits ?? 0) > 0) return "visitas";
   const n = nome.toLowerCase();
   if (/\[venda\]|\bvenda\b|cat[aá]logo|catalog|convers[aã]o|conversion|purchase/.test(n)) return "vendas";
   if (/engajamento|engagement|alcance|reach|awareness|reconhecimento/.test(n)) return "alcance";
   if (/rmkt|retargeting|remarketing|reengaj/.test(n)) return "rmkt";
   if (/evento|events?\b/.test(n)) return "eventos";
-  if (/mensagem|message|whatsapp|lead/.test(n)) return "leads";
+  if (/mensagem|message|whatsapp|lead/.test(n)) return "conversas";
   return "outro";
 }
 
 const CAMP_TYPE_META: Record<CampType, { label: string; color: string }> = {
-  vendas:  { label: "Vendas",     color: "bg-emerald-500/20 text-emerald-400" },
-  leads:   { label: "Leads",      color: "bg-[var(--primary)]/20 text-[var(--primary)]" },
-  alcance: { label: "Alcance",    color: "bg-white/[0.08] text-white/40" },
-  rmkt:    { label: "Remarketing",color: "bg-violet-500/20 text-violet-400" },
-  eventos: { label: "Eventos",    color: "bg-sky-500/20 text-sky-400" },
-  outro:   { label: "Outro",      color: "bg-white/[0.06] text-white/30" },
+  vendas:    { label: "Vendas",          color: "bg-emerald-500/20 text-emerald-400" },
+  leads:     { label: "Leads",           color: "bg-[var(--primary)]/20 text-[var(--primary)]" },
+  conversas: { label: "Conversas",       color: "bg-sky-500/20 text-sky-300" },
+  visitas:   { label: "Visitas ao Perfil", color: "bg-violet-500/20 text-violet-300" },
+  alcance:   { label: "Alcance",         color: "bg-white/[0.08] text-white/40" },
+  rmkt:      { label: "Remarketing",     color: "bg-violet-500/20 text-violet-400" },
+  eventos:   { label: "Eventos",         color: "bg-sky-500/20 text-sky-400" },
+  outro:     { label: "Outro",           color: "bg-white/[0.06] text-white/30" },
 };
 const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 
-type SortCol = "nome" | "status" | "diasAtivos" | "investimento" | "impressoes" | "cliques" | "ctr" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
+type SortCol = "nome" | "status" | "diasAtivos" | "investimento" | "impressoes" | "cliques" | "ctr" | "resultados" | "custoResultado" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
 type SortDir = "asc" | "desc";
 
 function SortIcon({ col, sortCol, sortDir }: { col: string; sortCol: string; sortDir: SortDir }) {
@@ -154,7 +166,6 @@ function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] 
     let va: number | string, vb: number | string;
     if (col === "nome") { va = a.nome; vb = b.nome; }
     else if (col === "status") {
-      // ATIVA sorts before PAUSADA; null last
       const rank = (s: string | null) => s === "ATIVA" ? 0 : s === "PAUSADA" ? 1 : 2;
       va = rank(a.status); vb = rank(b.status);
     }
@@ -164,6 +175,8 @@ function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] 
     else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
     else if (col === "ctr") { va = a.ctr ?? -Infinity; vb = b.ctr ?? -Infinity; }
     else if (col === "ticketMedio") { va = a.ticketMedio ?? -Infinity; vb = b.ticketMedio ?? -Infinity; }
+    else if (col === "resultados") { va = a.resultados ?? -Infinity; vb = b.resultados ?? -Infinity; }
+    else if (col === "custoResultado") { va = a.custoResultado ?? Infinity; vb = b.custoResultado ?? Infinity; }
     else { va = a[col] as number; vb = b[col] as number; }
     if (va < vb) return dir === "asc" ? -1 : 1;
     if (va > vb) return dir === "asc" ? 1 : -1;
@@ -187,26 +200,36 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
 
   const sorted = sortCampanhas(campanhas, sortCol, sortDir);
 
-  const hasLeads = campanhas.some(c => c.leads > 0 || detectCampType(c.nome, c.leads, c.purchases) === "leads");
-  const hasSales = campanhas.some(c => c.purchases > 0 || c.faturamento > 0 || detectCampType(c.nome, c.leads, c.purchases) === "vendas");
+  const hasResultados = campanhas.some(c => (c.resultados ?? 0) > 0);
+  const hasSales = campanhas.some(c => c.purchases > 0 || c.faturamento > 0 || detectCampType(c.nome, c.leads, c.purchases, c) === "vendas");
+
+  // Label for the Resultado column — pick the predominant result type
+  const resultTypesCounts = campanhas.reduce<Record<string, number>>((acc, c) => {
+    const rt = c.resultType ?? "alcance";
+    acc[rt] = (acc[rt] ?? 0) + (c.resultados ?? 0);
+    return acc;
+  }, {});
+  const dominantResultType = (Object.entries(resultTypesCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ?? "leads") as ResultType;
+  const resultadoLabel = dominantResultType === "conversas" ? "Conversas" : dominantResultType === "visitas" ? "Visitas" : dominantResultType === "leads" ? "Leads" : dominantResultType === "vendas" ? "Vendas" : "Resultado";
+  const custoResultadoLabel = dominantResultType === "conversas" ? "Custo/Conversa" : dominantResultType === "visitas" ? "Custo/Visita" : dominantResultType === "leads" ? "CPL" : dominantResultType === "vendas" ? "CPA" : "Custo/Result.";
 
   const totals = {
     investimento: sum(campanhas.map(c => c.investimento)),
     impressoes: sum(campanhas.map(c => c.impressoes)),
     cliques: sum(campanhas.map(c => c.cliques)),
-    leads: sum(campanhas.map(c => c.leads)),
+    resultados: sum(campanhas.map(c => c.resultados ?? 0)),
     purchases: sum(campanhas.map(c => c.purchases)),
     faturamento: sum(campanhas.map(c => c.faturamento)),
   };
   const totalCtr = totals.impressoes > 0 ? (totals.cliques / totals.impressoes) * 100 : 0;
-  const totalCpl = totals.leads > 0 ? totals.investimento / totals.leads : null;
+  const totalCustoResultado = totals.resultados > 0 ? totals.investimento / totals.resultados : null;
   const totalRoas = totals.investimento > 0 && totals.faturamento > 0 ? totals.faturamento / totals.investimento : null;
 
   const st = { sortCol, sortDir, onSort: handleSort };
 
   return (
     <div className="overflow-x-auto">
-      <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: hasSales ? 1180 : hasLeads ? 880 : 760 }}>
+      <table className="w-full border-separate [border-spacing:0_6px]" style={{ minWidth: hasSales ? 1200 : hasResultados ? 920 : 760 }}>
         <thead>
           <tr>
             <SortTh col="nome" label="Campanha" align="left" {...st} />
@@ -216,10 +239,8 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
             <SortTh col="impressoes" label="Impressões" {...st} />
             <SortTh col="cliques" label="Cliques" {...st} />
             <SortTh col="ctr" label="CTR" {...st} />
-            {hasLeads && <SortTh col="leads" label="Leads" {...st} />}
-            {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
-            {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
-            {hasSales && <SortTh col="cpa" label="CPA" {...st} />}
+            {hasResultados && <SortTh col="resultados" label={resultadoLabel} {...st} />}
+            {hasResultados && <SortTh col="custoResultado" label={custoResultadoLabel} {...st} />}
             {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
             {hasSales && <SortTh col="ticketMedio" label="Ticket Médio" {...st} />}
             {hasSales && <SortTh col="roas" label="ROAS" {...st} />}
@@ -231,10 +252,10 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
           {sorted.map((c, i) => {
             const isTop = i === 0;
             const bg = rowBg(isTop);
-            const ctype = detectCampType(c.nome, c.leads, c.purchases);
+            const ctype = detectCampType(c.nome, c.leads, c.purchases, c);
             const { label: typeLabel, color: typeColor } = CAMP_TYPE_META[ctype];
-            // Non-conversion campaigns: show "—" instead of "0" for conversion metrics
             const isNonConversion = ctype === "alcance" || ctype === "eventos";
+            const hasResult = (c.resultados ?? 0) > 0;
 
             return (
               <tr
@@ -317,47 +338,38 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
                   {c.ctr !== null ? fmtPct(c.ctr) : "—"}
                 </td>
 
-                {/* Leads */}
-                {hasLeads && (
+                {/* Resultado unificado (conversas / visitas / leads / vendas) */}
+                {hasResultados && (
                   <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
-                    {isNonConversion ? (
+                    {isNonConversion || !hasResult ? (
                       <span className="text-[13px] text-white/20">—</span>
                     ) : (
-                      <span className={`text-[14px] font-bold ${isTop && c.leads > 0 ? "text-[var(--primary)]" : c.leads > 0 ? "text-[var(--foreground)]" : "text-white/30"}`}>
-                        {c.leads > 0 ? fmt(c.leads) : "—"}
-                      </span>
+                      <div>
+                        <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
+                          {fmt(c.resultados ?? 0)}
+                        </span>
+                        {c.resultType && c.resultType !== dominantResultType && (
+                          <span className="block text-[9px] text-[var(--muted-foreground)] mt-0.5 leading-none uppercase tracking-wide">
+                            {c.resultType === "conversas" ? "conv." : c.resultType === "visitas" ? "vis." : c.resultType === "leads" ? "leads" : ""}
+                          </span>
+                        )}
+                      </div>
                     )}
                   </td>
                 )}
 
-                {/* CPL */}
-                {hasLeads && (
+                {/* Custo por resultado */}
+                {hasResultados && (
                   <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
-                    {isNonConversion ? <span className="text-white/20">—</span> : (c.cpl !== null ? fmtBrl(c.cpl) : "—")}
-                  </td>
-                )}
-
-                {/* Vendas */}
-                {hasSales && (
-                  <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
-                    {isNonConversion ? (
-                      <span className="text-[13px] text-white/20">—</span>
+                    {isNonConversion || !hasResult ? (
+                      <span className="text-white/20">—</span>
                     ) : (
-                      <span className={`text-[15px] font-black ${isTop && c.purchases > 0 ? "text-[var(--primary)]" : c.purchases > 0 ? "text-[var(--foreground)]" : "text-white/30"}`}>
-                        {c.purchases > 0 ? fmt(c.purchases) : "—"}
-                      </span>
+                      c.custoResultado !== null && c.custoResultado !== undefined ? fmtBrl(c.custoResultado) : "—"
                     )}
                   </td>
                 )}
 
-                {/* CPA */}
-                {hasSales && (
-                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
-                    {isNonConversion ? <span className="text-white/20">—</span> : (c.cpa !== null ? fmtBrl(c.cpa) : "—")}
-                  </td>
-                )}
-
-                {/* Faturado */}
+                {/* Faturado (apenas para vendas) */}
                 {hasSales && (
                   <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
                     {isNonConversion ? (
@@ -413,24 +425,14 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
             <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
               {fmtPct(totalCtr)}
             </td>
-            {hasLeads && (
+            {hasResultados && (
               <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[15px] font-black text-[var(--primary)]">
-                {fmt(totals.leads)}
+                {fmt(totals.resultados)}
               </td>
             )}
-            {hasLeads && (
+            {hasResultados && (
               <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
-                {totalCpl !== null ? fmtBrl(totalCpl) : "—"}
-              </td>
-            )}
-            {hasSales && (
-              <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[15px] font-black text-[var(--primary)]">
-                {fmt(totals.purchases)}
-              </td>
-            )}
-            {hasSales && (
-              <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
-                {totals.purchases > 0 ? fmtBrl(totals.investimento / totals.purchases) : "—"}
+                {totalCustoResultado !== null ? fmtBrl(totalCustoResultado) : "—"}
               </td>
             )}
             {hasSales && (
@@ -1037,7 +1039,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
   const isRoot = nivel === "campanhas";
 
   const parentCampType: CampType | null = selectedCampanhaObjRef.current
-    ? detectCampType(selectedCampanhaObjRef.current.nome, selectedCampanhaObjRef.current.leads, selectedCampanhaObjRef.current.purchases)
+    ? detectCampType(selectedCampanhaObjRef.current.nome, selectedCampanhaObjRef.current.leads, selectedCampanhaObjRef.current.purchases, selectedCampanhaObjRef.current)
     : null;
 
   const countLabel =

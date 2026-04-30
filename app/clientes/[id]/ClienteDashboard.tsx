@@ -1250,7 +1250,7 @@ function formatPercentage(value: number) {
           onAgrupamentoChange={isLongPeriod ? undefined : (ag) => setChartAgrupamento(ag)}
           chartRevenueKey={chartRevenueKey}
           conversasEngajamentoMode={isClinicaESpaPanel}
-          academyEngajamentoMode={isAcademyPanel}
+          academyEngajamentoMode={isAcademyPanel || isClinicaESpaPanel}
           kombuchaMode={isKombuchaPanel}
           lpViewsMode={isBeBluePanel}
         />

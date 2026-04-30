@@ -63,6 +63,8 @@ export async function GET(
       leads: number;
       purchases: number;
       faturamento: number;
+      conversas: number;
+      profileVisits: number;
       diasAtivos: Set<string>;
     }>();
 
@@ -77,6 +79,8 @@ export async function GET(
         existing.leads += fato.leads;
         existing.purchases += fato.purchases;
         existing.faturamento += Number(fato.websitePurchasesConversionValue);
+        existing.conversas += fato.messagingConversationsStarted ?? 0;
+        existing.profileVisits += (fato as { profileVisits?: number }).profileVisits ?? 0;
         if (Number(fato.investimento) > 0) existing.diasAtivos.add(dateKey);
       } else {
         byCampanha.set(nome, {
@@ -86,6 +90,8 @@ export async function GET(
           leads: fato.leads,
           purchases: fato.purchases,
           faturamento: Number(fato.websitePurchasesConversionValue),
+          conversas: fato.messagingConversationsStarted ?? 0,
+          profileVisits: (fato as { profileVisits?: number }).profileVisits ?? 0,
           diasAtivos: Number(fato.investimento) > 0 ? new Set([dateKey]) : new Set(),
         });
       }
@@ -113,23 +119,49 @@ export async function GET(
       }
     }
 
+    // Derive result type and primary metric per campaign
+    type ResultType = "vendas" | "leads" | "conversas" | "visitas" | "alcance";
+    function deriveResultType(v: { purchases: number; leads: number; conversas: number; profileVisits: number }, nome: string): ResultType {
+      if (v.purchases > 0) return "vendas";
+      if (v.leads > 0) return "leads";
+      // When a campaign has both profileVisits and conversas, the dominant metric wins.
+      // Instagram engagement campaigns often register a few incidental conversas alongside many profileVisits.
+      if (v.profileVisits > v.conversas) return "visitas";
+      if (v.conversas > 0) return "conversas";
+      if (v.profileVisits > 0) return "visitas";
+      const n = nome.toLowerCase();
+      if (/whatsapp|mensagem|message/.test(n)) return "conversas";
+      if (/instagram|perfil|engajamento|engagement|alcance|reach|awareness/.test(n)) return "alcance";
+      return "alcance";
+    }
+
     const campanhas = Array.from(byCampanha.entries())
-      .map(([nome, v]) => ({
-        nome,
-        status: campaignStatusMap.get(nome) ?? null,
-        diasAtivos: v.diasAtivos.size,
-        investimento: v.investimento,
-        impressoes: v.impressoes,
-        cliques: v.cliques,
-        leads: v.leads,
-        purchases: v.purchases,
-        faturamento: v.faturamento,
-        cpl: v.leads > 0 ? v.investimento / v.leads : null,
-        cpa: v.purchases > 0 ? v.investimento / v.purchases : null,
-        ticketMedio: v.purchases > 0 ? v.faturamento / v.purchases : null,
-        roas: v.investimento > 0 && v.faturamento > 0 ? v.faturamento / v.investimento : null,
-        ctr: v.impressoes > 0 ? (v.cliques / v.impressoes) * 100 : null,
-      }))
+      .map(([nome, v]) => {
+        const resultType = deriveResultType(v, nome);
+        const resultados = resultType === "vendas" ? v.purchases : resultType === "leads" ? v.leads : resultType === "conversas" ? v.conversas : resultType === "visitas" ? v.profileVisits : null;
+        const custoResultado = resultados && resultados > 0 ? v.investimento / resultados : null;
+        return {
+          nome,
+          status: campaignStatusMap.get(nome) ?? null,
+          diasAtivos: v.diasAtivos.size,
+          investimento: v.investimento,
+          impressoes: v.impressoes,
+          cliques: v.cliques,
+          leads: v.leads,
+          purchases: v.purchases,
+          faturamento: v.faturamento,
+          conversas: v.conversas,
+          profileVisits: v.profileVisits,
+          resultType,
+          resultados,
+          custoResultado,
+          cpl: v.leads > 0 ? v.investimento / v.leads : null,
+          cpa: v.purchases > 0 ? v.investimento / v.purchases : null,
+          ticketMedio: v.purchases > 0 ? v.faturamento / v.purchases : null,
+          roas: v.investimento > 0 && v.faturamento > 0 ? v.faturamento / v.investimento : null,
+          ctr: v.impressoes > 0 ? (v.cliques / v.impressoes) * 100 : null,
+        };
+      })
       .filter(c => c.investimento > 1)
       .sort((a, b) => b.investimento - a.investimento);
 
