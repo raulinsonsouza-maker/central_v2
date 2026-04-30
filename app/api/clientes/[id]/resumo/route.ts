@@ -60,6 +60,7 @@ export async function GET(
       websitePurchasesConversionValue: true,
       addToCart: true,
       landingPageViews: true,
+      campaignName: true,
     },
   });
 
@@ -79,21 +80,38 @@ export async function GET(
   let totalProfileVisits = 0;
   let totalAddToCart = 0;
   let totalLandingPageViews = 0;
-  // Academy: track investment per objective to avoid mixing budgets across campaigns
+
+  // Academy: 2-pass grouping by campaign to correctly attribute investment per objective.
+  // A campaign is a "lead campaign" if it has ANY leads in the period; "profile visit campaign" if ANY profileVisits.
+  // This ensures days with R$0 leads still count toward CPL (campaign always spends even on zero-lead days).
   let investimentoLeads = 0;
   let investimentoProfileVisits = 0;
+  if (isAcademyCliente) {
+    type CampAgg = { leads: number; pv: number; inv: number };
+    const bycamp = new Map<string, CampAgg>();
+    for (const r of rows) {
+      const cn = (r as { campaignName?: string }).campaignName ?? "";
+      const existing = bycamp.get(cn) ?? { leads: 0, pv: 0, inv: 0 };
+      bycamp.set(cn, {
+        leads: existing.leads + r.leads,
+        pv: existing.pv + ((r as { profileVisits?: number }).profileVisits ?? 0),
+        inv: existing.inv + Number(r.investimento),
+      });
+    }
+    for (const totals of bycamp.values()) {
+      if (totals.leads > 0) investimentoLeads += totals.inv;
+      if (totals.pv > 0) investimentoProfileVisits += totals.inv;
+    }
+  }
+
   for (const r of rows) {
     const inv = Number(r.investimento);
     totalInvestimento += inv;
     totalConversas += r.messagingConversationsStarted ?? 0;
-    const pv = r.profileVisits ?? 0;
+    const pv = (r as { profileVisits?: number }).profileVisits ?? 0;
     totalProfileVisits += pv;
     totalAddToCart += (r as { addToCart?: number }).addToCart ?? 0;
     totalLandingPageViews += (r as { landingPageViews?: number }).landingPageViews ?? 0;
-    if (isAcademyCliente) {
-      if (r.leads > 0) investimentoLeads += inv;
-      if (pv > 0) investimentoProfileVisits += inv;
-    }
     totalLeads += isVisitasCliente
       ? pv
       : isKombuchaCliente

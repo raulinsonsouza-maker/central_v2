@@ -829,7 +829,7 @@ async function fetchCampaignInsightsPerCampaignChunk(
   const params = new URLSearchParams({
     access_token: token,
     level: "campaign",
-    fields: "campaign_id,campaign_name,date_start,date_stop,spend,impressions,clicks,inline_link_clicks,reach,ctr,cpc,actions,action_values,unique_actions",
+    fields: "campaign_id,campaign_name,date_start,date_stop,spend,impressions,clicks,inline_link_clicks,reach,ctr,cpc,actions,action_values,unique_actions,results",
     time_increment: "1",
     limit: "200",
     time_range: JSON.stringify({ since: dateFrom, until: dateTo }),
