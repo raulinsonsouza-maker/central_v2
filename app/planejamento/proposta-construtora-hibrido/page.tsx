@@ -30,10 +30,10 @@ const SERVICOS = [
 
 const TERMOS = [
   { label: "Investimento em mídia", value: "R$ 8.000/mês", sub: "Pago diretamente nas plataformas — Meta e Google" },
-  { label: "Fee de gestão", value: "R$ 2.000/mês", sub: "Cobre a operação dedicada à conta" },
-  { label: "Comissão", value: "1% do VGV", sub: "Sobre todas as vendas realizadas pela construtora no período" },
-  { label: "Vigência", value: "12 meses", sub: "Contrato anual com renovação automática" },
-  { label: "Revisão do contrato", value: "90 dias", sub: "Revisão conjunta obrigatória de escopo e condições" },
+  { label: "Fee de operação", value: "R$ 2.000/mês", sub: "Garante equipe dedicada e operação com foco total no projeto" },
+  { label: "Participação nos resultados", value: "1% do VGV", sub: "Compartilhamos o crescimento — sobre todas as vendas do período" },
+  { label: "Vigência", value: "12 meses", sub: "Tempo real para estruturar, crescer e colher resultado" },
+  { label: "Revisão conjunta", value: "90 dias", sub: "Ajustamos juntos o que precisar — escopo, estratégia e ritmo" },
 ];
 
 export default function PropostaHibrido() {
@@ -68,7 +68,7 @@ export default function PropostaHibrido() {
               <span style={{ color: OS }}>custo compartilhado</span>
             </h1>
             <p className="text-sm text-neutral-400 leading-relaxed max-w-xs">
-              A agência opera, rastreia e otimiza. Você investe em mídia e um fee que cobre a operação. Os dois lados ganham quando as vendas acontecem.
+              Estruturamos juntos a operação de marketing, funil e CRM. Você foca em vender e entregar — nós cuidamos de atrair, qualificar e medir. O crescimento de um impulsiona o outro.
             </p>
           </div>
 
@@ -117,8 +117,8 @@ export default function PropostaHibrido() {
             },
             {
               n: "03",
-              titulo: "Venda feita, comissão paga",
-              texto: "1% sobre todas as vendas realizadas pela construtora no período, pagas até o 5º dia útil após confirmação de cada contrato. Simples, direto, sem exceção.",
+              titulo: "Crescimento compartilhado",
+              texto: "A participação de 1% sobre as vendas do período é o que mantém agência e construtora com os mesmos objetivos. Crescemos juntos — quanto mais imóveis vendidos, mais forte fica a parceria.",
             },
           ].map(({ n, titulo, texto }) => (
             <div key={n} className="space-y-3">
@@ -149,10 +149,10 @@ export default function PropostaHibrido() {
       {/* fechamento */}
       <section className="rounded-3xl p-8 space-y-3" style={{ background: GD, border: `1px solid ${GB}` }}>
         <p className="text-[11px] uppercase tracking-widest font-black" style={{ color: G }}>
-          Alinhamento de interesses
+          Por que essa estrutura funciona
         </p>
         <p className="text-base text-neutral-200 leading-relaxed max-w-2xl">
-          O fee de R$ 2k cobre a operação real da equipe dedicada à conta — não é margem. A comissão de 1% incide sobre todas as vendas da construtora no período: quanto mais você vende, mais a agência ganha. Os dois lados jogam no mesmo time, com revisão conjunta em 90 dias para ajustar o que precisar.
+          O fee de operação garante que a equipe esteja dedicada ao projeto com a atenção que ele merece. A participação nos resultados garante que nossos objetivos sejam idênticos aos seus: vender mais, crescer juntos e construir algo duradouro. Em 90 dias revisamos tudo juntos — o que estiver funcionando a gente acelera, o que precisar mudar a gente ajusta.
         </p>
       </section>
 

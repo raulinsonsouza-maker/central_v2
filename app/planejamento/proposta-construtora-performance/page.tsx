@@ -30,10 +30,10 @@ const SERVICOS = [
 
 const TERMOS = [
   { label: "Investimento em mídia", value: "R$ 8.000/mês", sub: "Pago diretamente nas plataformas — Meta e Google" },
-  { label: "Fee de gestão", value: "R$ 0", sub: "Zero custo fixo — a agência só recebe quando vende" },
-  { label: "Comissão", value: "1% do VGV", sub: "Sobre todas as vendas realizadas pela construtora no período" },
-  { label: "Vigência", value: "12 meses", sub: "Contrato anual com renovação automática" },
-  { label: "Revisão do contrato", value: "90 dias", sub: "Revisão conjunta obrigatória de escopo e condições" },
+  { label: "Fee de operação", value: "R$ 0", sub: "Sem custo fixo — investimos operação junto com você" },
+  { label: "Participação nos resultados", value: "1% do VGV", sub: "Compartilhamos o crescimento — sobre todas as vendas do período" },
+  { label: "Vigência", value: "12 meses", sub: "Tempo real para estruturar, crescer e colher resultado" },
+  { label: "Revisão conjunta", value: "90 dias", sub: "Ajustamos juntos o que precisar — escopo, estratégia e ritmo" },
 ];
 
 export default function PropostaPerformance() {
@@ -68,7 +68,7 @@ export default function PropostaPerformance() {
               <span style={{ color: OS }}>orientada a resultado</span>
             </h1>
             <p className="text-sm text-neutral-400 leading-relaxed max-w-xs">
-              Zero custo fixo para o cliente. A agência entra com operação completa e só recebe quando as vendas acontecem. Risco total da agência.
+              Entramos como parceiros de crescimento, não como prestadores de serviço. Investimos operação e dedicação porque acreditamos no potencial dos seus projetos — e queremos crescer junto com você.
             </p>
           </div>
 
@@ -117,8 +117,8 @@ export default function PropostaPerformance() {
             },
             {
               n: "03",
-              titulo: "Venda feita, comissão paga",
-              texto: "1% sobre todas as vendas realizadas pela construtora no período, pagas até o 5º dia útil após confirmação de cada contrato. Zero fee, zero custo fixo.",
+              titulo: "Resultados que chegam juntos",
+              texto: "A participação de 1% sobre as vendas do período é a nossa forma de dizer que estamos comprometidos com o seu crescimento de verdade — não apenas com a entrega de serviço.",
             },
           ].map(({ n, titulo, texto }) => (
             <div key={n} className="space-y-3">
@@ -147,10 +147,10 @@ export default function PropostaPerformance() {
       {/* único requisito */}
       <section className="rounded-3xl p-8 space-y-3" style={{ background: OD, border: `1px solid ${OB}` }}>
         <p className="text-[11px] uppercase tracking-widest font-black" style={{ color: O }}>
-          Um requisito inegociável
+          Uma parceria de verdade
         </p>
         <p className="text-base text-neutral-200 leading-relaxed max-w-2xl">
-          Zero custo fixo. A agência investe operação e só recebe quando as vendas acontecem — 1% sobre todas as vendas da construtora no período. O CRM garante visibilidade do funil completo e serve de base para o relatório mensal. Revisão conjunta em 90 dias para ajustar o que precisar.
+          Parceria real significa que os dois lados têm compromisso com o resultado. Entramos sem fee porque acreditamos nos projetos e no potencial de crescimento — juntos. O CRM é a ferramenta que garante visibilidade do funil e alinhamento contínuo entre as equipes. Em 90 dias revisamos o que precisar, sempre com os dois lados na mesma mesa.
         </p>
       </section>
 
