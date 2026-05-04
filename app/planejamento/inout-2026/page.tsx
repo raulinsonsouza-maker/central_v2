@@ -156,14 +156,17 @@ function SimuladorReceita() {
   const [faturadoInput, setFaturadoInput] = useState("");
 
   const metaAnual = 2_500_000;
-  const mesAtual = 5; // Maio 2026
-  const mesesRealizados = mesAtual - 1; // Jan–Abr = 4 meses
+  const nomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
+  const mesAtual = new Date().getMonth() + 1; // 1–12, mês corrente
+  const mesesRealizados = mesAtual - 1; // meses já encerrados
+  const labelRealizado = mesesRealizados > 0
+    ? `Jan – ${nomes[mesesRealizados - 1]} · realizado`
+    : "nenhum mês encerrado";
 
   const calcProjection = useCallback(() => {
     const months: { mes: string; realizado: number; projetado: number; clientes: number }[] = [];
     let clientesAtivos = clientes;
     let projetadoTotal = 0;
-    const nomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
     const recMesRealizado = mesesRealizados > 0 && faturadoAte > 0 ? faturadoAte / mesesRealizados : 0;
 
     for (let i = 0; i < 12; i++) {
@@ -205,7 +208,7 @@ function SimuladorReceita() {
         <div className="flex items-center justify-between">
           <label className="text-sm font-bold text-white">Faturado até agora em 2026</label>
           <span className="text-[10px] uppercase tracking-widest text-neutral-500 bg-neutral-800 rounded-full px-2 py-0.5">
-            Jan – Abr · realizado
+            {labelRealizado}
           </span>
         </div>
         <div className="relative">
@@ -276,12 +279,12 @@ function SimuladorReceita() {
           <div>
             <p className="text-neutral-500 text-[10px] uppercase tracking-widest font-bold mb-1">Realizado</p>
             <p className="text-xl font-extrabold text-neutral-300">{fmt(faturadoAte, 2)}</p>
-            <p className="text-[10px] text-neutral-600 mt-0.5">Jan – Abr</p>
+            <p className="text-[10px] text-neutral-600 mt-0.5">{mesesRealizados > 0 ? `Jan – ${nomes[mesesRealizados - 1]}` : "—"}</p>
           </div>
           <div>
             <p className="text-orange-400 text-[10px] uppercase tracking-widest font-bold mb-1">Projetado</p>
             <p className="text-xl font-extrabold text-orange-400">{fmt(projetadoTotal, 2)}</p>
-            <p className="text-[10px] text-neutral-600 mt-0.5">Mai – Dez</p>
+            <p className="text-[10px] text-neutral-600 mt-0.5">{`${nomes[mesAtual - 1]} – Dez`}</p>
           </div>
           <div>
             <p className={`text-[10px] uppercase tracking-widest font-bold mb-1 ${batem ? "text-emerald-400" : "text-red-400"}`}>Total 2026</p>
