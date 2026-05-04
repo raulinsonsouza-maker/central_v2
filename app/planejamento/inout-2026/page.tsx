@@ -149,44 +149,84 @@ function scrollTo(id: string) {
 // ─── SIMULATOR: RECEITA ───────────────────────────────────────────────────────
 function SimuladorReceita() {
   const [clientes, setClientes] = useState(10);
-  const [ticket, setTicket] = useState(18000);
+  const [ticket, setTicket] = useState(3000);
   const [churnMensal, setChurnMensal] = useState(5);
   const [crescimento, setCrescimento] = useState(1);
+  const [faturadoAte, setFaturadoAte] = useState(0);
+  const [faturadoInput, setFaturadoInput] = useState("");
 
   const metaAnual = 2_500_000;
+  const mesAtual = 5; // Maio 2026
+  const mesesRealizados = mesAtual - 1; // Jan–Abr = 4 meses
 
   const calcProjection = useCallback(() => {
-    const months: { mes: string; receita: number; clientes: number }[] = [];
+    const months: { mes: string; realizado: number; projetado: number; clientes: number }[] = [];
     let clientesAtivos = clientes;
-    let acumulado = 0;
+    let projetadoTotal = 0;
     const nomes = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
-    for (let i = 0; i < 12; i++) {
-      const churnSaem = Math.round(clientesAtivos * (churnMensal / 100));
-      const novosEntram = crescimento;
-      clientesAtivos = Math.max(0, clientesAtivos - churnSaem + novosEntram);
-      const rec = clientesAtivos * ticket;
-      acumulado += rec;
-      months.push({ mes: nomes[i], receita: rec, clientes: clientesAtivos });
-    }
-    return { months, acumulado };
-  }, [clientes, ticket, churnMensal, crescimento]);
+    const recMesRealizado = mesesRealizados > 0 && faturadoAte > 0 ? faturadoAte / mesesRealizados : 0;
 
-  const { months, acumulado } = calcProjection();
-  const batem = acumulado >= metaAnual;
-  const gap = acumulado - metaAnual;
+    for (let i = 0; i < 12; i++) {
+      const monthNum = i + 1;
+      if (monthNum < mesAtual) {
+        months.push({ mes: nomes[i], realizado: recMesRealizado, projetado: 0, clientes: 0 });
+      } else {
+        const churnSaem = Math.round(clientesAtivos * (churnMensal / 100));
+        clientesAtivos = Math.max(0, clientesAtivos - churnSaem + crescimento);
+        const rec = clientesAtivos * ticket;
+        projetadoTotal += rec;
+        months.push({ mes: nomes[i], realizado: 0, projetado: rec, clientes: clientesAtivos });
+      }
+    }
+    return { months, projetadoTotal };
+  }, [clientes, ticket, churnMensal, crescimento, faturadoAte, mesesRealizados]);
+
+  const { months, projetadoTotal } = calcProjection();
+  const totalAnual = faturadoAte + projetadoTotal;
+  const batem = totalAnual >= metaAnual;
+  const gap = totalAnual - metaAnual;
+
+  function handleFaturadoChange(raw: string) {
+    const digits = raw.replace(/\D/g, "");
+    setFaturadoInput(digits);
+    setFaturadoAte(digits ? Number(digits) : 0);
+  }
 
   return (
     <Card className="space-y-6">
       <div>
         <SectionLabel label="Simulador Interativo" />
         <h3 className="text-xl font-extrabold text-white mb-1">Projeção de Receita 2026</h3>
-        <p className="text-neutral-400 text-sm">Ajuste os parâmetros e veja se a meta de R$ 2,5M é atingida.</p>
+        <p className="text-neutral-400 text-sm">Informe o que já foi faturado e ajuste os parâmetros para ver o fechamento do ano.</p>
       </div>
 
+      {/* Campo: faturado até agora */}
+      <div className="rounded-xl border border-neutral-700 bg-neutral-900/70 p-4 space-y-2">
+        <div className="flex items-center justify-between">
+          <label className="text-sm font-bold text-white">Faturado até agora em 2026</label>
+          <span className="text-[10px] uppercase tracking-widest text-neutral-500 bg-neutral-800 rounded-full px-2 py-0.5">
+            Jan – Abr · realizado
+          </span>
+        </div>
+        <div className="relative">
+          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-sm font-bold text-neutral-400 select-none">R$</span>
+          <input
+            type="text"
+            inputMode="numeric"
+            value={faturadoInput}
+            onChange={(e) => handleFaturadoChange(e.target.value)}
+            placeholder="0"
+            className="w-full rounded-lg border border-neutral-700 bg-neutral-800 pl-9 pr-4 py-2.5 text-base font-bold text-white placeholder:text-neutral-600 focus:border-orange-500/60 focus:outline-none transition-colors"
+          />
+        </div>
+        <p className="text-xs text-neutral-600">A projeção a partir de Maio usa os parâmetros abaixo.</p>
+      </div>
+
+      {/* Sliders */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         {[
           { label: "Clientes atuais", value: clientes, set: setClientes, min: 1, max: 50, step: 1, fmt: (v: number) => `${v} clientes` },
-          { label: "Ticket médio mensal", value: ticket, set: setTicket, min: 5000, max: 50000, step: 1000, fmt: (v: number) => fmt(v, 0) },
+          { label: "Ticket médio mensal", value: ticket, set: setTicket, min: 1000, max: 50000, step: 500, fmt: (v: number) => fmt(v, 0) },
           { label: "Churn mensal", value: churnMensal, set: setChurnMensal, min: 0, max: 20, step: 1, fmt: (v: number) => `${v}%` },
           { label: "Novos clientes/mês", value: crescimento, set: setCrescimento, min: 0, max: 10, step: 1, fmt: (v: number) => `+${v}/mês` },
         ].map(({ label, value, set, min, max, step, fmt: f }) => (
@@ -204,6 +244,7 @@ function SimuladorReceita() {
         ))}
       </div>
 
+      {/* Gráfico */}
       <div className="h-52">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={months} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
@@ -212,6 +253,10 @@ function SimuladorReceita() {
                 <stop offset="5%" stopColor="#ff6a00" stopOpacity={0.3}/>
                 <stop offset="95%" stopColor="#ff6a00" stopOpacity={0}/>
               </linearGradient>
+              <linearGradient id="gradReal" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#525252" stopOpacity={0.5}/>
+                <stop offset="95%" stopColor="#525252" stopOpacity={0}/>
+              </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="3 3" stroke="#2a2a2a" />
             <XAxis dataKey="mes" tick={{ fill: "#666", fontSize: 11 }} axisLine={false} tickLine={false} />
@@ -219,26 +264,38 @@ function SimuladorReceita() {
             <Tooltip content={<ChartTooltip formatter={(v) => fmt(v, 0)} />} />
             <ReferenceLine y={metaAnual / 12} stroke="#ff6a00" strokeDasharray="4 4" strokeOpacity={0.5}
               label={{ value: "Meta mensal", position: "insideTopRight", fill: "#ff6a00", fontSize: 10 }} />
-            <Area type="monotone" dataKey="receita" name="Receita" stroke="#ff6a00" strokeWidth={2.5} fill="url(#gradRec)" />
+            <Area type="monotone" dataKey="realizado" name="Realizado" stroke="#6b7280" strokeWidth={2} fill="url(#gradReal)" />
+            <Area type="monotone" dataKey="projetado" name="Projetado" stroke="#ff6a00" strokeWidth={2.5} fill="url(#gradRec)" />
           </AreaChart>
         </ResponsiveContainer>
       </div>
 
+      {/* Resultado */}
       <div className={`rounded-xl p-5 border ${batem ? "border-emerald-500/30 bg-emerald-500/5" : "border-red-500/30 bg-red-500/5"}`}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div className="grid grid-cols-3 gap-3 mb-4">
           <div>
-            <p className="text-neutral-400 text-xs uppercase tracking-widest font-bold mb-1">Faturamento projetado 2026</p>
-            <p className={`text-3xl font-extrabold ${batem ? "text-emerald-400" : "text-red-400"}`}>{fmt(acumulado, 2)}</p>
+            <p className="text-neutral-500 text-[10px] uppercase tracking-widest font-bold mb-1">Realizado</p>
+            <p className="text-xl font-extrabold text-neutral-300">{fmt(faturadoAte, 2)}</p>
+            <p className="text-[10px] text-neutral-600 mt-0.5">Jan – Abr</p>
           </div>
-          <div className="text-right">
-            <p className="text-neutral-400 text-xs uppercase tracking-widest font-bold mb-1">vs Meta R$ 2,5M</p>
-            <p className={`text-xl font-extrabold ${batem ? "text-emerald-400" : "text-red-400"}`}>
-              {gap >= 0 ? "+" : ""}{fmt(Math.abs(gap), 2)}
-            </p>
-            <p className={`text-sm font-semibold mt-0.5 ${batem ? "text-emerald-500" : "text-red-500"}`}>
-              {batem ? "✓ Meta atingida" : "✗ Abaixo da meta"}
-            </p>
+          <div>
+            <p className="text-orange-400 text-[10px] uppercase tracking-widest font-bold mb-1">Projetado</p>
+            <p className="text-xl font-extrabold text-orange-400">{fmt(projetadoTotal, 2)}</p>
+            <p className="text-[10px] text-neutral-600 mt-0.5">Mai – Dez</p>
           </div>
+          <div>
+            <p className={`text-[10px] uppercase tracking-widest font-bold mb-1 ${batem ? "text-emerald-400" : "text-red-400"}`}>Total 2026</p>
+            <p className={`text-xl font-extrabold ${batem ? "text-emerald-400" : "text-red-400"}`}>{fmt(totalAnual, 2)}</p>
+            <p className="text-[10px] text-neutral-600 mt-0.5">vs meta R$ 2,5M</p>
+          </div>
+        </div>
+        <div className="flex items-center justify-between pt-3 border-t border-white/5">
+          <p className={`text-lg font-extrabold ${batem ? "text-emerald-400" : "text-red-400"}`}>
+            {gap >= 0 ? "+" : ""}{fmt(Math.abs(gap), 2)}
+          </p>
+          <p className={`text-sm font-bold ${batem ? "text-emerald-500" : "text-red-500"}`}>
+            {batem ? "✓ Meta atingida" : "✗ Abaixo da meta"}
+          </p>
         </div>
       </div>
     </Card>
