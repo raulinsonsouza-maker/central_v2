@@ -31,8 +31,9 @@ const SERVICOS = [
 const TERMOS = [
   { label: "Investimento em mídia", value: "R$ 8.000/mês", sub: "Pago diretamente nas plataformas — Meta e Google" },
   { label: "Fee de gestão", value: "R$ 0", sub: "Zero custo fixo — a agência só recebe quando vende" },
-  { label: "Comissão por resultado", value: "1% do VGV", sub: "Sobre cada venda originada pelos canais gerenciados" },
-  { label: "Duração do contrato", value: "12 meses", sub: "Com revisão conjunta obrigatória em 90 dias" },
+  { label: "Comissão", value: "1% do VGV", sub: "Sobre todas as vendas realizadas pela construtora no período" },
+  { label: "Vigência", value: "12 meses", sub: "Contrato anual com renovação automática" },
+  { label: "Revisão do contrato", value: "90 dias", sub: "Revisão conjunta obrigatória de escopo e condições" },
 ];
 
 export default function PropostaPerformance() {
@@ -116,8 +117,8 @@ export default function PropostaPerformance() {
             },
             {
               n: "03",
-              titulo: "Venda confirmada, comissão paga",
-              texto: "Cada venda rastreada do clique até o contrato assinado. Comissão de 1% paga até o 5º dia útil após confirmação. Sem fee, sem custo fixo.",
+              titulo: "Venda feita, comissão paga",
+              texto: "1% sobre todas as vendas realizadas pela construtora no período, pagas até o 5º dia útil após confirmação de cada contrato. Zero fee, zero custo fixo.",
             },
           ].map(({ n, titulo, texto }) => (
             <div key={n} className="space-y-3">
@@ -133,7 +134,7 @@ export default function PropostaPerformance() {
       </section>
 
       {/* termos */}
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-6">
+      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 mb-6">
         {TERMOS.map(({ label, value, sub }) => (
           <div key={label} className="rounded-2xl border border-neutral-800 bg-[#111113] p-5 space-y-2">
             <p className="text-[10px] uppercase tracking-widest font-bold text-neutral-500">{label}</p>
@@ -149,7 +150,7 @@ export default function PropostaPerformance() {
           Um requisito inegociável
         </p>
         <p className="text-base text-neutral-200 leading-relaxed max-w-2xl">
-          O CRM precisa ser usado por toda a equipe — dono, corretor, qualquer pessoa que atenda um interessado. É o processo que garante rastreamento, atribuição e transparência para os dois lados. Sem isso, a parceria não funciona.
+          Zero custo fixo. A agência investe operação e só recebe quando as vendas acontecem — 1% sobre todas as vendas da construtora no período. O CRM garante visibilidade do funil completo e serve de base para o relatório mensal. Revisão conjunta em 90 dias para ajustar o que precisar.
         </p>
       </section>
 

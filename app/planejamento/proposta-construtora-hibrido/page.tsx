@@ -31,8 +31,9 @@ const SERVICOS = [
 const TERMOS = [
   { label: "Investimento em mídia", value: "R$ 8.000/mês", sub: "Pago diretamente nas plataformas — Meta e Google" },
   { label: "Fee de gestão", value: "R$ 2.000/mês", sub: "Cobre a operação dedicada à conta" },
-  { label: "Comissão por resultado", value: "1% do VGV", sub: "Sobre cada venda originada pelos canais gerenciados" },
-  { label: "Duração do contrato", value: "12 meses", sub: "Com revisão conjunta obrigatória em 90 dias" },
+  { label: "Comissão", value: "1% do VGV", sub: "Sobre todas as vendas realizadas pela construtora no período" },
+  { label: "Vigência", value: "12 meses", sub: "Contrato anual com renovação automática" },
+  { label: "Revisão do contrato", value: "90 dias", sub: "Revisão conjunta obrigatória de escopo e condições" },
 ];
 
 export default function PropostaHibrido() {
@@ -116,8 +117,8 @@ export default function PropostaHibrido() {
             },
             {
               n: "03",
-              titulo: "Resultado e comissão",
-              texto: "Cada venda rastreada do clique até o contrato assinado. Comissão de 1% paga até o 5º dia útil após confirmação — processo transparente, sem discussão.",
+              titulo: "Venda feita, comissão paga",
+              texto: "1% sobre todas as vendas realizadas pela construtora no período, pagas até o 5º dia útil após confirmação de cada contrato. Simples, direto, sem exceção.",
             },
           ].map(({ n, titulo, texto }) => (
             <div key={n} className="space-y-3">
@@ -135,7 +136,7 @@ export default function PropostaHibrido() {
       </section>
 
       {/* termos */}
-      <section className="grid grid-cols-2 gap-3 sm:grid-cols-4 mb-6">
+      <section className="grid grid-cols-2 gap-3 sm:grid-cols-3 mb-6">
         {TERMOS.map(({ label, value, sub }) => (
           <div key={label} className="rounded-2xl border border-neutral-800 bg-[#111113] p-5 space-y-2">
             <p className="text-[10px] uppercase tracking-widest font-bold text-neutral-500">{label}</p>
@@ -151,7 +152,7 @@ export default function PropostaHibrido() {
           Alinhamento de interesses
         </p>
         <p className="text-base text-neutral-200 leading-relaxed max-w-2xl">
-          O fee de R$ 2k existe para cobrir a operação real de uma equipe dedicada — não é margem. A comissão de 1% é o que garante que agência e cliente estão jogando no mesmo time: quanto mais vendas, melhor para os dois. Simples assim.
+          O fee de R$ 2k cobre a operação real da equipe dedicada à conta — não é margem. A comissão de 1% incide sobre todas as vendas da construtora no período: quanto mais você vende, mais a agência ganha. Os dois lados jogam no mesmo time, com revisão conjunta em 90 dias para ajustar o que precisar.
         </p>
       </section>
 
