@@ -15,6 +15,14 @@ type Plano = {
 
 const PLANOS: Plano[] = [
   {
+    slug: "proposta-construtora",
+    nome: "Proposta Comercial — Construtora",
+    cliente: "Inout",
+    descricao: "Dois modelos de parceria imobiliária — Híbrido (R$ 2k fee + 1% VGV) e Performance (Zero fee + 1% VGV) — para os empreendimentos Luminare, Kantoo e Sarandi. VGV total R$ 148,8M.",
+    tag: "Proposta",
+    updatedAt: "Mai 2026",
+  },
+  {
     slug: "inout-2026",
     nome: "Planejamento Inout 2026",
     cliente: "Inout",
