@@ -16,9 +16,25 @@ type Plano = {
 const PLANOS: Plano[] = [
   {
     slug: "proposta-construtora",
-    nome: "Proposta Comercial — Construtora",
+    nome: "Análise Interna — Construtora",
     cliente: "Inout",
-    descricao: "Dois modelos de parceria imobiliária — Híbrido (R$ 2k fee + 1% VGV) e Performance (Zero fee + 1% VGV) — para os empreendimentos Luminare, Kantoo e Sarandi. VGV total R$ 148,8M.",
+    descricao: "Comparativo completo dos dois modelos (Híbrido e Performance) com VGV por empreendimento, análise financeira, riscos e contexto para a call. Uso interno.",
+    tag: "Análise",
+    updatedAt: "Mai 2026",
+  },
+  {
+    slug: "proposta-construtora-hibrido",
+    nome: "Proposta Híbrido — Construtora",
+    cliente: "Construtora Maringá",
+    descricao: "Proposta cliente: R$ 2k/mês fee + 1% VGV sobre vendas atribuídas. Gestão completa de Meta Ads, Google Ads e CRM para Luminare, Kantoo e Sarandi.",
+    tag: "Proposta",
+    updatedAt: "Mai 2026",
+  },
+  {
+    slug: "proposta-construtora-performance",
+    nome: "Proposta Performance — Construtora",
+    cliente: "Construtora Maringá",
+    descricao: "Proposta cliente: zero fee + 1% VGV sobre vendas atribuídas. Operação completa de mídia e CRM — agência só recebe quando vende.",
     tag: "Proposta",
     updatedAt: "Mai 2026",
   },
