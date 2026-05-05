@@ -580,7 +580,7 @@ export async function fetchAdAccounts(token: string): Promise<MetaAdAccount[]> {
 }
 
 export interface MetaAccountBalance {
-  balance: number;
+  balance: number | null;
   currency: string;
   spendCap: number | null;
 }
@@ -604,15 +604,28 @@ export async function fetchAccountBalance(accountId: string, token: string): Pro
     throw new Error(data?.error?.message ?? `Meta API error: ${res.status}`);
   }
 
-  // funding_source_details.amount is in cents and represents the "Saldo disponível"
-  // shown in Meta's billing page for prepaid accounts.
-  const fsd = data.funding_source_details as { amount?: string | number; type?: number } | undefined;
-  const fsdAmount = fsd?.amount != null ? parseFloat(String(fsd.amount)) / 100 : null;
+  // `balance` is the account's real-time rolling balance in cents.
+  // For prepaid accounts (boleto, pix, voucher) this is the remaining amount available to spend.
+  // For credit card / postpay accounts this is typically 0 (spend is charged directly to the card).
+  const accountBalance = data.balance ? parseFloat(data.balance) / 100 : 0;
 
-  // Use funding source balance if available and non-zero; otherwise fall back to account balance
-  const balance = fsdAmount != null && fsdAmount > 0
+  // `funding_source_details.amount` is the face value of the funding source (e.g. the boleto
+  // deposit amount or coupon value). For boleto accounts this does NOT reflect remaining balance —
+  // only `balance` does. We only use it as a fallback for coupon/credit accounts where balance = 0.
+  const fsd = data.funding_source_details as { amount?: string | number; type?: number } | undefined;
+  // type 2 = ad coupon/credit — the only case where fsdAmount is meaningful when balance = 0
+  const fsdAmount = fsd?.type === 2 && fsd?.amount != null
+    ? parseFloat(String(fsd.amount)) / 100
+    : null;
+
+  // Primary: account balance (real-time, correct for boleto/pix prepaid and credit cards)
+  // Fallback: fsdAmount only for coupon accounts (type 2) when balance is 0
+  // null: credit card / postpay accounts with no real prepaid saldo to display
+  const balance = accountBalance > 0
+    ? accountBalance
+    : fsdAmount != null && fsdAmount > 0
     ? fsdAmount
-    : data.balance ? parseFloat(data.balance) / 100 : 0;
+    : accountBalance === 0 ? null : 0;
 
   return {
     balance,

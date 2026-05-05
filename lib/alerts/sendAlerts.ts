@@ -83,14 +83,15 @@ async function fetchSaldosBaixos(config: Awaited<ReturnType<typeof getIntegratio
       }
 
       const balance = await fetchAccountBalance(accountId, metaToken);
-      const diasRestantes = burnDiario > 0 ? balance.balance / burnDiario : null;
+      const saldoVal = balance.balance;
+      const diasRestantes = saldoVal != null && burnDiario > 0 ? saldoVal / burnDiario : null;
 
       return {
         clienteId: cid,
         nome: conta.cliente.nome,
         slug: conta.cliente.slug,
         accountId,
-        saldo: balance.balance,
+        saldo: saldoVal,
         moeda: balance.currency,
         burnDiario7d: burnDiario,
         diasRestantes,

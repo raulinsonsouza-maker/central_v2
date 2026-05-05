@@ -69,7 +69,8 @@ export async function GET(request: NextRequest) {
       }
 
       const balance = await fetchAccountBalance(accountId, metaToken);
-      const diasRestantes = burnDiario > 0 ? balance.balance / burnDiario : null;
+      const saldoVal = balance.balance;
+      const diasRestantes = saldoVal != null && burnDiario > 0 ? saldoVal / burnDiario : null;
 
       return {
         clienteId: cid,
@@ -77,7 +78,7 @@ export async function GET(request: NextRequest) {
         slug: conta.cliente.slug,
         logoUrl: conta.cliente.logoUrl,
         accountId,
-        saldo: balance.balance,
+        saldo: saldoVal,
         moeda: balance.currency,
         burnDiario7d: burnDiario,
         diasRestantes,
