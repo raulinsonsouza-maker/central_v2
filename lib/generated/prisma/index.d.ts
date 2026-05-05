@@ -2364,6 +2364,9 @@ export namespace Prisma {
     segmento: string | null
     orcamentoMidiaGoogleMensal: Decimal | null
     orcamentoMidiaMetaMensal: Decimal | null
+    gestor: string | null
+    formaPagamentoMeta: string | null
+    formaPagamentoGoogle: string | null
     portalToken: string | null
     leadScoringEnabled: boolean | null
     perfilPanel: string | null
@@ -2380,6 +2383,9 @@ export namespace Prisma {
     segmento: string | null
     orcamentoMidiaGoogleMensal: Decimal | null
     orcamentoMidiaMetaMensal: Decimal | null
+    gestor: string | null
+    formaPagamentoMeta: string | null
+    formaPagamentoGoogle: string | null
     portalToken: string | null
     leadScoringEnabled: boolean | null
     perfilPanel: string | null
@@ -2396,6 +2402,9 @@ export namespace Prisma {
     segmento: number
     orcamentoMidiaGoogleMensal: number
     orcamentoMidiaMetaMensal: number
+    gestor: number
+    formaPagamentoMeta: number
+    formaPagamentoGoogle: number
     portalToken: number
     leadScoringEnabled: number
     perfilPanel: number
@@ -2424,6 +2433,9 @@ export namespace Prisma {
     segmento?: true
     orcamentoMidiaGoogleMensal?: true
     orcamentoMidiaMetaMensal?: true
+    gestor?: true
+    formaPagamentoMeta?: true
+    formaPagamentoGoogle?: true
     portalToken?: true
     leadScoringEnabled?: true
     perfilPanel?: true
@@ -2440,6 +2452,9 @@ export namespace Prisma {
     segmento?: true
     orcamentoMidiaGoogleMensal?: true
     orcamentoMidiaMetaMensal?: true
+    gestor?: true
+    formaPagamentoMeta?: true
+    formaPagamentoGoogle?: true
     portalToken?: true
     leadScoringEnabled?: true
     perfilPanel?: true
@@ -2456,6 +2471,9 @@ export namespace Prisma {
     segmento?: true
     orcamentoMidiaGoogleMensal?: true
     orcamentoMidiaMetaMensal?: true
+    gestor?: true
+    formaPagamentoMeta?: true
+    formaPagamentoGoogle?: true
     portalToken?: true
     leadScoringEnabled?: true
     perfilPanel?: true
@@ -2559,6 +2577,9 @@ export namespace Prisma {
     segmento: string | null
     orcamentoMidiaGoogleMensal: Decimal | null
     orcamentoMidiaMetaMensal: Decimal | null
+    gestor: string | null
+    formaPagamentoMeta: string | null
+    formaPagamentoGoogle: string | null
     portalToken: string | null
     leadScoringEnabled: boolean
     perfilPanel: string | null
@@ -2594,6 +2615,9 @@ export namespace Prisma {
     segmento?: boolean
     orcamentoMidiaGoogleMensal?: boolean
     orcamentoMidiaMetaMensal?: boolean
+    gestor?: boolean
+    formaPagamentoMeta?: boolean
+    formaPagamentoGoogle?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
     perfilPanel?: boolean
@@ -2623,6 +2647,9 @@ export namespace Prisma {
     segmento?: boolean
     orcamentoMidiaGoogleMensal?: boolean
     orcamentoMidiaMetaMensal?: boolean
+    gestor?: boolean
+    formaPagamentoMeta?: boolean
+    formaPagamentoGoogle?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
     perfilPanel?: boolean
@@ -2639,6 +2666,9 @@ export namespace Prisma {
     segmento?: boolean
     orcamentoMidiaGoogleMensal?: boolean
     orcamentoMidiaMetaMensal?: boolean
+    gestor?: boolean
+    formaPagamentoMeta?: boolean
+    formaPagamentoGoogle?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
     perfilPanel?: boolean
@@ -2655,12 +2685,15 @@ export namespace Prisma {
     segmento?: boolean
     orcamentoMidiaGoogleMensal?: boolean
     orcamentoMidiaMetaMensal?: boolean
+    gestor?: boolean
+    formaPagamentoMeta?: boolean
+    formaPagamentoGoogle?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
     perfilPanel?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "slug" | "logoUrl" | "ativo" | "createdAt" | "updatedAt" | "segmento" | "orcamentoMidiaGoogleMensal" | "orcamentoMidiaMetaMensal" | "portalToken" | "leadScoringEnabled" | "perfilPanel", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "slug" | "logoUrl" | "ativo" | "createdAt" | "updatedAt" | "segmento" | "orcamentoMidiaGoogleMensal" | "orcamentoMidiaMetaMensal" | "gestor" | "formaPagamentoMeta" | "formaPagamentoGoogle" | "portalToken" | "leadScoringEnabled" | "perfilPanel", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agregadosMensal?: boolean | Cliente$agregadosMensalArgs<ExtArgs>
     agregadosSemanal?: boolean | Cliente$agregadosSemanalArgs<ExtArgs>
@@ -2706,6 +2739,9 @@ export namespace Prisma {
       segmento: string | null
       orcamentoMidiaGoogleMensal: Prisma.Decimal | null
       orcamentoMidiaMetaMensal: Prisma.Decimal | null
+      gestor: string | null
+      formaPagamentoMeta: string | null
+      formaPagamentoGoogle: string | null
       portalToken: string | null
       leadScoringEnabled: boolean
       perfilPanel: string | null
@@ -3154,6 +3190,9 @@ export namespace Prisma {
     readonly segmento: FieldRef<"Cliente", 'String'>
     readonly orcamentoMidiaGoogleMensal: FieldRef<"Cliente", 'Decimal'>
     readonly orcamentoMidiaMetaMensal: FieldRef<"Cliente", 'Decimal'>
+    readonly gestor: FieldRef<"Cliente", 'String'>
+    readonly formaPagamentoMeta: FieldRef<"Cliente", 'String'>
+    readonly formaPagamentoGoogle: FieldRef<"Cliente", 'String'>
     readonly portalToken: FieldRef<"Cliente", 'String'>
     readonly leadScoringEnabled: FieldRef<"Cliente", 'Boolean'>
     readonly perfilPanel: FieldRef<"Cliente", 'String'>
@@ -21171,6 +21210,9 @@ export namespace Prisma {
     segmento: 'segmento',
     orcamentoMidiaGoogleMensal: 'orcamentoMidiaGoogleMensal',
     orcamentoMidiaMetaMensal: 'orcamentoMidiaMetaMensal',
+    gestor: 'gestor',
+    formaPagamentoMeta: 'formaPagamentoMeta',
+    formaPagamentoGoogle: 'formaPagamentoGoogle',
     portalToken: 'portalToken',
     leadScoringEnabled: 'leadScoringEnabled',
     perfilPanel: 'perfilPanel'
@@ -21637,6 +21679,9 @@ export namespace Prisma {
     segmento?: StringNullableFilter<"Cliente"> | string | null
     orcamentoMidiaGoogleMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
+    gestor?: StringNullableFilter<"Cliente"> | string | null
+    formaPagamentoMeta?: StringNullableFilter<"Cliente"> | string | null
+    formaPagamentoGoogle?: StringNullableFilter<"Cliente"> | string | null
     portalToken?: StringNullableFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolFilter<"Cliente"> | boolean
     perfilPanel?: StringNullableFilter<"Cliente"> | string | null
@@ -21665,6 +21710,9 @@ export namespace Prisma {
     segmento?: SortOrderInput | SortOrder
     orcamentoMidiaGoogleMensal?: SortOrderInput | SortOrder
     orcamentoMidiaMetaMensal?: SortOrderInput | SortOrder
+    gestor?: SortOrderInput | SortOrder
+    formaPagamentoMeta?: SortOrderInput | SortOrder
+    formaPagamentoGoogle?: SortOrderInput | SortOrder
     portalToken?: SortOrderInput | SortOrder
     leadScoringEnabled?: SortOrder
     perfilPanel?: SortOrderInput | SortOrder
@@ -21697,6 +21745,9 @@ export namespace Prisma {
     segmento?: StringNullableFilter<"Cliente"> | string | null
     orcamentoMidiaGoogleMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
+    gestor?: StringNullableFilter<"Cliente"> | string | null
+    formaPagamentoMeta?: StringNullableFilter<"Cliente"> | string | null
+    formaPagamentoGoogle?: StringNullableFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolFilter<"Cliente"> | boolean
     perfilPanel?: StringNullableFilter<"Cliente"> | string | null
     agregadosMensal?: AgregadoMidiaMensalListRelationFilter
@@ -21724,6 +21775,9 @@ export namespace Prisma {
     segmento?: SortOrderInput | SortOrder
     orcamentoMidiaGoogleMensal?: SortOrderInput | SortOrder
     orcamentoMidiaMetaMensal?: SortOrderInput | SortOrder
+    gestor?: SortOrderInput | SortOrder
+    formaPagamentoMeta?: SortOrderInput | SortOrder
+    formaPagamentoGoogle?: SortOrderInput | SortOrder
     portalToken?: SortOrderInput | SortOrder
     leadScoringEnabled?: SortOrder
     perfilPanel?: SortOrderInput | SortOrder
@@ -21748,6 +21802,9 @@ export namespace Prisma {
     segmento?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     orcamentoMidiaGoogleMensal?: DecimalNullableWithAggregatesFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: DecimalNullableWithAggregatesFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
+    gestor?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    formaPagamentoMeta?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    formaPagamentoGoogle?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     portalToken?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolWithAggregatesFilter<"Cliente"> | boolean
     perfilPanel?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
@@ -23268,6 +23325,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -23296,6 +23356,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -23324,6 +23387,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23352,6 +23418,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23380,6 +23449,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -23396,6 +23468,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23412,6 +23487,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25349,6 +25427,9 @@ export namespace Prisma {
     segmento?: SortOrder
     orcamentoMidiaGoogleMensal?: SortOrder
     orcamentoMidiaMetaMensal?: SortOrder
+    gestor?: SortOrder
+    formaPagamentoMeta?: SortOrder
+    formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
     perfilPanel?: SortOrder
@@ -25370,6 +25451,9 @@ export namespace Prisma {
     segmento?: SortOrder
     orcamentoMidiaGoogleMensal?: SortOrder
     orcamentoMidiaMetaMensal?: SortOrder
+    gestor?: SortOrder
+    formaPagamentoMeta?: SortOrder
+    formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
     perfilPanel?: SortOrder
@@ -25386,6 +25470,9 @@ export namespace Prisma {
     segmento?: SortOrder
     orcamentoMidiaGoogleMensal?: SortOrder
     orcamentoMidiaMetaMensal?: SortOrder
+    gestor?: SortOrder
+    formaPagamentoMeta?: SortOrder
+    formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
     perfilPanel?: SortOrder
@@ -29083,6 +29170,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -29110,6 +29200,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -29447,6 +29540,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29474,6 +29570,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29581,6 +29680,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -29608,6 +29710,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -29686,6 +29791,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29713,6 +29821,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29781,6 +29892,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -29808,6 +29922,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -29851,6 +29968,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29878,6 +29998,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29905,6 +30028,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -29932,6 +30058,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -29975,6 +30104,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30002,6 +30134,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30029,6 +30164,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30056,6 +30194,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30099,6 +30240,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30126,6 +30270,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30153,6 +30300,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30180,6 +30330,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30223,6 +30376,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30250,6 +30406,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30277,6 +30436,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30304,6 +30466,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30382,6 +30547,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30409,6 +30577,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30477,6 +30648,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30504,6 +30678,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30582,6 +30759,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30609,6 +30789,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30677,6 +30860,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30704,6 +30890,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30782,6 +30971,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30809,6 +31001,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30877,6 +31072,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30904,6 +31102,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -30982,6 +31183,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31009,6 +31213,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31077,6 +31284,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -31104,6 +31314,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -31147,6 +31360,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31174,6 +31390,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31201,6 +31420,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -31228,6 +31450,9 @@ export namespace Prisma {
     segmento?: string | null
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
     perfilPanel?: string | null
@@ -31271,6 +31496,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31298,6 +31526,9 @@ export namespace Prisma {
     segmento?: NullableStringFieldUpdateOperationsInput | string | null
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null

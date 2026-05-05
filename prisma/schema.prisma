@@ -19,6 +19,9 @@ model Cliente {
   segmento                   String?
   orcamentoMidiaGoogleMensal Decimal?                @db.Decimal(14, 2)
   orcamentoMidiaMetaMensal   Decimal?                @db.Decimal(14, 2)
+  gestor                     String?
+  formaPagamentoMeta         String?
+  formaPagamentoGoogle       String?
   portalToken                String?                 @unique @default(dbgenerated("(gen_random_uuid())::text"))
   leadScoringEnabled         Boolean                 @default(false)
   perfilPanel                String?
