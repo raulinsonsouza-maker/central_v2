@@ -604,22 +604,37 @@ export async function fetchAccountBalance(accountId: string, token: string): Pro
     throw new Error(data?.error?.message ?? `Meta API error: ${res.status}`);
   }
 
-  // `funding_source_details.amount` is the prepaid balance shown as "Saldo disponível"
-  // in Meta's billing UI. It is stored in cents and reflects the remaining prepaid credit
-  // for boleto, pix, and voucher accounts. This is the most accurate field for prepaid accounts.
-  const fsd = data.funding_source_details as { amount?: string | number; type?: number } | undefined;
-  const fsdAmount = fsd?.amount != null ? parseFloat(String(fsd.amount)) / 100 : null;
+  const fsd = data.funding_source_details as {
+    amount?: string | number;
+    type?: number;
+    display_string?: string;
+  } | undefined;
 
-  // `balance` is a net rolling balance that does NOT match Meta's UI for prepaid accounts.
-  // Use it only as a last resort when fsdAmount is unavailable.
+  // Meta does NOT return `funding_source_details.amount` in the API response.
+  // Instead, the correct "Saldo disponível" is embedded in `display_string` for
+  // prepaid accounts (type 20): e.g. "Saldo disponível (R$1.073,27 BRL)"
+  // We parse it out using a regex that handles Brazilian number formatting.
+  let fsdParsed: number | null = null;
+  if (fsd?.type === 20 && fsd?.display_string) {
+    const m = fsd.display_string.match(/R\$\s*([\d.]+,\d+)/);
+    if (m) {
+      // Convert from Brazilian format: "1.073,27" → 1073.27
+      const num = parseFloat(m[1].replace(/\./g, "").replace(",", "."));
+      if (!isNaN(num)) fsdParsed = num;
+    }
+  }
+
+  // `balance` field is a net rolling amount (in cents) — does NOT match Meta's billing UI
+  // for prepaid accounts (shown as ~1-2% of real saldo). Used only for credit card accounts.
   const accountBalance = data.balance ? parseFloat(data.balance) / 100 : 0;
 
   // Priority:
-  // 1. fsdAmount > 0 → prepaid account (boleto/pix/coupon), use it — matches Meta billing UI
-  // 2. accountBalance > 0 → some postpay accounts with rolling credit, use it
-  // 3. Both zero/null → credit card / postpay with no prepaid saldo → return null (show "—")
-  const balance: number | null = fsdAmount != null && fsdAmount > 0
-    ? fsdAmount
+  // 1. fsdParsed > 0 → type-20 prepaid account (boleto/pix), display_string parsed — matches Meta UI
+  // 2. fsdParsed === 0 → prepaid account with zero balance → show 0 (not null)
+  // 3. accountBalance > 0 with no fsd type 20 → credit card/other, use it
+  // 4. Everything zero/null → return null (show "—")
+  const balance: number | null = fsd?.type === 20
+    ? (fsdParsed ?? 0)
     : accountBalance > 0
     ? accountBalance
     : null;
