@@ -604,28 +604,25 @@ export async function fetchAccountBalance(accountId: string, token: string): Pro
     throw new Error(data?.error?.message ?? `Meta API error: ${res.status}`);
   }
 
-  // `balance` is the account's real-time rolling balance in cents.
-  // For prepaid accounts (boleto, pix, voucher) this is the remaining amount available to spend.
-  // For credit card / postpay accounts this is typically 0 (spend is charged directly to the card).
+  // `funding_source_details.amount` is the prepaid balance shown as "Saldo disponível"
+  // in Meta's billing UI. It is stored in cents and reflects the remaining prepaid credit
+  // for boleto, pix, and voucher accounts. This is the most accurate field for prepaid accounts.
+  const fsd = data.funding_source_details as { amount?: string | number; type?: number } | undefined;
+  const fsdAmount = fsd?.amount != null ? parseFloat(String(fsd.amount)) / 100 : null;
+
+  // `balance` is a net rolling balance that does NOT match Meta's UI for prepaid accounts.
+  // Use it only as a last resort when fsdAmount is unavailable.
   const accountBalance = data.balance ? parseFloat(data.balance) / 100 : 0;
 
-  // `funding_source_details.amount` is the face value of the funding source (e.g. the boleto
-  // deposit amount or coupon value). For boleto accounts this does NOT reflect remaining balance —
-  // only `balance` does. We only use it as a fallback for coupon/credit accounts where balance = 0.
-  const fsd = data.funding_source_details as { amount?: string | number; type?: number } | undefined;
-  // type 2 = ad coupon/credit — the only case where fsdAmount is meaningful when balance = 0
-  const fsdAmount = fsd?.type === 2 && fsd?.amount != null
-    ? parseFloat(String(fsd.amount)) / 100
-    : null;
-
-  // Primary: account balance (real-time, correct for boleto/pix prepaid and credit cards)
-  // Fallback: fsdAmount only for coupon accounts (type 2) when balance is 0
-  // null: credit card / postpay accounts with no real prepaid saldo to display
-  const balance = accountBalance > 0
-    ? accountBalance
-    : fsdAmount != null && fsdAmount > 0
+  // Priority:
+  // 1. fsdAmount > 0 → prepaid account (boleto/pix/coupon), use it — matches Meta billing UI
+  // 2. accountBalance > 0 → some postpay accounts with rolling credit, use it
+  // 3. Both zero/null → credit card / postpay with no prepaid saldo → return null (show "—")
+  const balance: number | null = fsdAmount != null && fsdAmount > 0
     ? fsdAmount
-    : accountBalance === 0 ? null : 0;
+    : accountBalance > 0
+    ? accountBalance
+    : null;
 
   return {
     balance,
