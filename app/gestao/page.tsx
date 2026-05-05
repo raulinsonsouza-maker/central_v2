@@ -356,16 +356,6 @@ function GestaoTable({
         </thead>
         <tbody>
           {ativos.map(renderRow)}
-          {inativos.length > 0 && (
-            <>
-              <tr>
-                <td colSpan={10} className="px-3 py-2 text-[10px] font-bold uppercase tracking-widest text-neutral-700 border-b border-neutral-900">
-                  Desativados
-                </td>
-              </tr>
-              {inativos.map(renderRow)}
-            </>
-          )}
         </tbody>
         <tfoot>
           <tr className="bg-neutral-900/60">
