@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import Image from "next/image";
-import { ExternalLink, RefreshCw, Shield } from "lucide-react";
+import { ArrowDown, ArrowUp, ArrowUpDown, ExternalLink, RefreshCw, Shield } from "lucide-react";
 
 function fmtBrl(v: number | null) {
   if (v === null) return "—";
@@ -166,12 +166,45 @@ function InlineOrcamento({
   );
 }
 
+type SortKey = "nome" | "gestor" | "orcamentoMeta" | "saldoMeta" | "orcamentoGoogle" | "saldoGoogle" | "orcamentoTotal";
+type SortDir = "asc" | "desc";
+
 function Th({ children, right }: { children: React.ReactNode; right?: boolean }) {
   return (
     <th
       className={`whitespace-nowrap border-b border-neutral-800 bg-neutral-950 px-3 py-2.5 text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-500 ${right ? "text-right" : "text-left"}`}
     >
       {children}
+    </th>
+  );
+}
+
+function ThSort({
+  children,
+  sortKey,
+  current,
+  dir,
+  onSort,
+  right,
+}: {
+  children: React.ReactNode;
+  sortKey: SortKey;
+  current: SortKey | null;
+  dir: SortDir;
+  onSort: (k: SortKey) => void;
+  right?: boolean;
+}) {
+  const active = current === sortKey;
+  const Icon = active ? (dir === "asc" ? ArrowUp : ArrowDown) : ArrowUpDown;
+  return (
+    <th
+      onClick={() => onSort(sortKey)}
+      className={`cursor-pointer select-none whitespace-nowrap border-b border-neutral-800 bg-neutral-950 px-3 py-2.5 text-[10px] font-bold uppercase tracking-[0.16em] transition-colors hover:text-neutral-300 ${active ? "text-[#ff6a00]" : "text-neutral-500"} ${right ? "text-right" : "text-left"}`}
+    >
+      <span className={`inline-flex items-center gap-1 ${right ? "flex-row-reverse" : ""}`}>
+        {children}
+        <Icon className={`h-3 w-3 shrink-0 ${active ? "text-[#ff6a00]" : "text-neutral-700"}`} />
+      </span>
     </th>
   );
 }
@@ -195,6 +228,34 @@ function GestaoTable({
 }) {
   const qc = useQueryClient();
   const [squadFiltro, setSquadFiltro] = useState<string>("todos");
+  const [sortKey, setSortKey] = useState<SortKey | null>(null);
+  const [sortDir, setSortDir] = useState<SortDir>("asc");
+
+  function handleSort(k: SortKey) {
+    if (sortKey === k) {
+      setSortDir((d) => (d === "asc" ? "desc" : "asc"));
+    } else {
+      setSortKey(k);
+      setSortDir("asc");
+    }
+  }
+
+  function sortRows(list: TabelaRow[]) {
+    if (!sortKey) return list;
+    return [...list].sort((a, b) => {
+      let av: string | number | null;
+      let bv: string | number | null;
+      if (sortKey === "nome") { av = a.nome.toLowerCase(); bv = b.nome.toLowerCase(); }
+      else if (sortKey === "gestor") { av = (a.gestor ?? "").toLowerCase(); bv = (b.gestor ?? "").toLowerCase(); }
+      else { av = a[sortKey]; bv = b[sortKey]; }
+      // nulls last regardless of direction
+      if (av === null && bv === null) return 0;
+      if (av === null) return 1;
+      if (bv === null) return -1;
+      const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+      return sortDir === "asc" ? cmp : -cmp;
+    });
+  }
 
   const patch = useCallback(
     async (id: string, data: Record<string, unknown>) => {
@@ -216,8 +277,8 @@ function GestaoTable({
     ? rows
     : rows.filter((r) => r.gestor?.trim() === squadFiltro);
 
-  const ativos = rowsFiltrados.filter((r) => r.ativo);
-  const inativos = rowsFiltrados.filter((r) => !r.ativo);
+  const ativos = sortRows(rowsFiltrados.filter((r) => r.ativo));
+  const inativos = sortRows(rowsFiltrados.filter((r) => !r.ativo));
 
   const totalOrcMeta = ativos.reduce((s, r) => s + (r.orcamentoMeta ?? 0), 0);
   const totalOrcGoogle = ativos.reduce((s, r) => s + (r.orcamentoGoogle ?? 0), 0);
@@ -342,16 +403,16 @@ function GestaoTable({
       <table className="w-full border-collapse" style={{ minWidth: 1050 }}>
         <thead>
           <tr>
-            <Th>Cliente</Th>
-            <Th>Squad</Th>
+            <ThSort sortKey="nome" current={sortKey} dir={sortDir} onSort={handleSort}>Cliente</ThSort>
+            <ThSort sortKey="gestor" current={sortKey} dir={sortDir} onSort={handleSort}>Squad</ThSort>
             <Th>Status</Th>
-            <Th right>Orç. Meta</Th>
+            <ThSort sortKey="orcamentoMeta" current={sortKey} dir={sortDir} onSort={handleSort} right>Orç. Meta</ThSort>
             <Th>Forma Pgto</Th>
-            <Th right>Saldo Meta</Th>
-            <Th right>Orç. Google</Th>
+            <ThSort sortKey="saldoMeta" current={sortKey} dir={sortDir} onSort={handleSort} right>Saldo Meta</ThSort>
+            <ThSort sortKey="orcamentoGoogle" current={sortKey} dir={sortDir} onSort={handleSort} right>Orç. Google</ThSort>
             <Th>Forma Pgto Google</Th>
-            <Th right>Saldo Google</Th>
-            <Th right>Orç. Total</Th>
+            <ThSort sortKey="saldoGoogle" current={sortKey} dir={sortDir} onSort={handleSort} right>Saldo Google</ThSort>
+            <ThSort sortKey="orcamentoTotal" current={sortKey} dir={sortDir} onSort={handleSort} right>Orç. Total</ThSort>
           </tr>
         </thead>
         <tbody>
