@@ -194,6 +194,7 @@ function GestaoTable({
   onRefresh: () => void;
 }) {
   const qc = useQueryClient();
+  const [squadFiltro, setSquadFiltro] = useState<string>("todos");
 
   const patch = useCallback(
     async (id: string, data: Record<string, unknown>) => {
@@ -207,8 +208,16 @@ function GestaoTable({
     [adminToken, qc]
   );
 
-  const ativos = rows.filter((r) => r.ativo);
-  const inativos = rows.filter((r) => !r.ativo);
+  const squadsDisponiveis = Array.from(
+    new Set(rows.map((r) => r.gestor?.trim()).filter(Boolean) as string[])
+  ).sort();
+
+  const rowsFiltrados = squadFiltro === "todos"
+    ? rows
+    : rows.filter((r) => r.gestor?.trim() === squadFiltro);
+
+  const ativos = rowsFiltrados.filter((r) => r.ativo);
+  const inativos = rowsFiltrados.filter((r) => !r.ativo);
 
   const totalOrcMeta = ativos.reduce((s, r) => s + (r.orcamentoMeta ?? 0), 0);
   const totalOrcGoogle = ativos.reduce((s, r) => s + (r.orcamentoGoogle ?? 0), 0);
@@ -272,11 +281,11 @@ function GestaoTable({
         </Td>
 
         <Td right className="min-w-[110px]">
-          <span className="tabular-nums text-neutral-300 font-semibold">{fmtBrl(r.orcamentoTotal || null)}</span>
+          <SaldoCell valor={r.saldoGoogle} />
         </Td>
 
         <Td right className="min-w-[110px]">
-          <SaldoCell valor={r.saldoGoogle} />
+          <span className="tabular-nums text-neutral-300 font-semibold">{fmtBrl(r.orcamentoTotal || null)}</span>
         </Td>
       </tr>
     );
@@ -284,33 +293,65 @@ function GestaoTable({
 
   return (
     <div className="overflow-x-auto rounded-xl border border-neutral-800 bg-neutral-950">
-      <div className="flex items-center justify-between px-4 py-3 border-b border-neutral-800">
+      <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-b border-neutral-800">
         <div>
           <h2 className="text-[13px] font-bold text-neutral-200">Gestão de Projetos</h2>
           <p className="text-[11px] text-neutral-600 mt-0.5">Clique em qualquer célula editável para alterar · Saldos via API</p>
         </div>
-        <button
-          onClick={onRefresh}
-          className="flex items-center gap-1.5 rounded-lg border border-neutral-800 px-3 py-1.5 text-[11px] text-neutral-500 hover:border-[#ff6a00]/30 hover:text-neutral-300 transition-colors"
-        >
-          <RefreshCw className="h-3 w-3" />
-          Atualizar saldos
-        </button>
+        <div className="flex items-center gap-2">
+          {squadsDisponiveis.length > 0 && (
+            <div className="flex items-center gap-1.5">
+              <span className="text-[10px] font-semibold uppercase tracking-widest text-neutral-600">Squad</span>
+              <div className="flex items-center gap-1">
+                <button
+                  onClick={() => setSquadFiltro("todos")}
+                  className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-colors ${
+                    squadFiltro === "todos"
+                      ? "bg-[#ff6a00] text-white"
+                      : "border border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300"
+                  }`}
+                >
+                  Todos
+                </button>
+                {squadsDisponiveis.map((s) => (
+                  <button
+                    key={s}
+                    onClick={() => setSquadFiltro(s)}
+                    className={`rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-colors ${
+                      squadFiltro === s
+                        ? "bg-[#ff6a00] text-white"
+                        : "border border-neutral-800 text-neutral-500 hover:border-neutral-700 hover:text-neutral-300"
+                    }`}
+                  >
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+          <button
+            onClick={onRefresh}
+            className="flex items-center gap-1.5 rounded-lg border border-neutral-800 px-3 py-1.5 text-[11px] text-neutral-500 hover:border-[#ff6a00]/30 hover:text-neutral-300 transition-colors"
+          >
+            <RefreshCw className="h-3 w-3" />
+            Atualizar saldos
+          </button>
+        </div>
       </div>
 
       <table className="w-full border-collapse" style={{ minWidth: 1050 }}>
         <thead>
           <tr>
             <Th>Cliente</Th>
-            <Th>Gestor</Th>
+            <Th>Squad</Th>
             <Th>Status</Th>
             <Th right>Orç. Meta</Th>
             <Th>Forma Pgto</Th>
             <Th right>Saldo Meta</Th>
             <Th right>Orç. Google</Th>
             <Th>Forma Pgto Google</Th>
-            <Th right>Orç. Total</Th>
             <Th right>Saldo Google</Th>
+            <Th right>Orç. Total</Th>
           </tr>
         </thead>
         <tbody>
@@ -340,10 +381,10 @@ function GestaoTable({
               {fmtBrl(totalOrcGoogle)}
             </td>
             <td />
+            <td />
             <td className="px-3 py-3 text-right text-[12px] font-bold tabular-nums text-[#ff6a00]">
               {fmtBrl(totalOrcTotal)}
             </td>
-            <td />
           </tr>
         </tfoot>
       </table>
