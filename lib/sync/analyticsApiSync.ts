@@ -6,10 +6,19 @@ import {
 import { findAllClientes } from "@/lib/repositories/clientesRepository";
 import { prisma } from "@/lib/db";
 
-const DEFAULT_DATE_FROM = "2026-01-01";
+// For brand-new clients with no data, fetch last 90 days (not all of 2026)
+const DEFAULT_LOOKBACK_DAYS = 90;
+// How many days back to re-fetch to capture late-arriving GA4 data
+const INCREMENTAL_LOOKBACK_DAYS = 3;
 
-function formatDateYyyyMmDd(d: Date): string {
+function formatDate(d: Date): string {
   return d.toISOString().slice(0, 10);
+}
+
+function daysAgo(n: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  return formatDate(d);
 }
 
 function parseGa4Date(dateStr: string): Date {
@@ -27,11 +36,15 @@ export interface AnalyticsSyncOptions {
 
 export interface AnalyticsSyncResult {
   daysProcessed: number;
+  dateFrom: string;
+  dateTo: string;
   error?: string;
 }
 
 /**
  * Sync GA4 data into FatoAnalyticsDiario and FatoAnalyticsPorCanal.
+ * Incremental: detects the last saved record and goes back INCREMENTAL_LOOKBACK_DAYS
+ * to capture late-arriving GA4 data. Falls back to DEFAULT_LOOKBACK_DAYS for new clients.
  */
 export async function syncAnalyticsCliente(
   clienteId: string,
@@ -45,12 +58,30 @@ export async function syncAnalyticsCliente(
   if (!propertyId) {
     return {
       daysProcessed: 0,
+      dateFrom: "",
+      dateTo: "",
       error: "Sem conta Google Analytics configurada (Conta com plataforma GOOGLE_ANALYTICS)",
     };
   }
 
-  const today = formatDateYyyyMmDd(new Date());
-  const dateFrom = options?.dateFrom ?? DEFAULT_DATE_FROM;
+  const today = formatDate(new Date());
+
+  // Incremental: find the last record for this client and go back INCREMENTAL_LOOKBACK_DAYS
+  let smartDateFrom = daysAgo(DEFAULT_LOOKBACK_DAYS);
+  if (!options?.dateFrom) {
+    const lastFato = await prisma.fatoAnalyticsDiario.findFirst({
+      where: { clienteId },
+      orderBy: { data: "desc" },
+      select: { data: true },
+    });
+    if (lastFato?.data) {
+      const d = new Date(lastFato.data);
+      d.setDate(d.getDate() - INCREMENTAL_LOOKBACK_DAYS);
+      smartDateFrom = formatDate(d);
+    }
+  }
+
+  const dateFrom = options?.dateFrom ?? smartDateFrom;
   const dateTo = options?.dateTo ?? today;
 
   try {
@@ -82,35 +113,42 @@ export async function syncAnalyticsCliente(
       });
     }
 
-    return { daysProcessed: dailyRows.length };
+    console.log(`[analyticsSync] clienteId=${clienteId} propertyId=${propertyId} dateFrom=${dateFrom} dateTo=${dateTo} dailyRows=${dailyRows.length} channelRows=${channelRows.length}`);
+
+    return { daysProcessed: dailyRows.length, dateFrom, dateTo };
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
-    return { daysProcessed: 0, error: message };
+    console.error(`[analyticsSync] ERRO clienteId=${clienteId} propertyId=${propertyId}:`, message);
+    return { daysProcessed: 0, dateFrom, dateTo, error: message };
   }
 }
 
 export interface AnalyticsSyncAllResult {
   clienteId: string;
   daysProcessed: number;
+  dateFrom: string;
+  dateTo: string;
   error?: string;
 }
 
 /**
  * Sync GA4 for all active clients with Conta GOOGLE_ANALYTICS.
+ * Each client uses its own incremental date (last record - INCREMENTAL_LOOKBACK_DAYS).
  */
-export async function syncAnalyticsTodosClientes(): Promise<AnalyticsSyncAllResult[]> {
+export async function syncAnalyticsTodosClientes(options?: { dateFrom?: string; dateTo?: string }): Promise<AnalyticsSyncAllResult[]> {
   const clientes = await findAllClientes(true);
-  const today = formatDateYyyyMmDd(new Date());
   const results: AnalyticsSyncAllResult[] = [];
 
   for (const cliente of clientes) {
     const result = await syncAnalyticsCliente(cliente.id, {
-      dateFrom: DEFAULT_DATE_FROM,
-      dateTo: today,
+      ...(options?.dateFrom ? { dateFrom: options.dateFrom } : {}),
+      ...(options?.dateTo ? { dateTo: options.dateTo } : {}),
     });
     results.push({
       clienteId: cliente.id,
       daysProcessed: result.daysProcessed,
+      dateFrom: result.dateFrom,
+      dateTo: result.dateTo,
       error: result.error,
     });
   }

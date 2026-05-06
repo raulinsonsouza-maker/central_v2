@@ -67,16 +67,24 @@ export async function syncMetaCliente(
       select: { data: true },
     });
     if (lastFato?.data) {
-      // Volta 2 dias atrás para garantir que dados atrasados da Meta sejam capturados
+      // Volta 3 dias atrás — Meta pode atrasar até 72h em dados de campanhas e conversões
       const d = new Date(lastFato.data);
-      d.setDate(d.getDate() - 2);
+      d.setDate(d.getDate() - 3);
       smartDateFrom = formatDate(d);
     }
   }
 
   const dateFrom = options?.dateFrom ?? smartDateFrom;
   const dateTo = options?.dateTo ?? today;
-  const creativeDateFrom = options?.creativeDateFrom ?? smartDateFrom;
+
+  // Criativos e status de campanha: usa janela mínima de 7 dias
+  // para capturar pausas, ativações e renomeações recentes
+  const creativeMinDate = (() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 7);
+    return formatDate(d);
+  })();
+  const creativeDateFrom = options?.creativeDateFrom ?? (smartDateFrom < creativeMinDate ? smartDateFrom : creativeMinDate);
   const creativeDateTo = options?.creativeDateTo ?? today;
 
   try {
@@ -240,9 +248,11 @@ export async function syncMetaCliente(
       });
     }
 
+    console.log(`[metaSync] clienteId=${clienteId} accountId=${accountId} dateFrom=${dateFrom} dateTo=${dateTo} rows=${rows.length} creatives=${ads.length}`);
     return { daysProcessed: rows.length, creativesProcessed: ads.length };
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
+    console.error(`[metaSync] ERRO clienteId=${clienteId} accountId=${accountId}:`, message);
     return { daysProcessed: 0, creativesProcessed: 0, error: message };
   }
 }

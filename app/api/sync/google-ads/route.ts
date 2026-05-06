@@ -34,7 +34,7 @@ async function runSync(
         error: result.error,
       });
     }
-    const results = await syncGoogleAdsTodosClientes();
+    const results = await syncGoogleAdsTodosClientes({ dateFrom, dateTo });
     return NextResponse.json({ ok: true, results });
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);

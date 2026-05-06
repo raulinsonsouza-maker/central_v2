@@ -80,9 +80,9 @@ export async function syncGoogleAdsCliente(
       select: { data: true },
     });
     if (lastFato?.data) {
-      // Volta 2 dias atrás para capturar dados com processamento atrasado
+      // Volta 3 dias atrás — Google Ads pode atrasar até 72h em conversões e ajustes
       const d = new Date(lastFato.data);
-      d.setDate(d.getDate() - 2);
+      d.setDate(d.getDate() - 3);
       smartDateFrom = formatDate(d);
     }
   }
@@ -147,9 +147,11 @@ export async function syncGoogleAdsCliente(
       });
     }
 
+    console.log(`[googleAdsSync] clienteId=${clienteId} customerId=${customerId} dateFrom=${dateFrom} dateTo=${dateTo} days=${byDate.size} campaigns=${campaignRows.length} creatives=${creativeRows.length}`);
     return { daysProcessed: byDate.size };
   } catch (e) {
     const message = extractGoogleAdsError(e);
+    console.error(`[googleAdsSync] ERRO clienteId=${clienteId} customerId=${customerId}:`, message);
     return { daysProcessed: 0, error: message };
   }
 }
