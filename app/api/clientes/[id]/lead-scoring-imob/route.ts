@@ -33,6 +33,8 @@ function norm(value?: string | null): string {
   return (value ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/g, " ").trim();
 }
 
+const NAME_KEYWORDS = ["nome", "name", "full name", "full_name"];
+
 function extractField(raw: unknown, keywords: string[]): string | null {
   if (!Array.isArray(raw)) return null;
   const entries = raw as FieldEntry[];
@@ -524,7 +526,7 @@ export async function GET(
   const leadsList = filtered.slice(0, LEADS_LIMIT).map((l) => ({
     id: l.id,
     createdTime: l.createdTime.toISOString(),
-    fullName: l.fullName,
+    fullName: l.fullName ?? extractField(l.rawFieldData, NAME_KEYWORDS),
     telefone: l.telefone,
     emailLead: l.emailLead,
     formId: l.formId,

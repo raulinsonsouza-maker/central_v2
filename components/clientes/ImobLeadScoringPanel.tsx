@@ -14,7 +14,7 @@ import {
   ComposedChart,
   Line,
 } from "recharts";
-import { Users, Target, TrendingUp, Zap, Building2, Clock, Wallet, RefreshCw, ChevronRight, ArrowLeft, BarChart3, Eye } from "lucide-react";
+import { Users, Target, TrendingUp, Zap, Building2, Clock, Wallet, RefreshCw, ChevronRight, ChevronUp, ChevronDown, ArrowLeft, BarChart3, Eye } from "lucide-react";
 import type { DateFilter } from "@/app/clientes/[id]/ClienteDashboard";
 
 const tooltipStyle = {
@@ -1217,7 +1217,7 @@ export function ImobLeadScoringPanel({
                 ) : (
                   <>
                     <ChevronDown className="h-3.5 w-3.5" />
-                    Ver todos os {leads.length} leads
+                    Ver todos os {displayedLeads.length} leads
                   </>
                 )}
               </button>
