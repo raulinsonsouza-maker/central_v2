@@ -325,14 +325,11 @@ export function ImobLeadScoringPanel({
   const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasHierarchy, formsRanking, periodoSeries, leads, leadsTruncated } = data;
   const isAcademy = profile === "academy";
 
-  // Client-side filtering: campanha → adset → formulário
-  const displayedLeads = React.useMemo(() => {
-    let list = leads;
-    if (selectedCamp) list = list.filter((l) => l.campaignId === selectedCamp.campaignId);
-    if (selectedAdset) list = list.filter((l) => l.adsetId === selectedAdset.adsetId);
-    if (activeFormId) list = list.filter((l) => l.formId === activeFormId);
-    return list;
-  }, [leads, selectedCamp, selectedAdset, activeFormId]);
+  // Client-side filtering: campanha → adset → formulário (IIFE — sem hook, pois é após early returns)
+  let displayedLeads = leads;
+  if (selectedCamp) displayedLeads = displayedLeads.filter((l) => l.campaignId === selectedCamp.campaignId);
+  if (selectedAdset) displayedLeads = displayedLeads.filter((l) => l.adsetId === selectedAdset.adsetId);
+  if (activeFormId) displayedLeads = displayedLeads.filter((l) => l.formId === activeFormId);
 
   const visibleLeads = showAllLeads ? displayedLeads : displayedLeads.slice(0, 20);
   const hasData = kpis.totalLeads > 0;
