@@ -191,6 +191,8 @@ export function ImobLeadScoringPanel({
   const [agrupamento, setAgrupamento] = React.useState<"semanal" | "mensal">("semanal");
   const [gradeFilter, setGradeFilter] = React.useState<string | null>(null);
   const [showAllLeads, setShowAllLeads] = React.useState(false);
+  const [syncStatus, setSyncStatus] = React.useState<"idle" | "syncing" | "ok" | "error">("idle");
+  const [syncMsg, setSyncMsg] = React.useState<string | null>(null);
 
   const params = new URLSearchParams();
   if (dateFilter.dataInicio) params.set("dataInicio", dateFilter.dataInicio);
@@ -208,6 +210,29 @@ export function ImobLeadScoringPanel({
     placeholderData: keepPreviousData,
     staleTime: 3 * 60 * 1000,
   });
+
+  async function triggerLeadSync() {
+    setSyncStatus("syncing");
+    setSyncMsg(null);
+    try {
+      const res = await fetch(`/api/clientes/${clienteId}/sync-leads`, { method: "POST" });
+      const json = await res.json();
+      if (!res.ok || !json.ok) {
+        setSyncStatus("error");
+        setSyncMsg(json.error ?? "Erro ao sincronizar leads");
+      } else {
+        setSyncStatus("ok");
+        const created = json.leadsCreated ?? 0;
+        const forms = json.formsFound ?? 0;
+        setSyncMsg(`${forms} formulário${forms !== 1 ? "s" : ""} · ${json.leadsProcessed ?? 0} leads processados · ${created} novo${created !== 1 ? "s" : ""}`);
+        await refetch();
+      }
+    } catch (e) {
+      setSyncStatus("error");
+      setSyncMsg(e instanceof Error ? e.message : "Erro desconhecido");
+    }
+    setTimeout(() => { if (syncStatus !== "syncing") setSyncStatus("idle"); }, 6000);
+  }
 
   if (isLoading) {
     return (
@@ -236,9 +261,9 @@ export function ImobLeadScoringPanel({
   return (
     <div className="space-y-10">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <SectionHeader sub="Meta Lead Ads · Qualificação" title="Lead Scoring — Sou+ Icaraí" />
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {(["semanal", "mensal"] as const).map((a) => (
             <button
               key={a}
@@ -252,9 +277,29 @@ export function ImobLeadScoringPanel({
               {PERIOD_LABELS[a]}
             </button>
           ))}
+
+          {/* Sync leads button */}
+          <button
+            onClick={triggerLeadSync}
+            disabled={syncStatus === "syncing"}
+            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
+              syncStatus === "syncing"
+                ? "border-[var(--primary)]/40 bg-[var(--primary)]/8 text-[var(--primary)] cursor-wait"
+                : syncStatus === "ok"
+                ? "border-green-500/40 bg-green-500/8 text-green-400"
+                : syncStatus === "error"
+                ? "border-red-500/40 bg-red-500/8 text-red-400"
+                : "border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            }`}
+          >
+            <RefreshCw className={`h-3.5 w-3.5 ${syncStatus === "syncing" ? "animate-spin" : ""}`} />
+            {syncStatus === "syncing" ? "Sincronizando…" : syncStatus === "ok" ? "Atualizado!" : syncStatus === "error" ? "Erro" : "Sincronizar leads"}
+          </button>
+
           <button
             onClick={() => refetch()}
             disabled={isFetching}
+            title="Recarregar dados do banco"
             className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-1.5 text-[var(--muted-foreground)] transition-all hover:text-[var(--foreground)]"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isFetching ? "animate-spin" : ""}`} />
@@ -262,13 +307,43 @@ export function ImobLeadScoringPanel({
         </div>
       </div>
 
+      {/* Sync result message */}
+      {syncMsg && (
+        <div className={`-mt-6 rounded-xl border px-4 py-2.5 text-xs ${
+          syncStatus === "error"
+            ? "border-red-500/20 bg-red-500/6 text-red-400"
+            : "border-green-500/20 bg-green-500/6 text-green-400"
+        }`}>
+          {syncMsg}
+        </div>
+      )}
+
       {!hasData ? (
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] px-8 py-16 text-center">
           <Building2 className="mx-auto mb-4 h-10 w-10 text-[var(--muted-foreground)]/40" />
           <p className="text-base font-semibold text-[var(--foreground)]">Nenhum lead encontrado</p>
           <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-            Sincronize os dados do Meta para ver os leads gerados pelos formulários do Sou+ Icaraí neste período.
+            Use o botão abaixo para importar os leads dos formulários Meta do Sou+ Icaraí.
           </p>
+          <button
+            onClick={triggerLeadSync}
+            disabled={syncStatus === "syncing"}
+            className={`mt-5 inline-flex items-center gap-2 rounded-xl border px-5 py-2.5 text-sm font-semibold transition-all ${
+              syncStatus === "syncing"
+                ? "border-[var(--primary)]/40 bg-[var(--primary)]/8 text-[var(--primary)] cursor-wait"
+                : syncStatus === "error"
+                ? "border-red-500/40 bg-red-500/8 text-red-400"
+                : "border-[var(--primary)]/30 bg-[var(--primary)]/8 text-[var(--primary)] hover:bg-[var(--primary)]/15"
+            }`}
+          >
+            <RefreshCw className={`h-4 w-4 ${syncStatus === "syncing" ? "animate-spin" : ""}`} />
+            {syncStatus === "syncing" ? "Sincronizando formulários Meta…" : "Sincronizar leads agora"}
+          </button>
+          {syncMsg && (
+            <p className={`mt-3 text-xs ${syncStatus === "error" ? "text-red-400" : "text-green-400"}`}>
+              {syncMsg}
+            </p>
+          )}
         </div>
       ) : (
         <>
