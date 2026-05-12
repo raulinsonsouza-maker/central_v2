@@ -303,32 +303,6 @@ export function ImobLeadScoringPanel({
             </button>
           ))}
 
-          {/* Sync leads button */}
-          <button
-            onClick={triggerLeadSync}
-            disabled={syncStatus === "syncing"}
-            className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-xs font-semibold transition-all ${
-              syncStatus === "syncing"
-                ? "border-[var(--primary)]/40 bg-[var(--primary)]/8 text-[var(--primary)] cursor-wait"
-                : syncStatus === "ok"
-                ? "border-green-500/40 bg-green-500/8 text-green-400"
-                : syncStatus === "error"
-                ? "border-red-500/40 bg-red-500/8 text-red-400"
-                : "border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-            }`}
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${syncStatus === "syncing" ? "animate-spin" : ""}`} />
-            {syncStatus === "syncing" ? "Sincronizando…" : syncStatus === "ok" ? "Atualizado!" : syncStatus === "error" ? "Erro" : "Sincronizar leads"}
-          </button>
-
-          <button
-            onClick={() => refetch()}
-            disabled={isFetching}
-            title="Recarregar dados do banco"
-            className="rounded-lg border border-[var(--border)] bg-[var(--card)] p-1.5 text-[var(--muted-foreground)] transition-all hover:text-[var(--foreground)]"
-          >
-            <RefreshCw className={`h-3.5 w-3.5 ${isFetching ? "animate-spin" : ""}`} />
-          </button>
         </div>
       </div>
 
