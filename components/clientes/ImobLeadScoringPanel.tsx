@@ -381,16 +381,16 @@ export function ImobLeadScoringPanel({
               icon={Users}
             />
             <KpiCard
-              title="MQL"
+              title={isAcademy ? "Qualificados" : "MQL"}
               value={kpis.totalMql.toString()}
-              sub="leads qualificados"
+              sub={isAcademy ? "com graduação" : "leads qualificados"}
               icon={Target}
               highlight
             />
             <KpiCard
-              title="Taxa MQL"
+              title={isAcademy ? "Taxa Qualif." : "Taxa MQL"}
               value={fmtPct(kpis.taxaMql)}
-              sub="dos leads são MQL"
+              sub={isAcademy ? "dos leads qualificados" : "dos leads são MQL"}
               icon={TrendingUp}
               accent
             />
@@ -401,16 +401,16 @@ export function ImobLeadScoringPanel({
               icon={Wallet}
             />
             <KpiCard
-              title="Custo por MQL"
+              title={isAcademy ? "Custo/Qualificado" : "Custo por MQL"}
               value={fmt(kpis.custoMql)}
-              sub="investimento / MQL"
+              sub="investimento / qualificado"
               icon={Zap}
               accent
             />
             <KpiCard
-              title="Fora do perfil"
+              title="Não qualificados"
               value={kpis.totalNonMql.toString()}
-              sub="não qualificados"
+              sub="sem graduação"
               icon={Clock}
             />
           </div>
@@ -494,115 +494,128 @@ export function ImobLeadScoringPanel({
               )}
             </div>
 
-            {/* Timeline chart */}
+            {/* Right panel: Academy = degree distribution chart; Icaraí = time series */}
             <div className="lg:col-span-2">
-              <SectionHeader sub="Evolução" title="Leads vs MQL no tempo" />
-              <div className="mt-4 h-[280px]">
-                {periodoSeries.length === 0 ? (
-                  <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
-                    Sem dados para o período
+              {isAcademy ? (
+                <>
+                  <SectionHeader sub="Critério de qualificação" title="Formação acadêmica dos leads" />
+                  <div className="mt-4 h-[280px]">
+                    {(degreeDistribuicao ?? []).length === 0 ? (
+                      <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
+                        Sem dados de formação no período
+                      </div>
+                    ) : (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <BarChart
+                          layout="vertical"
+                          data={(degreeDistribuicao ?? []).map((d) => ({
+                            degree: d.degree,
+                            total: d.total,
+                            pct: kpis.totalLeads > 0 ? Math.round((d.total / kpis.totalLeads) * 100) : 0,
+                            color: DEGREE_COLORS[d.degree] ?? "#94a3b8",
+                          }))}
+                          margin={{ top: 4, right: 60, left: 8, bottom: 4 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.3} horizontal={false} />
+                          <XAxis type="number" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                          <YAxis type="category" dataKey="degree" tick={{ fontSize: 11, fill: "var(--foreground)" }} axisLine={false} tickLine={false} width={110} />
+                          <Tooltip
+                            {...tooltipStyle}
+                            formatter={(v: number, _: string, entry: { payload?: { pct?: number } }) => [
+                              `${v} lead${v !== 1 ? "s" : ""} (${entry.payload?.pct ?? 0}%)`,
+                              "Total",
+                            ]}
+                          />
+                          <Bar dataKey="total" radius={[0, 4, 4, 0]} maxBarSize={28}>
+                            {(degreeDistribuicao ?? []).map((d) => (
+                              <Cell key={d.degree} fill={DEGREE_COLORS[d.degree] ?? "#94a3b8"} />
+                            ))}
+                          </Bar>
+                        </BarChart>
+                      </ResponsiveContainer>
+                    )}
                   </div>
-                ) : (
-                  <ResponsiveContainer width="100%" height="100%">
-                    <ComposedChart data={periodoSeries.map((p) => ({ ...p, label: formatPeriodLabel(p.periodo) }))} margin={{ top: 4, right: 8, left: -8, bottom: 0 }}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.4} />
-                      <XAxis dataKey="label" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
-                      <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} allowDecimals={false} />
-                      <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [v, name === "total" ? "Total" : "MQL"]} />
-                      <Bar dataKey="total" fill="var(--border)" radius={[3, 3, 0, 0]} name="Total" opacity={0.6} />
-                      <Bar dataKey="mql" fill="#22c55e" radius={[3, 3, 0, 0]} name="MQL" />
-                    </ComposedChart>
-                  </ResponsiveContainer>
-                )}
-              </div>
+                </>
+              ) : (
+                <>
+                  <SectionHeader sub="Evolução" title="Leads vs MQL no tempo" />
+                  <div className="mt-4 h-[280px]">
+                    {periodoSeries.length === 0 ? (
+                      <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
+                        Sem dados para o período
+                      </div>
+                    ) : (
+                      <ResponsiveContainer width="100%" height="100%">
+                        <ComposedChart data={periodoSeries.map((p) => ({ ...p, label: formatPeriodLabel(p.periodo) }))} margin={{ top: 4, right: 8, left: -8, bottom: 0 }}>
+                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.4} />
+                          <XAxis dataKey="label" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                          <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [v, name === "total" ? "Total" : "MQL"]} />
+                          <Bar dataKey="total" fill="var(--border)" radius={[3, 3, 0, 0]} name="Total" opacity={0.6} />
+                          <Bar dataKey="mql" fill="#22c55e" radius={[3, 3, 0, 0]} name="MQL" />
+                        </ComposedChart>
+                      </ResponsiveContainer>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
-          {/* Timing + Invest + Degree breakdown */}
-          <div className={`grid gap-6 ${isAcademy ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
-            {/* Timing */}
-            <div>
-              <SectionHeader
-                sub={isAcademy ? "Urgência" : "Intenção de compra"}
-                title={isAcademy ? "Prazo para ir aos EUA" : "Quando pretende adquirir?"}
-              />
-              <div className="mt-4 space-y-2">
-                {timingDistribuicao.map((t) => {
-                  const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
-                  const color = TIMING_COLORS[t.timing] ?? "#94a3b8";
-                  return (
-                    <div key={t.timing} className="flex items-center gap-3">
-                      <span className="w-28 shrink-0 text-xs text-[var(--foreground)]">{t.timing}</span>
-                      <div className="flex-1 h-2 rounded-full bg-[var(--muted)] overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
-                      </div>
-                      <span className="w-20 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                        {t.total} ({pct.toFixed(0)}%)
-                      </span>
-                    </div>
-                  );
-                })}
-                {timingDistribuicao.length === 0 && (
-                  <p className="text-sm text-[var(--muted-foreground)]">Campo de prazo não encontrado.</p>
-                )}
-              </div>
-            </div>
-
-            {/* Investment */}
-            <div>
-              <SectionHeader
-                sub="Capacidade financeira"
-                title={isAcademy ? "Disposto a investir" : "Quanto pretende investir?"}
-              />
-              <div className="mt-4 space-y-2">
-                {investDistribuicao.map((t) => {
-                  const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
-                  const color = INVEST_COLORS[t.invest] ?? "#94a3b8";
-                  return (
-                    <div key={t.invest} className="flex items-center gap-3">
-                      <span className="w-28 shrink-0 text-xs text-[var(--foreground)]">{t.invest}</span>
-                      <div className="flex-1 h-2 rounded-full bg-[var(--muted)] overflow-hidden">
-                        <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
-                      </div>
-                      <span className="w-20 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                        {t.total} ({pct.toFixed(0)}%)
-                      </span>
-                    </div>
-                  );
-                })}
-                {investDistribuicao.length === 0 && (
-                  <p className="text-sm text-[var(--muted-foreground)]">Campo de investimento não encontrado.</p>
-                )}
-              </div>
-            </div>
-
-            {/* Degree — Academy only */}
-            {isAcademy && (
+          {/* Timing + Invest breakdown — Icaraí only (Academy fields are not captured in the form) */}
+          {!isAcademy && (
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Timing */}
               <div>
-                <SectionHeader sub="Perfil acadêmico" title="Formação dos leads" />
+                <SectionHeader sub="Intenção de compra" title="Quando pretende adquirir?" />
                 <div className="mt-4 space-y-2">
-                  {(degreeDistribuicao ?? []).map((d) => {
-                    const pct = kpis.totalLeads > 0 ? (d.total / kpis.totalLeads) * 100 : 0;
-                    const color = DEGREE_COLORS[d.degree] ?? "#94a3b8";
+                  {timingDistribuicao.map((t) => {
+                    const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
+                    const color = TIMING_COLORS[t.timing] ?? "#94a3b8";
                     return (
-                      <div key={d.degree} className="flex items-center gap-3">
-                        <span className="w-28 shrink-0 text-xs text-[var(--foreground)]">{d.degree}</span>
+                      <div key={t.timing} className="flex items-center gap-3">
+                        <span className="w-28 shrink-0 text-xs text-[var(--foreground)]">{t.timing}</span>
                         <div className="flex-1 h-2 rounded-full bg-[var(--muted)] overflow-hidden">
                           <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
                         </div>
                         <span className="w-20 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                          {d.total} ({pct.toFixed(0)}%)
+                          {t.total} ({pct.toFixed(0)}%)
                         </span>
                       </div>
                     );
                   })}
-                  {(degreeDistribuicao ?? []).length === 0 && (
-                    <p className="text-sm text-[var(--muted-foreground)]">Campo de formação não encontrado.</p>
+                  {timingDistribuicao.length === 0 && (
+                    <p className="text-sm text-[var(--muted-foreground)]">Campo de prazo não encontrado.</p>
                   )}
                 </div>
               </div>
-            )}
-          </div>
+
+              {/* Investment */}
+              <div>
+                <SectionHeader sub="Capacidade financeira" title="Quanto pretende investir?" />
+                <div className="mt-4 space-y-2">
+                  {investDistribuicao.map((t) => {
+                    const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
+                    const color = INVEST_COLORS[t.invest] ?? "#94a3b8";
+                    return (
+                      <div key={t.invest} className="flex items-center gap-3">
+                        <span className="w-28 shrink-0 text-xs text-[var(--foreground)]">{t.invest}</span>
+                        <div className="flex-1 h-2 rounded-full bg-[var(--muted)] overflow-hidden">
+                          <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
+                        </div>
+                        <span className="w-20 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
+                          {t.total} ({pct.toFixed(0)}%)
+                        </span>
+                      </div>
+                    );
+                  })}
+                  {investDistribuicao.length === 0 && (
+                    <p className="text-sm text-[var(--muted-foreground)]">Campo de investimento não encontrado.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Campanhas + Formulários */}
           <div className="grid gap-6 lg:grid-cols-2">

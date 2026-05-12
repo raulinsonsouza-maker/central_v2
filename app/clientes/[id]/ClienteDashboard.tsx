@@ -874,7 +874,7 @@ function formatPercentage(value: number) {
         {/* Linha 1: Saldo chip (esquerda) + Filtro de data (direita) */}
         <div className="flex items-center gap-2">
           {/* Saldo chip — só em Meta/Google */}
-          {canal !== "geral" && canal !== "imoveis" && canal !== "lead-scoring" && (() => {
+          {canal !== "geral" && canal !== "imoveis" && canal !== "lead-scoring" && subView !== "lead-scoring" && (() => {
             const saldo = canal === "meta" ? saldoMeta : saldoGoogle;
             const plataforma = canal === "meta" ? "META" : "Google";
             const value = saldo?.saldo;
