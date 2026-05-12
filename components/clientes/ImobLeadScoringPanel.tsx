@@ -688,17 +688,11 @@ export function ImobLeadScoringPanel({
                             <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
                               {camp.leadsMeta > 0 ? camp.leadsMeta : camp.leadsScored > 0 ? camp.leadsScored : <span className="text-[13px] font-normal text-white/20">—</span>}
                             </span>
-                            {camp.leadsScored > 0 && camp.leadsMeta > 0 && camp.leadsScored !== camp.leadsMeta && (
-                              <span className="mt-0.5 block text-[10px] leading-none text-[var(--muted-foreground)]">{camp.leadsScored} qualif.</span>
-                            )}
                           </td>
                           <td className={`px-4 py-4 text-right tabular-nums ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                            {camp.mql > 0 ? (
-                              <>
-                                <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{camp.mql}</span>
-                                <span className="mt-0.5 block text-[10px] leading-none text-[var(--muted-foreground)]">{fmtPct(camp.taxaMql)}</span>
-                              </>
-                            ) : <span className="text-[13px] text-white/20">—</span>}
+                            {camp.mql > 0
+                              ? <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{camp.mql}</span>
+                              : <span className="text-[13px] text-white/20">—</span>}
                           </td>
                           <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
                             {camp.cpl != null ? `R$\u00a0${camp.cpl.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : <span className="text-white/20">—</span>}

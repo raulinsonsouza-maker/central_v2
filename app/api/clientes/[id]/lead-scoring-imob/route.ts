@@ -375,15 +375,31 @@ export async function GET(
   }
   function txMql(total: number, mql: number) { return total > 0 ? Math.round((mql / total) * 1000) / 10 : 0; }
 
-  const campanhasHierarchy = Object.entries(campInsights).map(([cid, d]) => {
+  // Distribui `total` inteiro proporcionalmente a `parts` sem perda por arredondamento
+  // (largest-remainder method — garante que a soma dos resultados == total)
+  function distributeProportional(total: number, parts: number[]): number[] {
+    const sum = parts.reduce((a, b) => a + b, 0);
+    if (sum === 0 || total === 0) return parts.map(() => 0);
+    const floats = parts.map(p => total * p / sum);
+    const floors = floats.map(f => Math.floor(f));
+    const remainder = total - floors.reduce((a, b) => a + b, 0);
+    const order = floats
+      .map((f, i) => ({ i, frac: f - Math.floor(f) }))
+      .sort((a, b) => b.frac - a.frac);
+    for (let k = 0; k < remainder; k++) floors[order[k].i]++;
+    return floors;
+  }
+
+  const campanhasHierarchy = Object.entries(campInsights)
+    .filter(([, d]) => d.campaignName) // ignora linhas sem nome (leads de teste sem campanha)
+    .map(([cid, d]) => {
     const mqld = mqlByCampaign[cid] ?? { total: 0, mql: 0, name: d.campaignName };
     const campMql = mqld.mql;
-    const campLeadsMeta = d.leads; // total leads from MetaAdsCriativo for this campaign
-    // Distribui MQL proporcionalmente por adset/ad com base nos leads do Meta Insights
-    function mqlEst(levelLeads: number): number {
-      if (campLeadsMeta <= 0 || campMql <= 0) return 0;
-      return Math.round(campMql * (levelLeads / campLeadsMeta));
-    }
+
+    // Distribui MQL proporcionalmente por adset (sem arredondamento acumulado)
+    const adsetEntries = Object.entries(d.adsets);
+    const adsetMqls = distributeProportional(campMql, adsetEntries.map(([, a]) => a.leads));
+
     return {
       campaignId: cid,
       campaignName: d.campaignName ?? mqld.name,
@@ -396,27 +412,30 @@ export async function GET(
       clicks: d.clicks,
       ctr: calcCtr(d.clicks, d.impressions),
       cpl: calcCpl(d.spend, d.leads),
-      adsets: Object.entries(d.adsets).map(([adsetId, a]) => {
-        const adsetMqlEst = mqlEst(a.leads);
+      adsets: adsetEntries.map(([adsetId, a], ai) => {
+        const adsetMqlEst = adsetMqls[ai];
+        // Distribui MQL do adset proporcionalmente pelos ads
+        const adEntries = Object.entries(a.ads);
+        const adMqls = distributeProportional(adsetMqlEst, adEntries.map(([, ad]) => ad.leads));
         return {
           adsetId,
           adsetName: a.adsetName ?? adsetId,
           leadsMeta: a.leads,
           mqlEst: adsetMqlEst,
-          taxaMqlEst: a.leads > 0 ? Math.round((adsetMqlEst / a.leads) * 1000) / 10 : 0,
+          taxaMqlEst: d.leads > 0 ? Math.round((adsetMqlEst / d.leads) * 1000) / 10 : 0,
           invest: a.spend,
           impressions: a.impressions,
           clicks: a.clicks,
           ctr: calcCtr(a.clicks, a.impressions),
           cpl: calcCpl(a.spend, a.leads),
-          ads: Object.entries(a.ads).map(([adId, ad]) => {
-            const adMqlEst = mqlEst(ad.leads);
+          ads: adEntries.map(([adId, ad], di) => {
+            const adMqlEst = adMqls[di];
             return {
               adId,
               adName: ad.adName,
               leadsMeta: ad.leads,
               mqlEst: adMqlEst,
-              taxaMqlEst: ad.leads > 0 ? Math.round((adMqlEst / ad.leads) * 1000) / 10 : 0,
+              taxaMqlEst: a.leads > 0 ? Math.round((adMqlEst / a.leads) * 1000) / 10 : 0,
               invest: ad.spend,
               impressions: ad.impressions,
               clicks: ad.clicks,
@@ -428,9 +447,9 @@ export async function GET(
       }).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
     };
   });
-  // Adiciona campanhas com leads mas sem MetaAdsCriativo
+  // Adiciona campanhas com leads scored mas sem MetaAdsCriativo (e com nome real)
   for (const [cid, mqld] of Object.entries(mqlByCampaign)) {
-    if (!campInsights[cid]) {
+    if (!campInsights[cid] && mqld.name) {
       campanhasHierarchy.push({
         campaignId: cid,
         campaignName: mqld.name,
