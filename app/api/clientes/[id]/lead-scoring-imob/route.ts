@@ -241,7 +241,23 @@ export async function GET(
   const profile: "academy" | "icarai" = isAcademy ? "academy" : "icarai";
   const gradeLabels = isAcademy ? GRADE_LABELS_ACADEMY : GRADE_LABELS_ICARAI;
 
-  const scored = allLeads.map((lead) => {
+  // Filtra leads de teste do Meta (valores contêm "<test lead:" ou "dummy data")
+  const isTestLead = (lead: typeof allLeads[number]) => {
+    const raw = lead.rawFieldData;
+    if (!Array.isArray(raw)) return false;
+    return (raw as Array<{ name: string; values: string[] }>).some((f) =>
+      (f.values ?? []).some((v) =>
+        typeof v === "string" && (
+          v.toLowerCase().includes("<test lead") ||
+          v.toLowerCase().includes("dummy data") ||
+          v.toLowerCase().includes("test_lead")
+        )
+      )
+    );
+  };
+  const filteredLeads = allLeads.filter((l) => !isTestLead(l));
+
+  const scored = filteredLeads.map((lead) => {
     const raw = lead.rawFieldData;
 
     if (isAcademy) {

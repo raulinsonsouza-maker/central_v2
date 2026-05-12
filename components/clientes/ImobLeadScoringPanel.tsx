@@ -827,6 +827,38 @@ export function ImobLeadScoringPanel({
                             {campanhasHierarchy.length === 0 && (
                               <tr><td colSpan={7} className="py-10 text-center text-sm text-[var(--muted-foreground)]">Nenhuma campanha encontrada no período</td></tr>
                             )}
+                            {campanhasHierarchy.length > 1 && (() => {
+                              const totInvest = campanhasHierarchy.reduce((s, c) => s + c.invest, 0);
+                              const totLeads = campanhasHierarchy.reduce((s, c) => s + c.leadsScored, 0);
+                              const totMql = campanhasHierarchy.reduce((s, c) => s + c.mql, 0);
+                              const totClicks = campanhasHierarchy.reduce((s, c) => s + c.clicks, 0);
+                              const totImpressions = campanhasHierarchy.reduce((s, c) => s + c.impressions, 0);
+                              const totCtr = totImpressions > 0 ? totClicks / totImpressions * 100 : 0;
+                              const totCpl = totLeads > 0 && totInvest > 0 ? totInvest / totLeads : null;
+                              return (
+                                <tr>
+                                  <td className="rounded-l-2xl px-4 py-3 bg-white/[0.03] border-t border-[var(--border)]/40">
+                                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Total</p>
+                                  </td>
+                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)] bg-white/[0.03] border-t border-[var(--border)]/40">
+                                    {totInvest > 0 ? fBrl(totInvest) : <span className="text-white/20">—</span>}
+                                  </td>
+                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] font-bold text-[var(--foreground)] bg-white/[0.03] border-t border-[var(--border)]/40">
+                                    {totLeads > 0 ? totLeads : <span className="text-white/20">—</span>}
+                                  </td>
+                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] font-bold text-[var(--primary)] bg-white/[0.03] border-t border-[var(--border)]/40">
+                                    {totMql > 0 ? totMql : <span className="text-white/20">—</span>}
+                                  </td>
+                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)] bg-white/[0.03] border-t border-[var(--border)]/40">
+                                    {totCpl != null ? fBrl(totCpl) : <span className="text-white/20">—</span>}
+                                  </td>
+                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] bg-white/[0.03] border-t border-[var(--border)]/40">
+                                    {totCtr > 0 ? fCtr(totCtr) : <span className="text-white/20">—</span>}
+                                  </td>
+                                  <td className="rounded-r-2xl px-3 py-3 bg-white/[0.03] border-t border-[var(--border)]/40" />
+                                </tr>
+                              );
+                            })()}
                           </tbody>
                         </table>
                       </div>
