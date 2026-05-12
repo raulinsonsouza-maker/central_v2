@@ -324,6 +324,20 @@ export async function GET(
     if (l._isMql) mqlByCampaign[cid].mql++;
   }
 
+  // MQL real por adset e por anúncio (MetaLeadIndividual — atribuição exata do webhook)
+  const mqlByAdset: Record<string, { total: number; mql: number }> = {};
+  const mqlByAd: Record<string, { total: number; mql: number }> = {};
+  for (const l of scored) {
+    const asetId = l.adsetId ?? "_none";
+    if (!mqlByAdset[asetId]) mqlByAdset[asetId] = { total: 0, mql: 0 };
+    mqlByAdset[asetId].total++;
+    if (l._isMql) mqlByAdset[asetId].mql++;
+    const aid = l.adId ?? "_none";
+    if (!mqlByAd[aid]) mqlByAd[aid] = { total: 0, mql: 0 };
+    mqlByAd[aid].total++;
+    if (l._isMql) mqlByAd[aid].mql++;
+  }
+
   // Hierarquia real: Campanha → Conjunto → Anúncio (MetaAdsCriativo)
   const metaAdsCriativos = await prisma.metaAdsCriativo.findMany({
     where: {
@@ -391,14 +405,11 @@ export async function GET(
   }
 
   const campanhasHierarchy = Object.entries(campInsights)
-    .filter(([, d]) => d.campaignName) // ignora linhas sem nome (leads de teste sem campanha)
+    .filter(([, d]) => d.campaignName)
     .map(([cid, d]) => {
     const mqld = mqlByCampaign[cid] ?? { total: 0, mql: 0, name: d.campaignName };
     const campMql = mqld.mql;
-
-    // Distribui MQL proporcionalmente por adset (sem arredondamento acumulado)
     const adsetEntries = Object.entries(d.adsets);
-    const adsetMqls = distributeProportional(campMql, adsetEntries.map(([, a]) => a.leads));
 
     return {
       campaignId: cid,
@@ -411,32 +422,34 @@ export async function GET(
       impressions: d.impressions,
       clicks: d.clicks,
       ctr: calcCtr(d.clicks, d.impressions),
-      // CPL usa leadsScored (webhook) para ser consistente com os KPI cards
       cpl: calcCpl(d.spend, mqld.total),
-      adsets: adsetEntries.map(([adsetId, a], ai) => {
-        const adsetMqlEst = adsetMqls[ai];
-        // Distribui MQL do adset proporcionalmente pelos ads
+      adsets: adsetEntries.map(([adsetId, a]) => {
+        // MQL real do webhook para este adset
+        const adsetMqlData = mqlByAdset[adsetId] ?? { total: 0, mql: 0 };
+        const adsetMql = adsetMqlData.mql;
         const adEntries = Object.entries(a.ads);
-        const adMqls = distributeProportional(adsetMqlEst, adEntries.map(([, ad]) => ad.leads));
         return {
           adsetId,
           adsetName: a.adsetName ?? adsetId,
           leadsMeta: a.leads,
-          mqlEst: adsetMqlEst,
-          taxaMqlEst: d.leads > 0 ? Math.round((adsetMqlEst / d.leads) * 1000) / 10 : 0,
+          leadsScored: adsetMqlData.total,
+          mql: adsetMql,
+          taxaMql: adsetMqlData.total > 0 ? txMql(adsetMqlData.total, adsetMql) : 0,
           invest: a.spend,
           impressions: a.impressions,
           clicks: a.clicks,
           ctr: calcCtr(a.clicks, a.impressions),
           cpl: calcCpl(a.spend, a.leads),
-          ads: adEntries.map(([adId, ad], di) => {
-            const adMqlEst = adMqls[di];
+          ads: adEntries.map(([adId, ad]) => {
+            // MQL real do webhook para este anúncio
+            const adMqlData = mqlByAd[adId] ?? { total: 0, mql: 0 };
             return {
               adId,
               adName: ad.adName,
               leadsMeta: ad.leads,
-              mqlEst: adMqlEst,
-              taxaMqlEst: a.leads > 0 ? Math.round((adMqlEst / a.leads) * 1000) / 10 : 0,
+              leadsScored: adMqlData.total,
+              mql: adMqlData.mql,
+              taxaMql: adMqlData.total > 0 ? txMql(adMqlData.total, adMqlData.mql) : 0,
               invest: ad.spend,
               impressions: ad.impressions,
               clicks: ad.clicks,
@@ -456,7 +469,8 @@ export async function GET(
         campaignName: mqld.name,
         leadsMeta: 0, leadsScored: mqld.total, mql: mqld.mql,
         taxaMql: txMql(mqld.total, mqld.mql),
-        invest: 0, impressions: 0, clicks: 0, ctr: 0, cpl: null, adsets: [],
+        invest: 0, impressions: 0, clicks: 0, ctr: 0, cpl: null,
+        adsets: [],
       });
     }
   }
@@ -513,10 +527,14 @@ export async function GET(
     fullName: l.fullName,
     telefone: l.telefone,
     emailLead: l.emailLead,
+    formId: l.formId,
     formName: l.formName,
+    campaignId: l.campaignId,
     campaignName: l.campaignName,
-    adName: l.adName,
+    adsetId: l.adsetId,
     adsetName: l.adsetName,
+    adId: l.adId,
+    adName: l.adName,
     platform: l.platform,
     grade: l._grade,
     isMql: l._isMql,

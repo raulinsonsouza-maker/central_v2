@@ -160,8 +160,9 @@ interface ApiResponse {
       adsetId: string;
       adsetName: string;
       leadsMeta: number;
-      mqlEst: number;
-      taxaMqlEst: number;
+      leadsScored: number;
+      mql: number;
+      taxaMql: number;
       invest: number;
       impressions: number;
       clicks: number;
@@ -171,8 +172,9 @@ interface ApiResponse {
         adId: string;
         adName: string;
         leadsMeta: number;
-        mqlEst: number;
-        taxaMqlEst: number;
+        leadsScored: number;
+        mql: number;
+        taxaMql: number;
         invest: number;
         impressions: number;
         clicks: number;
@@ -189,10 +191,14 @@ interface ApiResponse {
     fullName: string | null;
     telefone: string | null;
     emailLead: string | null;
+    formId: string | null;
     formName: string | null;
+    campaignId: string | null;
     campaignName: string | null;
-    adName: string | null;
+    adsetId: string | null;
     adsetName: string | null;
+    adId: string | null;
+    adName: string | null;
     platform: string | null;
     grade: string;
     isMql: boolean;
@@ -249,6 +255,7 @@ export function ImobLeadScoringPanel({
   const [agrupamento, setAgrupamento] = React.useState<"semanal" | "mensal">("semanal");
   const [gradeFilter, setGradeFilter] = React.useState<string | null>(null);
   const [showAllLeads, setShowAllLeads] = React.useState(false);
+  const [activeFormId, setActiveFormId] = React.useState<string | null>(null);
   const [syncStatus, setSyncStatus] = React.useState<"idle" | "syncing" | "ok" | "error">("idle");
   const [syncMsg, setSyncMsg] = React.useState<string | null>(null);
   type Camp = ApiResponse["campanhasHierarchy"][0];
@@ -315,10 +322,19 @@ export function ImobLeadScoringPanel({
 
   if (!data) return null;
 
-  const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasHierarchy, formsRanking, periodoSeries, leads, leadsTruncated, totalFiltered } = data;
+  const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasHierarchy, formsRanking, periodoSeries, leads, leadsTruncated } = data;
   const isAcademy = profile === "academy";
 
-  const visibleLeads = showAllLeads ? leads : leads.slice(0, 20);
+  // Client-side filtering: campanha → adset → formulário
+  const displayedLeads = React.useMemo(() => {
+    let list = leads;
+    if (selectedCamp) list = list.filter((l) => l.campaignId === selectedCamp.campaignId);
+    if (selectedAdset) list = list.filter((l) => l.adsetId === selectedAdset.adsetId);
+    if (activeFormId) list = list.filter((l) => l.formId === activeFormId);
+    return list;
+  }, [leads, selectedCamp, selectedAdset, activeFormId]);
+
+  const visibleLeads = showAllLeads ? displayedLeads : displayedLeads.slice(0, 20);
   const hasData = kpis.totalLeads > 0;
 
   return (
@@ -427,203 +443,257 @@ export function ImobLeadScoringPanel({
             />
           </div>
 
-          {/* Grade breakdown + MQL explanation */}
-          <div className="grid gap-6 lg:grid-cols-3">
-            {/* Grade cards */}
-            <div className="lg:col-span-1 space-y-3">
-              <SectionHeader
-                sub="Qualificação"
-                title={isAcademy ? "Qualificados vs Não qualificados" : "Graus MQL"}
-              />
-              <div className="space-y-2">
-                {(isAcademy
-                  ? gradeDistribuicao.filter((g) => g.grade === "A" || g.grade === "E")
-                  : gradeDistribuicao
-                ).map((g) => {
-                  const pct = kpis.totalLeads > 0 ? (g.total / kpis.totalLeads) * 100 : 0;
-                  const isActive = gradeFilter === g.grade;
-                  const academyColor = g.grade === "A" ? "#22c55e" : "#ef4444";
-                  const color = isAcademy ? academyColor : GRADE_COLORS[g.grade];
-                  const academyLabel = g.grade === "A" ? "Qualificado" : "Não qualificado";
-                  return (
-                    <button
-                      key={g.grade}
-                      onClick={() => setGradeFilter(isActive ? null : g.grade)}
-                      className={`w-full rounded-xl border p-3 text-left transition-all ${
-                        isActive
-                          ? "border-[var(--primary)]/40 bg-[var(--primary)]/8"
-                          : "border-[var(--border)] bg-[var(--card)] hover:border-[var(--primary)]/20 hover:bg-[var(--muted)]/40"
-                      }`}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2">
-                          {isAcademy ? (
-                            <span
-                              className="rounded-full px-2 py-0.5 text-[10px] font-bold"
-                              style={{ backgroundColor: `${color}20`, color }}
-                            >
-                              {academyLabel}
-                            </span>
-                          ) : (
-                            <span
-                              className="inline-flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-black text-white"
-                              style={{ backgroundColor: color }}
-                            >
-                              {g.grade}
-                            </span>
-                          )}
-                          <span className="text-xs font-semibold text-[var(--foreground)]">{g.total} leads</span>
-                          {!isAcademy && g.isMql && (
-                            <span className="rounded-full bg-green-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-green-400">
-                              MQL
-                            </span>
-                          )}
-                        </div>
-                        <span className="text-xs font-bold tabular-nums text-[var(--muted-foreground)]">
-                          {pct.toFixed(0)}%
-                        </span>
-                      </div>
-                      {!isAcademy && (
-                        <p className="mt-1 text-[10px] text-[var(--muted-foreground)]">{g.label}</p>
-                      )}
-                      <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--muted)]">
-                        <div
-                          className="h-full rounded-full transition-all"
-                          style={{ width: `${pct}%`, backgroundColor: color }}
+          {/* ── Qualificação — redesign completo ── */}
+          {(() => {
+            const ringR = 44;
+            const ringC = 2 * Math.PI * ringR;
+            const mqlPct = kpis.taxaMql;
+            const fill = (mqlPct / 100) * ringC;
+            return (
+              <div className="grid gap-5 lg:grid-cols-5">
+                {/* Lado esquerdo: anel + stats + (Icaraí: grade chips) */}
+                <div className="lg:col-span-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Qualificação</p>
+                  <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">
+                    {isAcademy ? "Taxa de qualificados" : "Taxa MQL"}
+                  </h3>
+
+                  <div className="mt-5 flex items-center gap-6">
+                    {/* SVG donut ring */}
+                    <div className="relative shrink-0">
+                      <svg width="104" height="104" viewBox="0 0 104 104">
+                        <circle cx="52" cy="52" r={ringR} fill="none" stroke="var(--border)" strokeWidth="11" />
+                        <circle
+                          cx="52" cy="52" r={ringR} fill="none"
+                          stroke={mqlPct >= 70 ? "#22c55e" : mqlPct >= 40 ? "#f59e0b" : "#ef4444"}
+                          strokeWidth="11"
+                          strokeDasharray={`${fill} ${ringC}`}
+                          strokeLinecap="round"
+                          transform="rotate(-90 52 52)"
+                          style={{ transition: "stroke-dasharray 0.6s ease" }}
                         />
-                      </div>
-                    </button>
-                  );
-                })}
-              </div>
-              {gradeFilter && (
-                <button
-                  onClick={() => setGradeFilter(null)}
-                  className="text-xs text-[var(--primary)] underline underline-offset-2"
-                >
-                  Limpar filtro
-                </button>
-              )}
-            </div>
-
-            {/* Right panel: Academy = degree distribution chart; Icaraí = time series */}
-            <div className="lg:col-span-2">
-              {isAcademy ? (
-                <>
-                  <SectionHeader sub="Critério de qualificação" title="Formação acadêmica dos leads" />
-                  <div className="mt-4 h-[280px]">
-                    {(degreeDistribuicao ?? []).length === 0 ? (
-                      <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
-                        Sem dados de formação no período
-                      </div>
-                    ) : (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <BarChart
-                          layout="vertical"
-                          data={(degreeDistribuicao ?? []).map((d) => ({
-                            degree: d.degree,
-                            total: d.total,
-                            pct: kpis.totalLeads > 0 ? Math.round((d.total / kpis.totalLeads) * 100) : 0,
-                            color: DEGREE_COLORS[d.degree] ?? "#94a3b8",
-                          }))}
-                          margin={{ top: 4, right: 60, left: 8, bottom: 4 }}
-                        >
-                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.3} horizontal={false} />
-                          <XAxis type="number" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} allowDecimals={false} />
-                          <YAxis type="category" dataKey="degree" tick={{ fontSize: 11, fill: "var(--foreground)" }} axisLine={false} tickLine={false} width={110} />
-                          <Tooltip
-                            {...tooltipStyle}
-                            formatter={(v: number, _: string, entry: { payload?: { pct?: number } }) => [
-                              `${v} lead${v !== 1 ? "s" : ""} (${entry.payload?.pct ?? 0}%)`,
-                              "Total",
-                            ]}
-                          />
-                          <Bar dataKey="total" radius={[0, 4, 4, 0]} maxBarSize={28}>
-                            {(degreeDistribuicao ?? []).map((d) => (
-                              <Cell key={d.degree} fill={DEGREE_COLORS[d.degree] ?? "#94a3b8"} />
-                            ))}
-                          </Bar>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <>
-                  <SectionHeader sub="Evolução" title="Leads vs MQL no tempo" />
-                  <div className="mt-4 h-[280px]">
-                    {periodoSeries.length === 0 ? (
-                      <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
-                        Sem dados para o período
-                      </div>
-                    ) : (
-                      <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={periodoSeries.map((p) => ({ ...p, label: formatPeriodLabel(p.periodo) }))} margin={{ top: 4, right: 8, left: -8, bottom: 0 }}>
-                          <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.4} />
-                          <XAxis dataKey="label" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
-                          <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} allowDecimals={false} />
-                          <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [v, name === "total" ? "Total" : "MQL"]} />
-                          <Bar dataKey="total" fill="var(--border)" radius={[3, 3, 0, 0]} name="Total" opacity={0.6} />
-                          <Bar dataKey="mql" fill="#22c55e" radius={[3, 3, 0, 0]} name="MQL" />
-                        </ComposedChart>
-                      </ResponsiveContainer>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Timing + Invest breakdown — Icaraí only (Academy fields are not captured in the form) */}
-          {!isAcademy && (
-            <div className="grid gap-6 md:grid-cols-2">
-              {/* Timing */}
-              <div>
-                <SectionHeader sub="Intenção de compra" title="Quando pretende adquirir?" />
-                <div className="mt-4 space-y-2">
-                  {timingDistribuicao.map((t) => {
-                    const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
-                    const color = TIMING_COLORS[t.timing] ?? "#94a3b8";
-                    return (
-                      <div key={t.timing} className="flex items-center gap-3">
-                        <span className="w-28 shrink-0 text-xs text-[var(--foreground)]">{t.timing}</span>
-                        <div className="flex-1 h-2 rounded-full bg-[var(--muted)] overflow-hidden">
-                          <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
-                        </div>
-                        <span className="w-20 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                          {t.total} ({pct.toFixed(0)}%)
+                      </svg>
+                      <div className="absolute inset-0 flex flex-col items-center justify-center">
+                        <span className="text-xl font-black tabular-nums text-[var(--foreground)]">
+                          {mqlPct.toFixed(0)}%
                         </span>
                       </div>
-                    );
-                  })}
-                  {timingDistribuicao.length === 0 && (
-                    <p className="text-sm text-[var(--muted-foreground)]">Campo de prazo não encontrado.</p>
+                    </div>
+
+                    {/* Números */}
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-3xl font-black tabular-nums text-green-400">{kpis.totalMql}</p>
+                        <p className="text-[11px] text-[var(--muted-foreground)]">
+                          {isAcademy ? "qualificados" : "MQL"}
+                        </p>
+                      </div>
+                      <div className="h-px w-full bg-[var(--border)]" />
+                      <div>
+                        <p className="text-xl font-bold tabular-nums text-[var(--muted-foreground)]">{kpis.totalNonMql}</p>
+                        <p className="text-[11px] text-[var(--muted-foreground)]">não qualificados</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Icaraí: grade chips clicáveis */}
+                  {!isAcademy && (
+                    <div className="mt-5 space-y-2">
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Filtrar por grau</p>
+                      <div className="flex flex-wrap gap-2">
+                        {gradeDistribuicao.filter((g) => g.total > 0).map((g) => {
+                          const isActive = gradeFilter === g.grade;
+                          const color = GRADE_COLORS[g.grade] ?? "#94a3b8";
+                          return (
+                            <button
+                              key={g.grade}
+                              onClick={() => setGradeFilter(isActive ? null : g.grade)}
+                              className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold transition-all ${
+                                isActive
+                                  ? "border-[var(--primary)]/40 bg-[var(--primary)]/10 text-[var(--foreground)]"
+                                  : "border-[var(--border)] bg-[var(--muted)]/40 text-[var(--muted-foreground)] hover:border-[var(--primary)]/20 hover:text-[var(--foreground)]"
+                              }`}
+                            >
+                              <span
+                                className="inline-flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-black text-white"
+                                style={{ backgroundColor: color }}
+                              >
+                                {g.grade}
+                              </span>
+                              {g.total}
+                              {g.isMql && <span className="text-green-400">●</span>}
+                            </button>
+                          );
+                        })}
+                        {gradeFilter && (
+                          <button
+                            onClick={() => setGradeFilter(null)}
+                            className="rounded-full border border-[var(--primary)]/30 px-2 py-1 text-[10px] text-[var(--primary)] hover:bg-[var(--primary)]/8 transition-colors"
+                          >
+                            ✕ limpar
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Academy: dois pills Qualificado/Não qualificado clicáveis */}
+                  {isAcademy && (
+                    <div className="mt-5 flex gap-2">
+                      {[
+                        { grade: "A", label: "Qualificados", color: "#22c55e", count: kpis.totalMql },
+                        { grade: "E", label: "Não qualificados", color: "#ef4444", count: kpis.totalNonMql },
+                      ].map(({ grade, label, color, count }) => {
+                        const isActive = gradeFilter === grade;
+                        return (
+                          <button
+                            key={grade}
+                            onClick={() => setGradeFilter(isActive ? null : grade)}
+                            className={`flex-1 rounded-xl border p-3 text-left transition-all ${
+                              isActive
+                                ? "border-[var(--primary)]/40 bg-[var(--primary)]/8"
+                                : "border-[var(--border)] bg-[var(--muted)]/30 hover:border-[var(--primary)]/20"
+                            }`}
+                          >
+                            <div className="flex items-center gap-1.5">
+                              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+                              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">{label}</span>
+                            </div>
+                            <p className="mt-1 text-2xl font-black tabular-nums" style={{ color }}>{count}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+
+                {/* Lado direito: Academy = barras de formação; Icaraí = evolução temporal */}
+                <div className="lg:col-span-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+                  {isAcademy ? (
+                    <>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Critério de qualificação</p>
+                      <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">Formação acadêmica dos leads</h3>
+                      {(degreeDistribuicao ?? []).length === 0 ? (
+                        <p className="mt-6 text-sm text-[var(--muted-foreground)]">Sem dados de formação no período.</p>
+                      ) : (
+                        <div className="mt-5 space-y-3.5">
+                          {(degreeDistribuicao ?? []).filter((d) => d.total > 0).map((d) => {
+                            const pct = kpis.totalLeads > 0 ? (d.total / kpis.totalLeads) * 100 : 0;
+                            const color = DEGREE_COLORS[d.degree] ?? "#94a3b8";
+                            const maxCount = Math.max(...(degreeDistribuicao ?? []).map((x) => x.total), 1);
+                            return (
+                              <div key={d.degree}>
+                                <div className="mb-1 flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                                    <span className="text-[12px] font-medium text-[var(--foreground)]">{d.degree}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{d.total}</span>
+                                    <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
+                                  </div>
+                                </div>
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
+                                  <div
+                                    className="h-full rounded-full transition-all duration-500"
+                                    style={{ width: `${(d.total / maxCount) * 100}%`, backgroundColor: color }}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Evolução</p>
+                      <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">Leads vs MQL no tempo</h3>
+                      <div className="mt-4 h-[240px]">
+                        {periodoSeries.length === 0 ? (
+                          <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
+                            Sem dados para o período
+                          </div>
+                        ) : (
+                          <ResponsiveContainer width="100%" height="100%">
+                            <ComposedChart data={periodoSeries.map((p) => ({ ...p, label: formatPeriodLabel(p.periodo) }))} margin={{ top: 4, right: 8, left: -8, bottom: 0 }}>
+                              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.4} />
+                              <XAxis dataKey="label" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
+                              <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} allowDecimals={false} />
+                              <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [v, name === "total" ? "Total" : "MQL"]} />
+                              <Bar dataKey="total" fill="var(--border)" radius={[3, 3, 0, 0]} name="Total" opacity={0.6} />
+                              <Bar dataKey="mql" fill="#22c55e" radius={[3, 3, 0, 0]} name="MQL" />
+                            </ComposedChart>
+                          </ResponsiveContainer>
+                        )}
+                      </div>
+                    </>
                   )}
                 </div>
               </div>
+            );
+          })()}
 
-              {/* Investment */}
-              <div>
-                <SectionHeader sub="Capacidade financeira" title="Quanto pretende investir?" />
-                <div className="mt-4 space-y-2">
-                  {investDistribuicao.map((t) => {
+          {/* Timing + Invest — Icaraí only */}
+          {!isAcademy && (
+            <div className="grid gap-5 md:grid-cols-2">
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Intenção de compra</p>
+                <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">Quando pretende adquirir?</h3>
+                <div className="mt-4 space-y-3">
+                  {timingDistribuicao.map((t) => {
                     const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
-                    const color = INVEST_COLORS[t.invest] ?? "#94a3b8";
+                    const color = TIMING_COLORS[t.timing] ?? "#94a3b8";
+                    const maxCount = Math.max(...timingDistribuicao.map((x) => x.total), 1);
                     return (
-                      <div key={t.invest} className="flex items-center gap-3">
-                        <span className="w-28 shrink-0 text-xs text-[var(--foreground)]">{t.invest}</span>
-                        <div className="flex-1 h-2 rounded-full bg-[var(--muted)] overflow-hidden">
-                          <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
+                      <div key={t.timing}>
+                        <div className="mb-1 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                            <span className="text-[12px] font-medium text-[var(--foreground)]">{t.timing}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{t.total}</span>
+                            <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
+                          </div>
                         </div>
-                        <span className="w-20 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                          {t.total} ({pct.toFixed(0)}%)
-                        </span>
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
+                          <div className="h-full rounded-full transition-all" style={{ width: `${(t.total / maxCount) * 100}%`, backgroundColor: color }} />
+                        </div>
                       </div>
                     );
                   })}
-                  {investDistribuicao.length === 0 && (
-                    <p className="text-sm text-[var(--muted-foreground)]">Campo de investimento não encontrado.</p>
-                  )}
+                  {timingDistribuicao.length === 0 && <p className="text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>}
+                </div>
+              </div>
+
+              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Capacidade financeira</p>
+                <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">Quanto pretende investir?</h3>
+                <div className="mt-4 space-y-3">
+                  {investDistribuicao.map((t) => {
+                    const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
+                    const color = INVEST_COLORS[t.invest] ?? "#94a3b8";
+                    const maxCount = Math.max(...investDistribuicao.map((x) => x.total), 1);
+                    return (
+                      <div key={t.invest}>
+                        <div className="mb-1 flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                            <span className="text-[12px] font-medium text-[var(--foreground)]">{t.invest}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{t.total}</span>
+                            <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
+                          </div>
+                        </div>
+                        <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
+                          <div className="h-full rounded-full transition-all" style={{ width: `${(t.total / maxCount) * 100}%`, backgroundColor: color }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                  {investDistribuicao.length === 0 && <p className="text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>}
                 </div>
               </div>
             </div>
@@ -683,7 +753,7 @@ export function ImobLeadScoringPanel({
                       </h3>
                       {nivel === "campanhas" && (
                         <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-                          Clique em uma campanha para ver conjuntos · {mqlLabel} estimado nos subníveis é proporcional aos leads do Meta Insights
+                          Clique em uma campanha para ver conjuntos e anúncios · leads da lista atualizam conforme a navegação
                         </p>
                       )}
                     </div>
@@ -774,7 +844,7 @@ export function ImobLeadScoringPanel({
                               <th className="pb-2 pl-4 text-left text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Conjunto de Anúncios</th>
                               <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Invest.</th>
                               <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Leads</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">{mqlLabel} est.</th>
+                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">{mqlLabel}</th>
                               <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CPL</th>
                               <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CTR</th>
                               <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Anúncios</th>
@@ -808,12 +878,11 @@ export function ImobLeadScoringPanel({
                                     {adset.leadsMeta > 0 ? adset.leadsMeta : <span className="text-white/20">—</span>}
                                   </td>
                                   <td className={`px-4 py-4 text-right tabular-nums ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {adset.mqlEst > 0 ? (
-                                      <div>
-                                        <span className={`text-[13px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{adset.mqlEst}</span>
-                                        <span className="mt-0.5 block text-[9px] leading-none text-[var(--muted-foreground)]/60 uppercase tracking-wide">est.</span>
-                                      </div>
-                                    ) : <span className="text-[13px] text-white/20">—</span>}
+                                    {adset.mql > 0
+                                      ? <span className={`text-[13px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{adset.mql}</span>
+                                      : adset.leadsScored === 0
+                                        ? <span className="text-[13px] text-white/20">—</span>
+                                        : <span className="text-[13px] font-bold text-[var(--muted-foreground)]">0</span>}
                                   </td>
                                   <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
                                     {adset.cpl != null ? fBrl(adset.cpl) : <span className="text-white/20">—</span>}
@@ -844,7 +913,7 @@ export function ImobLeadScoringPanel({
                               <th className="pb-2 pl-4 text-left text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Anúncio</th>
                               <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Invest.</th>
                               <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Leads</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">{mqlLabel} est.</th>
+                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">{mqlLabel}</th>
                               <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CPL</th>
                               <th className="pb-2 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CTR</th>
                             </tr>
@@ -871,12 +940,11 @@ export function ImobLeadScoringPanel({
                                     {ad.leadsMeta > 0 ? ad.leadsMeta : <span className="text-white/20">—</span>}
                                   </td>
                                   <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
-                                    {ad.mqlEst > 0 ? (
-                                      <div>
-                                        <span className={`text-[13px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{ad.mqlEst}</span>
-                                        <span className="mt-0.5 block text-[9px] leading-none text-[var(--muted-foreground)]/60 uppercase tracking-wide">est.</span>
-                                      </div>
-                                    ) : <span className="text-[13px] text-white/20">—</span>}
+                                    {ad.mql > 0
+                                      ? <span className={`text-[13px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{ad.mql}</span>
+                                      : ad.leadsScored === 0
+                                        ? <span className="text-[13px] text-white/20">—</span>
+                                        : <span className="text-[13px] font-bold text-[var(--muted-foreground)]">0</span>}
                                   </td>
                                   <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
                                     {ad.cpl != null ? fBrl(ad.cpl) : <span className="text-white/20">—</span>}
@@ -898,9 +966,19 @@ export function ImobLeadScoringPanel({
             );
           })()}
 
-          {/* Formulários */}
+          {/* Formulários — clicáveis para filtrar leads */}
           <div>
-            <SectionHeader sub="Origem" title={isAcademy ? "Leads por Formulário" : "MQL por Formulário"} />
+            <div className="flex items-center justify-between">
+              <SectionHeader sub="Origem" title={isAcademy ? "Leads por Formulário" : "MQL por Formulário"} />
+              {activeFormId && (
+                <button
+                  onClick={() => setActiveFormId(null)}
+                  className="text-xs text-[var(--primary)] underline underline-offset-2 hover:no-underline"
+                >
+                  ✕ limpar filtro
+                </button>
+              )}
+            </div>
             <div className="mt-4 overflow-x-auto">
               <table className="w-full min-w-[400px] text-sm">
                 <thead>
@@ -909,28 +987,46 @@ export function ImobLeadScoringPanel({
                     <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
                     <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
                     <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
+                    <th className="w-6" />
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[var(--border)]">
-                  {formsRanking.slice(0, 8).map((f) => (
-                    <tr key={f.formId} className="hover:bg-[var(--muted)]/30 transition-colors">
-                      <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
-                        <span className="line-clamp-1">{f.formName ?? "—"}</span>
-                      </td>
-                      <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{f.total}</td>
-                      <td className="py-2.5 text-right">
-                        <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
-                          {f.mql}
-                        </span>
-                      </td>
-                      <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                        {fmtPct(f.taxaMql)}
-                      </td>
-                    </tr>
-                  ))}
+                  {formsRanking.slice(0, 8).map((f) => {
+                    const isActive = activeFormId === f.formId;
+                    return (
+                      <tr
+                        key={f.formId}
+                        onClick={() => setActiveFormId(isActive ? null : f.formId)}
+                        className={`cursor-pointer transition-colors ${
+                          isActive
+                            ? "bg-[var(--primary)]/8"
+                            : "hover:bg-[var(--muted)]/30"
+                        }`}
+                      >
+                        <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
+                          <div className="flex items-center gap-2">
+                            {isActive && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary)]" />}
+                            <span className="line-clamp-1">{f.formName ?? "—"}</span>
+                          </div>
+                        </td>
+                        <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{f.total}</td>
+                        <td className="py-2.5 text-right">
+                          <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
+                            {f.mql}
+                          </span>
+                        </td>
+                        <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
+                          {fmtPct(f.taxaMql)}
+                        </td>
+                        <td className="py-2.5 pl-2">
+                          <ChevronRight className={`ml-auto h-3 w-3 transition-colors ${isActive ? "text-[var(--primary)]" : "text-white/15"}`} />
+                        </td>
+                      </tr>
+                    );
+                  })}
                   {formsRanking.length === 0 && (
                     <tr>
-                      <td colSpan={4} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum formulário encontrado</td>
+                      <td colSpan={5} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum formulário encontrado</td>
                     </tr>
                   )}
                 </tbody>
@@ -940,15 +1036,36 @@ export function ImobLeadScoringPanel({
 
           {/* Tabela de leads individuais */}
           <div>
-            <div className="flex items-center justify-between">
-              <SectionHeader
-                sub="Todos os Leads"
-                title={`Lista detalhada${gradeFilter ? (isAcademy ? ` — ${gradeFilter === "A" ? "Qualificados" : "Não qualificados"}` : ` — Grau ${gradeFilter}`) : ""}`}
-              />
-              <span className="text-xs text-[var(--muted-foreground)]">
-                {totalFiltered} lead{totalFiltered !== 1 ? "s" : ""}
-                {leadsTruncated ? " (limitado a 500)" : ""}
-              </span>
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <SectionHeader sub="Leads" title="Lista detalhada" />
+              <div className="flex flex-wrap items-center gap-2">
+                {/* Chips de filtros ativos */}
+                {selectedCamp && (
+                  <span className="flex items-center gap-1.5 rounded-full border border-[var(--primary)]/30 bg-[var(--primary)]/8 px-2.5 py-1 text-[11px] font-medium text-[var(--foreground)]">
+                    <span className="text-[var(--primary)]">Campanha:</span>
+                    <span className="max-w-[140px] truncate">{selectedCamp.campaignName}</span>
+                    <button onClick={() => { setSelectedCamp(null); setSelectedAdset(null); }} className="ml-0.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
+                  </span>
+                )}
+                {selectedAdset && (
+                  <span className="flex items-center gap-1.5 rounded-full border border-[var(--primary)]/30 bg-[var(--primary)]/8 px-2.5 py-1 text-[11px] font-medium text-[var(--foreground)]">
+                    <span className="text-[var(--primary)]">Conjunto:</span>
+                    <span className="max-w-[120px] truncate">{selectedAdset.adsetName}</span>
+                    <button onClick={() => setSelectedAdset(null)} className="ml-0.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
+                  </span>
+                )}
+                {activeFormId && (
+                  <span className="flex items-center gap-1.5 rounded-full border border-[var(--primary)]/30 bg-[var(--primary)]/8 px-2.5 py-1 text-[11px] font-medium text-[var(--foreground)]">
+                    <span className="text-[var(--primary)]">Form:</span>
+                    <span className="max-w-[120px] truncate">{formsRanking.find((f) => f.formId === activeFormId)?.formName ?? activeFormId}</span>
+                    <button onClick={() => setActiveFormId(null)} className="ml-0.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
+                  </span>
+                )}
+                <span className="text-xs text-[var(--muted-foreground)]">
+                  {displayedLeads.length} lead{displayedLeads.length !== 1 ? "s" : ""}
+                  {leadsTruncated && !selectedCamp && !selectedAdset && !activeFormId ? " (limitado a 500)" : ""}
+                </span>
+              </div>
             </div>
             <div className="mt-4 overflow-x-auto">
               <table className={`w-full text-sm ${isAcademy ? "min-w-[900px]" : "min-w-[820px]"}`}>
