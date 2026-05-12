@@ -146,6 +146,8 @@ interface ApiResponse {
   degreeDistribuicao?: { degree: string; total: number }[] | null;
   campanhasRanking: { campaignId: string; campaignName: string | null; total: number; mql: number; taxaMql: number }[];
   formsRanking: { formId: string; formName: string | null; total: number; mql: number; taxaMql: number }[];
+  adsetRanking: { adsetName: string; total: number; mql: number; taxaMql: number }[];
+  adRanking: { adName: string; adsetName: string | null; total: number; mql: number; taxaMql: number }[];
   periodoSeries: { periodo: string; total: number; mql: number }[];
   leads: {
     id: string;
@@ -275,7 +277,7 @@ export function ImobLeadScoringPanel({
 
   if (!data) return null;
 
-  const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasRanking, formsRanking, periodoSeries, leads, leadsTruncated, totalFiltered } = data;
+  const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasRanking, formsRanking, adsetRanking, adRanking, periodoSeries, leads, leadsTruncated, totalFiltered } = data;
   const isAcademy = profile === "academy";
 
   const visibleLeads = showAllLeads ? leads : leads.slice(0, 20);
@@ -417,11 +419,20 @@ export function ImobLeadScoringPanel({
           <div className="grid gap-6 lg:grid-cols-3">
             {/* Grade cards */}
             <div className="lg:col-span-1 space-y-3">
-              <SectionHeader sub="Classificação" title="Graus MQL" />
+              <SectionHeader
+                sub="Qualificação"
+                title={isAcademy ? "Qualificados vs Não qualificados" : "Graus MQL"}
+              />
               <div className="space-y-2">
-                {gradeDistribuicao.map((g) => {
+                {(isAcademy
+                  ? gradeDistribuicao.filter((g) => g.grade === "A" || g.grade === "E")
+                  : gradeDistribuicao
+                ).map((g) => {
                   const pct = kpis.totalLeads > 0 ? (g.total / kpis.totalLeads) * 100 : 0;
                   const isActive = gradeFilter === g.grade;
+                  const academyColor = g.grade === "A" ? "#22c55e" : "#ef4444";
+                  const color = isAcademy ? academyColor : GRADE_COLORS[g.grade];
+                  const academyLabel = g.grade === "A" ? "Qualificado" : "Não qualificado";
                   return (
                     <button
                       key={g.grade}
@@ -434,14 +445,23 @@ export function ImobLeadScoringPanel({
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2">
-                          <span
-                            className="inline-flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-black text-white"
-                            style={{ backgroundColor: GRADE_COLORS[g.grade] }}
-                          >
-                            {g.grade}
-                          </span>
+                          {isAcademy ? (
+                            <span
+                              className="rounded-full px-2 py-0.5 text-[10px] font-bold"
+                              style={{ backgroundColor: `${color}20`, color }}
+                            >
+                              {academyLabel}
+                            </span>
+                          ) : (
+                            <span
+                              className="inline-flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-black text-white"
+                              style={{ backgroundColor: color }}
+                            >
+                              {g.grade}
+                            </span>
+                          )}
                           <span className="text-xs font-semibold text-[var(--foreground)]">{g.total} leads</span>
-                          {g.isMql && (
+                          {!isAcademy && g.isMql && (
                             <span className="rounded-full bg-green-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-green-400">
                               MQL
                             </span>
@@ -451,11 +471,13 @@ export function ImobLeadScoringPanel({
                           {pct.toFixed(0)}%
                         </span>
                       </div>
-                      <p className="mt-1 text-[10px] text-[var(--muted-foreground)]">{g.label}</p>
+                      {!isAcademy && (
+                        <p className="mt-1 text-[10px] text-[var(--muted-foreground)]">{g.label}</p>
+                      )}
                       <div className="mt-2 h-1.5 w-full overflow-hidden rounded-full bg-[var(--muted)]">
                         <div
                           className="h-full rounded-full transition-all"
-                          style={{ width: `${pct}%`, backgroundColor: GRADE_COLORS[g.grade] }}
+                          style={{ width: `${pct}%`, backgroundColor: color }}
                         />
                       </div>
                     </button>
@@ -586,14 +608,14 @@ export function ImobLeadScoringPanel({
           <div className="grid gap-6 lg:grid-cols-2">
             {/* Campanhas */}
             <div>
-              <SectionHeader sub="Performance" title="MQL por Campanha" />
+              <SectionHeader sub="Origem" title={isAcademy ? "Leads por Campanha" : "MQL por Campanha"} />
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full min-w-[400px] text-sm">
                   <thead>
                     <tr className="border-b border-[var(--border)]">
                       <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Campanha</th>
                       <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
-                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">MQL</th>
+                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
                       <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
                     </tr>
                   </thead>
@@ -626,14 +648,14 @@ export function ImobLeadScoringPanel({
 
             {/* Formulários */}
             <div>
-              <SectionHeader sub="Origem" title="MQL por Formulário" />
+              <SectionHeader sub="Origem" title={isAcademy ? "Leads por Formulário" : "MQL por Formulário"} />
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full min-w-[400px] text-sm">
                   <thead>
                     <tr className="border-b border-[var(--border)]">
                       <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Formulário</th>
                       <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
-                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">MQL</th>
+                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
                       <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
                     </tr>
                   </thead>
@@ -665,21 +687,112 @@ export function ImobLeadScoringPanel({
             </div>
           </div>
 
+          {/* Adset + Ad ranking — Academy only */}
+          {isAcademy && (
+            <div className="grid gap-6 lg:grid-cols-2">
+              {/* Conjuntos */}
+              <div>
+                <SectionHeader sub="Origem detalhada" title="Leads por Conjunto de Anúncios" />
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full min-w-[400px] text-sm">
+                    <thead>
+                      <tr className="border-b border-[var(--border)]">
+                        <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Conjunto</th>
+                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
+                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Qualif.</th>
+                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--border)]">
+                      {adsetRanking.slice(0, 10).map((a) => (
+                        <tr key={a.adsetName} className="hover:bg-[var(--muted)]/30 transition-colors">
+                          <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
+                            <span className="line-clamp-1">{a.adsetName}</span>
+                          </td>
+                          <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{a.total}</td>
+                          <td className="py-2.5 text-right">
+                            <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
+                              {a.mql}
+                            </span>
+                          </td>
+                          <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
+                            {fmtPct(a.taxaMql)}
+                          </td>
+                        </tr>
+                      ))}
+                      {adsetRanking.length === 0 && (
+                        <tr>
+                          <td colSpan={4} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum conjunto encontrado</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {/* Anúncios */}
+              <div>
+                <SectionHeader sub="Origem detalhada" title="Leads por Anúncio" />
+                <div className="mt-4 overflow-x-auto">
+                  <table className="w-full min-w-[400px] text-sm">
+                    <thead>
+                      <tr className="border-b border-[var(--border)]">
+                        <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Anúncio</th>
+                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
+                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Qualif.</th>
+                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-[var(--border)]">
+                      {adRanking.slice(0, 10).map((a) => (
+                        <tr key={a.adName} className="hover:bg-[var(--muted)]/30 transition-colors">
+                          <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
+                            <div className="line-clamp-1">{a.adName}</div>
+                            {a.adsetName && (
+                              <div className="text-[10px] text-[var(--muted-foreground)] line-clamp-1">{a.adsetName}</div>
+                            )}
+                          </td>
+                          <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{a.total}</td>
+                          <td className="py-2.5 text-right">
+                            <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
+                              {a.mql}
+                            </span>
+                          </td>
+                          <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
+                            {fmtPct(a.taxaMql)}
+                          </td>
+                        </tr>
+                      ))}
+                      {adRanking.length === 0 && (
+                        <tr>
+                          <td colSpan={4} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum anúncio encontrado</td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Tabela de leads individuais */}
           <div>
             <div className="flex items-center justify-between">
-              <SectionHeader sub="Todos os Leads" title={`Lista detalhada${gradeFilter ? ` — Grau ${gradeFilter}` : ""}`} />
+              <SectionHeader
+                sub="Todos os Leads"
+                title={`Lista detalhada${gradeFilter ? (isAcademy ? ` — ${gradeFilter === "A" ? "Qualificados" : "Não qualificados"}` : ` — Grau ${gradeFilter}`) : ""}`}
+              />
               <span className="text-xs text-[var(--muted-foreground)]">
                 {totalFiltered} lead{totalFiltered !== 1 ? "s" : ""}
                 {leadsTruncated ? " (limitado a 500)" : ""}
               </span>
             </div>
             <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[820px] text-sm">
+              <table className={`w-full text-sm ${isAcademy ? "min-w-[900px]" : "min-w-[820px]"}`}>
                 <thead>
                   <tr className="border-b border-[var(--border)]">
                     {(isAcademy
-                      ? ["Data", "Nome", "Grau", "Prazo", "Investimento", "Formação", "Formulário", "Campanha"]
+                      ? ["Data", "Nome", "Status", "Formação", "Formulário", "Campanha", "Conjunto", "Anúncio"]
                       : ["Data", "Nome", "Grau", "Timing", "Investimento", "Formulário", "Campanha", "Plataforma"]
                     ).map((h) => (
                       <th key={h} className="pb-2 pr-3 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
@@ -695,53 +808,50 @@ export function ImobLeadScoringPanel({
                         {new Date(lead.createdTime).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit" })}
                       </td>
                       <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
-                        <div className="max-w-[140px] truncate">{lead.fullName ?? "—"}</div>
+                        <div className="max-w-[130px] truncate">{lead.fullName ?? "—"}</div>
                         {lead.telefone && (
                           <div className="text-[10px] text-[var(--muted-foreground)]">{lead.telefone}</div>
                         )}
                       </td>
-                      <td className="py-2.5 pr-3">
-                        <div className="flex items-center gap-1.5">
+
+                      {/* Status — Academy: Qualificado/Não qualificado pill; Icaraí: letter grade badge */}
+                      {isAcademy ? (
+                        <td className="py-2.5 pr-3">
                           <span
-                            className="inline-flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-black text-white"
-                            style={{ backgroundColor: GRADE_COLORS[lead.grade] }}
+                            className="rounded-full px-2 py-0.5 text-[10px] font-bold whitespace-nowrap"
+                            style={
+                              lead.isMql
+                                ? { backgroundColor: "#22c55e20", color: "#22c55e" }
+                                : { backgroundColor: "#ef444420", color: "#ef4444" }
+                            }
                           >
-                            {lead.grade}
+                            {lead.isMql ? "Qualificado" : "Não qualificado"}
                           </span>
-                          {lead.isMql && (
-                            <span className="rounded-full bg-green-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-green-400">
-                              MQL
+                        </td>
+                      ) : (
+                        <td className="py-2.5 pr-3">
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className="inline-flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-black text-white"
+                              style={{ backgroundColor: GRADE_COLORS[lead.grade] }}
+                            >
+                              {lead.grade}
                             </span>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-2.5 pr-3 text-xs">
-                        <span
-                          className="rounded-full px-2 py-0.5 text-[10px] font-medium"
-                          style={{
-                            backgroundColor: `${TIMING_COLORS[lead.timingLabel] ?? "#94a3b8"}20`,
-                            color: TIMING_COLORS[lead.timingLabel] ?? "#94a3b8",
-                          }}
-                        >
-                          {lead.timingLabel}
-                        </span>
-                      </td>
-                      <td className="py-2.5 pr-3 text-xs">
-                        <span
-                          className="rounded-full px-2 py-0.5 text-[10px] font-medium"
-                          style={{
-                            backgroundColor: `${INVEST_COLORS[lead.investLabel] ?? "#94a3b8"}20`,
-                            color: INVEST_COLORS[lead.investLabel] ?? "#94a3b8",
-                          }}
-                        >
-                          {lead.investLabel}
-                        </span>
-                      </td>
-                      {isAcademy && (
+                            {lead.isMql && (
+                              <span className="rounded-full bg-green-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-green-400">
+                                MQL
+                              </span>
+                            )}
+                          </div>
+                        </td>
+                      )}
+
+                      {/* Academy: Formação pill */}
+                      {isAcademy ? (
                         <td className="py-2.5 pr-3 text-xs">
                           {lead.degreeLabel ? (
                             <span
-                              className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                              className="rounded-full px-2 py-0.5 text-[10px] font-medium whitespace-nowrap"
                               style={{
                                 backgroundColor: `${DEGREE_COLORS[lead.degreeLabel] ?? "#94a3b8"}20`,
                                 color: DEGREE_COLORS[lead.degreeLabel] ?? "#94a3b8",
@@ -753,14 +863,54 @@ export function ImobLeadScoringPanel({
                             <span className="text-[var(--muted-foreground)]">—</span>
                           )}
                         </td>
+                      ) : (
+                        /* Icaraí: Timing pill */
+                        <td className="py-2.5 pr-3 text-xs">
+                          <span
+                            className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                            style={{
+                              backgroundColor: `${TIMING_COLORS[lead.timingLabel] ?? "#94a3b8"}20`,
+                              color: TIMING_COLORS[lead.timingLabel] ?? "#94a3b8",
+                            }}
+                          >
+                            {lead.timingLabel}
+                          </span>
+                        </td>
                       )}
-                      <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
-                        <div className="max-w-[140px] truncate">{lead.formName ?? "—"}</div>
-                      </td>
-                      <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
-                        <div className="max-w-[140px] truncate">{lead.campaignName ?? "—"}</div>
-                      </td>
+
+                      {/* Icaraí only: Investimento */}
                       {!isAcademy && (
+                        <td className="py-2.5 pr-3 text-xs">
+                          <span
+                            className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                            style={{
+                              backgroundColor: `${INVEST_COLORS[lead.investLabel] ?? "#94a3b8"}20`,
+                              color: INVEST_COLORS[lead.investLabel] ?? "#94a3b8",
+                            }}
+                          >
+                            {lead.investLabel}
+                          </span>
+                        </td>
+                      )}
+
+                      <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
+                        <div className="max-w-[120px] truncate">{lead.formName ?? "—"}</div>
+                      </td>
+                      <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
+                        <div className="max-w-[120px] truncate">{lead.campaignName ?? "—"}</div>
+                      </td>
+
+                      {/* Academy: Conjunto + Anúncio; Icaraí: Plataforma */}
+                      {isAcademy ? (
+                        <>
+                          <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
+                            <div className="max-w-[120px] truncate">{lead.adsetName ?? "—"}</div>
+                          </td>
+                          <td className="py-2.5 text-xs text-[var(--muted-foreground)]">
+                            <div className="max-w-[120px] truncate">{lead.adName ?? "—"}</div>
+                          </td>
+                        </>
+                      ) : (
                         <td className="py-2.5 text-xs text-[var(--muted-foreground)] capitalize">
                           {lead.platform ?? "—"}
                         </td>
@@ -802,27 +952,47 @@ export function ImobLeadScoringPanel({
             <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--primary)]">
               Critérios de qualificação MQL
             </p>
-            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-              {[
-                { grade: "A", color: "#22c55e", title: "Hot MQL", desc: "Agora + R$ 700k ou acima de R$ 1M" },
-                { grade: "B", color: "#84cc16", title: "MQL", desc: "Agora + R$ 300k até R$ 700k" },
-                { grade: "C", color: "#f59e0b", title: "MQL Morno", desc: "3 a 6 meses + qualquer valor acima de R$ 300k" },
-                { grade: "D", color: "#94a3b8", title: "Potencial", desc: "Avaliando, mas com orçamento qualificado (≥ R$ 300k)" },
-              ].map((item) => (
-                <div key={item.grade} className="flex items-start gap-2">
-                  <span
-                    className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-black text-white"
-                    style={{ backgroundColor: item.color }}
-                  >
-                    {item.grade}
-                  </span>
-                  <div>
-                    <p className="text-xs font-semibold text-[var(--foreground)]">{item.title}</p>
-                    <p className="text-[10px] text-[var(--muted-foreground)]">{item.desc}</p>
+            {isAcademy ? (
+              <div className="grid gap-2 sm:grid-cols-2">
+                {[
+                  { color: "#22c55e", title: "Qualificado", desc: "Lead tem graduação (cursando ou completa, em qualquer nível)" },
+                  { color: "#ef4444", title: "Não qualificado", desc: "Lead não informou ou não possui nenhuma graduação" },
+                ].map((item) => (
+                  <div key={item.title} className="flex items-start gap-2">
+                    <span
+                      className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                      style={{ backgroundColor: item.color, marginTop: 4 }}
+                    />
+                    <div>
+                      <p className="text-xs font-semibold text-[var(--foreground)]">{item.title}</p>
+                      <p className="text-[10px] text-[var(--muted-foreground)]">{item.desc}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+                {[
+                  { grade: "A", color: "#22c55e", title: "Hot MQL", desc: "Agora + R$ 700k ou acima de R$ 1M" },
+                  { grade: "B", color: "#84cc16", title: "MQL", desc: "Agora + R$ 300k até R$ 700k" },
+                  { grade: "C", color: "#f59e0b", title: "MQL Morno", desc: "3 a 6 meses + qualquer valor acima de R$ 300k" },
+                  { grade: "D", color: "#94a3b8", title: "Potencial", desc: "Avaliando, mas com orçamento qualificado (≥ R$ 300k)" },
+                ].map((item) => (
+                  <div key={item.grade} className="flex items-start gap-2">
+                    <span
+                      className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-black text-white"
+                      style={{ backgroundColor: item.color }}
+                    >
+                      {item.grade}
+                    </span>
+                    <div>
+                      <p className="text-xs font-semibold text-[var(--foreground)]">{item.title}</p>
+                      <p className="text-[10px] text-[var(--muted-foreground)]">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </>
       )}

@@ -145,17 +145,8 @@ function timelineRankAcademy(raw: string | null): number {
   return 0;
 }
 
-function calcGradeAcademy(degree: string | null, invest: string | null, timeline: string | null): ImobGrade {
-  const dr = degreeRank(degree);
-  const ir = investRankAcademy(invest);
-  const tr = timelineRankAcademy(timeline);
-
-  if (dr >= 2 && ir === 3 && tr >= 2) return "A";
-  if (dr >= 2 && ir >= 2 && tr >= 2) return "B";
-  if (dr >= 2 && ir >= 2) return "C";
-  if (dr >= 1 && ir >= 2 && tr >= 2) return "C";
-  if (dr >= 1 && ir >= 1) return "D";
-  return "E";
+function calcGradeAcademy(degree: string | null): "A" | "E" {
+  return degreeRank(degree) >= 1 ? "A" : "E";
 }
 
 function prettyDegree(raw: string | null): string {
@@ -190,11 +181,11 @@ function prettyInvestAcademy(raw: string | null): string {
 }
 
 const GRADE_LABELS_ACADEMY: Record<ImobGrade, string> = {
-  A: "Hot MQL — Pós-grad + O quanto for necessário + Imediato",
-  B: "MQL — Graduado + Mais de R$5k + Imediato (6m ou 1 ano)",
-  C: "MQL Morno — Graduado + R$5k+ (qualquer prazo)",
-  D: "Potencial — Cursando ou investimento básico",
-  E: "Fora do perfil",
+  A: "Qualificado — tem graduação",
+  B: "—",
+  C: "—",
+  D: "—",
+  E: "Não qualificado — sem graduação",
 };
 
 // ─── Shared ──────────────────────────────────────────────────────────────────
@@ -255,7 +246,7 @@ export async function GET(
       const degree = extractField(raw, DEGREE_KEYWORDS);
       const invest = extractField(raw, INVEST_KEYWORDS_ACADEMY);
       const timeline = extractField(raw, TIMING_KEYWORDS_ACADEMY);
-      const grade = calcGradeAcademy(degree, invest, timeline);
+      const grade = calcGradeAcademy(degree);
       return {
         ...lead,
         _timing: timeline,
@@ -330,6 +321,22 @@ export async function GET(
     if (!formMap[fid]) formMap[fid] = { name: l.formName, total: 0, mql: 0 };
     formMap[fid].total++;
     if (l._isMql) formMap[fid].mql++;
+  }
+
+  const adsetMap: Record<string, { total: number; mql: number }> = {};
+  for (const l of scored) {
+    const key = l.adsetName ?? "Não informado";
+    if (!adsetMap[key]) adsetMap[key] = { total: 0, mql: 0 };
+    adsetMap[key].total++;
+    if (l._isMql) adsetMap[key].mql++;
+  }
+
+  const adMap: Record<string, { adsetName: string | null; total: number; mql: number }> = {};
+  for (const l of scored) {
+    const key = l.adName ?? "Não informado";
+    if (!adMap[key]) adMap[key] = { adsetName: l.adsetName, total: 0, mql: 0 };
+    adMap[key].total++;
+    if (l._isMql) adMap[key].mql++;
   }
 
   const periodoMap: Record<string, { total: number; mql: number }> = {};
@@ -438,6 +445,12 @@ export async function GET(
     formsRanking: Object.entries(formMap)
       .map(([id, data]) => ({ formId: id, formName: data.name, total: data.total, mql: data.mql, taxaMql: data.total > 0 ? Math.round((data.mql / data.total) * 1000) / 10 : 0 }))
       .sort((a, b) => b.mql - a.mql),
+    adsetRanking: Object.entries(adsetMap)
+      .map(([adsetName, data]) => ({ adsetName, total: data.total, mql: data.mql, taxaMql: data.total > 0 ? Math.round((data.mql / data.total) * 1000) / 10 : 0 }))
+      .sort((a, b) => b.total - a.total),
+    adRanking: Object.entries(adMap)
+      .map(([adName, data]) => ({ adName, adsetName: data.adsetName, total: data.total, mql: data.mql, taxaMql: data.total > 0 ? Math.round((data.mql / data.total) * 1000) / 10 : 0 }))
+      .sort((a, b) => b.total - a.total),
     periodoSeries,
     leads: leadsList,
     leadsTruncated: filtered.length > LEADS_LIMIT,
