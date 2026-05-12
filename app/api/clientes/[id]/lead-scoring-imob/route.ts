@@ -377,38 +377,55 @@ export async function GET(
 
   const campanhasHierarchy = Object.entries(campInsights).map(([cid, d]) => {
     const mqld = mqlByCampaign[cid] ?? { total: 0, mql: 0, name: d.campaignName };
+    const campMql = mqld.mql;
+    const campLeadsMeta = d.leads; // total leads from MetaAdsCriativo for this campaign
+    // Distribui MQL proporcionalmente por adset/ad com base nos leads do Meta Insights
+    function mqlEst(levelLeads: number): number {
+      if (campLeadsMeta <= 0 || campMql <= 0) return 0;
+      return Math.round(campMql * (levelLeads / campLeadsMeta));
+    }
     return {
       campaignId: cid,
       campaignName: d.campaignName ?? mqld.name,
       leadsMeta: d.leads,
       leadsScored: mqld.total,
-      mql: mqld.mql,
-      taxaMql: txMql(mqld.total, mqld.mql),
+      mql: campMql,
+      taxaMql: txMql(mqld.total, campMql),
       invest: d.spend,
       impressions: d.impressions,
       clicks: d.clicks,
       ctr: calcCtr(d.clicks, d.impressions),
       cpl: calcCpl(d.spend, d.leads),
-      adsets: Object.entries(d.adsets).map(([adsetId, a]) => ({
-        adsetId,
-        adsetName: a.adsetName ?? adsetId,
-        leadsMeta: a.leads,
-        invest: a.spend,
-        impressions: a.impressions,
-        clicks: a.clicks,
-        ctr: calcCtr(a.clicks, a.impressions),
-        cpl: calcCpl(a.spend, a.leads),
-        ads: Object.entries(a.ads).map(([adId, ad]) => ({
-          adId,
-          adName: ad.adName,
-          leadsMeta: ad.leads,
-          invest: ad.spend,
-          impressions: ad.impressions,
-          clicks: ad.clicks,
-          ctr: calcCtr(ad.clicks, ad.impressions),
-          cpl: calcCpl(ad.spend, ad.leads),
-        })).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
-      })).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
+      adsets: Object.entries(d.adsets).map(([adsetId, a]) => {
+        const adsetMqlEst = mqlEst(a.leads);
+        return {
+          adsetId,
+          adsetName: a.adsetName ?? adsetId,
+          leadsMeta: a.leads,
+          mqlEst: adsetMqlEst,
+          taxaMqlEst: a.leads > 0 ? Math.round((adsetMqlEst / a.leads) * 1000) / 10 : 0,
+          invest: a.spend,
+          impressions: a.impressions,
+          clicks: a.clicks,
+          ctr: calcCtr(a.clicks, a.impressions),
+          cpl: calcCpl(a.spend, a.leads),
+          ads: Object.entries(a.ads).map(([adId, ad]) => {
+            const adMqlEst = mqlEst(ad.leads);
+            return {
+              adId,
+              adName: ad.adName,
+              leadsMeta: ad.leads,
+              mqlEst: adMqlEst,
+              taxaMqlEst: ad.leads > 0 ? Math.round((adMqlEst / ad.leads) * 1000) / 10 : 0,
+              invest: ad.spend,
+              impressions: ad.impressions,
+              clicks: ad.clicks,
+              ctr: calcCtr(ad.clicks, ad.impressions),
+              cpl: calcCpl(ad.spend, ad.leads),
+            };
+          }).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
+        };
+      }).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
     };
   });
   // Adiciona campanhas com leads mas sem MetaAdsCriativo

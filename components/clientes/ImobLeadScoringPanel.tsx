@@ -160,6 +160,8 @@ interface ApiResponse {
       adsetId: string;
       adsetName: string;
       leadsMeta: number;
+      mqlEst: number;
+      taxaMqlEst: number;
       invest: number;
       impressions: number;
       clicks: number;
@@ -169,6 +171,8 @@ interface ApiResponse {
         adId: string;
         adName: string;
         leadsMeta: number;
+        mqlEst: number;
+        taxaMqlEst: number;
         invest: number;
         impressions: number;
         clicks: number;
@@ -627,25 +631,25 @@ export function ImobLeadScoringPanel({
           <div>
             <SectionHeader sub="Origem" title="Análise por Campanha" />
             <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-              Clique em uma campanha para expandir conjuntos e anúncios · Invest., leads e CTR via Meta Insights
+              Clique em uma campanha para expandir conjuntos e anúncios · {isAcademy ? "Qualif." : "MQL"} estimado nos conjuntos/anúncios é proporcional aos leads
             </p>
             <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[720px] border-separate [border-spacing:0_3px]">
+              <table className="w-full min-w-[760px] border-separate [border-spacing:0_6px]">
                 <thead>
                   <tr>
-                    <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Campanha / Conjunto / Anúncio</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Invest.</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">CPL</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">CTR</th>
+                    <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Campanha / Conjunto / Anúncio</th>
+                    <th className="pb-2 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Invest.</th>
+                    <th className="pb-2 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Leads</th>
+                    <th className="pb-2 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
+                    <th className="pb-2 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CPL</th>
+                    <th className="pb-2 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CTR</th>
                   </tr>
                 </thead>
                 <tbody>
                   {campanhasHierarchy.map((camp, ci) => {
                     const campExpanded = expandedCamps.has(camp.campaignId);
                     const isTop = ci === 0;
-                    const campBg = isTop ? "bg-[var(--primary)]/5" : "bg-white/[0.035]";
+                    const campBg = isTop ? "bg-[var(--primary)]/[0.07]" : "bg-white/[0.03]";
                     const hasAdsets = camp.adsets.length > 0;
                     return (
                       <React.Fragment key={camp.campaignId}>
@@ -661,44 +665,46 @@ export function ImobLeadScoringPanel({
                             });
                           }}
                         >
-                          <td className={`rounded-l-xl px-3 py-3 ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
-                            <div className="flex items-center gap-2">
-                              <span className={`shrink-0 w-6 text-right text-[11px] font-bold tabular-nums ${isTop ? "text-[var(--primary)]" : "text-white/20"}`}>#{ci + 1}</span>
+                          <td className={`rounded-l-2xl px-4 py-4 ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
+                            <div className="flex items-start gap-2.5">
+                              {isTop ? (
+                                <span className="mt-0.5 shrink-0 rounded-full bg-[var(--primary)]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--primary)]">#1</span>
+                              ) : (
+                                <span className="mt-0.5 w-5 shrink-0 text-right text-[11px] font-bold tabular-nums text-white/20">#{ci + 1}</span>
+                              )}
                               {hasAdsets
                                 ? campExpanded
-                                  ? <ChevronDown className="h-3 w-3 shrink-0 text-[var(--primary)]" />
-                                  : <ChevronRight className="h-3 w-3 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
-                                : <span className="w-3" />
+                                  ? <ChevronDown className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                                  : <ChevronRight className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                                : <span className="w-3.5" />
                               }
-                              <span className="text-xs font-semibold text-[var(--foreground)] line-clamp-1">{camp.campaignName ?? "—"}</span>
+                              <p className="text-[12px] font-semibold leading-snug text-[var(--foreground)] line-clamp-2">{camp.campaignName ?? "—"}</p>
                             </div>
                           </td>
-                          <td className={`px-3 py-3 text-right text-xs tabular-nums text-[var(--foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
-                            {camp.invest > 0 ? fmt(camp.invest) : <span className="text-[var(--muted-foreground)]/40">—</span>}
+                          <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
+                            {camp.invest > 0 ? `R$\u00a0${camp.invest.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : <span className="text-white/20">—</span>}
                           </td>
-                          <td className={`px-3 py-3 text-right ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
-                            <div className="flex flex-col items-end gap-0.5">
-                              <span className="text-xs tabular-nums text-[var(--muted-foreground)]">{camp.leadsMeta > 0 ? camp.leadsMeta : camp.leadsScored}</span>
-                              {camp.leadsScored > 0 && camp.leadsMeta > 0 && camp.leadsScored !== camp.leadsMeta && (
-                                <span className="text-[10px] tabular-nums text-[var(--muted-foreground)]/50">{camp.leadsScored} qualif.</span>
-                              )}
-                            </div>
-                          </td>
-                          <td className={`px-3 py-3 text-right ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
-                            {camp.mql > 0 ? (
-                              <div className="flex flex-col items-end gap-0.5">
-                                <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-bold tabular-nums text-green-400">{camp.mql}</span>
-                                <span className="text-[10px] tabular-nums text-[var(--muted-foreground)]/50">{fmtPct(camp.taxaMql)}</span>
-                              </div>
-                            ) : (
-                              <span className="text-[var(--muted-foreground)]/40 text-xs">—</span>
+                          <td className={`px-4 py-4 text-right tabular-nums ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
+                            <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
+                              {camp.leadsMeta > 0 ? camp.leadsMeta : camp.leadsScored > 0 ? camp.leadsScored : <span className="text-[13px] font-normal text-white/20">—</span>}
+                            </span>
+                            {camp.leadsScored > 0 && camp.leadsMeta > 0 && camp.leadsScored !== camp.leadsMeta && (
+                              <span className="mt-0.5 block text-[10px] leading-none text-[var(--muted-foreground)]">{camp.leadsScored} qualif.</span>
                             )}
                           </td>
-                          <td className={`px-3 py-3 text-right text-xs tabular-nums text-[var(--muted-foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
-                            {camp.cpl != null ? fmt(camp.cpl) : <span className="text-[var(--muted-foreground)]/40">—</span>}
+                          <td className={`px-4 py-4 text-right tabular-nums ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
+                            {camp.mql > 0 ? (
+                              <>
+                                <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{camp.mql}</span>
+                                <span className="mt-0.5 block text-[10px] leading-none text-[var(--muted-foreground)]">{fmtPct(camp.taxaMql)}</span>
+                              </>
+                            ) : <span className="text-[13px] text-white/20">—</span>}
                           </td>
-                          <td className={`rounded-r-xl px-3 py-3 text-right text-xs tabular-nums text-[var(--muted-foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
-                            {camp.ctr > 0 ? `${camp.ctr.toFixed(2)}%` : <span className="text-[var(--muted-foreground)]/40">—</span>}
+                          <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
+                            {camp.cpl != null ? `R$\u00a0${camp.cpl.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : <span className="text-white/20">—</span>}
+                          </td>
+                          <td className={`rounded-r-2xl px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
+                            {camp.ctr > 0 ? `${camp.ctr.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : <span className="text-white/20">—</span>}
                           </td>
                         </tr>
 
@@ -720,60 +726,70 @@ export function ImobLeadScoringPanel({
                                   });
                                 }}
                               >
-                                <td className={`rounded-l-xl bg-white/[0.02] px-3 py-2.5 pl-12 transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                <td className={`rounded-l-2xl bg-white/[0.02] px-4 py-3 pl-14 transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
                                   <div className="flex items-center gap-2">
-                                    <span className="w-5 text-right text-[10px] font-bold tabular-nums text-white/15">#{ai + 1}</span>
+                                    <span className="w-5 shrink-0 text-right text-[10px] font-bold tabular-nums text-white/15">#{ai + 1}</span>
                                     {hasAds
                                       ? adsetExpanded
-                                        ? <ChevronDown className="h-2.5 w-2.5 shrink-0 text-[var(--primary)]" />
-                                        : <ChevronRight className="h-2.5 w-2.5 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
-                                      : <span className="w-2.5" />
+                                        ? <ChevronDown className="h-3 w-3 shrink-0 text-[var(--primary)]" />
+                                        : <ChevronRight className="h-3 w-3 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                                      : <span className="w-3" />
                                     }
-                                    <span className="text-xs text-[var(--muted-foreground)] line-clamp-1">{adset.adsetName}</span>
+                                    <span className="text-[12px] text-[var(--muted-foreground)] line-clamp-1">{adset.adsetName}</span>
                                   </div>
                                 </td>
-                                <td className={`bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--foreground)]/80 transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
-                                  {fmt(adset.invest)}
+                                <td className={`bg-white/[0.02] px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {`R$\u00a0${adset.invest.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                                 </td>
-                                <td className={`bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
-                                  {adset.leadsMeta}
+                                <td className={`bg-white/[0.02] px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {adset.leadsMeta > 0 ? adset.leadsMeta : <span className="text-white/20">—</span>}
                                 </td>
-                                <td className={`bg-white/[0.02] px-3 py-2.5 text-right transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
-                                  <span className="text-[var(--muted-foreground)]/30 text-xs">—</span>
+                                <td className={`bg-white/[0.02] px-4 py-3 text-right tabular-nums transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {adset.mqlEst > 0 ? (
+                                    <>
+                                      <span className="text-[13px] font-semibold text-[var(--foreground)]/70">{adset.mqlEst}</span>
+                                      <span className="mt-0.5 block text-[9px] leading-none text-[var(--muted-foreground)]/50 uppercase tracking-wide">est. · {fmtPct(adset.taxaMqlEst)}</span>
+                                    </>
+                                  ) : <span className="text-[13px] text-white/20">—</span>}
                                 </td>
-                                <td className={`bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
-                                  {adset.cpl != null ? fmt(adset.cpl) : "—"}
+                                <td className={`bg-white/[0.02] px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {adset.cpl != null ? `R$\u00a0${adset.cpl.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : <span className="text-white/20">—</span>}
                                 </td>
-                                <td className={`rounded-r-xl bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
-                                  {adset.ctr > 0 ? `${adset.ctr.toFixed(2)}%` : "—"}
+                                <td className={`rounded-r-2xl bg-white/[0.02] px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {adset.ctr > 0 ? `${adset.ctr.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : <span className="text-white/20">—</span>}
                                 </td>
                               </tr>
 
                               {/* Ad rows */}
                               {adsetExpanded && adset.ads.map((ad, adi) => (
                                 <tr key={ad.adId}>
-                                  <td className="rounded-l-xl bg-white/[0.01] px-3 py-2 pl-[4.5rem]">
+                                  <td className="rounded-l-2xl bg-white/[0.015] px-4 py-2.5 pl-[5rem]">
                                     <div className="flex items-center gap-2">
-                                      <span className="w-5 text-right text-[10px] text-white/10 tabular-nums">#{adi + 1}</span>
-                                      <span className="text-[11px] text-[var(--muted-foreground)]/70 line-clamp-1">{ad.adName}</span>
+                                      <span className="w-5 shrink-0 text-right text-[10px] tabular-nums text-white/10">#{adi + 1}</span>
+                                      <span className="text-[11px] text-[var(--muted-foreground)]/60 line-clamp-1">{ad.adName}</span>
                                     </div>
                                   </td>
-                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--foreground)]/60">
-                                    {fmt(ad.invest)}
+                                  <td className="bg-white/[0.015] px-4 py-2.5 text-right tabular-nums text-[12px] text-[var(--muted-foreground)]/60">
+                                    {`R$\u00a0${ad.invest.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                                   </td>
-                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">
+                                  <td className="bg-white/[0.015] px-4 py-2.5 text-right tabular-nums text-[12px] text-[var(--muted-foreground)]/60">
                                     {ad.leadsMeta > 0 ? (
-                                      <span className="inline-flex items-center justify-center rounded-full bg-green-500/8 px-2 py-0.5 text-[11px] font-bold tabular-nums text-green-400/70">{ad.leadsMeta}</span>
-                                    ) : "—"}
+                                      <span className="inline-flex items-center justify-center rounded-full bg-green-500/10 px-2 py-0.5 text-[11px] font-bold tabular-nums text-green-400/80">{ad.leadsMeta}</span>
+                                    ) : <span className="text-white/15">—</span>}
                                   </td>
-                                  <td className="bg-white/[0.01] px-3 py-2 text-right">
-                                    <span className="text-[var(--muted-foreground)]/25 text-[11px]">—</span>
+                                  <td className="bg-white/[0.015] px-4 py-2.5 text-right tabular-nums">
+                                    {ad.mqlEst > 0 ? (
+                                      <>
+                                        <span className="text-[12px] font-semibold text-[var(--foreground)]/50">{ad.mqlEst}</span>
+                                        <span className="mt-0.5 block text-[9px] leading-none text-[var(--muted-foreground)]/40 uppercase tracking-wide">est.</span>
+                                      </>
+                                    ) : <span className="text-[12px] text-white/15">—</span>}
                                   </td>
-                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">
-                                    {ad.cpl != null ? fmt(ad.cpl) : "—"}
+                                  <td className="bg-white/[0.015] px-4 py-2.5 text-right tabular-nums text-[12px] text-[var(--muted-foreground)]/60">
+                                    {ad.cpl != null ? `R$\u00a0${ad.cpl.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : <span className="text-white/15">—</span>}
                                   </td>
-                                  <td className="rounded-r-xl bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">
-                                    {ad.ctr > 0 ? `${ad.ctr.toFixed(2)}%` : "—"}
+                                  <td className="rounded-r-2xl bg-white/[0.015] px-4 py-2.5 text-right tabular-nums text-[12px] text-[var(--muted-foreground)]/60">
+                                    {ad.ctr > 0 ? `${ad.ctr.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%` : <span className="text-white/15">—</span>}
                                   </td>
                                 </tr>
                               ))}
