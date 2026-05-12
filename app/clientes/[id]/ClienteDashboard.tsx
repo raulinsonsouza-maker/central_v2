@@ -9,12 +9,13 @@ import { GoogleKeywordsPanel } from "@/components/clientes/GoogleKeywordsPanel";
 import { AnalyticsGA4Section } from "@/components/clientes/AnalyticsGA4Section";
 import { ImoveisPanel } from "@/components/clientes/ImoveisPanel";
 import { LeadScoringPanel } from "@/components/clientes/LeadScoringPanel";
+import { ImobLeadScoringPanel } from "@/components/clientes/ImobLeadScoringPanel";
 import { HotelFazendaSaoJoaoPanel } from "@/components/clientes/HotelFazendaSaoJoaoPanel";
 import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
 import { CampanhasPanel } from "@/components/clientes/CampanhasPanel";
 import { GoogleCampanhasPanel } from "@/components/clientes/GoogleCampanhasPanel";
-import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci, isKombucha, isBeBlueSchool } from "@/lib/clientProfiles";
+import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci, isKombucha, isBeBlueSchool, isSouIcarai } from "@/lib/clientProfiles";
 import {
   Bar,
   XAxis,
@@ -36,7 +37,7 @@ async function fetchCliente(id: string) {
   return res.json();
 }
 
-type DateFilter = {
+export type DateFilter = {
   periodo: string;
   dataInicio?: string;
   dataFim?: string;
@@ -335,7 +336,7 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }
 
 export function ClienteDashboard({ id, portalMode = false }: { id: string; portalMode?: boolean }) {
   const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring">("geral");
-  const [subView, setSubView] = React.useState<"dados" | "criativos">("dados");
+  const [subView, setSubView] = React.useState<"dados" | "criativos" | "lead-scoring">("dados");
   const [saldoVisible, setSaldoVisible] = React.useState(false);
   const [presetPeriodo, setPresetPeriodo] = React.useState<PresetPeriodo>("mesAtual");
   const [chartAgrupamento, setChartAgrupamento] = React.useState<"diario" | "semanal" | "mensal">("semanal");
@@ -971,10 +972,14 @@ function formatPercentage(value: number) {
           </div>
         </div>
 
-        {/* Linha 2: Toggle Análise / Criativos — só em Meta e Google */}
+        {/* Linha 2: Toggle Análise / Criativos / Lead Scoring — só em Meta e Google */}
         {(canal === "meta" || canal === "google") && (
           <div className="flex items-center gap-1 self-end rounded-xl border border-[var(--border)] bg-[var(--card)] p-1">
-            {(["dados", "criativos"] as const).map((view) => (
+            {(
+              canal === "meta" && isSouIcarai(cliente)
+                ? (["dados", "criativos", "lead-scoring"] as const)
+                : (["dados", "criativos"] as const)
+            ).map((view) => (
               <button
                 key={view}
                 onClick={() => setSubView(view)}
@@ -984,7 +989,7 @@ function formatPercentage(value: number) {
                     : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/60 hover:text-[var(--foreground)]"
                 }`}
               >
-                {view === "dados" ? "Análise" : `Criativos`}
+                {view === "dados" ? "Análise" : view === "criativos" ? "Criativos" : "Lead Scoring"}
               </button>
             ))}
           </div>
@@ -1199,6 +1204,11 @@ function formatPercentage(value: number) {
       {/* ── Lead Scoring panel (Meta Lead Gen forms) ── */}
       {canal === "lead-scoring" && (
         <LeadScoringPanel clienteId={id} dateFilter={dateFilter} />
+      )}
+
+      {/* ── Imob Lead Scoring — Sou+ Icaraí (subView dentro do Meta) ── */}
+      {canal === "meta" && subView === "lead-scoring" && isSouIcarai(cliente) && (
+        <ImobLeadScoringPanel clienteId={id} dateFilter={dateFilter} />
       )}
 
       {/* ── Default panel (KPIs, chart, weekly table, financial) ── */}

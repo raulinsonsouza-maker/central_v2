@@ -11,6 +11,7 @@ export const ACADEMY_AMERICANA_SLUG = "academy-americana";
 export const VITO_BALDUCCI_SLUG = "vito-balducci";
 export const KOMBUCHA_DA_CA_SLUG = "kombucha-da-ca";
 export const BE_BLUE_SCHOOL_SLUG = "be-blue-school";
+export const SOU_ICARAI_SLUG = "sou-icarai";
 
 export type ClientIdentity = {
   nome?: string | null;
@@ -208,5 +209,20 @@ export function isBeBlueSchool(client?: ClientIdentity | null) {
   return (
     slug === BE_BLUE_SCHOOL_SLUG ||
     nome === "be blue school"
+  );
+}
+
+export function isSouIcarai(client?: ClientIdentity | null) {
+  if (!client) return false;
+  if (client.perfilPanel === "sou-icarai") return true;
+
+  const slug = normalizeText(client.slug);
+  const nome = normalizeText(client.nome);
+
+  return (
+    slug === SOU_ICARAI_SLUG ||
+    nome === "sou + icarai" ||
+    nome === "sou icarai" ||
+    (slug.includes("sou") && slug.includes("icara"))
   );
 }
