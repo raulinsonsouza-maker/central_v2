@@ -805,7 +805,9 @@ export function ImobLeadScoringPanel({
                                   <td className={`px-4 py-4 text-right tabular-nums ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
                                     {camp.leadsScored > 0
                                       ? <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{camp.leadsScored}</span>
-                                      : <span className="text-[13px] text-white/20">—</span>}
+                                      : camp.leadsMeta > 0
+                                        ? <span className="text-[13px] text-[var(--muted-foreground)]" title="Leads reportados pelo Meta Ads (sem atribuição de webhook)">{camp.leadsMeta}</span>
+                                        : <span className="text-[13px] text-white/20">—</span>}
                                   </td>
                                   <td className={`px-4 py-4 text-right tabular-nums ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
                                     {camp.mql > 0
