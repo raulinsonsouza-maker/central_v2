@@ -54,6 +54,9 @@ const TIMING_COLORS: Record<string, string> = {
   "Agora": "#22c55e",
   "3 a 6 meses": "#f59e0b",
   "Estou avaliando": "#94a3b8",
+  "6 meses": "#22c55e",
+  "1 ano": "#84cc16",
+  "Avaliando": "#94a3b8",
   "Não informado": "#475569",
 };
 
@@ -63,6 +66,20 @@ const INVEST_COLORS: Record<string, string> = {
   "R$ 500k – 700k": "#f59e0b",
   "R$ 300k – 500k": "#fb923c",
   "Até R$ 300k": "#ef4444",
+  "O quanto for necessário": "#22c55e",
+  "Mais de R$5k": "#84cc16",
+  "Até R$5k": "#f59e0b",
+  "Menos de R$5k": "#ef4444",
+  "Não informado": "#475569",
+};
+
+const DEGREE_COLORS: Record<string, string> = {
+  "Mestre/Doutor": "#22c55e",
+  "Doutorando": "#84cc16",
+  "Mestrando": "#84cc16",
+  "Grad. Completa": "#f59e0b",
+  "Graduando": "#fb923c",
+  "Sem graduação": "#ef4444",
   "Não informado": "#475569",
 };
 
@@ -113,6 +130,7 @@ function KpiCard({
 }
 
 interface ApiResponse {
+  profile: "academy" | "icarai";
   kpis: {
     totalLeads: number;
     totalMql: number;
@@ -125,6 +143,7 @@ interface ApiResponse {
   gradeDistribuicao: { grade: string; total: number; label: string; isMql: boolean }[];
   timingDistribuicao: { timing: string; total: number }[];
   investDistribuicao: { invest: string; total: number }[];
+  degreeDistribuicao?: { degree: string; total: number }[] | null;
   campanhasRanking: { campaignId: string; campaignName: string | null; total: number; mql: number; taxaMql: number }[];
   formsRanking: { formId: string; formName: string | null; total: number; mql: number; taxaMql: number }[];
   periodoSeries: { periodo: string; total: number; mql: number }[];
@@ -143,6 +162,7 @@ interface ApiResponse {
     isMql: boolean;
     timingLabel: string;
     investLabel: string;
+    degreeLabel?: string | null;
   }[];
   leadsTruncated: boolean;
   totalFiltered: number;
@@ -255,7 +275,8 @@ export function ImobLeadScoringPanel({
 
   if (!data) return null;
 
-  const { kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, campanhasRanking, formsRanking, periodoSeries, leads, leadsTruncated, totalFiltered } = data;
+  const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasRanking, formsRanking, periodoSeries, leads, leadsTruncated, totalFiltered } = data;
+  const isAcademy = profile === "academy";
 
   const visibleLeads = showAllLeads ? leads : leads.slice(0, 20);
   const hasData = kpis.totalLeads > 0;
@@ -475,11 +496,14 @@ export function ImobLeadScoringPanel({
             </div>
           </div>
 
-          {/* Timing + Invest breakdown */}
-          <div className="grid gap-6 md:grid-cols-2">
+          {/* Timing + Invest + Degree breakdown */}
+          <div className={`grid gap-6 ${isAcademy ? "md:grid-cols-3" : "md:grid-cols-2"}`}>
             {/* Timing */}
             <div>
-              <SectionHeader sub="Intenção de compra" title="Quando pretende adquirir?" />
+              <SectionHeader
+                sub={isAcademy ? "Urgência" : "Intenção de compra"}
+                title={isAcademy ? "Prazo para ir aos EUA" : "Quando pretende adquirir?"}
+              />
               <div className="mt-4 space-y-2">
                 {timingDistribuicao.map((t) => {
                   const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
@@ -497,14 +521,17 @@ export function ImobLeadScoringPanel({
                   );
                 })}
                 {timingDistribuicao.length === 0 && (
-                  <p className="text-sm text-[var(--muted-foreground)]">Campo de timing não encontrado nos leads.</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">Campo de prazo não encontrado.</p>
                 )}
               </div>
             </div>
 
             {/* Investment */}
             <div>
-              <SectionHeader sub="Capacidade financeira" title="Quanto pretende investir?" />
+              <SectionHeader
+                sub="Capacidade financeira"
+                title={isAcademy ? "Disposto a investir" : "Quanto pretende investir?"}
+              />
               <div className="mt-4 space-y-2">
                 {investDistribuicao.map((t) => {
                   const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
@@ -522,10 +549,37 @@ export function ImobLeadScoringPanel({
                   );
                 })}
                 {investDistribuicao.length === 0 && (
-                  <p className="text-sm text-[var(--muted-foreground)]">Campo de investimento não encontrado nos leads.</p>
+                  <p className="text-sm text-[var(--muted-foreground)]">Campo de investimento não encontrado.</p>
                 )}
               </div>
             </div>
+
+            {/* Degree — Academy only */}
+            {isAcademy && (
+              <div>
+                <SectionHeader sub="Perfil acadêmico" title="Formação dos leads" />
+                <div className="mt-4 space-y-2">
+                  {(degreeDistribuicao ?? []).map((d) => {
+                    const pct = kpis.totalLeads > 0 ? (d.total / kpis.totalLeads) * 100 : 0;
+                    const color = DEGREE_COLORS[d.degree] ?? "#94a3b8";
+                    return (
+                      <div key={d.degree} className="flex items-center gap-3">
+                        <span className="w-28 shrink-0 text-xs text-[var(--foreground)]">{d.degree}</span>
+                        <div className="flex-1 h-2 rounded-full bg-[var(--muted)] overflow-hidden">
+                          <div className="h-full rounded-full" style={{ width: `${pct}%`, backgroundColor: color }} />
+                        </div>
+                        <span className="w-20 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
+                          {d.total} ({pct.toFixed(0)}%)
+                        </span>
+                      </div>
+                    );
+                  })}
+                  {(degreeDistribuicao ?? []).length === 0 && (
+                    <p className="text-sm text-[var(--muted-foreground)]">Campo de formação não encontrado.</p>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Campanhas + Formulários */}
@@ -624,7 +678,10 @@ export function ImobLeadScoringPanel({
               <table className="w-full min-w-[820px] text-sm">
                 <thead>
                   <tr className="border-b border-[var(--border)]">
-                    {["Data", "Nome", "Grau", "Timing", "Investimento", "Formulário", "Campanha", "Plataforma"].map((h) => (
+                    {(isAcademy
+                      ? ["Data", "Nome", "Grau", "Prazo", "Investimento", "Formação", "Formulário", "Campanha"]
+                      : ["Data", "Nome", "Grau", "Timing", "Investimento", "Formulário", "Campanha", "Plataforma"]
+                    ).map((h) => (
                       <th key={h} className="pb-2 pr-3 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                         {h}
                       </th>
@@ -680,15 +737,34 @@ export function ImobLeadScoringPanel({
                           {lead.investLabel}
                         </span>
                       </td>
+                      {isAcademy && (
+                        <td className="py-2.5 pr-3 text-xs">
+                          {lead.degreeLabel ? (
+                            <span
+                              className="rounded-full px-2 py-0.5 text-[10px] font-medium"
+                              style={{
+                                backgroundColor: `${DEGREE_COLORS[lead.degreeLabel] ?? "#94a3b8"}20`,
+                                color: DEGREE_COLORS[lead.degreeLabel] ?? "#94a3b8",
+                              }}
+                            >
+                              {lead.degreeLabel}
+                            </span>
+                          ) : (
+                            <span className="text-[var(--muted-foreground)]">—</span>
+                          )}
+                        </td>
+                      )}
                       <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
                         <div className="max-w-[140px] truncate">{lead.formName ?? "—"}</div>
                       </td>
                       <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
                         <div className="max-w-[140px] truncate">{lead.campaignName ?? "—"}</div>
                       </td>
-                      <td className="py-2.5 text-xs text-[var(--muted-foreground)] capitalize">
-                        {lead.platform ?? "—"}
-                      </td>
+                      {!isAcademy && (
+                        <td className="py-2.5 text-xs text-[var(--muted-foreground)] capitalize">
+                          {lead.platform ?? "—"}
+                        </td>
+                      )}
                     </tr>
                   ))}
                   {leads.length === 0 && (

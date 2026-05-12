@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { isAcademyAmericana } from "@/lib/clientProfiles";
 
 function parseDateOnly(value?: string | null): Date | null {
   if (!value) return null;
@@ -28,11 +29,15 @@ function getWeekKey(date: Date): string {
 
 type FieldEntry = { name: string; values: string[] };
 
+function norm(value?: string | null): string {
+  return (value ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/g, " ").trim();
+}
+
 function extractField(raw: unknown, keywords: string[]): string | null {
   if (!Array.isArray(raw)) return null;
   const entries = raw as FieldEntry[];
   for (const entry of entries) {
-    const name = (entry.name ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    const name = norm(entry.name);
     if (keywords.some((kw) => name.includes(kw))) {
       return (entry.values?.[0] ?? "").trim() || null;
     }
@@ -40,57 +45,33 @@ function extractField(raw: unknown, keywords: string[]): string | null {
   return null;
 }
 
-const TIMING_KEYWORDS = ["pretende", "quando", "prazo", "adquirir", "imovel", "imov"];
-const INVEST_KEYWORDS = ["invest", "valor", "ticket", "quanto", "orcamento", "budget"];
+// ─── Sou+ Icaraí scoring ────────────────────────────────────────────────────
 
-const INVEST_ORDER = [
-  "ate 300",
-  "300 mil ate 500",
-  "300 mil até 500",
-  "500 mil ate 700",
-  "500 mil até 700",
-  "700 mil ate 1",
-  "700 mil até 1",
-  "acima de 1",
-  "acima 1",
-];
+const TIMING_KEYWORDS_ICARAI = ["pretende", "quando", "prazo", "adquirir", "imovel", "imov"];
+const INVEST_KEYWORDS_ICARAI = ["invest", "valor", "ticket", "quanto", "orcamento", "budget"];
 
-function normalizeInvest(raw: string | null): string | null {
-  if (!raw) return null;
-  return raw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/g, "").trim();
-}
-
-function investRank(raw: string | null): number {
+function timingRankIcarai(raw: string | null): number {
   if (!raw) return 0;
-  const n = normalizeInvest(raw) ?? "";
-  if (n.includes("acima")) return 5;
-  if (n.includes("700")) return 4;
-  if (n.includes("500")) return 3;
-  if (n.includes("300")) return 2;
-  if (n.includes("ate 300") || n.includes("300 mil") && !n.includes("500")) return 1;
-  if (n.includes("300")) return 2;
-  return 0;
-}
-
-function isQualifiedInvest(rank: number): boolean {
-  return rank >= 2;
-}
-
-function timingRank(raw: string | null): number {
-  if (!raw) return 0;
-  const n = (raw ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const n = norm(raw);
   if (n.includes("agora")) return 3;
   if (n.includes("3") || n.includes("seis") || n.includes("6") || n.includes("meses")) return 2;
   if (n.includes("avaliando") || n.includes("avali")) return 1;
   return 0;
 }
 
-export type ImobGrade = "A" | "B" | "C" | "D" | "E";
+function investRankIcarai(raw: string | null): number {
+  if (!raw) return 0;
+  const n = norm(raw);
+  if (n.includes("acima")) return 5;
+  if (n.includes("700")) return 4;
+  if (n.includes("500")) return 3;
+  if (n.includes("300")) return 2;
+  return 0;
+}
 
-function calcGrade(timing: string | null, invest: string | null): ImobGrade {
-  const tr = timingRank(timing);
-  const ir = investRank(invest);
-
+function calcGradeIcarai(timing: string | null, invest: string | null): ImobGrade {
+  const tr = timingRankIcarai(timing);
+  const ir = investRankIcarai(invest);
   if (tr === 3 && ir >= 4) return "A";
   if (tr === 3 && ir >= 2) return "B";
   if (tr === 2 && ir >= 2) return "C";
@@ -98,11 +79,32 @@ function calcGrade(timing: string | null, invest: string | null): ImobGrade {
   return "E";
 }
 
-function isMQL(grade: ImobGrade): boolean {
-  return grade === "A" || grade === "B" || grade === "C";
+function prettyTimingIcarai(raw: string | null): string {
+  if (!raw) return "Não informado";
+  const n = norm(raw);
+  if (n.includes("agora")) return "Agora";
+  if (n.includes("3") || n.includes("6") || n.includes("meses")) return "3 a 6 meses";
+  if (n.includes("avaliando")) return "Avaliando";
+  return raw;
 }
 
-const GRADE_LABELS: Record<ImobGrade, string> = {
+function prettyInvestIcarai(raw: string | null): string {
+  if (!raw) return "Não informado";
+  const n = norm(raw);
+  const INVEST_LABEL_MAP: [string[], string][] = [
+    [["acima", "1"], "Acima de R$ 1M"],
+    [["700"], "R$ 700k – 1M"],
+    [["500"], "R$ 500k – 700k"],
+    [["300"], "R$ 300k – 500k"],
+    [["ate", "300"], "Até R$ 300k"],
+  ];
+  for (const [keys, label] of INVEST_LABEL_MAP) {
+    if (keys.every((k) => n.includes(k))) return label;
+  }
+  return raw;
+}
+
+const GRADE_LABELS_ICARAI: Record<ImobGrade, string> = {
   A: "Hot MQL — Agora + Alto investimento",
   B: "MQL — Agora + Investimento qualificado",
   C: "MQL Morno — 3 a 6 meses + Qualificado",
@@ -110,40 +112,97 @@ const GRADE_LABELS: Record<ImobGrade, string> = {
   E: "Fora do perfil",
 };
 
-const INVEST_LABEL_MAP: Record<string, string> = {
-  "ate 300 mil": "Até R$ 300k",
-  "300 mil ate 500 mil": "R$ 300k – 500k",
-  "300 mil até 500 mil": "R$ 300k – 500k",
-  "500 mil ate 700 mil": "R$ 500k – 700k",
-  "500 mil até 700 mil": "R$ 500k – 700k",
-  "700 mil ate 1 milhao": "R$ 700k – 1M",
-  "700 mil até 1 milhao": "R$ 700k – 1M",
-  "acima de 1 milhao": "Acima de R$ 1M",
-  "acima 1 milhao": "Acima de R$ 1M",
-};
+// ─── Academy Americana scoring ───────────────────────────────────────────────
 
-function prettyInvest(raw: string | null): string {
+const DEGREE_KEYWORDS = ["grau", "academico", "formacao", "graduacao"];
+const TIMING_KEYWORDS_ACADEMY = ["tempo", "quando", "prazo", "ir para", "estados unidos", "eua"];
+const INVEST_KEYWORDS_ACADEMY = ["disposto", "invest", "sonho", "disposto a"];
+
+function degreeRank(raw: string | null): number {
+  if (!raw) return 0;
+  const n = norm(raw);
+  if (n.includes("mestrado") || n.includes("doutorado")) return 3;
+  if (n.includes("graduacao") && (n.includes("completa") || n.includes("completo"))) return 2;
+  if (n.includes("graduacao") && n.includes("cursando")) return 1;
+  return 0;
+}
+
+function investRankAcademy(raw: string | null): number {
+  if (!raw) return 0;
+  const n = norm(raw);
+  if (n.includes("necessario") || n.includes("o quanto")) return 3;
+  if (n.includes("mais de")) return 2;
+  if (n.includes("ate") && n.includes("5")) return 1;
+  return 0;
+}
+
+function timelineRankAcademy(raw: string | null): number {
+  if (!raw) return 0;
+  const n = norm(raw);
+  if (n.includes("6")) return 2;
+  if (n.includes("1 ano") || n.includes("um ano")) return 2;
+  if (n.includes("avaliando")) return 1;
+  return 0;
+}
+
+function calcGradeAcademy(degree: string | null, invest: string | null, timeline: string | null): ImobGrade {
+  const dr = degreeRank(degree);
+  const ir = investRankAcademy(invest);
+  const tr = timelineRankAcademy(timeline);
+
+  if (dr >= 2 && ir === 3 && tr >= 2) return "A";
+  if (dr >= 2 && ir >= 2 && tr >= 2) return "B";
+  if (dr >= 2 && ir >= 2) return "C";
+  if (dr >= 1 && ir >= 2 && tr >= 2) return "C";
+  if (dr >= 1 && ir >= 1) return "D";
+  return "E";
+}
+
+function prettyDegree(raw: string | null): string {
   if (!raw) return "Não informado";
-  const n = normalizeInvest(raw) ?? "";
-  for (const [key, label] of Object.entries(INVEST_LABEL_MAP)) {
-    if (n.includes(key.replace(/[^\w\s]/g, "").trim().split(" ")[0]) && n.includes(key.split(" ").slice(-1)[0])) {
-      return label;
-    }
-  }
-  for (const [key, label] of Object.entries(INVEST_LABEL_MAP)) {
-    const words = key.replace(/[^\w\s]/g, "").trim().split(" ");
-    if (words.every((w) => n.includes(w))) return label;
-  }
+  const n = norm(raw);
+  if (n.includes("doutorado") && n.includes("cursando")) return "Doutorando";
+  if (n.includes("mestrado") && n.includes("cursando")) return "Mestrando";
+  if (n.includes("doutorado") || n.includes("mestrado")) return "Mestre/Doutor";
+  if (n.includes("graduacao") && n.includes("cursando")) return "Graduando";
+  if (n.includes("graduacao")) return "Grad. Completa";
+  if (n.includes("sem")) return "Sem graduação";
   return raw;
 }
 
-function prettyTiming(raw: string | null): string {
+function prettyTimelineAcademy(raw: string | null): string {
   if (!raw) return "Não informado";
-  const n = (raw ?? "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  if (n.includes("agora")) return "Agora";
-  if (n.includes("3") || n.includes("6") || n.includes("meses")) return "3 a 6 meses";
-  if (n.includes("avaliando")) return "Estou avaliando";
+  const n = norm(raw);
+  if (n.includes("6")) return "6 meses";
+  if (n.includes("1 ano") || n.includes("um ano")) return "1 ano";
+  if (n.includes("avaliando")) return "Avaliando";
   return raw;
+}
+
+function prettyInvestAcademy(raw: string | null): string {
+  if (!raw) return "Não informado";
+  const n = norm(raw);
+  if (n.includes("necessario") || n.includes("o quanto")) return "O quanto for necessário";
+  if (n.includes("mais de")) return "Mais de R$5k";
+  if (n.includes("ate") && n.includes("5")) return "Até R$5k";
+  if (n.includes("menos de")) return "Menos de R$5k";
+  return raw;
+}
+
+const GRADE_LABELS_ACADEMY: Record<ImobGrade, string> = {
+  A: "Hot MQL — Pós-grad + O quanto for necessário + Imediato",
+  B: "MQL — Graduado + Mais de R$5k + Imediato (6m ou 1 ano)",
+  C: "MQL Morno — Graduado + R$5k+ (qualquer prazo)",
+  D: "Potencial — Cursando ou investimento básico",
+  E: "Fora do perfil",
+};
+
+// ─── Shared ──────────────────────────────────────────────────────────────────
+
+export type ImobGrade = "A" | "B" | "C" | "D" | "E";
+
+function isMQL(grade: ImobGrade): boolean {
+  return grade === "A" || grade === "B" || grade === "C";
 }
 
 export async function GET(
@@ -157,8 +216,6 @@ export async function GET(
   const dataFimParam = searchParams.get("dataFim");
   const agrupamento = searchParams.get("agrupamento") ?? "semanal";
   const gradeFilter = searchParams.get("grade");
-  const timingFilter = searchParams.get("timing");
-  const investFilter = searchParams.get("invest");
   const campanhaFilter = searchParams.get("campanha");
   const fallbackDays = Math.min(365, Math.max(1, parseInt(searchParams.get("periodo") ?? "90", 10) || 90));
 
@@ -170,39 +227,66 @@ export async function GET(
   const dataInicioStr = formatDateOnly(dataInicio);
   const dataFimStr = formatDateOnly(dataFim);
 
-  const whereBase = {
-    clienteId,
-    createdTime: {
-      gte: new Date(dataInicioStr + "T00:00:00Z"),
-      lte: new Date(dataFimStr + "T23:59:59Z"),
-    },
-  };
+  const [allLeads, cliente] = await Promise.all([
+    prisma.metaLeadIndividual.findMany({
+      where: {
+        clienteId,
+        createdTime: {
+          gte: new Date(dataInicioStr + "T00:00:00Z"),
+          lte: new Date(dataFimStr + "T23:59:59Z"),
+        },
+      },
+      orderBy: { createdTime: "desc" },
+    }),
+    prisma.cliente.findUnique({
+      where: { id: clienteId },
+      select: { slug: true, nome: true, perfilPanel: true },
+    }),
+  ]);
 
-  const allLeads = await prisma.metaLeadIndividual.findMany({
-    where: whereBase,
-    orderBy: { createdTime: "desc" },
-  });
+  const isAcademy = isAcademyAmericana(cliente);
+  const profile: "academy" | "icarai" = isAcademy ? "academy" : "icarai";
+  const gradeLabels = isAcademy ? GRADE_LABELS_ACADEMY : GRADE_LABELS_ICARAI;
 
   const scored = allLeads.map((lead) => {
     const raw = lead.rawFieldData;
-    const timing = extractField(raw, TIMING_KEYWORDS);
-    const invest = extractField(raw, INVEST_KEYWORDS);
-    const grade = calcGrade(timing, invest);
-    return {
-      ...lead,
-      _timing: timing,
-      _invest: invest,
-      _grade: grade,
-      _isMql: isMQL(grade),
-      _timingLabel: prettyTiming(timing),
-      _investLabel: prettyInvest(invest),
-    };
+
+    if (isAcademy) {
+      const degree = extractField(raw, DEGREE_KEYWORDS);
+      const invest = extractField(raw, INVEST_KEYWORDS_ACADEMY);
+      const timeline = extractField(raw, TIMING_KEYWORDS_ACADEMY);
+      const grade = calcGradeAcademy(degree, invest, timeline);
+      return {
+        ...lead,
+        _timing: timeline,
+        _invest: invest,
+        _degree: degree,
+        _grade: grade,
+        _isMql: isMQL(grade),
+        _timingLabel: prettyTimelineAcademy(timeline),
+        _investLabel: prettyInvestAcademy(invest),
+        _degreeLabel: prettyDegree(degree),
+      };
+    } else {
+      const timing = extractField(raw, TIMING_KEYWORDS_ICARAI);
+      const invest = extractField(raw, INVEST_KEYWORDS_ICARAI);
+      const grade = calcGradeIcarai(timing, invest);
+      return {
+        ...lead,
+        _timing: timing,
+        _invest: invest,
+        _degree: null as string | null,
+        _grade: grade,
+        _isMql: isMQL(grade),
+        _timingLabel: prettyTimingIcarai(timing),
+        _investLabel: prettyInvestIcarai(invest),
+        _degreeLabel: null as string | null,
+      };
+    }
   });
 
   let filtered = scored;
   if (gradeFilter) filtered = filtered.filter((l) => l._grade === gradeFilter);
-  if (timingFilter) filtered = filtered.filter((l) => prettyTiming(l._timing).toLowerCase().includes(timingFilter.toLowerCase()));
-  if (investFilter) filtered = filtered.filter((l) => l._invest?.toLowerCase().includes(investFilter.toLowerCase()));
   if (campanhaFilter) filtered = filtered.filter((l) => l.campaignId === campanhaFilter);
 
   const totalLeads = allLeads.length;
@@ -222,6 +306,14 @@ export async function GET(
   for (const l of scored) {
     const key = l._investLabel;
     investCount[key] = (investCount[key] ?? 0) + 1;
+  }
+
+  const degreeCount: Record<string, number> = {};
+  if (isAcademy) {
+    for (const l of scored) {
+      const key = l._degreeLabel ?? "Não informado";
+      degreeCount[key] = (degreeCount[key] ?? 0) + 1;
+    }
   }
 
   const campanhaMap: Record<string, { name: string | null; total: number; mql: number }> = {};
@@ -270,9 +362,19 @@ export async function GET(
   const gradeDistribuicao = (["A", "B", "C", "D", "E"] as ImobGrade[]).map((g) => ({
     grade: g,
     total: gradeCount[g],
-    label: GRADE_LABELS[g],
+    label: gradeLabels[g],
     isMql: isMQL(g),
   }));
+
+  const ACADEMY_INVEST_ORDER = ["O quanto for necessário", "Mais de R$5k", "Até R$5k", "Menos de R$5k", "Não informado"];
+  const ICARAI_INVEST_ORDER = ["Acima de R$ 1M", "R$ 700k – 1M", "R$ 500k – 700k", "R$ 300k – 500k", "Até R$ 300k", "Não informado"];
+  const investOrder = isAcademy ? ACADEMY_INVEST_ORDER : ICARAI_INVEST_ORDER;
+
+  const ACADEMY_TIMING_ORDER = ["6 meses", "1 ano", "Avaliando", "Não informado"];
+  const ICARAI_TIMING_ORDER = ["Agora", "3 a 6 meses", "Avaliando", "Estou avaliando", "Não informado"];
+  const timingOrder = isAcademy ? ACADEMY_TIMING_ORDER : ICARAI_TIMING_ORDER;
+
+  const DEGREE_ORDER = ["Mestre/Doutor", "Doutorando", "Mestrando", "Grad. Completa", "Graduando", "Sem graduação", "Não informado"];
 
   const LEADS_LIMIT = 500;
   const leadsList = filtered.slice(0, LEADS_LIMIT).map((l) => ({
@@ -290,9 +392,11 @@ export async function GET(
     isMql: l._isMql,
     timingLabel: l._timingLabel,
     investLabel: l._investLabel,
+    degreeLabel: l._degreeLabel,
   }));
 
   return NextResponse.json({
+    profile,
     dataInicio: dataInicioStr,
     dataFim: dataFimStr,
     kpis: {
@@ -307,13 +411,27 @@ export async function GET(
     gradeDistribuicao,
     timingDistribuicao: Object.entries(timingCount)
       .map(([timing, total]) => ({ timing, total }))
-      .sort((a, b) => b.total - a.total),
+      .sort((a, b) => {
+        const ia = timingOrder.indexOf(a.timing);
+        const ib = timingOrder.indexOf(b.timing);
+        return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+      }),
     investDistribuicao: Object.entries(investCount)
       .map(([invest, total]) => ({ invest, total }))
       .sort((a, b) => {
-        const orderKeys = ["Acima de R$ 1M", "R$ 700k – 1M", "R$ 500k – 700k", "R$ 300k – 500k", "Até R$ 300k", "Não informado"];
-        return orderKeys.indexOf(a.invest) - orderKeys.indexOf(b.invest);
+        const ia = investOrder.indexOf(a.invest);
+        const ib = investOrder.indexOf(b.invest);
+        return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
       }),
+    degreeDistribuicao: isAcademy
+      ? Object.entries(degreeCount)
+          .map(([degree, total]) => ({ degree, total }))
+          .sort((a, b) => {
+            const ia = DEGREE_ORDER.indexOf(a.degree);
+            const ib = DEGREE_ORDER.indexOf(b.degree);
+            return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
+          })
+      : null,
     campanhasRanking: Object.entries(campanhaMap)
       .map(([id, data]) => ({ campaignId: id, campaignName: data.name, total: data.total, mql: data.mql, taxaMql: data.total > 0 ? Math.round((data.mql / data.total) * 1000) / 10 : 0 }))
       .sort((a, b) => b.mql - a.mql),
