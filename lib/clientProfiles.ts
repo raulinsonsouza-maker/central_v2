@@ -226,3 +226,9 @@ export function isSouIcarai(client?: ClientIdentity | null) {
     (slug.includes("sou") && slug.includes("icara"))
   );
 }
+
+export function isImobClient(client?: ClientIdentity | null) {
+  if (!client) return false;
+  if (client.perfilPanel === "imob") return true;
+  return isSouIcarai(client) || isAcademyAmericana(client);
+}

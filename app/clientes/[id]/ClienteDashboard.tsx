@@ -15,7 +15,7 @@ import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
 import { CampanhasPanel } from "@/components/clientes/CampanhasPanel";
 import { GoogleCampanhasPanel } from "@/components/clientes/GoogleCampanhasPanel";
-import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci, isKombucha, isBeBlueSchool, isSouIcarai } from "@/lib/clientProfiles";
+import { isHotelFazendaSaoJoao, isTertulia, isVarellaMotos, isMiguelImoveis, isDrFernandoGuena, isClinicaESpa, isDor, isGranarolo, isFlorien, isAcademyAmericana, isVitoBalducci, isKombucha, isBeBlueSchool, isSouIcarai, isImobClient } from "@/lib/clientProfiles";
 import {
   Bar,
   XAxis,
@@ -976,7 +976,7 @@ function formatPercentage(value: number) {
         {(canal === "meta" || canal === "google") && (
           <div className="flex items-center gap-1 self-end rounded-xl border border-[var(--border)] bg-[var(--card)] p-1">
             {(
-              canal === "meta" && isSouIcarai(cliente)
+              canal === "meta" && isImobClient(cliente)
                 ? (["dados", "criativos", "lead-scoring"] as const)
                 : (["dados", "criativos"] as const)
             ).map((view) => (
@@ -1206,9 +1206,9 @@ function formatPercentage(value: number) {
         <LeadScoringPanel clienteId={id} dateFilter={dateFilter} />
       )}
 
-      {/* ── Imob Lead Scoring — Sou+ Icaraí (subView dentro do Meta) ── */}
-      {canal === "meta" && subView === "lead-scoring" && isSouIcarai(cliente) && (
-        <ImobLeadScoringPanel clienteId={id} dateFilter={dateFilter} />
+      {/* ── Imob Lead Scoring — clientes imob (subView dentro do Meta) ── */}
+      {canal === "meta" && subView === "lead-scoring" && isImobClient(cliente) && (
+        <ImobLeadScoringPanel clienteId={id} dateFilter={dateFilter} clienteNome={cliente?.nome ?? ""} />
       )}
 
       {/* ── Default panel (KPIs, chart, weekly table, financial) ── */}

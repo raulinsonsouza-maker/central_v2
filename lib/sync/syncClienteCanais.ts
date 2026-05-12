@@ -3,7 +3,7 @@ import { syncMetaCliente } from "@/lib/sync/metaApiSync";
 import { syncAnalyticsCliente } from "@/lib/sync/analyticsApiSync";
 import { syncMetaLeadsCliente } from "@/lib/sync/metaLeadsSync";
 import { prisma } from "@/lib/db";
-import { isSouIcarai } from "@/lib/clientProfiles";
+import { isImobClient } from "@/lib/clientProfiles";
 
 export interface SyncClienteCanaisResult {
   ok: boolean;
@@ -49,7 +49,7 @@ export async function syncClienteCanais(clienteId: string): Promise<SyncClienteC
   const metaConta = contas.find((conta) => conta.plataforma === "META");
   const analyticsConta = contas.find((conta) => conta.plataforma === "GOOGLE_ANALYTICS");
 
-  const shouldSyncLeads = metaConta && (isSouIcarai(cliente) || (cliente?.leadScoringEnabled ?? false));
+  const shouldSyncLeads = metaConta && (isImobClient(cliente) || (cliente?.leadScoringEnabled ?? false));
 
   const [googleAdsResult, metaResult, analyticsResult, metaLeadsResult] = await Promise.all([
     googleConta ? syncGoogleAdsCliente(clienteId, { customerId: googleConta.accountIdPlataforma ?? undefined }) : null,

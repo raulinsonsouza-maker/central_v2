@@ -184,9 +184,11 @@ function formatPeriodLabel(key: string): string {
 export function ImobLeadScoringPanel({
   clienteId,
   dateFilter,
+  clienteNome,
 }: {
   clienteId: string;
   dateFilter: DateFilter;
+  clienteNome?: string;
 }) {
   const [agrupamento, setAgrupamento] = React.useState<"semanal" | "mensal">("semanal");
   const [gradeFilter, setGradeFilter] = React.useState<string | null>(null);
@@ -262,7 +264,7 @@ export function ImobLeadScoringPanel({
     <div className="space-y-10">
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
-        <SectionHeader sub="Meta Lead Ads · Qualificação" title="Lead Scoring — Sou+ Icaraí" />
+        <SectionHeader sub="Meta Lead Ads · Qualificação" title={`Lead Scoring${clienteNome ? ` — ${clienteNome}` : ""}`} />
         <div className="flex flex-wrap items-center gap-2">
           {(["semanal", "mensal"] as const).map((a) => (
             <button
