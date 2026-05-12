@@ -14,7 +14,7 @@ import {
   ComposedChart,
   Line,
 } from "recharts";
-import { Users, Target, TrendingUp, Zap, Building2, Clock, Wallet, RefreshCw, ChevronDown, ChevronUp } from "lucide-react";
+import { Users, Target, TrendingUp, Zap, Building2, Clock, Wallet, RefreshCw, ChevronDown, ChevronUp, ChevronRight } from "lucide-react";
 import type { DateFilter } from "@/app/clientes/[id]/ClienteDashboard";
 
 const tooltipStyle = {
@@ -144,10 +144,21 @@ interface ApiResponse {
   timingDistribuicao: { timing: string; total: number }[];
   investDistribuicao: { invest: string; total: number }[];
   degreeDistribuicao?: { degree: string; total: number }[] | null;
-  campanhasRanking: { campaignId: string; campaignName: string | null; total: number; mql: number; taxaMql: number }[];
+  campanhasHierarchy: {
+    campaignId: string;
+    campaignName: string | null;
+    total: number;
+    mql: number;
+    taxaMql: number;
+    adsets: {
+      adsetName: string;
+      total: number;
+      mql: number;
+      taxaMql: number;
+      ads: { adName: string; total: number; mql: number; taxaMql: number }[];
+    }[];
+  }[];
   formsRanking: { formId: string; formName: string | null; total: number; mql: number; taxaMql: number }[];
-  adsetRanking: { adsetName: string; total: number; mql: number; taxaMql: number }[];
-  adRanking: { adName: string; adsetName: string | null; total: number; mql: number; taxaMql: number }[];
   periodoSeries: { periodo: string; total: number; mql: number }[];
   leads: {
     id: string;
@@ -217,6 +228,8 @@ export function ImobLeadScoringPanel({
   const [showAllLeads, setShowAllLeads] = React.useState(false);
   const [syncStatus, setSyncStatus] = React.useState<"idle" | "syncing" | "ok" | "error">("idle");
   const [syncMsg, setSyncMsg] = React.useState<string | null>(null);
+  const [expandedCamps, setExpandedCamps] = React.useState<Set<string>>(new Set());
+  const [expandedAdsets, setExpandedAdsets] = React.useState<Set<string>>(new Set());
 
   const params = new URLSearchParams();
   if (dateFilter.dataInicio) params.set("dataInicio", dateFilter.dataInicio);
@@ -277,7 +290,7 @@ export function ImobLeadScoringPanel({
 
   if (!data) return null;
 
-  const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasRanking, formsRanking, adsetRanking, adRanking, periodoSeries, leads, leadsTruncated, totalFiltered } = data;
+  const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasHierarchy, formsRanking, periodoSeries, leads, leadsTruncated, totalFiltered } = data;
   const isAcademy = profile === "academy";
 
   const visibleLeads = showAllLeads ? leads : leads.slice(0, 20);
@@ -591,176 +604,163 @@ export function ImobLeadScoringPanel({
             </div>
           )}
 
-          {/* Campanhas + Formulários */}
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* Campanhas */}
-            <div>
-              <SectionHeader sub="Origem" title={isAcademy ? "Leads por Campanha" : "MQL por Campanha"} />
-              <div className="mt-4 overflow-x-auto">
-                <table className="w-full min-w-[400px] text-sm">
-                  <thead>
-                    <tr className="border-b border-[var(--border)]">
-                      <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Campanha</th>
-                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
-                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
-                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--border)]">
-                    {campanhasRanking.slice(0, 8).map((c) => (
-                      <tr key={c.campaignId} className="hover:bg-[var(--muted)]/30 transition-colors">
-                        <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
-                          <span className="line-clamp-1">{c.campaignName ?? "—"}</span>
-                        </td>
-                        <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{c.total}</td>
-                        <td className="py-2.5 text-right">
-                          <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
-                            {c.mql}
-                          </span>
-                        </td>
-                        <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                          {fmtPct(c.taxaMql)}
-                        </td>
-                      </tr>
-                    ))}
-                    {campanhasRanking.length === 0 && (
-                      <tr>
-                        <td colSpan={4} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhuma campanha encontrada</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
+          {/* Drilldown hierárquico: Campanha → Conjunto → Anúncio */}
+          <div>
+            <SectionHeader sub="Origem" title="Análise por Campanha" />
+            <p className="mt-1 text-xs text-[var(--muted-foreground)]">Clique em uma campanha para expandir conjuntos e anúncios</p>
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full min-w-[560px] border-separate [border-spacing:0_3px]">
+                <thead>
+                  <tr>
+                    <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Campanha / Conjunto / Anúncio</th>
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
+                    <th className="w-6" />
+                  </tr>
+                </thead>
+                <tbody>
+                  {campanhasHierarchy.map((camp, ci) => {
+                    const campExpanded = expandedCamps.has(camp.campaignId);
+                    const isTop = ci === 0;
+                    const campBg = isTop ? "bg-[var(--primary)]/5" : "bg-white/[0.035]";
+                    return (
+                      <React.Fragment key={camp.campaignId}>
+                        {/* Campaign row */}
+                        <tr
+                          className="group cursor-pointer"
+                          onClick={() =>
+                            setExpandedCamps((s) => {
+                              const n = new Set(s);
+                              n.has(camp.campaignId) ? n.delete(camp.campaignId) : n.add(camp.campaignId);
+                              return n;
+                            })
+                          }
+                        >
+                          <td className={`rounded-l-xl px-3 py-3 ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`}>
+                            <div className="flex items-center gap-2">
+                              <span className={`shrink-0 w-6 text-right text-[11px] font-bold tabular-nums ${isTop ? "text-[var(--primary)]" : "text-white/20"}`}>#{ci + 1}</span>
+                              {campExpanded
+                                ? <ChevronDown className="h-3 w-3 shrink-0 text-[var(--primary)]" />
+                                : <ChevronRight className="h-3 w-3 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                              }
+                              <span className="text-xs font-semibold text-[var(--foreground)] line-clamp-1">{camp.campaignName ?? "—"}</span>
+                            </div>
+                          </td>
+                          <td className={`px-3 py-3 text-right text-xs tabular-nums text-[var(--muted-foreground)] ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`}>{camp.total}</td>
+                          <td className={`px-3 py-3 text-right ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`}>
+                            <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-bold tabular-nums text-green-400">{camp.mql}</span>
+                          </td>
+                          <td className={`px-3 py-3 text-right text-xs tabular-nums text-[var(--muted-foreground)] ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`}>{fmtPct(camp.taxaMql)}</td>
+                          <td className={`rounded-r-xl px-2 py-3 ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`} />
+                        </tr>
 
-            {/* Formulários */}
-            <div>
-              <SectionHeader sub="Origem" title={isAcademy ? "Leads por Formulário" : "MQL por Formulário"} />
-              <div className="mt-4 overflow-x-auto">
-                <table className="w-full min-w-[400px] text-sm">
-                  <thead>
-                    <tr className="border-b border-[var(--border)]">
-                      <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Formulário</th>
-                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
-                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
-                      <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
+                        {/* Adset rows */}
+                        {campExpanded && camp.adsets.map((adset, ai) => {
+                          const adsetKey = `${camp.campaignId}::${adset.adsetName}`;
+                          const adsetExpanded = expandedAdsets.has(adsetKey);
+                          return (
+                            <React.Fragment key={adsetKey}>
+                              <tr
+                                className="group cursor-pointer"
+                                onClick={() =>
+                                  setExpandedAdsets((s) => {
+                                    const n = new Set(s);
+                                    n.has(adsetKey) ? n.delete(adsetKey) : n.add(adsetKey);
+                                    return n;
+                                  })
+                                }
+                              >
+                                <td className="rounded-l-xl bg-white/[0.02] px-3 py-2.5 pl-12 transition-colors group-hover:bg-white/[0.04]">
+                                  <div className="flex items-center gap-2">
+                                    <span className="w-5 text-right text-[10px] font-bold tabular-nums text-white/15">#{ai + 1}</span>
+                                    {adsetExpanded
+                                      ? <ChevronDown className="h-2.5 w-2.5 shrink-0 text-[var(--primary)]" />
+                                      : <ChevronRight className="h-2.5 w-2.5 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                                    }
+                                    <span className="text-xs text-[var(--muted-foreground)] line-clamp-1">{adset.adsetName}</span>
+                                  </div>
+                                </td>
+                                <td className="bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors group-hover:bg-white/[0.04]">{adset.total}</td>
+                                <td className="bg-white/[0.02] px-3 py-2.5 text-right transition-colors group-hover:bg-white/[0.04]">
+                                  <span className="inline-flex items-center justify-center rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold tabular-nums text-green-400">{adset.mql}</span>
+                                </td>
+                                <td className="bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors group-hover:bg-white/[0.04]">{fmtPct(adset.taxaMql)}</td>
+                                <td className="rounded-r-xl bg-white/[0.02] px-2 py-2.5 transition-colors group-hover:bg-white/[0.04]" />
+                              </tr>
+
+                              {/* Ad rows */}
+                              {adsetExpanded && adset.ads.map((ad, adi) => (
+                                <tr key={`${adsetKey}::${ad.adName}::${adi}`}>
+                                  <td className="rounded-l-xl bg-white/[0.01] px-3 py-2 pl-[4.5rem]">
+                                    <div className="flex items-center gap-2">
+                                      <span className="w-5 text-right text-[10px] text-white/10 tabular-nums">#{adi + 1}</span>
+                                      <span className="text-[11px] text-[var(--muted-foreground)]/60 line-clamp-1">{ad.adName}</span>
+                                    </div>
+                                  </td>
+                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">{ad.total}</td>
+                                  <td className="bg-white/[0.01] px-3 py-2 text-right">
+                                    <span className="inline-flex items-center justify-center rounded-full bg-green-500/8 px-2 py-0.5 text-[11px] font-bold tabular-nums text-green-400/70">{ad.mql}</span>
+                                  </td>
+                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">{fmtPct(ad.taxaMql)}</td>
+                                  <td className="rounded-r-xl bg-white/[0.01] px-2 py-2" />
+                                </tr>
+                              ))}
+                            </React.Fragment>
+                          );
+                        })}
+                      </React.Fragment>
+                    );
+                  })}
+                  {campanhasHierarchy.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhuma campanha encontrada</td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[var(--border)]">
-                    {formsRanking.slice(0, 8).map((f) => (
-                      <tr key={f.formId} className="hover:bg-[var(--muted)]/30 transition-colors">
-                        <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
-                          <span className="line-clamp-1">{f.formName ?? "—"}</span>
-                        </td>
-                        <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{f.total}</td>
-                        <td className="py-2.5 text-right">
-                          <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
-                            {f.mql}
-                          </span>
-                        </td>
-                        <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                          {fmtPct(f.taxaMql)}
-                        </td>
-                      </tr>
-                    ))}
-                    {formsRanking.length === 0 && (
-                      <tr>
-                        <td colSpan={4} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum formulário encontrado</td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
+                  )}
+                </tbody>
+              </table>
             </div>
           </div>
 
-          {/* Adset + Ad ranking — Academy only */}
-          {isAcademy && (
-            <div className="grid gap-6 lg:grid-cols-2">
-              {/* Conjuntos */}
-              <div>
-                <SectionHeader sub="Origem detalhada" title="Leads por Conjunto de Anúncios" />
-                <div className="mt-4 overflow-x-auto">
-                  <table className="w-full min-w-[400px] text-sm">
-                    <thead>
-                      <tr className="border-b border-[var(--border)]">
-                        <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Conjunto</th>
-                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
-                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Qualif.</th>
-                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[var(--border)]">
-                      {adsetRanking.slice(0, 10).map((a) => (
-                        <tr key={a.adsetName} className="hover:bg-[var(--muted)]/30 transition-colors">
-                          <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
-                            <span className="line-clamp-1">{a.adsetName}</span>
-                          </td>
-                          <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{a.total}</td>
-                          <td className="py-2.5 text-right">
-                            <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
-                              {a.mql}
-                            </span>
-                          </td>
-                          <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                            {fmtPct(a.taxaMql)}
-                          </td>
-                        </tr>
-                      ))}
-                      {adsetRanking.length === 0 && (
-                        <tr>
-                          <td colSpan={4} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum conjunto encontrado</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-
-              {/* Anúncios */}
-              <div>
-                <SectionHeader sub="Origem detalhada" title="Leads por Anúncio" />
-                <div className="mt-4 overflow-x-auto">
-                  <table className="w-full min-w-[400px] text-sm">
-                    <thead>
-                      <tr className="border-b border-[var(--border)]">
-                        <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Anúncio</th>
-                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
-                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Qualif.</th>
-                        <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[var(--border)]">
-                      {adRanking.slice(0, 10).map((a) => (
-                        <tr key={a.adName} className="hover:bg-[var(--muted)]/30 transition-colors">
-                          <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
-                            <div className="line-clamp-1">{a.adName}</div>
-                            {a.adsetName && (
-                              <div className="text-[10px] text-[var(--muted-foreground)] line-clamp-1">{a.adsetName}</div>
-                            )}
-                          </td>
-                          <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{a.total}</td>
-                          <td className="py-2.5 text-right">
-                            <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
-                              {a.mql}
-                            </span>
-                          </td>
-                          <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                            {fmtPct(a.taxaMql)}
-                          </td>
-                        </tr>
-                      ))}
-                      {adRanking.length === 0 && (
-                        <tr>
-                          <td colSpan={4} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum anúncio encontrado</td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
+          {/* Formulários */}
+          <div>
+            <SectionHeader sub="Origem" title={isAcademy ? "Leads por Formulário" : "MQL por Formulário"} />
+            <div className="mt-4 overflow-x-auto">
+              <table className="w-full min-w-[400px] text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--border)]">
+                    <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Formulário</th>
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--border)]">
+                  {formsRanking.slice(0, 8).map((f) => (
+                    <tr key={f.formId} className="hover:bg-[var(--muted)]/30 transition-colors">
+                      <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
+                        <span className="line-clamp-1">{f.formName ?? "—"}</span>
+                      </td>
+                      <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{f.total}</td>
+                      <td className="py-2.5 text-right">
+                        <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
+                          {f.mql}
+                        </span>
+                      </td>
+                      <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
+                        {fmtPct(f.taxaMql)}
+                      </td>
+                    </tr>
+                  ))}
+                  {formsRanking.length === 0 && (
+                    <tr>
+                      <td colSpan={4} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum formulário encontrado</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
-          )}
+          </div>
 
           {/* Tabela de leads individuais */}
           <div>

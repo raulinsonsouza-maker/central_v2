@@ -307,14 +307,6 @@ export async function GET(
     }
   }
 
-  const campanhaMap: Record<string, { name: string | null; total: number; mql: number }> = {};
-  for (const l of scored) {
-    if (!l.campaignId) continue;
-    if (!campanhaMap[l.campaignId]) campanhaMap[l.campaignId] = { name: l.campaignName, total: 0, mql: 0 };
-    campanhaMap[l.campaignId].total++;
-    if (l._isMql) campanhaMap[l.campaignId].mql++;
-  }
-
   const formMap: Record<string, { name: string | null; total: number; mql: number }> = {};
   for (const l of scored) {
     const fid = l.formId ?? "unknown";
@@ -323,21 +315,59 @@ export async function GET(
     if (l._isMql) formMap[fid].mql++;
   }
 
-  const adsetMap: Record<string, { total: number; mql: number }> = {};
+  // Hierarchical: Campanha → Conjunto → Anúncio
+  const campHierarchy: Record<string, {
+    name: string | null;
+    total: number;
+    mql: number;
+    adsets: Record<string, {
+      total: number;
+      mql: number;
+      ads: Record<string, { total: number; mql: number }>;
+    }>;
+  }> = {};
   for (const l of scored) {
-    const key = l.adsetName ?? "Não informado";
-    if (!adsetMap[key]) adsetMap[key] = { total: 0, mql: 0 };
-    adsetMap[key].total++;
-    if (l._isMql) adsetMap[key].mql++;
+    const cid = l.campaignId ?? "_unknown";
+    const adsetKey = l.adsetName ?? "Não informado";
+    const adKey = l.adName ?? "Não informado";
+    if (!campHierarchy[cid]) campHierarchy[cid] = { name: l.campaignName, total: 0, mql: 0, adsets: {} };
+    campHierarchy[cid].total++;
+    if (l._isMql) campHierarchy[cid].mql++;
+    const ce = campHierarchy[cid];
+    if (!ce.adsets[adsetKey]) ce.adsets[adsetKey] = { total: 0, mql: 0, ads: {} };
+    ce.adsets[adsetKey].total++;
+    if (l._isMql) ce.adsets[adsetKey].mql++;
+    const ae = ce.adsets[adsetKey];
+    if (!ae.ads[adKey]) ae.ads[adKey] = { total: 0, mql: 0 };
+    ae.ads[adKey].total++;
+    if (l._isMql) ae.ads[adKey].mql++;
   }
-
-  const adMap: Record<string, { adsetName: string | null; total: number; mql: number }> = {};
-  for (const l of scored) {
-    const key = l.adName ?? "Não informado";
-    if (!adMap[key]) adMap[key] = { adsetName: l.adsetName, total: 0, mql: 0 };
-    adMap[key].total++;
-    if (l._isMql) adMap[key].mql++;
-  }
+  function txMql(total: number, mql: number) { return total > 0 ? Math.round((mql / total) * 1000) / 10 : 0; }
+  const campanhasHierarchy = Object.entries(campHierarchy)
+    .map(([id, d]) => ({
+      campaignId: id,
+      campaignName: d.name,
+      total: d.total,
+      mql: d.mql,
+      taxaMql: txMql(d.total, d.mql),
+      adsets: Object.entries(d.adsets)
+        .map(([adsetName, a]) => ({
+          adsetName,
+          total: a.total,
+          mql: a.mql,
+          taxaMql: txMql(a.total, a.mql),
+          ads: Object.entries(a.ads)
+            .map(([adName, ad]) => ({
+              adName,
+              total: ad.total,
+              mql: ad.mql,
+              taxaMql: txMql(ad.total, ad.mql),
+            }))
+            .sort((a, b) => b.mql - a.mql),
+        }))
+        .sort((a, b) => b.mql - a.mql),
+    }))
+    .sort((a, b) => b.mql - a.mql);
 
   const periodoMap: Record<string, { total: number; mql: number }> = {};
   for (const l of scored) {
@@ -439,18 +469,10 @@ export async function GET(
             return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
           })
       : null,
-    campanhasRanking: Object.entries(campanhaMap)
-      .map(([id, data]) => ({ campaignId: id, campaignName: data.name, total: data.total, mql: data.mql, taxaMql: data.total > 0 ? Math.round((data.mql / data.total) * 1000) / 10 : 0 }))
-      .sort((a, b) => b.mql - a.mql),
+    campanhasHierarchy,
     formsRanking: Object.entries(formMap)
       .map(([id, data]) => ({ formId: id, formName: data.name, total: data.total, mql: data.mql, taxaMql: data.total > 0 ? Math.round((data.mql / data.total) * 1000) / 10 : 0 }))
       .sort((a, b) => b.mql - a.mql),
-    adsetRanking: Object.entries(adsetMap)
-      .map(([adsetName, data]) => ({ adsetName, total: data.total, mql: data.mql, taxaMql: data.total > 0 ? Math.round((data.mql / data.total) * 1000) / 10 : 0 }))
-      .sort((a, b) => b.total - a.total),
-    adRanking: Object.entries(adMap)
-      .map(([adName, data]) => ({ adName, adsetName: data.adsetName, total: data.total, mql: data.mql, taxaMql: data.total > 0 ? Math.round((data.mql / data.total) * 1000) / 10 : 0 }))
-      .sort((a, b) => b.total - a.total),
     periodoSeries,
     leads: leadsList,
     leadsTruncated: filtered.length > LEADS_LIMIT,
