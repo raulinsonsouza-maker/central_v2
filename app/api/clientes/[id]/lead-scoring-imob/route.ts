@@ -124,7 +124,7 @@ function degreeRank(raw: string | null): number {
   if (!raw) return 0;
   const n = norm(raw);
   if (n.includes("mestrado") || n.includes("doutorado")) return 3;
-  if (n.includes("graduacao") && (n.includes("completa") || n.includes("completo"))) return 2;
+  if (n.includes("graduacao") && (n.includes("completa") || n.includes("completo") || n.includes("concluida") || n.includes("concluido"))) return 2;
   if (n.includes("graduacao") && n.includes("cursando")) return 1;
   return 0;
 }
