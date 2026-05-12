@@ -16,6 +16,12 @@ function isAuthorized(request: NextRequest): boolean {
   return token === expected;
 }
 
+function stripMetaPrefix(raw: string | undefined): string | null {
+  if (!raw) return null;
+  // Meta export prefixes: ag: (ad), as: (adset), c: (campaign), f: (form), p: (phone), l: (lead)
+  return raw.replace(/^(ag|as|c|f|p|l):/, "").trim() || null;
+}
+
 function parseDate(raw: string): Date | null {
   if (!raw) return null;
   const parts = raw.trim().split("/");
@@ -113,7 +119,7 @@ async function processRows(rows: Record<string, string>[], clienteId: string) {
   const errors: string[] = [];
 
   for (const row of rows) {
-    const leadId = row["id"]?.trim();
+    const leadId = stripMetaPrefix(row["id"]?.trim()) ?? row["id"]?.trim();
     if (!leadId) { failed++; continue; }
 
     const rawDate = row["created_time"]?.trim();
@@ -132,13 +138,20 @@ async function processRows(rows: Record<string, string>[], clienteId: string) {
     const tipoEmpresa = normalizeSegmento(tipoEmpresaRaw ?? "");
     const faixaFaturamento = row["qual_sua_atual_faixa_de_faturamento?"]?.trim() || null;
 
+    const adId = stripMetaPrefix(row["ad_id"]?.trim());
+    const adsetId = stripMetaPrefix(row["adset_id"]?.trim());
+    const campaignId = stripMetaPrefix(row["campaign_id"]?.trim());
+    const formId = stripMetaPrefix(row["form_id"]?.trim());
+    // fullName: prefer explicit full_name column, fall back to "nome" custom field
+    const fullName = row["full_name"]?.trim() || row["nome"]?.trim() || null;
+
     const rawFieldData = {
       website: row["qual_o_site_da_sua_empresa?_"]?.trim() || null,
-      adId: row["ad_id"]?.trim() || null,
+      adId,
       adName: row["ad_name"]?.trim() || null,
-      adsetId: row["adset_id"]?.trim() || null,
+      adsetId,
       adsetName: row["adset_name"]?.trim() || null,
-      isOrganic: row["is_organic"]?.trim() === "true",
+      isOrganic: row["is_organic"]?.trim() === "true" || row["is_organic"]?.trim() === "FALSE" ? row["is_organic"]?.trim() !== "FALSE" : false,
       originalSegmento: tipoEmpresaRaw,
     };
 
@@ -150,15 +163,15 @@ async function processRows(rows: Record<string, string>[], clienteId: string) {
 
       const data = {
         createdTime,
-        campaignId: row["campaign_id"]?.trim() || null,
+        campaignId,
         campaignName: row["campaign_name"]?.trim() || null,
-        adId: row["ad_id"]?.trim() || null,
+        adId,
         adName: row["ad_name"]?.trim() || null,
-        adsetId: row["adset_id"]?.trim() || null,
+        adsetId,
         adsetName: row["adset_name"]?.trim() || null,
-        formId: row["form_id"]?.trim() || null,
+        formId,
         formName: row["form_name"]?.trim() || null,
-        fullName: row["full_name"]?.trim() || null,
+        fullName,
         nomeEmpresa: row["company_name"]?.trim() || null,
         telefone: phone,
         emailLead: row["email"]?.trim() || null,

@@ -89,7 +89,8 @@ export async function syncMetaLeadsCliente(
         leadsProcessed++;
         const fd = lead.field_data ?? [];
 
-        const nomeEmpresa = getFieldValue(fd, "empresa", "company", "nome_empresa", "razao_social", "nome");
+        const fullName = getFieldValue(fd, "full_name", "nome completo", "nome", "name");
+        const nomeEmpresa = getFieldValue(fd, "empresa", "company", "nome_empresa", "razao_social");
         const telefone = getFieldValue(fd, "phone", "telefone", "celular", "whatsapp");
         const emailLead = getFieldValue(fd, "email");
         const tipoEmpresa = getFieldValue(fd, "tipo_empresa", "tipo", "segmento", "ramo");
@@ -121,6 +122,11 @@ export async function syncMetaLeadsCliente(
               formName: form.name,
               campaignId: lead.campaign_id ?? null,
               campaignName: lead.campaign_name ?? null,
+              adId: lead.ad_id ?? null,
+              adName: lead.ad_name ?? null,
+              adsetId: lead.adset_id ?? null,
+              adsetName: lead.adset_name ?? null,
+              fullName,
               createdTime,
               nomeEmpresa,
               telefone,
@@ -134,6 +140,11 @@ export async function syncMetaLeadsCliente(
             update: {
               campaignId: lead.campaign_id ?? null,
               campaignName: lead.campaign_name ?? null,
+              adId: lead.ad_id ?? null,
+              adName: lead.ad_name ?? null,
+              adsetId: lead.adset_id ?? null,
+              adsetName: lead.adset_name ?? null,
+              fullName,
               nomeEmpresa,
               telefone,
               estado,

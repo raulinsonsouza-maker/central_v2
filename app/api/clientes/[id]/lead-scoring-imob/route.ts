@@ -413,10 +413,11 @@ export async function GET(
     const campMql = mqld.mql;
     const adsetEntries = Object.entries(d.adsets);
 
-    // Distribuição proporcional do MQL real da campanha para adsets (leads não têm adsetId no webhook)
+    // Se não há dados reais de adset no webhook, distribui proporcionalmente pelos leads do Meta
+    const hasRealAdsetData = adsetEntries.some(([asetId]) => (mqlByAdset[asetId]?.total ?? 0) > 0);
     const adsetLeadCounts = adsetEntries.map(([, a]) => a.leads);
-    const adsetMqlDist = distributeProportional(campMql, adsetLeadCounts);
-    const adsetScoredDist = distributeProportional(mqld.total, adsetLeadCounts);
+    const adsetMqlDist = hasRealAdsetData ? null : distributeProportional(campMql, adsetLeadCounts);
+    const adsetScoredDist = hasRealAdsetData ? null : distributeProportional(mqld.total, adsetLeadCounts);
 
     return {
       campaignId: cid,
@@ -431,13 +432,17 @@ export async function GET(
       ctr: calcCtr(d.clicks, d.impressions),
       cpl: calcCpl(d.spend, mqld.total),
       adsets: adsetEntries.map(([adsetId, a], adsetIdx) => {
-        const adsetMql = adsetMqlDist[adsetIdx];
-        const adsetScored = adsetScoredDist[adsetIdx];
+        // Usa dados reais do webhook se disponíveis, senão distribuição proporcional
+        const realAdset = mqlByAdset[adsetId];
+        const adsetMql = realAdset ? realAdset.mql : (adsetMqlDist![adsetIdx]);
+        const adsetScored = realAdset ? realAdset.total : (adsetScoredDist![adsetIdx]);
+
         const adEntries = Object.entries(a.ads);
-        // Distribuição proporcional do MQL do adset para os anúncios
+        const hasRealAdData = adEntries.some(([aid]) => (mqlByAd[aid]?.total ?? 0) > 0);
         const adLeadCounts = adEntries.map(([, ad]) => ad.leads);
-        const adMqlDist = distributeProportional(adsetMql, adLeadCounts);
-        const adScoredDist = distributeProportional(adsetScored, adLeadCounts);
+        const adMqlDist = hasRealAdData ? null : distributeProportional(adsetMql, adLeadCounts);
+        const adScoredDist = hasRealAdData ? null : distributeProportional(adsetScored, adLeadCounts);
+
         return {
           adsetId,
           adsetName: a.adsetName ?? adsetId,
@@ -450,19 +455,24 @@ export async function GET(
           clicks: a.clicks,
           ctr: calcCtr(a.clicks, a.impressions),
           cpl: calcCpl(a.spend, adsetScored),
-          ads: adEntries.map(([adId, ad], adIdx) => ({
-            adId,
-            adName: ad.adName,
-            leadsMeta: ad.leads,
-            leadsScored: adScoredDist[adIdx],
-            mql: adMqlDist[adIdx],
-            taxaMql: txMql(adScoredDist[adIdx], adMqlDist[adIdx]),
-            invest: ad.spend,
-            impressions: ad.impressions,
-            clicks: ad.clicks,
-            ctr: calcCtr(ad.clicks, ad.impressions),
-            cpl: calcCpl(ad.spend, adScoredDist[adIdx]),
-          })).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
+          ads: adEntries.map(([adId, ad], adIdx) => {
+            const realAd = mqlByAd[adId];
+            const adMql = realAd ? realAd.mql : (adMqlDist![adIdx]);
+            const adScored = realAd ? realAd.total : (adScoredDist![adIdx]);
+            return {
+              adId,
+              adName: ad.adName,
+              leadsMeta: ad.leads,
+              leadsScored: adScored,
+              mql: adMql,
+              taxaMql: txMql(adScored, adMql),
+              invest: ad.spend,
+              impressions: ad.impressions,
+              clicks: ad.clicks,
+              ctr: calcCtr(ad.clicks, ad.impressions),
+              cpl: calcCpl(ad.spend, adScored),
+            };
+          }).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
         };
       }).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
     };

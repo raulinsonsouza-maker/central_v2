@@ -26,6 +26,8 @@ export interface MetaLeadEntry {
   field_data: MetaLeadFieldData[];
   ad_id?: string;
   ad_name?: string;
+  adset_id?: string;
+  adset_name?: string;
   campaign_id?: string;
   campaign_name?: string;
   form_id?: string;
@@ -327,7 +329,7 @@ export async function fetchLeadsFromForm(
   options?: { dateFrom?: string; dateTo?: string; maxLeads?: number }
 ): Promise<MetaLeadEntry[]> {
   const maxLeads = options?.maxLeads ?? 10000;
-  const fields = "id,created_time,field_data,ad_id,ad_name,campaign_id,campaign_name,form_id";
+  const fields = "id,created_time,field_data,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,form_id";
   const params = new URLSearchParams({
     access_token: token,
     fields,
