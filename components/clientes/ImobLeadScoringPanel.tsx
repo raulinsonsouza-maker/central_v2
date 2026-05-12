@@ -147,15 +147,34 @@ interface ApiResponse {
   campanhasHierarchy: {
     campaignId: string;
     campaignName: string | null;
-    total: number;
+    leadsMeta: number;
+    leadsScored: number;
     mql: number;
     taxaMql: number;
+    invest: number;
+    impressions: number;
+    clicks: number;
+    ctr: number;
+    cpl: number | null;
     adsets: {
+      adsetId: string;
       adsetName: string;
-      total: number;
-      mql: number;
-      taxaMql: number;
-      ads: { adName: string; total: number; mql: number; taxaMql: number }[];
+      leadsMeta: number;
+      invest: number;
+      impressions: number;
+      clicks: number;
+      ctr: number;
+      cpl: number | null;
+      ads: {
+        adId: string;
+        adName: string;
+        leadsMeta: number;
+        invest: number;
+        impressions: number;
+        clicks: number;
+        ctr: number;
+        cpl: number | null;
+      }[];
     }[];
   }[];
   formsRanking: { formId: string; formName: string | null; total: number; mql: number; taxaMql: number }[];
@@ -607,16 +626,19 @@ export function ImobLeadScoringPanel({
           {/* Drilldown hierárquico: Campanha → Conjunto → Anúncio */}
           <div>
             <SectionHeader sub="Origem" title="Análise por Campanha" />
-            <p className="mt-1 text-xs text-[var(--muted-foreground)]">Clique em uma campanha para expandir conjuntos e anúncios</p>
+            <p className="mt-1 text-xs text-[var(--muted-foreground)]">
+              Clique em uma campanha para expandir conjuntos e anúncios · Invest., leads e CTR via Meta Insights
+            </p>
             <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[560px] border-separate [border-spacing:0_3px]">
+              <table className="w-full min-w-[720px] border-separate [border-spacing:0_3px]">
                 <thead>
                   <tr>
                     <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Campanha / Conjunto / Anúncio</th>
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Invest.</th>
                     <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
                     <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
-                    <th className="w-6" />
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">CPL</th>
+                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">CTR</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -624,86 +646,135 @@ export function ImobLeadScoringPanel({
                     const campExpanded = expandedCamps.has(camp.campaignId);
                     const isTop = ci === 0;
                     const campBg = isTop ? "bg-[var(--primary)]/5" : "bg-white/[0.035]";
+                    const hasAdsets = camp.adsets.length > 0;
                     return (
                       <React.Fragment key={camp.campaignId}>
                         {/* Campaign row */}
                         <tr
-                          className="group cursor-pointer"
-                          onClick={() =>
+                          className={`group ${hasAdsets ? "cursor-pointer" : ""}`}
+                          onClick={() => {
+                            if (!hasAdsets) return;
                             setExpandedCamps((s) => {
                               const n = new Set(s);
                               n.has(camp.campaignId) ? n.delete(camp.campaignId) : n.add(camp.campaignId);
                               return n;
-                            })
-                          }
+                            });
+                          }}
                         >
-                          <td className={`rounded-l-xl px-3 py-3 ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`}>
+                          <td className={`rounded-l-xl px-3 py-3 ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
                             <div className="flex items-center gap-2">
                               <span className={`shrink-0 w-6 text-right text-[11px] font-bold tabular-nums ${isTop ? "text-[var(--primary)]" : "text-white/20"}`}>#{ci + 1}</span>
-                              {campExpanded
-                                ? <ChevronDown className="h-3 w-3 shrink-0 text-[var(--primary)]" />
-                                : <ChevronRight className="h-3 w-3 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                              {hasAdsets
+                                ? campExpanded
+                                  ? <ChevronDown className="h-3 w-3 shrink-0 text-[var(--primary)]" />
+                                  : <ChevronRight className="h-3 w-3 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                                : <span className="w-3" />
                               }
                               <span className="text-xs font-semibold text-[var(--foreground)] line-clamp-1">{camp.campaignName ?? "—"}</span>
                             </div>
                           </td>
-                          <td className={`px-3 py-3 text-right text-xs tabular-nums text-[var(--muted-foreground)] ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`}>{camp.total}</td>
-                          <td className={`px-3 py-3 text-right ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`}>
-                            <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-bold tabular-nums text-green-400">{camp.mql}</span>
+                          <td className={`px-3 py-3 text-right text-xs tabular-nums text-[var(--foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
+                            {camp.invest > 0 ? fmt(camp.invest) : <span className="text-[var(--muted-foreground)]/40">—</span>}
                           </td>
-                          <td className={`px-3 py-3 text-right text-xs tabular-nums text-[var(--muted-foreground)] ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`}>{fmtPct(camp.taxaMql)}</td>
-                          <td className={`rounded-r-xl px-2 py-3 ${campBg} transition-colors group-hover:bg-[var(--primary)]/8`} />
+                          <td className={`px-3 py-3 text-right ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
+                            <div className="flex flex-col items-end gap-0.5">
+                              <span className="text-xs tabular-nums text-[var(--muted-foreground)]">{camp.leadsMeta > 0 ? camp.leadsMeta : camp.leadsScored}</span>
+                              {camp.leadsScored > 0 && camp.leadsMeta > 0 && camp.leadsScored !== camp.leadsMeta && (
+                                <span className="text-[10px] tabular-nums text-[var(--muted-foreground)]/50">{camp.leadsScored} qualif.</span>
+                              )}
+                            </div>
+                          </td>
+                          <td className={`px-3 py-3 text-right ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
+                            {camp.mql > 0 ? (
+                              <div className="flex flex-col items-end gap-0.5">
+                                <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-bold tabular-nums text-green-400">{camp.mql}</span>
+                                <span className="text-[10px] tabular-nums text-[var(--muted-foreground)]/50">{fmtPct(camp.taxaMql)}</span>
+                              </div>
+                            ) : (
+                              <span className="text-[var(--muted-foreground)]/40 text-xs">—</span>
+                            )}
+                          </td>
+                          <td className={`px-3 py-3 text-right text-xs tabular-nums text-[var(--muted-foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
+                            {camp.cpl != null ? fmt(camp.cpl) : <span className="text-[var(--muted-foreground)]/40">—</span>}
+                          </td>
+                          <td className={`rounded-r-xl px-3 py-3 text-right text-xs tabular-nums text-[var(--muted-foreground)] ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/8" : ""}`}>
+                            {camp.ctr > 0 ? `${camp.ctr.toFixed(2)}%` : <span className="text-[var(--muted-foreground)]/40">—</span>}
+                          </td>
                         </tr>
 
                         {/* Adset rows */}
                         {campExpanded && camp.adsets.map((adset, ai) => {
-                          const adsetKey = `${camp.campaignId}::${adset.adsetName}`;
+                          const adsetKey = `${camp.campaignId}::${adset.adsetId}`;
                           const adsetExpanded = expandedAdsets.has(adsetKey);
+                          const hasAds = adset.ads.length > 0;
                           return (
                             <React.Fragment key={adsetKey}>
                               <tr
-                                className="group cursor-pointer"
-                                onClick={() =>
+                                className={`group ${hasAds ? "cursor-pointer" : ""}`}
+                                onClick={() => {
+                                  if (!hasAds) return;
                                   setExpandedAdsets((s) => {
                                     const n = new Set(s);
                                     n.has(adsetKey) ? n.delete(adsetKey) : n.add(adsetKey);
                                     return n;
-                                  })
-                                }
+                                  });
+                                }}
                               >
-                                <td className="rounded-l-xl bg-white/[0.02] px-3 py-2.5 pl-12 transition-colors group-hover:bg-white/[0.04]">
+                                <td className={`rounded-l-xl bg-white/[0.02] px-3 py-2.5 pl-12 transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
                                   <div className="flex items-center gap-2">
                                     <span className="w-5 text-right text-[10px] font-bold tabular-nums text-white/15">#{ai + 1}</span>
-                                    {adsetExpanded
-                                      ? <ChevronDown className="h-2.5 w-2.5 shrink-0 text-[var(--primary)]" />
-                                      : <ChevronRight className="h-2.5 w-2.5 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                                    {hasAds
+                                      ? adsetExpanded
+                                        ? <ChevronDown className="h-2.5 w-2.5 shrink-0 text-[var(--primary)]" />
+                                        : <ChevronRight className="h-2.5 w-2.5 shrink-0 text-[var(--muted-foreground)] group-hover:text-[var(--primary)] transition-colors" />
+                                      : <span className="w-2.5" />
                                     }
                                     <span className="text-xs text-[var(--muted-foreground)] line-clamp-1">{adset.adsetName}</span>
                                   </div>
                                 </td>
-                                <td className="bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors group-hover:bg-white/[0.04]">{adset.total}</td>
-                                <td className="bg-white/[0.02] px-3 py-2.5 text-right transition-colors group-hover:bg-white/[0.04]">
-                                  <span className="inline-flex items-center justify-center rounded-full bg-green-500/10 px-2 py-0.5 text-xs font-bold tabular-nums text-green-400">{adset.mql}</span>
+                                <td className={`bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--foreground)]/80 transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {fmt(adset.invest)}
                                 </td>
-                                <td className="bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors group-hover:bg-white/[0.04]">{fmtPct(adset.taxaMql)}</td>
-                                <td className="rounded-r-xl bg-white/[0.02] px-2 py-2.5 transition-colors group-hover:bg-white/[0.04]" />
+                                <td className={`bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {adset.leadsMeta}
+                                </td>
+                                <td className={`bg-white/[0.02] px-3 py-2.5 text-right transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  <span className="text-[var(--muted-foreground)]/30 text-xs">—</span>
+                                </td>
+                                <td className={`bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {adset.cpl != null ? fmt(adset.cpl) : "—"}
+                                </td>
+                                <td className={`rounded-r-xl bg-white/[0.02] px-3 py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)] transition-colors ${hasAds ? "group-hover:bg-white/[0.04]" : ""}`}>
+                                  {adset.ctr > 0 ? `${adset.ctr.toFixed(2)}%` : "—"}
+                                </td>
                               </tr>
 
                               {/* Ad rows */}
                               {adsetExpanded && adset.ads.map((ad, adi) => (
-                                <tr key={`${adsetKey}::${ad.adName}::${adi}`}>
+                                <tr key={ad.adId}>
                                   <td className="rounded-l-xl bg-white/[0.01] px-3 py-2 pl-[4.5rem]">
                                     <div className="flex items-center gap-2">
                                       <span className="w-5 text-right text-[10px] text-white/10 tabular-nums">#{adi + 1}</span>
-                                      <span className="text-[11px] text-[var(--muted-foreground)]/60 line-clamp-1">{ad.adName}</span>
+                                      <span className="text-[11px] text-[var(--muted-foreground)]/70 line-clamp-1">{ad.adName}</span>
                                     </div>
                                   </td>
-                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">{ad.total}</td>
-                                  <td className="bg-white/[0.01] px-3 py-2 text-right">
-                                    <span className="inline-flex items-center justify-center rounded-full bg-green-500/8 px-2 py-0.5 text-[11px] font-bold tabular-nums text-green-400/70">{ad.mql}</span>
+                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--foreground)]/60">
+                                    {fmt(ad.invest)}
                                   </td>
-                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">{fmtPct(ad.taxaMql)}</td>
-                                  <td className="rounded-r-xl bg-white/[0.01] px-2 py-2" />
+                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">
+                                    {ad.leadsMeta > 0 ? (
+                                      <span className="inline-flex items-center justify-center rounded-full bg-green-500/8 px-2 py-0.5 text-[11px] font-bold tabular-nums text-green-400/70">{ad.leadsMeta}</span>
+                                    ) : "—"}
+                                  </td>
+                                  <td className="bg-white/[0.01] px-3 py-2 text-right">
+                                    <span className="text-[var(--muted-foreground)]/25 text-[11px]">—</span>
+                                  </td>
+                                  <td className="bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">
+                                    {ad.cpl != null ? fmt(ad.cpl) : "—"}
+                                  </td>
+                                  <td className="rounded-r-xl bg-white/[0.01] px-3 py-2 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]/60">
+                                    {ad.ctr > 0 ? `${ad.ctr.toFixed(2)}%` : "—"}
+                                  </td>
                                 </tr>
                               ))}
                             </React.Fragment>
@@ -714,7 +785,7 @@ export function ImobLeadScoringPanel({
                   })}
                   {campanhasHierarchy.length === 0 && (
                     <tr>
-                      <td colSpan={5} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhuma campanha encontrada</td>
+                      <td colSpan={6} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhuma campanha encontrada no período</td>
                     </tr>
                   )}
                 </tbody>

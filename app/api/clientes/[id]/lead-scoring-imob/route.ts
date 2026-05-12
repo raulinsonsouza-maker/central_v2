@@ -315,59 +315,115 @@ export async function GET(
     if (l._isMql) formMap[fid].mql++;
   }
 
-  // Hierarchical: Campanha → Conjunto → Anúncio
-  const campHierarchy: Record<string, {
-    name: string | null;
-    total: number;
-    mql: number;
-    adsets: Record<string, {
-      total: number;
-      mql: number;
-      ads: Record<string, { total: number; mql: number }>;
-    }>;
-  }> = {};
+  // MQL por campanha (MetaLeadIndividual)
+  const mqlByCampaign: Record<string, { name: string | null; total: number; mql: number }> = {};
   for (const l of scored) {
     const cid = l.campaignId ?? "_unknown";
-    const adsetKey = l.adsetName ?? "Não informado";
-    const adKey = l.adName ?? "Não informado";
-    if (!campHierarchy[cid]) campHierarchy[cid] = { name: l.campaignName, total: 0, mql: 0, adsets: {} };
-    campHierarchy[cid].total++;
-    if (l._isMql) campHierarchy[cid].mql++;
-    const ce = campHierarchy[cid];
-    if (!ce.adsets[adsetKey]) ce.adsets[adsetKey] = { total: 0, mql: 0, ads: {} };
-    ce.adsets[adsetKey].total++;
-    if (l._isMql) ce.adsets[adsetKey].mql++;
-    const ae = ce.adsets[adsetKey];
-    if (!ae.ads[adKey]) ae.ads[adKey] = { total: 0, mql: 0 };
-    ae.ads[adKey].total++;
-    if (l._isMql) ae.ads[adKey].mql++;
+    if (!mqlByCampaign[cid]) mqlByCampaign[cid] = { name: l.campaignName, total: 0, mql: 0 };
+    mqlByCampaign[cid].total++;
+    if (l._isMql) mqlByCampaign[cid].mql++;
+  }
+
+  // Hierarquia real: Campanha → Conjunto → Anúncio (MetaAdsCriativo)
+  const metaAdsCriativos = await prisma.metaAdsCriativo.findMany({
+    where: {
+      clienteId,
+      data: { gte: new Date(dataInicioStr), lte: new Date(dataFimStr) },
+    },
+    select: {
+      campaignId: true, campaignName: true,
+      adsetId: true, adsetName: true,
+      adId: true, adName: true,
+      leads: true, spend: true, impressions: true, clicks: true,
+    },
+  });
+
+  type AdRow = { adName: string; leads: number; spend: number; impressions: number; clicks: number };
+  type AdsetRow = { adsetName: string | null; leads: number; spend: number; impressions: number; clicks: number; ads: Record<string, AdRow> };
+  type CampRow = { campaignName: string | null; leads: number; spend: number; impressions: number; clicks: number; adsets: Record<string, AdsetRow> };
+
+  const campInsights: Record<string, CampRow> = {};
+  for (const row of metaAdsCriativos) {
+    const cid = row.campaignId ?? "_unknown";
+    if (!campInsights[cid]) campInsights[cid] = { campaignName: row.campaignName, leads: 0, spend: 0, impressions: 0, clicks: 0, adsets: {} };
+    const camp = campInsights[cid];
+    camp.leads += row.leads;
+    camp.spend += Number(row.spend);
+    camp.impressions += row.impressions;
+    camp.clicks += row.clicks;
+    const asetKey = row.adsetId ?? "_unknown_adset";
+    if (!camp.adsets[asetKey]) camp.adsets[asetKey] = { adsetName: row.adsetName, leads: 0, spend: 0, impressions: 0, clicks: 0, ads: {} };
+    const adset = camp.adsets[asetKey];
+    adset.leads += row.leads;
+    adset.spend += Number(row.spend);
+    adset.impressions += row.impressions;
+    adset.clicks += row.clicks;
+    const aid = row.adId;
+    if (!adset.ads[aid]) adset.ads[aid] = { adName: row.adName, leads: 0, spend: 0, impressions: 0, clicks: 0 };
+    const ad = adset.ads[aid];
+    ad.leads += row.leads;
+    ad.spend += Number(row.spend);
+    ad.impressions += row.impressions;
+    ad.clicks += row.clicks;
+  }
+
+  function calcCtr(clicks: number, impressions: number): number {
+    return impressions > 0 ? Math.round((clicks / impressions) * 10000) / 100 : 0;
+  }
+  function calcCpl(spend: number, leads: number): number | null {
+    return leads > 0 && spend > 0 ? spend / leads : null;
   }
   function txMql(total: number, mql: number) { return total > 0 ? Math.round((mql / total) * 1000) / 10 : 0; }
-  const campanhasHierarchy = Object.entries(campHierarchy)
-    .map(([id, d]) => ({
-      campaignId: id,
-      campaignName: d.name,
-      total: d.total,
-      mql: d.mql,
-      taxaMql: txMql(d.total, d.mql),
-      adsets: Object.entries(d.adsets)
-        .map(([adsetName, a]) => ({
-          adsetName,
-          total: a.total,
-          mql: a.mql,
-          taxaMql: txMql(a.total, a.mql),
-          ads: Object.entries(a.ads)
-            .map(([adName, ad]) => ({
-              adName,
-              total: ad.total,
-              mql: ad.mql,
-              taxaMql: txMql(ad.total, ad.mql),
-            }))
-            .sort((a, b) => b.mql - a.mql),
-        }))
-        .sort((a, b) => b.mql - a.mql),
-    }))
-    .sort((a, b) => b.mql - a.mql);
+
+  const campanhasHierarchy = Object.entries(campInsights).map(([cid, d]) => {
+    const mqld = mqlByCampaign[cid] ?? { total: 0, mql: 0, name: d.campaignName };
+    return {
+      campaignId: cid,
+      campaignName: d.campaignName ?? mqld.name,
+      leadsMeta: d.leads,
+      leadsScored: mqld.total,
+      mql: mqld.mql,
+      taxaMql: txMql(mqld.total, mqld.mql),
+      invest: d.spend,
+      impressions: d.impressions,
+      clicks: d.clicks,
+      ctr: calcCtr(d.clicks, d.impressions),
+      cpl: calcCpl(d.spend, d.leads),
+      adsets: Object.entries(d.adsets).map(([adsetId, a]) => ({
+        adsetId,
+        adsetName: a.adsetName ?? adsetId,
+        leadsMeta: a.leads,
+        invest: a.spend,
+        impressions: a.impressions,
+        clicks: a.clicks,
+        ctr: calcCtr(a.clicks, a.impressions),
+        cpl: calcCpl(a.spend, a.leads),
+        ads: Object.entries(a.ads).map(([adId, ad]) => ({
+          adId,
+          adName: ad.adName,
+          leadsMeta: ad.leads,
+          invest: ad.spend,
+          impressions: ad.impressions,
+          clicks: ad.clicks,
+          ctr: calcCtr(ad.clicks, ad.impressions),
+          cpl: calcCpl(ad.spend, ad.leads),
+        })).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
+      })).sort((a, b) => b.leadsMeta - a.leadsMeta || b.invest - a.invest),
+    };
+  });
+  // Adiciona campanhas com leads mas sem MetaAdsCriativo
+  for (const [cid, mqld] of Object.entries(mqlByCampaign)) {
+    if (!campInsights[cid]) {
+      campanhasHierarchy.push({
+        campaignId: cid,
+        campaignName: mqld.name,
+        leadsMeta: 0, leadsScored: mqld.total, mql: mqld.mql,
+        taxaMql: txMql(mqld.total, mqld.mql),
+        invest: 0, impressions: 0, clicks: 0, ctr: 0, cpl: null, adsets: [],
+      });
+    }
+  }
+  campanhasHierarchy.sort((a, b) => b.invest - a.invest || b.leadsScored - a.leadsScored);
 
   const periodoMap: Record<string, { total: number; mql: number }> = {};
   for (const l of scored) {
