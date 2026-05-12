@@ -685,9 +685,9 @@ export function ImobLeadScoringPanel({
                             {camp.invest > 0 ? `R$\u00a0${camp.invest.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` : <span className="text-white/20">—</span>}
                           </td>
                           <td className={`px-4 py-4 text-right tabular-nums ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                            <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
-                              {camp.leadsMeta > 0 ? camp.leadsMeta : camp.leadsScored > 0 ? camp.leadsScored : <span className="text-[13px] font-normal text-white/20">—</span>}
-                            </span>
+                            {camp.leadsScored > 0
+                              ? <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{camp.leadsScored}</span>
+                              : <span className="text-[13px] text-white/20">—</span>}
                           </td>
                           <td className={`px-4 py-4 text-right tabular-nums ${campBg} transition-colors ${hasAdsets ? "group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
                             {camp.mql > 0

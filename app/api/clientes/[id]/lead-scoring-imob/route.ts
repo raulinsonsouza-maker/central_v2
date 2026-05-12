@@ -411,7 +411,8 @@ export async function GET(
       impressions: d.impressions,
       clicks: d.clicks,
       ctr: calcCtr(d.clicks, d.impressions),
-      cpl: calcCpl(d.spend, d.leads),
+      // CPL usa leadsScored (webhook) para ser consistente com os KPI cards
+      cpl: calcCpl(d.spend, mqld.total),
       adsets: adsetEntries.map(([adsetId, a], ai) => {
         const adsetMqlEst = adsetMqls[ai];
         // Distribui MQL do adset proporcionalmente pelos ads
