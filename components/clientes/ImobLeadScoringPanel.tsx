@@ -231,20 +231,29 @@ function SectionHeader({ sub, title }: { sub: string; title: string }) {
   );
 }
 
-const PERIOD_LABELS: Record<string, string> = {
-  semanal: "semanal",
-  mensal: "mensal",
-};
-
 function formatPeriodLabel(key: string): string {
+  // Weekly: 2026-S08 → "27/04-03/05"
   if (/^\d{4}-S\d{2}$/.test(key)) {
-    const [year, week] = key.split("-S");
-    return `S${week}/${year?.slice(2)}`;
+    const [yearStr, weekPart] = key.split("-S");
+    const year = parseInt(yearStr ?? "0", 10);
+    const week = parseInt(weekPart ?? "0", 10);
+    const jan4 = new Date(Date.UTC(year, 0, 4));
+    const jan4Day = jan4.getUTCDay() || 7;
+    const monday = new Date(jan4.getTime() - (jan4Day - 1) * 86400000 + (week - 1) * 7 * 86400000);
+    const sunday = new Date(monday.getTime() + 6 * 86400000);
+    const fmt = (d: Date) => `${String(d.getUTCDate()).padStart(2, "0")}/${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+    return `${fmt(monday)}-${fmt(sunday)}`;
   }
+  // Monthly: 2026-05 → "Mai/26"
   if (/^\d{4}-\d{2}$/.test(key)) {
     const [year, month] = key.split("-");
     const months = ["Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"];
     return `${months[parseInt(month ?? "1", 10) - 1]}/${year?.slice(2)}`;
+  }
+  // Daily: 2026-05-13 → "13/05"
+  if (/^\d{4}-\d{2}-\d{2}$/.test(key)) {
+    const parts = key.split("-");
+    return `${parts[2]}/${parts[1]}`;
   }
   return key;
 }
@@ -258,7 +267,7 @@ export function ImobLeadScoringPanel({
   dateFilter: DateFilter;
   clienteNome?: string;
 }) {
-  const [agrupamento, setAgrupamento] = React.useState<"semanal" | "mensal">("semanal");
+  const [agrupamento, setAgrupamento] = React.useState<"diario" | "semanal">("semanal");
   const [gradeFilter, setGradeFilter] = React.useState<string | null>(null);
   const [selectedFormId, setSelectedFormId] = React.useState<string | null>(null);
   const [showAllLeads, setShowAllLeads] = React.useState(false);
@@ -347,19 +356,20 @@ export function ImobLeadScoringPanel({
       <div className="flex flex-wrap items-start justify-between gap-3">
         <SectionHeader sub="Meta Lead Ads · Qualificação" title={`Lead Scoring${clienteNome ? ` — ${clienteNome}` : ""}`} />
         <div className="flex flex-wrap items-center gap-2">
-          {(["semanal", "mensal"] as const).map((a) => (
+          <div className="flex overflow-hidden rounded-lg border border-[var(--border)] text-xs">
             <button
-              key={a}
-              onClick={() => setAgrupamento(a)}
-              className={`rounded-lg px-3 py-1.5 text-xs font-semibold uppercase tracking-wide transition-all ${
-                agrupamento === a
-                  ? "bg-[var(--primary)] text-[var(--primary-foreground)]"
-                  : "border border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-              }`}
+              onClick={() => setAgrupamento("diario")}
+              className={`px-2.5 py-1.5 font-semibold transition-colors ${agrupamento === "diario" ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
             >
-              {PERIOD_LABELS[a]}
+              Diário
             </button>
-          ))}
+            <button
+              onClick={() => setAgrupamento("semanal")}
+              className={`px-2.5 py-1.5 font-semibold transition-colors ${agrupamento === "semanal" ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
+            >
+              Semanal
+            </button>
+          </div>
 
         </div>
       </div>
@@ -678,7 +688,17 @@ export function ImobLeadScoringPanel({
                                 </linearGradient>
                               </defs>
                               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.5} />
-                              <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                              <XAxis
+                                dataKey="label"
+                                stroke="var(--muted-foreground)"
+                                fontSize={11}
+                                tickLine={false}
+                                axisLine={false}
+                                interval={agrupamento === "diario" && periodoSeries.length > 14 ? Math.ceil(periodoSeries.length / 14) - 1 : 0}
+                                angle={agrupamento === "diario" && periodoSeries.length > 14 ? -45 : 0}
+                                textAnchor={agrupamento === "diario" && periodoSeries.length > 14 ? "end" : "middle"}
+                                height={agrupamento === "diario" && periodoSeries.length > 14 ? 50 : 30}
+                              />
                               <YAxis yAxisId="left" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
                               <YAxis yAxisId="right" orientation="right" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
                               <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [v, name]} />

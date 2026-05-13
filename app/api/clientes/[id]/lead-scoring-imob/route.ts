@@ -27,6 +27,10 @@ function getWeekKey(date: Date): string {
   return `${d.getUTCFullYear()}-S${String(weekNo).padStart(2, "0")}`;
 }
 
+function getDayKey(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 type FieldEntry = { name: string; values: string[] };
 
 function norm(value?: string | null): string {
@@ -565,9 +569,11 @@ export async function GET(
   const periodoMap: Record<string, { total: number; mql: number }> = {};
   for (const l of scored) {
     const key =
-      agrupamento === "semanal"
-        ? getWeekKey(new Date(l.createdTime))
-        : getMonthKey(new Date(l.createdTime));
+      agrupamento === "diario"
+        ? getDayKey(new Date(l.createdTime))
+        : agrupamento === "semanal"
+          ? getWeekKey(new Date(l.createdTime))
+          : getMonthKey(new Date(l.createdTime));
     if (!periodoMap[key]) periodoMap[key] = { total: 0, mql: 0 };
     periodoMap[key].total++;
     if (l._isMql) periodoMap[key].mql++;
