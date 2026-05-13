@@ -8,6 +8,7 @@ export const DOR_SLUG = "d-or";
 export const GRANAROLO_SLUG = "granarolo";
 export const FLORIEN_SLUG = "florien-fitoativos";
 export const ACADEMY_AMERICANA_SLUG = "academy-americana";
+export const MIRANTE_INCORPORADORA_SLUG = "mirante-incorporadora";
 export const VITO_BALDUCCI_SLUG = "vito-balducci";
 export const KOMBUCHA_DA_CA_SLUG = "kombucha-da-ca";
 export const BE_BLUE_SCHOOL_SLUG = "be-blue-school";
@@ -227,8 +228,23 @@ export function isSouIcarai(client?: ClientIdentity | null) {
   );
 }
 
+export function isMiranteIncorporadora(client?: ClientIdentity | null) {
+  if (!client) return false;
+  if (client.perfilPanel === "mirante-incorporadora") return true;
+  if (client.perfilPanel === "mirante") return true;
+
+  const slug = normalizeText(client.slug);
+  const nome = normalizeText(client.nome);
+
+  return (
+    slug === MIRANTE_INCORPORADORA_SLUG ||
+    nome === "mirante incorporadora" ||
+    slug.includes("mirante")
+  );
+}
+
 export function isImobClient(client?: ClientIdentity | null) {
   if (!client) return false;
   if (client.perfilPanel === "imob") return true;
-  return isSouIcarai(client) || isAcademyAmericana(client);
+  return isSouIcarai(client) || isAcademyAmericana(client) || isMiranteIncorporadora(client);
 }

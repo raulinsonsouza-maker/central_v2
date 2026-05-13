@@ -57,6 +57,8 @@ const TIMING_COLORS: Record<string, string> = {
   "6 meses": "#22c55e",
   "1 ano": "#84cc16",
   "Avaliando": "#94a3b8",
+  "Até 3 meses": "#22c55e",
+  "Ainda avaliando": "#94a3b8",
   "Não informado": "#475569",
 };
 
@@ -70,6 +72,8 @@ const INVEST_COLORS: Record<string, string> = {
   "Mais de R$5k": "#84cc16",
   "Até R$5k": "#f59e0b",
   "Menos de R$5k": "#ef4444",
+  "Sim": "#22c55e",
+  "Não": "#ef4444",
   "Não informado": "#475569",
 };
 
@@ -130,7 +134,8 @@ function KpiCard({
 }
 
 interface ApiResponse {
-  profile: "academy" | "icarai";
+  profile: "academy" | "icarai" | "mirante";
+  selectedFormId?: string | null;
   kpis: {
     totalLeads: number;
     totalMql: number;
@@ -254,8 +259,8 @@ export function ImobLeadScoringPanel({
 }) {
   const [agrupamento, setAgrupamento] = React.useState<"semanal" | "mensal">("semanal");
   const [gradeFilter, setGradeFilter] = React.useState<string | null>(null);
+  const [selectedFormId, setSelectedFormId] = React.useState<string | null>(null);
   const [showAllLeads, setShowAllLeads] = React.useState(false);
-  const [activeFormId, setActiveFormId] = React.useState<string | null>(null);
   const [syncStatus, setSyncStatus] = React.useState<"idle" | "syncing" | "ok" | "error">("idle");
   const [syncMsg, setSyncMsg] = React.useState<string | null>(null);
   type Camp = ApiResponse["campanhasHierarchy"][0];
@@ -268,9 +273,10 @@ export function ImobLeadScoringPanel({
   if (dateFilter.dataFim) params.set("dataFim", dateFilter.dataFim);
   params.set("agrupamento", agrupamento);
   if (gradeFilter) params.set("grade", gradeFilter);
+  if (selectedFormId) params.set("formId", selectedFormId);
 
   const { data, isLoading, error, refetch, isFetching } = useQuery<ApiResponse>({
-    queryKey: ["imob-lead-scoring", clienteId, dateFilter.dataInicio, dateFilter.dataFim, agrupamento, gradeFilter],
+    queryKey: ["imob-lead-scoring", clienteId, dateFilter.dataInicio, dateFilter.dataFim, agrupamento, gradeFilter, selectedFormId],
     queryFn: async () => {
       const res = await fetch(`/api/clientes/${clienteId}/lead-scoring-imob?${params}`);
       if (!res.ok) throw new Error(await res.text());
@@ -324,12 +330,12 @@ export function ImobLeadScoringPanel({
 
   const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasHierarchy, formsRanking, periodoSeries, leads, leadsTruncated } = data;
   const isAcademy = profile === "academy";
+  const isMirante = profile === "mirante";
 
-  // Client-side filtering: campanha → adset → formulário (IIFE — sem hook, pois é após early returns)
+  // Client-side filtering: campanha → adset (formId é server-side agora)
   let displayedLeads = leads;
   if (selectedCamp) displayedLeads = displayedLeads.filter((l) => l.campaignId === selectedCamp.campaignId);
   if (selectedAdset) displayedLeads = displayedLeads.filter((l) => l.adsetId === selectedAdset.adsetId);
-  if (activeFormId) displayedLeads = displayedLeads.filter((l) => l.formId === activeFormId);
 
   const visibleLeads = showAllLeads ? displayedLeads : displayedLeads.slice(0, 20);
   const hasData = kpis.totalLeads > 0;
@@ -368,12 +374,59 @@ export function ImobLeadScoringPanel({
         </div>
       )}
 
+      {/* ── Seletor de Formulário ── */}
+      {formsRanking.length > 1 && (
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+          <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
+            Formulário
+          </p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => { setSelectedFormId(null); setGradeFilter(null); }}
+              className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition-all ${
+                !selectedFormId
+                  ? "border-[var(--primary)]/40 bg-[var(--primary)]/10 text-[var(--foreground)]"
+                  : "border-[var(--border)] bg-[var(--muted)]/30 text-[var(--muted-foreground)] hover:border-[var(--primary)]/20 hover:text-[var(--foreground)]"
+              }`}
+            >
+              <span className={`h-1.5 w-1.5 rounded-full ${!selectedFormId ? "bg-[var(--primary)]" : "bg-[var(--muted-foreground)]"}`} />
+              Todos os formulários
+              <span className={`rounded-full px-1.5 py-0.5 text-[10px] tabular-nums ${!selectedFormId ? "bg-[var(--primary)]/15 text-[var(--primary)]" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
+                {formsRanking.reduce((s, f) => s + f.total, 0)}
+              </span>
+            </button>
+            {formsRanking.map((f) => {
+              const isActive = selectedFormId === f.formId;
+              const mqlPct = f.total > 0 ? Math.round((f.mql / f.total) * 100) : 0;
+              return (
+                <button
+                  key={f.formId}
+                  onClick={() => { setSelectedFormId(isActive ? null : f.formId); setGradeFilter(null); }}
+                  className={`flex items-center gap-2 rounded-xl border px-3 py-2 text-xs font-semibold transition-all ${
+                    isActive
+                      ? "border-[var(--primary)]/40 bg-[var(--primary)]/10 text-[var(--foreground)]"
+                      : "border-[var(--border)] bg-[var(--muted)]/30 text-[var(--muted-foreground)] hover:border-[var(--primary)]/20 hover:text-[var(--foreground)]"
+                  }`}
+                >
+                  <span className={`h-1.5 w-1.5 rounded-full ${isActive ? "bg-[var(--primary)]" : "bg-[var(--muted-foreground)]"}`} />
+                  <span className="max-w-[200px] truncate">{f.formName ?? f.formId}</span>
+                  <span className={`rounded-full px-1.5 py-0.5 text-[10px] tabular-nums ${isActive ? "bg-[var(--primary)]/15 text-[var(--primary)]" : "bg-[var(--muted)] text-[var(--muted-foreground)]"}`}>
+                    {f.total}
+                  </span>
+                  <span className="text-[10px] text-green-400">{mqlPct}% MQL</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {!hasData ? (
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] px-8 py-16 text-center">
           <Building2 className="mx-auto mb-4 h-10 w-10 text-[var(--muted-foreground)]/40" />
           <p className="text-base font-semibold text-[var(--foreground)]">Nenhum lead encontrado</p>
           <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-            Use o botão abaixo para importar os leads dos formulários Meta do Sou+ Icaraí.
+            Use o botão abaixo para importar os leads dos formulários Meta.
           </p>
           <button
             onClick={triggerLeadSync}
@@ -631,12 +684,16 @@ export function ImobLeadScoringPanel({
             );
           })()}
 
-          {/* Timing + Invest — Icaraí only */}
+          {/* Timing + Invest — Icaraí e Mirante */}
           {!isAcademy && (
             <div className="grid gap-5 md:grid-cols-2">
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Intenção de compra</p>
-                <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">Quando pretende adquirir?</h3>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
+                  {isMirante ? "Previsão de compra" : "Intenção de compra"}
+                </p>
+                <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
+                  {isMirante ? "Qual é sua previsão para compra?" : "Quando pretende adquirir?"}
+                </h3>
                 <div className="mt-4 space-y-3">
                   {timingDistribuicao.map((t) => {
                     const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
@@ -665,8 +722,12 @@ export function ImobLeadScoringPanel({
               </div>
 
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Capacidade financeira</p>
-                <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">Quanto pretende investir?</h3>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
+                  {isMirante ? "Interesse no produto" : "Capacidade financeira"}
+                </p>
+                <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
+                  {isMirante ? "Busca imóvel de alto padrão em Águas Claras?" : "Quanto pretende investir?"}
+                </h3>
                 <div className="mt-4 space-y-3">
                   {investDistribuicao.map((t) => {
                     const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
@@ -997,13 +1058,13 @@ export function ImobLeadScoringPanel({
             );
           })()}
 
-          {/* Formulários — clicáveis para filtrar leads */}
+          {/* Formulários — clicáveis para filtrar leads (espelho do seletor de topo) */}
           <div>
             <div className="flex items-center justify-between">
               <SectionHeader sub="Origem" title={isAcademy ? "Leads por Formulário" : "MQL por Formulário"} />
-              {activeFormId && (
+              {selectedFormId && (
                 <button
-                  onClick={() => setActiveFormId(null)}
+                  onClick={() => setSelectedFormId(null)}
                   className="text-xs text-[var(--primary)] underline underline-offset-2 hover:no-underline"
                 >
                   ✕ limpar filtro
@@ -1023,11 +1084,11 @@ export function ImobLeadScoringPanel({
                 </thead>
                 <tbody className="divide-y divide-[var(--border)]">
                   {formsRanking.slice(0, 8).map((f) => {
-                    const isActive = activeFormId === f.formId;
+                    const isActive = selectedFormId === f.formId;
                     return (
                       <tr
                         key={f.formId}
-                        onClick={() => setActiveFormId(isActive ? null : f.formId)}
+                        onClick={() => { setSelectedFormId(isActive ? null : f.formId); setGradeFilter(null); }}
                         className={`cursor-pointer transition-colors ${
                           isActive
                             ? "bg-[var(--primary)]/8"
@@ -1085,16 +1146,16 @@ export function ImobLeadScoringPanel({
                     <button onClick={() => setSelectedAdset(null)} className="ml-0.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
                   </span>
                 )}
-                {activeFormId && (
+                {selectedFormId && (
                   <span className="flex items-center gap-1.5 rounded-full border border-[var(--primary)]/30 bg-[var(--primary)]/8 px-2.5 py-1 text-[11px] font-medium text-[var(--foreground)]">
                     <span className="text-[var(--primary)]">Form:</span>
-                    <span className="max-w-[120px] truncate">{formsRanking.find((f) => f.formId === activeFormId)?.formName ?? activeFormId}</span>
-                    <button onClick={() => setActiveFormId(null)} className="ml-0.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
+                    <span className="max-w-[120px] truncate">{formsRanking.find((f) => f.formId === selectedFormId)?.formName ?? selectedFormId}</span>
+                    <button onClick={() => setSelectedFormId(null)} className="ml-0.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)]">✕</button>
                   </span>
                 )}
                 <span className="text-xs text-[var(--muted-foreground)]">
                   {displayedLeads.length} lead{displayedLeads.length !== 1 ? "s" : ""}
-                  {leadsTruncated && !selectedCamp && !selectedAdset && !activeFormId ? " (limitado a 500)" : ""}
+                  {leadsTruncated && !selectedCamp && !selectedAdset && !selectedFormId ? " (limitado a 500)" : ""}
                 </span>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { isAcademyAmericana } from "@/lib/clientProfiles";
+import { isAcademyAmericana, isMiranteIncorporadora } from "@/lib/clientProfiles";
 
 function parseDateOnly(value?: string | null): Date | null {
   if (!value) return null;
@@ -190,12 +190,57 @@ const GRADE_LABELS_ACADEMY: Record<ImobGrade, string> = {
   E: "Não qualificado — sem graduação",
 };
 
+// ─── Mirante Incorporadora scoring ───────────────────────────────────────────
+
+const ALTOPADRAO_KEYWORDS_MIRANTE = ["aguas claras", "alto padrao"];
+const PREVISAO_KEYWORDS_MIRANTE = ["previsao"];
+
+function calcGradeMirante(altopadrao: string | null, previsao: string | null): ImobGrade {
+  if (!altopadrao) return "E";
+  const q1 = norm(altopadrao);
+  const q2 = norm(previsao ?? "");
+  const isSim = q1.includes("sim");
+  if (!isSim) return "D";
+  if (q2.includes("ate") && q2.includes("3")) return "A";
+  if (q2.includes("3") && q2.includes("6")) return "B";
+  if (q2.includes("avali")) return "C";
+  return "E";
+}
+
+function prettyAltoPadraoMirante(raw: string | null): string {
+  if (!raw) return "Não informado";
+  const n = norm(raw);
+  if (n.includes("sim")) return "Sim";
+  if (n.includes("nao")) return "Não";
+  return raw;
+}
+
+function prettyPrevisaoMirante(raw: string | null): string {
+  if (!raw) return "Não informado";
+  const n = norm(raw);
+  if (n.includes("ate") && n.includes("3")) return "Até 3 meses";
+  if (n.includes("3") && n.includes("6")) return "3 a 6 meses";
+  if (n.includes("avali")) return "Ainda avaliando";
+  return raw;
+}
+
+const GRADE_LABELS_MIRANTE: Record<ImobGrade, string> = {
+  A: "MQL — Sim + Até 3 meses",
+  B: "Quente — Sim + 3 a 6 meses",
+  C: "Em avaliação — Sim + avaliando",
+  D: "Fora do perfil — Não",
+  E: "Sem dados",
+};
+
 // ─── Shared ──────────────────────────────────────────────────────────────────
 
 export type ImobGrade = "A" | "B" | "C" | "D" | "E";
 
-function isMQL(grade: ImobGrade): boolean {
-  return grade === "A" || grade === "B" || grade === "C";
+type ImobProfile = "academy" | "icarai" | "mirante";
+
+function isMQL(grade: ImobGrade, profile: ImobProfile): boolean {
+  if (profile === "icarai") return grade === "A" || grade === "B" || grade === "C";
+  return grade === "A";
 }
 
 export async function GET(
@@ -238,8 +283,9 @@ export async function GET(
   ]);
 
   const isAcademy = isAcademyAmericana(cliente);
-  const profile: "academy" | "icarai" = isAcademy ? "academy" : "icarai";
-  const gradeLabels = isAcademy ? GRADE_LABELS_ACADEMY : GRADE_LABELS_ICARAI;
+  const isMirante = isMiranteIncorporadora(cliente);
+  const profile: ImobProfile = isAcademy ? "academy" : isMirante ? "mirante" : "icarai";
+  const gradeLabels = isAcademy ? GRADE_LABELS_ACADEMY : isMirante ? GRADE_LABELS_MIRANTE : GRADE_LABELS_ICARAI;
 
   // Filtra leads de teste do Meta (valores contêm "<test lead:" ou "dummy data")
   const isTestLead = (lead: typeof allLeads[number]) => {
@@ -257,7 +303,8 @@ export async function GET(
   };
   const filteredLeads = allLeads.filter((l) => !isTestLead(l));
 
-  const scored = filteredLeads.map((lead) => {
+  // Score ALL leads (sem filtro de formId) — usado para formsRanking e seletor de form
+  const scoredAll = filteredLeads.map((lead) => {
     const raw = lead.rawFieldData;
 
     if (isAcademy) {
@@ -271,10 +318,25 @@ export async function GET(
         _invest: invest,
         _degree: degree,
         _grade: grade,
-        _isMql: isMQL(grade),
+        _isMql: isMQL(grade, profile),
         _timingLabel: prettyTimelineAcademy(timeline),
         _investLabel: prettyInvestAcademy(invest),
         _degreeLabel: prettyDegree(degree),
+      };
+    } else if (isMirante) {
+      const altopadrao = extractField(raw, ALTOPADRAO_KEYWORDS_MIRANTE);
+      const previsao = extractField(raw, PREVISAO_KEYWORDS_MIRANTE);
+      const grade = calcGradeMirante(altopadrao, previsao);
+      return {
+        ...lead,
+        _timing: previsao,
+        _invest: altopadrao,
+        _degree: null as string | null,
+        _grade: grade,
+        _isMql: isMQL(grade, profile),
+        _timingLabel: prettyPrevisaoMirante(previsao),
+        _investLabel: prettyAltoPadraoMirante(altopadrao),
+        _degreeLabel: null as string | null,
       };
     } else {
       const timing = extractField(raw, TIMING_KEYWORDS_ICARAI);
@@ -286,7 +348,7 @@ export async function GET(
         _invest: invest,
         _degree: null as string | null,
         _grade: grade,
-        _isMql: isMQL(grade),
+        _isMql: isMQL(grade, profile),
         _timingLabel: prettyTimingIcarai(timing),
         _investLabel: prettyInvestIcarai(invest),
         _degreeLabel: null as string | null,
@@ -294,11 +356,15 @@ export async function GET(
     }
   });
 
+  // Aplica filtro de formulário (server-side) — KPIs e distribuições refletem apenas o form selecionado
+  const formIdFilter = searchParams.get("formId");
+  const scored = formIdFilter ? scoredAll.filter((l) => l.formId === formIdFilter) : scoredAll;
+
   let filtered = scored;
   if (gradeFilter) filtered = filtered.filter((l) => l._grade === gradeFilter);
   if (campanhaFilter) filtered = filtered.filter((l) => l.campaignId === campanhaFilter);
 
-  const totalLeads = allLeads.length;
+  const totalLeads = scored.length;
   const totalMql = scored.filter((l) => l._isMql).length;
   const totalNonMql = totalLeads - totalMql;
 
@@ -325,8 +391,9 @@ export async function GET(
     }
   }
 
+  // formsRanking sempre de TODOS os leads (scoredAll), sem filtro de formId, para o seletor de formulário
   const formMap: Record<string, { name: string | null; total: number; mql: number }> = {};
-  for (const l of scored) {
+  for (const l of scoredAll) {
     const fid = l.formId ?? "unknown";
     if (!formMap[fid]) formMap[fid] = { name: l.formName, total: 0, mql: 0 };
     formMap[fid].total++;
@@ -539,16 +606,18 @@ export async function GET(
     grade: g,
     total: gradeCount[g],
     label: gradeLabels[g],
-    isMql: isMQL(g),
+    isMql: isMQL(g, profile),
   }));
 
   const ACADEMY_INVEST_ORDER = ["O quanto for necessário", "Mais de R$5k", "Até R$5k", "Menos de R$5k", "Não informado"];
   const ICARAI_INVEST_ORDER = ["Acima de R$ 1M", "R$ 700k – 1M", "R$ 500k – 700k", "R$ 300k – 500k", "Até R$ 300k", "Não informado"];
-  const investOrder = isAcademy ? ACADEMY_INVEST_ORDER : ICARAI_INVEST_ORDER;
+  const MIRANTE_INVEST_ORDER = ["Sim", "Não", "Não informado"];
+  const investOrder = isAcademy ? ACADEMY_INVEST_ORDER : isMirante ? MIRANTE_INVEST_ORDER : ICARAI_INVEST_ORDER;
 
   const ACADEMY_TIMING_ORDER = ["6 meses", "1 ano", "Avaliando", "Não informado"];
   const ICARAI_TIMING_ORDER = ["Agora", "3 a 6 meses", "Avaliando", "Estou avaliando", "Não informado"];
-  const timingOrder = isAcademy ? ACADEMY_TIMING_ORDER : ICARAI_TIMING_ORDER;
+  const MIRANTE_TIMING_ORDER = ["Até 3 meses", "3 a 6 meses", "Ainda avaliando", "Não informado"];
+  const timingOrder = isAcademy ? ACADEMY_TIMING_ORDER : isMirante ? MIRANTE_TIMING_ORDER : ICARAI_TIMING_ORDER;
 
   const DEGREE_ORDER = ["Mestre/Doutor", "Doutorando", "Mestrando", "Grad. Completa", "Graduando", "Sem graduação", "Não informado"];
 
@@ -577,6 +646,7 @@ export async function GET(
 
   return NextResponse.json({
     profile,
+    selectedFormId: formIdFilter ?? null,
     dataInicio: dataInicioStr,
     dataFim: dataFimStr,
     kpis: {
