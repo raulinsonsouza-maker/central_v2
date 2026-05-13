@@ -517,8 +517,8 @@ export async function GET(
       adsets: adsetEntries.map(([adsetId, a], adsetIdx) => {
         // Usa dados reais do webhook se disponíveis, senão distribuição proporcional
         const realAdset = mqlByAdset[adsetId];
-        const adsetMql = realAdset ? realAdset.mql : (adsetMqlDist![adsetIdx]);
-        const adsetScored = realAdset ? realAdset.total : (adsetScoredDist![adsetIdx]);
+        const adsetMql = realAdset ? realAdset.mql : (adsetMqlDist ? adsetMqlDist[adsetIdx] : 0);
+        const adsetScored = realAdset ? realAdset.total : (adsetScoredDist ? adsetScoredDist[adsetIdx] : 0);
 
         const adEntries = Object.entries(a.ads);
         const hasRealAdData = adEntries.some(([aid]) => (mqlByAd[aid]?.total ?? 0) > 0);
@@ -540,8 +540,8 @@ export async function GET(
           cpl: calcCpl(a.spend, adsetScored),
           ads: adEntries.map(([adId, ad], adIdx) => {
             const realAd = mqlByAd[adId];
-            const adMql = realAd ? realAd.mql : (adMqlDist![adIdx]);
-            const adScored = realAd ? realAd.total : (adScoredDist![adIdx]);
+            const adMql = realAd ? realAd.mql : (adMqlDist ? adMqlDist[adIdx] : 0);
+            const adScored = realAd ? realAd.total : (adScoredDist ? adScoredDist[adIdx] : 0);
             return {
               adId,
               adName: ad.adName,
