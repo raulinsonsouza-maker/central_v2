@@ -501,7 +501,7 @@ export function ImobLeadScoringPanel({
             <KpiCard
               title="Não qualificados"
               value={kpis.totalNonMql.toString()}
-              sub="sem graduação"
+              sub={isAcademy ? "sem graduação" : "leads não qualificados"}
               icon={Clock}
             />
           </div>
