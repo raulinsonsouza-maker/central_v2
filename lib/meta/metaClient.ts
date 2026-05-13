@@ -42,17 +42,21 @@ export interface MetaLeadsResponse {
 /**
  * Paginate through all results of a /{page_id}/leadgen_forms endpoint.
  */
-async function paginateLeadGenForms(firstUrl: string): Promise<MetaLeadGenForm[]> {
+async function paginateLeadGenForms(firstUrl: string): Promise<{ forms: MetaLeadGenForm[]; error?: string }> {
   const all: MetaLeadGenForm[] = [];
   let url: string | null = firstUrl;
   while (url) {
     const r = await fetch(url);
     const d = (await r.json()) as MetaLeadGenFormsResponse;
-    if (!r.ok || d.error) break;
+    if (!r.ok || d.error) {
+      const errMsg = d.error?.message ?? `HTTP ${r.status}`;
+      console.warn(`[paginateLeadGenForms] error code=${d.error?.code} msg=${errMsg}`);
+      return { forms: all, error: errMsg };
+    }
     if (d.data?.length) all.push(...d.data);
     url = d.paging?.next ?? null;
   }
-  return all;
+  return { forms: all };
 }
 
 /**
@@ -174,20 +178,54 @@ export async function fetchLeadGenForms(
   const pageIds: string[] = [...pageIdSet];
 
   if (pageIds.length > 0) {
+    // For each page, try to exchange the system user token for a Page Access Token.
+    // /{pageId}/leadgen_forms requires a Page Access Token (error 190 otherwise).
     const formSets = await Promise.all(
-      pageIds.map((pageId) =>
-        paginateLeadGenForms(
-          `${GRAPH_BASE}/${pageId}/leadgen_forms?${tokenParam}&fields=id,name,status,leads_count,created_time&limit=100`
-        )
-      )
+      pageIds.map(async (pageId) => {
+        // Try to get a Page Access Token first
+        let pageToken: string | null = null;
+        try {
+          const pageTokenRes = await fetch(
+            `${GRAPH_BASE}/${pageId}?fields=access_token&${tokenParam}`
+          );
+          const pageTokenData = (await pageTokenRes.json()) as {
+            access_token?: string;
+            error?: { message: string; code: number };
+          };
+          if (pageTokenRes.ok && !pageTokenData.error && pageTokenData.access_token) {
+            pageToken = pageTokenData.access_token;
+            console.log(`[fetchLeadGenForms] T2 got page token for pageId=${pageId}`);
+          } else {
+            console.log(`[fetchLeadGenForms] T2 no page token for pageId=${pageId}: code=${pageTokenData.error?.code} msg=${pageTokenData.error?.message}`);
+          }
+        } catch {
+          // ignore — fall through to using the user token
+        }
+        const tokenToUse = pageToken ?? token;
+        const tokenParamToUse = `access_token=${encodeURIComponent(tokenToUse)}`;
+        return paginateLeadGenForms(
+          `${GRAPH_BASE}/${pageId}/leadgen_forms?${tokenParamToUse}&fields=id,name,status,leads_count,created_time&limit=100`
+        );
+      })
     );
-    const allForms = formSets.flat();
-    const seen = new Set<string>();
-    return allForms.filter((f) => {
-      if (seen.has(f.id)) return false;
-      seen.add(f.id);
-      return true;
-    });
+    const allForms = formSets.flatMap((s) => s.forms);
+    const t2PageErrors = formSets.filter((s) => s.error).map((s) => s.error!);
+    console.log(`[fetchLeadGenForms] T2 page forms total=${allForms.length} pageErrors=${t2PageErrors.length} errors=[${t2PageErrors.join("; ")}]`);
+
+    if (allForms.length > 0) {
+      const seen = new Set<string>();
+      return allForms.filter((f) => {
+        if (seen.has(f.id)) return false;
+        seen.add(f.id);
+        return true;
+      });
+    }
+    // If we found pages but got 0 forms (likely a permission error on the Page),
+    // fall through to T3 (ads scan) which only needs ads_read/insights access.
+    if (t2PageErrors.length > 0) {
+      t2PermErr = t2PageErrors[0];
+    }
+    console.log(`[fetchLeadGenForms] T2 returned 0 forms — falling through to T3`);
   }
 
   // ── Tier 3: discover form IDs via ads' leadgen_id creative field ──────────
