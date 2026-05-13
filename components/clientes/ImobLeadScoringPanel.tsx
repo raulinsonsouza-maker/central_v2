@@ -516,8 +516,8 @@ export function ImobLeadScoringPanel({
               <>
                 {/* ── Performance geral — largura total (não Academy) ── */}
                 {!isAcademy && (
-                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 flex flex-col min-h-[360px]">
-                    <div className="flex flex-1 flex-col">
+                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+                    <div className="flex flex-col">
                       <div className="mb-4 flex items-center justify-between">
                         <div>
                           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Volume</p>
@@ -545,7 +545,7 @@ export function ImobLeadScoringPanel({
                           <p className="text-sm text-[var(--muted-foreground)]">Sem dados de mídia no período.</p>
                         </div>
                       ) : (
-                        <div className="flex-1">
+                        <div className="h-[280px]">
                           <ResponsiveContainer width="100%" height="100%">
                             <ComposedChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
                               <defs>
