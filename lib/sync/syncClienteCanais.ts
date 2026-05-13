@@ -61,7 +61,7 @@ export async function syncClienteCanais(clienteId: string): Promise<SyncClienteC
   ]);
 
   return {
-    ok: !googleAdsResult?.error && !metaResult?.error && !analyticsResult?.error && !metaLeadsResult?.error,
+    ok: !googleAdsResult?.error && !metaResult?.error && !analyticsResult?.error,
     googleAds: googleAdsResult
       ? {
           ok: !googleAdsResult.error,
