@@ -13,6 +13,7 @@ import {
   Cell,
   ComposedChart,
   Line,
+  Legend,
 } from "recharts";
 import { Users, Target, TrendingUp, Zap, Building2, Clock, Wallet, RefreshCw, ChevronRight, ChevronUp, ChevronDown, ArrowLeft, BarChart3, Eye } from "lucide-react";
 import type { DateFilter } from "@/app/clientes/[id]/ClienteDashboard";
@@ -508,8 +509,23 @@ export function ImobLeadScoringPanel({
                     {isAcademy ? "Taxa de qualificados" : "Taxa MQL"}
                   </h3>
 
-                  <div className="mt-5 flex items-center gap-6">
-                    {/* SVG donut ring */}
+                  <div className="mt-5 flex items-center justify-between gap-6">
+                    {/* Números */}
+                    <div className="space-y-3">
+                      <div>
+                        <p className="text-3xl font-black tabular-nums text-green-400">{kpis.totalMql}</p>
+                        <p className="text-[11px] text-[var(--muted-foreground)]">
+                          {isAcademy ? "qualificados" : "MQL"}
+                        </p>
+                      </div>
+                      <div className="h-px w-full bg-[var(--border)]" />
+                      <div>
+                        <p className="text-xl font-bold tabular-nums text-[var(--muted-foreground)]">{kpis.totalNonMql}</p>
+                        <p className="text-[11px] text-[var(--muted-foreground)]">não qualificados</p>
+                      </div>
+                    </div>
+
+                    {/* SVG donut ring — lado direito */}
                     <div className="relative shrink-0">
                       <svg width="104" height="104" viewBox="0 0 104 104">
                         <circle cx="52" cy="52" r={ringR} fill="none" stroke="var(--border)" strokeWidth="11" />
@@ -527,21 +543,6 @@ export function ImobLeadScoringPanel({
                         <span className="text-xl font-black tabular-nums text-[var(--foreground)]">
                           {mqlPct.toFixed(0)}%
                         </span>
-                      </div>
-                    </div>
-
-                    {/* Números */}
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-3xl font-black tabular-nums text-green-400">{kpis.totalMql}</p>
-                        <p className="text-[11px] text-[var(--muted-foreground)]">
-                          {isAcademy ? "qualificados" : "MQL"}
-                        </p>
-                      </div>
-                      <div className="h-px w-full bg-[var(--border)]" />
-                      <div>
-                        <p className="text-xl font-bold tabular-nums text-[var(--muted-foreground)]">{kpis.totalNonMql}</p>
-                        <p className="text-[11px] text-[var(--muted-foreground)]">não qualificados</p>
                       </div>
                     </div>
                   </div>
@@ -666,13 +667,32 @@ export function ImobLeadScoringPanel({
                           </div>
                         ) : (
                           <ResponsiveContainer width="100%" height="100%">
-                            <ComposedChart data={periodoSeries.map((p) => ({ ...p, label: formatPeriodLabel(p.periodo) }))} margin={{ top: 4, right: 8, left: -8, bottom: 0 }}>
-                              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" opacity={0.4} />
-                              <XAxis dataKey="label" tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} />
-                              <YAxis tick={{ fontSize: 10, fill: "var(--muted-foreground)" }} axisLine={false} tickLine={false} allowDecimals={false} />
-                              <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [v, name === "total" ? "Total" : "MQL"]} />
-                              <Bar dataKey="total" fill="var(--border)" radius={[3, 3, 0, 0]} name="Total" opacity={0.6} />
-                              <Bar dataKey="mql" fill="#22c55e" radius={[3, 3, 0, 0]} name="MQL" />
+                            <ComposedChart
+                              data={periodoSeries.map((p) => ({ ...p, label: formatPeriodLabel(p.periodo), Leads: p.total, MQL: p.mql }))}
+                              margin={{ top: 4, right: 16, left: -8, bottom: 0 }}
+                            >
+                              <defs>
+                                <linearGradient id="imobBarGrad" x1="0" y1="0" x2="0" y2="1">
+                                  <stop offset="0%" stopColor="var(--muted-foreground)" stopOpacity={0.25} />
+                                  <stop offset="100%" stopColor="var(--muted)" stopOpacity={0.8} />
+                                </linearGradient>
+                              </defs>
+                              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.5} />
+                              <XAxis dataKey="label" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
+                              <YAxis yAxisId="left" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
+                              <YAxis yAxisId="right" orientation="right" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
+                              <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [v, name]} />
+                              <Legend iconType="circle" iconSize={8} wrapperStyle={{ paddingTop: 10, fontSize: 12 }} />
+                              <Bar yAxisId="left" dataKey="Leads" fill="url(#imobBarGrad)" radius={[6, 6, 0, 0]} />
+                              <Line
+                                yAxisId="right"
+                                type="monotone"
+                                dataKey="MQL"
+                                stroke="var(--primary)"
+                                strokeWidth={2.5}
+                                dot={{ fill: "var(--primary)", r: 4, strokeWidth: 0 }}
+                                activeDot={{ r: 6, strokeWidth: 0, fill: "var(--primary)" }}
+                              />
                             </ComposedChart>
                           </ResponsiveContainer>
                         )}
