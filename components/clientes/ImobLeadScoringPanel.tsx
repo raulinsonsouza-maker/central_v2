@@ -513,162 +513,10 @@ export function ImobLeadScoringPanel({
             const mqlPct = kpis.taxaMql;
             const fill = (mqlPct / 100) * ringC;
             return (
-              <div className="grid gap-5 lg:grid-cols-5">
-                {/* Lado esquerdo: anel + stats + (Icaraí: grade chips) */}
-                <div className="lg:col-span-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Qualificação</p>
-                  <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">
-                    {isAcademy ? "Taxa de qualificados" : "Taxa MQL"}
-                  </h3>
-
-                  <div className="mt-5 flex items-center justify-between gap-6">
-                    {/* Números */}
-                    <div className="space-y-3">
-                      <div>
-                        <p className="text-3xl font-black tabular-nums text-green-400">{kpis.totalMql}</p>
-                        <p className="text-[11px] text-[var(--muted-foreground)]">
-                          {isAcademy ? "qualificados" : "MQL"}
-                        </p>
-                      </div>
-                      <div className="h-px w-full bg-[var(--border)]" />
-                      <div>
-                        <p className="text-xl font-bold tabular-nums text-[var(--muted-foreground)]">{kpis.totalNonMql}</p>
-                        <p className="text-[11px] text-[var(--muted-foreground)]">não qualificados</p>
-                      </div>
-                    </div>
-
-                    {/* SVG donut ring — lado direito */}
-                    <div className="relative shrink-0">
-                      <svg width="104" height="104" viewBox="0 0 104 104">
-                        <circle cx="52" cy="52" r={ringR} fill="none" stroke="var(--border)" strokeWidth="11" />
-                        <circle
-                          cx="52" cy="52" r={ringR} fill="none"
-                          stroke={mqlPct >= 70 ? "#22c55e" : mqlPct >= 40 ? "#f59e0b" : "#ef4444"}
-                          strokeWidth="11"
-                          strokeDasharray={`${fill} ${ringC}`}
-                          strokeLinecap="round"
-                          transform="rotate(-90 52 52)"
-                          style={{ transition: "stroke-dasharray 0.6s ease" }}
-                        />
-                      </svg>
-                      <div className="absolute inset-0 flex flex-col items-center justify-center">
-                        <span className="text-xl font-black tabular-nums text-[var(--foreground)]">
-                          {mqlPct.toFixed(0)}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Icaraí: grade chips clicáveis */}
-                  {!isAcademy && (
-                    <div className="mt-5 space-y-2">
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Filtrar por grau</p>
-                      <div className="flex flex-wrap gap-2">
-                        {gradeDistribuicao.filter((g) => g.total > 0).map((g) => {
-                          const isActive = gradeFilter === g.grade;
-                          const color = GRADE_COLORS[g.grade] ?? "#94a3b8";
-                          return (
-                            <button
-                              key={g.grade}
-                              onClick={() => setGradeFilter(isActive ? null : g.grade)}
-                              className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold transition-all ${
-                                isActive
-                                  ? "border-[var(--primary)]/40 bg-[var(--primary)]/10 text-[var(--foreground)]"
-                                  : "border-[var(--border)] bg-[var(--muted)]/40 text-[var(--muted-foreground)] hover:border-[var(--primary)]/20 hover:text-[var(--foreground)]"
-                              }`}
-                            >
-                              <span
-                                className="inline-flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-black text-white"
-                                style={{ backgroundColor: color }}
-                              >
-                                {g.grade}
-                              </span>
-                              {g.total}
-                              {g.isMql && <span className="text-green-400">●</span>}
-                            </button>
-                          );
-                        })}
-                        {gradeFilter && (
-                          <button
-                            onClick={() => setGradeFilter(null)}
-                            className="rounded-full border border-[var(--primary)]/30 px-2 py-1 text-[10px] text-[var(--primary)] hover:bg-[var(--primary)]/8 transition-colors"
-                          >
-                            ✕ limpar
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Academy: dois pills Qualificado/Não qualificado clicáveis */}
-                  {isAcademy && (
-                    <div className="mt-5 flex gap-2">
-                      {[
-                        { grade: "A", label: "Qualificados", color: "#22c55e", count: kpis.totalMql },
-                        { grade: "E", label: "Não qualificados", color: "#ef4444", count: kpis.totalNonMql },
-                      ].map(({ grade, label, color, count }) => {
-                        const isActive = gradeFilter === grade;
-                        return (
-                          <button
-                            key={grade}
-                            onClick={() => setGradeFilter(isActive ? null : grade)}
-                            className={`flex-1 rounded-xl border p-3 text-left transition-all ${
-                              isActive
-                                ? "border-[var(--primary)]/40 bg-[var(--primary)]/8"
-                                : "border-[var(--border)] bg-[var(--muted)]/30 hover:border-[var(--primary)]/20"
-                            }`}
-                          >
-                            <div className="flex items-center gap-1.5">
-                              <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
-                              <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">{label}</span>
-                            </div>
-                            <p className="mt-1 text-2xl font-black tabular-nums" style={{ color }}>{count}</p>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-                {/* Lado direito: Academy = barras de formação; Icaraí = evolução temporal */}
-                <div className="lg:col-span-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 flex flex-col min-h-[360px]">
-                  {isAcademy ? (
-                    <>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Critério de qualificação</p>
-                      <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">Formação acadêmica dos leads</h3>
-                      {(degreeDistribuicao ?? []).length === 0 ? (
-                        <p className="mt-6 text-sm text-[var(--muted-foreground)]">Sem dados de formação no período.</p>
-                      ) : (
-                        <div className="mt-5 space-y-3.5">
-                          {(degreeDistribuicao ?? []).filter((d) => d.total > 0).map((d) => {
-                            const pct = kpis.totalLeads > 0 ? (d.total / kpis.totalLeads) * 100 : 0;
-                            const color = DEGREE_COLORS[d.degree] ?? "#94a3b8";
-                            const maxCount = Math.max(...(degreeDistribuicao ?? []).map((x) => x.total), 1);
-                            return (
-                              <div key={d.degree}>
-                                <div className="mb-1 flex items-center justify-between">
-                                  <div className="flex items-center gap-2">
-                                    <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
-                                    <span className="text-[12px] font-medium text-[var(--foreground)]">{d.degree}</span>
-                                  </div>
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{d.total}</span>
-                                    <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
-                                  </div>
-                                </div>
-                                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
-                                  <div
-                                    className="h-full rounded-full transition-all duration-500"
-                                    style={{ width: `${(d.total / maxCount) * 100}%`, backgroundColor: color }}
-                                  />
-                                </div>
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-                    </>
-                  ) : (
+              <>
+                {/* ── Performance geral — largura total (não Academy) ── */}
+                {!isAcademy && (
+                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 flex flex-col min-h-[360px]">
                     <div className="flex flex-1 flex-col">
                       <div className="mb-4 flex items-center justify-between">
                         <div>
@@ -753,86 +601,242 @@ export function ImobLeadScoringPanel({
                         </div>
                       )}
                     </div>
-                  )}
+                  </div>
+                )}
+
+                {/* ── Taxa MQL | Formação/Previsão — grid 2 colunas ── */}
+                <div className={`grid gap-5 ${isAcademy ? "lg:grid-cols-5" : "md:grid-cols-2"}`}>
+                  {/* Coluna esquerda: anel Taxa MQL + stats + chips */}
+                  <div className={`${isAcademy ? "lg:col-span-2 " : ""}rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6`}>
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Qualificação</p>
+                    <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">
+                      {isAcademy ? "Taxa de qualificados" : "Taxa MQL"}
+                    </h3>
+
+                    <div className="mt-5 flex items-center justify-between gap-6">
+                      {/* Números */}
+                      <div className="space-y-3">
+                        <div>
+                          <p className="text-3xl font-black tabular-nums text-green-400">{kpis.totalMql}</p>
+                          <p className="text-[11px] text-[var(--muted-foreground)]">
+                            {isAcademy ? "qualificados" : "MQL"}
+                          </p>
+                        </div>
+                        <div className="h-px w-full bg-[var(--border)]" />
+                        <div>
+                          <p className="text-xl font-bold tabular-nums text-[var(--muted-foreground)]">{kpis.totalNonMql}</p>
+                          <p className="text-[11px] text-[var(--muted-foreground)]">não qualificados</p>
+                        </div>
+                      </div>
+
+                      {/* SVG donut ring */}
+                      <div className="relative shrink-0">
+                        <svg width="104" height="104" viewBox="0 0 104 104">
+                          <circle cx="52" cy="52" r={ringR} fill="none" stroke="var(--border)" strokeWidth="11" />
+                          <circle
+                            cx="52" cy="52" r={ringR} fill="none"
+                            stroke={mqlPct >= 70 ? "#22c55e" : mqlPct >= 40 ? "#f59e0b" : "#ef4444"}
+                            strokeWidth="11"
+                            strokeDasharray={`${fill} ${ringC}`}
+                            strokeLinecap="round"
+                            transform="rotate(-90 52 52)"
+                            style={{ transition: "stroke-dasharray 0.6s ease" }}
+                          />
+                        </svg>
+                        <div className="absolute inset-0 flex flex-col items-center justify-center">
+                          <span className="text-xl font-black tabular-nums text-[var(--foreground)]">
+                            {mqlPct.toFixed(0)}%
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Icaraí: grade chips clicáveis */}
+                    {!isAcademy && (
+                      <div className="mt-5 space-y-2">
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Filtrar por grau</p>
+                        <div className="flex flex-wrap gap-2">
+                          {gradeDistribuicao.filter((g) => g.total > 0).map((g) => {
+                            const isActive = gradeFilter === g.grade;
+                            const color = GRADE_COLORS[g.grade] ?? "#94a3b8";
+                            return (
+                              <button
+                                key={g.grade}
+                                onClick={() => setGradeFilter(isActive ? null : g.grade)}
+                                className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-[11px] font-semibold transition-all ${
+                                  isActive
+                                    ? "border-[var(--primary)]/40 bg-[var(--primary)]/10 text-[var(--foreground)]"
+                                    : "border-[var(--border)] bg-[var(--muted)]/40 text-[var(--muted-foreground)] hover:border-[var(--primary)]/20 hover:text-[var(--foreground)]"
+                                }`}
+                              >
+                                <span
+                                  className="inline-flex h-4 w-4 items-center justify-center rounded-full text-[9px] font-black text-white"
+                                  style={{ backgroundColor: color }}
+                                >
+                                  {g.grade}
+                                </span>
+                                {g.total}
+                                {g.isMql && <span className="text-green-400">●</span>}
+                              </button>
+                            );
+                          })}
+                          {gradeFilter && (
+                            <button
+                              onClick={() => setGradeFilter(null)}
+                              className="rounded-full border border-[var(--primary)]/30 px-2 py-1 text-[10px] text-[var(--primary)] hover:bg-[var(--primary)]/8 transition-colors"
+                            >
+                              ✕ limpar
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Academy: dois pills Qualificado/Não qualificado clicáveis */}
+                    {isAcademy && (
+                      <div className="mt-5 flex gap-2">
+                        {[
+                          { grade: "A", label: "Qualificados", color: "#22c55e", count: kpis.totalMql },
+                          { grade: "E", label: "Não qualificados", color: "#ef4444", count: kpis.totalNonMql },
+                        ].map(({ grade, label, color, count }) => {
+                          const isActive = gradeFilter === grade;
+                          return (
+                            <button
+                              key={grade}
+                              onClick={() => setGradeFilter(isActive ? null : grade)}
+                              className={`flex-1 rounded-xl border p-3 text-left transition-all ${
+                                isActive
+                                  ? "border-[var(--primary)]/40 bg-[var(--primary)]/8"
+                                  : "border-[var(--border)] bg-[var(--muted)]/30 hover:border-[var(--primary)]/20"
+                              }`}
+                            >
+                              <div className="flex items-center gap-1.5">
+                                <span className="h-2 w-2 rounded-full" style={{ backgroundColor: color }} />
+                                <span className="text-[10px] font-semibold uppercase tracking-wide text-[var(--muted-foreground)]">{label}</span>
+                              </div>
+                              <p className="mt-1 text-2xl font-black tabular-nums" style={{ color }}>{count}</p>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Coluna direita: Academy = Formação acadêmica; outros = Previsão/Intenção de compra */}
+                  <div className={`${isAcademy ? "lg:col-span-3 min-h-[360px] " : ""}rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 flex flex-col`}>
+                    {isAcademy ? (
+                      <>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Critério de qualificação</p>
+                        <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">Formação acadêmica dos leads</h3>
+                        {(degreeDistribuicao ?? []).length === 0 ? (
+                          <p className="mt-6 text-sm text-[var(--muted-foreground)]">Sem dados de formação no período.</p>
+                        ) : (
+                          <div className="mt-5 space-y-3.5">
+                            {(degreeDistribuicao ?? []).filter((d) => d.total > 0).map((d) => {
+                              const pct = kpis.totalLeads > 0 ? (d.total / kpis.totalLeads) * 100 : 0;
+                              const color = DEGREE_COLORS[d.degree] ?? "#94a3b8";
+                              const maxCount = Math.max(...(degreeDistribuicao ?? []).map((x) => x.total), 1);
+                              return (
+                                <div key={d.degree}>
+                                  <div className="mb-1 flex items-center justify-between">
+                                    <div className="flex items-center gap-2">
+                                      <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                                      <span className="text-[12px] font-medium text-[var(--foreground)]">{d.degree}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{d.total}</span>
+                                      <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
+                                    </div>
+                                  </div>
+                                  <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
+                                    <div
+                                      className="h-full rounded-full transition-all duration-500"
+                                      style={{ width: `${(d.total / maxCount) * 100}%`, backgroundColor: color }}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
+                          {isMirante ? "Previsão de compra" : "Intenção de compra"}
+                        </p>
+                        <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
+                          {isMirante ? "Qual é sua previsão para compra?" : "Quando pretende adquirir?"}
+                        </h3>
+                        <div className="mt-4 space-y-3">
+                          {timingDistribuicao.map((t) => {
+                            const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
+                            const color = TIMING_COLORS[t.timing] ?? "#94a3b8";
+                            const maxCount = Math.max(...timingDistribuicao.map((x) => x.total), 1);
+                            return (
+                              <div key={t.timing}>
+                                <div className="mb-1 flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                                    <span className="text-[12px] font-medium text-[var(--foreground)]">{t.timing}</span>
+                                  </div>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{t.total}</span>
+                                    <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
+                                  </div>
+                                </div>
+                                <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
+                                  <div className="h-full rounded-full transition-all" style={{ width: `${(t.total / maxCount) * 100}%`, backgroundColor: color }} />
+                                </div>
+                              </div>
+                            );
+                          })}
+                          {timingDistribuicao.length === 0 && <p className="text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>}
+                        </div>
+                      </>
+                    )}
+                  </div>
                 </div>
-              </div>
+
+                {/* Capacidade financeira — standalone para Icaraí (não Mirante, não Academy) */}
+                {!isAcademy && !isMirante && (
+                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
+                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
+                      Capacidade financeira
+                    </p>
+                    <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
+                      Quanto pretende investir?
+                    </h3>
+                    <div className="mt-4 space-y-3">
+                      {investDistribuicao.map((t) => {
+                        const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
+                        const color = INVEST_COLORS[t.invest] ?? "#94a3b8";
+                        const maxCount = Math.max(...investDistribuicao.map((x) => x.total), 1);
+                        return (
+                          <div key={t.invest}>
+                            <div className="mb-1 flex items-center justify-between">
+                              <div className="flex items-center gap-2">
+                                <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
+                                <span className="text-[12px] font-medium text-[var(--foreground)]">{t.invest}</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{t.total}</span>
+                                <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
+                              </div>
+                            </div>
+                            <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
+                              <div className="h-full rounded-full transition-all" style={{ width: `${(t.total / maxCount) * 100}%`, backgroundColor: color }} />
+                            </div>
+                          </div>
+                        );
+                      })}
+                      {investDistribuicao.length === 0 && <p className="text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>}
+                    </div>
+                  </div>
+                )}
+              </>
             );
           })()}
-
-          {/* Timing + Invest — Icaraí e Mirante */}
-          {!isAcademy && (
-            <div className="grid gap-5 md:grid-cols-2">
-              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
-                  {isMirante ? "Previsão de compra" : "Intenção de compra"}
-                </p>
-                <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
-                  {isMirante ? "Qual é sua previsão para compra?" : "Quando pretende adquirir?"}
-                </h3>
-                <div className="mt-4 space-y-3">
-                  {timingDistribuicao.map((t) => {
-                    const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
-                    const color = TIMING_COLORS[t.timing] ?? "#94a3b8";
-                    const maxCount = Math.max(...timingDistribuicao.map((x) => x.total), 1);
-                    return (
-                      <div key={t.timing}>
-                        <div className="mb-1 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
-                            <span className="text-[12px] font-medium text-[var(--foreground)]">{t.timing}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{t.total}</span>
-                            <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
-                          </div>
-                        </div>
-                        <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
-                          <div className="h-full rounded-full transition-all" style={{ width: `${(t.total / maxCount) * 100}%`, backgroundColor: color }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {timingDistribuicao.length === 0 && <p className="text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>}
-                </div>
-              </div>
-
-              {!isMirante && (
-              <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
-                  Capacidade financeira
-                </p>
-                <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
-                  Quanto pretende investir?
-                </h3>
-                <div className="mt-4 space-y-3">
-                  {investDistribuicao.map((t) => {
-                    const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
-                    const color = INVEST_COLORS[t.invest] ?? "#94a3b8";
-                    const maxCount = Math.max(...investDistribuicao.map((x) => x.total), 1);
-                    return (
-                      <div key={t.invest}>
-                        <div className="mb-1 flex items-center justify-between">
-                          <div className="flex items-center gap-2">
-                            <span className="h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: color }} />
-                            <span className="text-[12px] font-medium text-[var(--foreground)]">{t.invest}</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-[12px] font-bold tabular-nums text-[var(--foreground)]">{t.total}</span>
-                            <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
-                          </div>
-                        </div>
-                        <div className="h-2 w-full overflow-hidden rounded-full bg-[var(--muted)]">
-                          <div className="h-full rounded-full transition-all" style={{ width: `${(t.total / maxCount) * 100}%`, backgroundColor: color }} />
-                        </div>
-                      </div>
-                    );
-                  })}
-                  {investDistribuicao.length === 0 && <p className="text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>}
-                </div>
-              </div>
-              )}
-            </div>
-          )}
 
           {/* ── Campanhas ── */}
           <CampanhasPanel clienteId={clienteId} dateFilter={dateFilter} canal="meta" />
