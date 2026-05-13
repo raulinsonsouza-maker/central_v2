@@ -721,12 +721,13 @@ export function ImobLeadScoringPanel({
                 </div>
               </div>
 
+              {!isMirante && (
               <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
                 <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
-                  {isMirante ? "Interesse no produto" : "Capacidade financeira"}
+                  Capacidade financeira
                 </p>
                 <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
-                  {isMirante ? "Busca imóvel de alto padrão em Águas Claras?" : "Quanto pretende investir?"}
+                  Quanto pretende investir?
                 </h3>
                 <div className="mt-4 space-y-3">
                   {investDistribuicao.map((t) => {
@@ -754,6 +755,7 @@ export function ImobLeadScoringPanel({
                   {investDistribuicao.length === 0 && <p className="text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>}
                 </div>
               </div>
+              )}
             </div>
           )}
 

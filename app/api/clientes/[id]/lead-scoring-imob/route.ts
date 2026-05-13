@@ -192,27 +192,15 @@ const GRADE_LABELS_ACADEMY: Record<ImobGrade, string> = {
 
 // ─── Mirante Incorporadora scoring ───────────────────────────────────────────
 
-const ALTOPADRAO_KEYWORDS_MIRANTE = ["aguas claras", "alto padrao"];
 const PREVISAO_KEYWORDS_MIRANTE = ["previsao"];
 
-function calcGradeMirante(altopadrao: string | null, previsao: string | null): ImobGrade {
-  if (!altopadrao) return "E";
-  const q1 = norm(altopadrao);
-  const q2 = norm(previsao ?? "");
-  const isSim = q1.includes("sim");
-  if (!isSim) return "D";
-  if (q2.includes("ate") && q2.includes("3")) return "A";
-  if (q2.includes("3") && q2.includes("6")) return "B";
-  if (q2.includes("avali")) return "C";
+function calcGradeMirante(previsao: string | null): ImobGrade {
+  if (!previsao) return "E";
+  const q = norm(previsao);
+  if (q.includes("ate") && q.includes("3")) return "A";
+  if (q.includes("3") && q.includes("6")) return "B";
+  if (q.includes("avali")) return "C";
   return "E";
-}
-
-function prettyAltoPadraoMirante(raw: string | null): string {
-  if (!raw) return "Não informado";
-  const n = norm(raw);
-  if (n.includes("sim")) return "Sim";
-  if (n.includes("nao")) return "Não";
-  return raw;
 }
 
 function prettyPrevisaoMirante(raw: string | null): string {
@@ -225,10 +213,10 @@ function prettyPrevisaoMirante(raw: string | null): string {
 }
 
 const GRADE_LABELS_MIRANTE: Record<ImobGrade, string> = {
-  A: "MQL — Sim + Até 3 meses",
-  B: "Quente — Sim + 3 a 6 meses",
-  C: "Em avaliação — Sim + avaliando",
-  D: "Fora do perfil — Não",
+  A: "MQL — Até 3 meses",
+  B: "Quente — 3 a 6 meses",
+  C: "Em avaliação",
+  D: "Fora do perfil",
   E: "Sem dados",
 };
 
@@ -324,18 +312,17 @@ export async function GET(
         _degreeLabel: prettyDegree(degree),
       };
     } else if (isMirante) {
-      const altopadrao = extractField(raw, ALTOPADRAO_KEYWORDS_MIRANTE);
       const previsao = extractField(raw, PREVISAO_KEYWORDS_MIRANTE);
-      const grade = calcGradeMirante(altopadrao, previsao);
+      const grade = calcGradeMirante(previsao);
       return {
         ...lead,
         _timing: previsao,
-        _invest: altopadrao,
+        _invest: null as string | null,
         _degree: null as string | null,
         _grade: grade,
         _isMql: isMQL(grade, profile),
         _timingLabel: prettyPrevisaoMirante(previsao),
-        _investLabel: prettyAltoPadraoMirante(altopadrao),
+        _investLabel: null as string | null,
         _degreeLabel: null as string | null,
       };
     } else {
