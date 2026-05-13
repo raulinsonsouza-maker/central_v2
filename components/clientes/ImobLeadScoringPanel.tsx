@@ -349,10 +349,15 @@ export function ImobLeadScoringPanel({
   const isAcademy = profile === "academy";
   const isMirante = profile === "mirante";
   const isDiario = chartAgrupamento === "diario";
+  // Build MQL lookup: formatted period label → mql count (from lead-scoring API)
+  const mqlByPeriod = new Map<string, number>(
+    periodoSeries.map((p) => [formatPeriodLabel(p.periodo), p.mql])
+  );
   const chartData = (midia?.series ?? []).map((s) => ({
     periodo: s.periodo,
     Investimento: Math.round(s.investimento * 100) / 100,
     Leads: s.leads,
+    MQL: mqlByPeriod.get(s.periodo) ?? 0,
     CPL: s.leads > 0 ? Math.round((s.investimento / s.leads) * 100) / 100 : 0,
   }));
 
@@ -626,7 +631,7 @@ export function ImobLeadScoringPanel({
                 </div>
 
                 {/* Lado direito: Academy = barras de formação; Icaraí = evolução temporal */}
-                <div className="lg:col-span-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6">
+                <div className="lg:col-span-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 flex flex-col min-h-[360px]">
                   {isAcademy ? (
                     <>
                       <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Critério de qualificação</p>
@@ -664,8 +669,8 @@ export function ImobLeadScoringPanel({
                       )}
                     </>
                   ) : (
-                    <div className="flex h-full flex-col">
-                      <div className="mb-3 flex items-center justify-between">
+                    <div className="flex flex-1 flex-col">
+                      <div className="mb-4 flex items-center justify-between">
                         <div>
                           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Volume</p>
                           <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">Performance geral</h3>
@@ -688,11 +693,13 @@ export function ImobLeadScoringPanel({
                         )}
                       </div>
                       {chartData.length === 0 ? (
-                        <p className="text-sm text-[var(--muted-foreground)]">Sem dados de mídia no período.</p>
+                        <div className="flex flex-1 items-center justify-center">
+                          <p className="text-sm text-[var(--muted-foreground)]">Sem dados de mídia no período.</p>
+                        </div>
                       ) : (
-                        <div className="flex-1 min-h-[200px]">
+                        <div className="flex-1">
                           <ResponsiveContainer width="100%" height="100%">
-                            <ComposedChart data={chartData}>
+                            <ComposedChart data={chartData} margin={{ top: 4, right: 8, left: 0, bottom: 0 }}>
                               <defs>
                                 <linearGradient id="imobBarGrad" x1="0" y1="0" x2="0" y2="1">
                                   <stop offset="0%" stopColor="var(--muted-foreground)" stopOpacity={0.25} />
@@ -711,15 +718,14 @@ export function ImobLeadScoringPanel({
                                 textAnchor={isDiario && chartData.length > 14 ? "end" : "middle"}
                                 height={isDiario && chartData.length > 14 ? 50 : 30}
                               />
-                              <YAxis yAxisId="left" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
-                              <YAxis yAxisId="right" orientation="right" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
+                              <YAxis yAxisId="left" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} width={55} tickFormatter={(v) => `R$${(v / 1000).toFixed(0)}k`} />
+                              <YAxis yAxisId="right" orientation="right" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} width={28} />
                               <Tooltip
                                 {...tooltipStyle}
-                                formatter={(value: number, name: string) =>
-                                  name === "Investimento"
-                                    ? [`R$\u00a0${value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, name]
-                                    : [value, name]
-                                }
+                                formatter={(value: number, name: string) => {
+                                  if (name === "Investimento") return [`R$\u00a0${value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, name];
+                                  return [value, name];
+                                }}
                               />
                               <Legend iconType="circle" iconSize={8} wrapperStyle={{ paddingTop: 10, fontSize: 12 }} />
                               <Bar yAxisId="left" dataKey="Investimento" fill="url(#imobBarGrad)" radius={[6, 6, 0, 0]} />
@@ -731,6 +737,16 @@ export function ImobLeadScoringPanel({
                                 strokeWidth={2.5}
                                 dot={{ fill: "var(--primary)", r: 4, strokeWidth: 0 }}
                                 activeDot={{ r: 6, strokeWidth: 0, fill: "var(--primary)" }}
+                              />
+                              <Line
+                                yAxisId="right"
+                                type="monotone"
+                                dataKey="MQL"
+                                stroke="#22c55e"
+                                strokeWidth={2}
+                                strokeDasharray="5 3"
+                                dot={{ fill: "#22c55e", r: 3, strokeWidth: 0 }}
+                                activeDot={{ r: 5, strokeWidth: 0, fill: "#22c55e" }}
                               />
                             </ComposedChart>
                           </ResponsiveContainer>
