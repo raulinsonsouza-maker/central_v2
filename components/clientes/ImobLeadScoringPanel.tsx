@@ -17,6 +17,7 @@ import {
 } from "recharts";
 import { Users, Target, TrendingUp, Zap, Building2, Clock, Wallet, RefreshCw, ChevronRight, ChevronUp, ChevronDown, ArrowLeft, BarChart3, Eye } from "lucide-react";
 import type { DateFilter } from "@/app/clientes/[id]/ClienteDashboard";
+import { CampanhasPanel } from "@/components/clientes/CampanhasPanel";
 
 const tooltipStyle = {
   contentStyle: {
@@ -262,10 +263,16 @@ export function ImobLeadScoringPanel({
   clienteId,
   dateFilter,
   clienteNome,
+  midia,
+  chartAgrupamento,
+  onAgrupamentoChange,
 }: {
   clienteId: string;
   dateFilter: DateFilter;
   clienteNome?: string;
+  midia?: { series: Array<{ periodo: string; investimento: number; leads: number }> };
+  chartAgrupamento?: "diario" | "semanal" | "mensal";
+  onAgrupamentoChange?: (ag: "diario" | "semanal") => void;
 }) {
   const [agrupamento, setAgrupamento] = React.useState<"diario" | "semanal">("semanal");
   const [gradeFilter, setGradeFilter] = React.useState<string | null>(null);
@@ -341,6 +348,13 @@ export function ImobLeadScoringPanel({
   const { profile, kpis, gradeDistribuicao, timingDistribuicao, investDistribuicao, degreeDistribuicao, campanhasHierarchy, formsRanking, periodoSeries, leads, leadsTruncated } = data;
   const isAcademy = profile === "academy";
   const isMirante = profile === "mirante";
+  const isDiario = chartAgrupamento === "diario";
+  const chartData = (midia?.series ?? []).map((s) => ({
+    periodo: s.periodo,
+    Investimento: Math.round(s.investimento * 100) / 100,
+    Leads: s.leads,
+    CPL: s.leads > 0 ? Math.round((s.investimento / s.leads) * 100) / 100 : 0,
+  }));
 
   // Client-side filtering: campanha → adset (formId é server-side agora)
   let displayedLeads = leads;
@@ -355,23 +369,6 @@ export function ImobLeadScoringPanel({
       {/* Header */}
       <div className="flex flex-wrap items-start justify-between gap-3">
         <SectionHeader sub="Meta Lead Ads · Qualificação" title={`Lead Scoring${clienteNome ? ` — ${clienteNome}` : ""}`} />
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex overflow-hidden rounded-lg border border-[var(--border)] text-xs">
-            <button
-              onClick={() => setAgrupamento("diario")}
-              className={`px-2.5 py-1.5 font-semibold transition-colors ${agrupamento === "diario" ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
-            >
-              Diário
-            </button>
-            <button
-              onClick={() => setAgrupamento("semanal")}
-              className={`px-2.5 py-1.5 font-semibold transition-colors ${agrupamento === "semanal" ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
-            >
-              Semanal
-            </button>
-          </div>
-
-        </div>
       </div>
 
       {/* Sync result message */}
@@ -667,20 +664,35 @@ export function ImobLeadScoringPanel({
                       )}
                     </>
                   ) : (
-                    <>
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Evolução</p>
-                      <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">Leads vs MQL no tempo</h3>
-                      <div className="mt-4 h-[240px]">
-                        {periodoSeries.length === 0 ? (
-                          <div className="flex h-full items-center justify-center text-sm text-[var(--muted-foreground)]">
-                            Sem dados para o período
-                          </div>
-                        ) : (
-                          <ResponsiveContainer width="100%" height="100%">
-                            <ComposedChart
-                              data={periodoSeries.map((p) => ({ ...p, label: formatPeriodLabel(p.periodo), Leads: p.total, MQL: p.mql }))}
-                              margin={{ top: 4, right: 16, left: -8, bottom: 0 }}
+                    <div className="flex h-full flex-col">
+                      <div className="mb-3 flex items-center justify-between">
+                        <div>
+                          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Volume</p>
+                          <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">Performance geral</h3>
+                        </div>
+                        {onAgrupamentoChange && (
+                          <div className="flex overflow-hidden rounded-lg border border-[var(--border)] text-xs">
+                            <button
+                              onClick={() => onAgrupamentoChange("diario")}
+                              className={`px-2.5 py-1.5 font-semibold transition-colors ${isDiario ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
                             >
+                              Diário
+                            </button>
+                            <button
+                              onClick={() => onAgrupamentoChange("semanal")}
+                              className={`px-2.5 py-1.5 font-semibold transition-colors ${!isDiario ? "bg-[var(--primary)] text-white" : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"}`}
+                            >
+                              Semanal
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                      {chartData.length === 0 ? (
+                        <p className="text-sm text-[var(--muted-foreground)]">Sem dados de mídia no período.</p>
+                      ) : (
+                        <div className="flex-1 min-h-[200px]">
+                          <ResponsiveContainer width="100%" height="100%">
+                            <ComposedChart data={chartData}>
                               <defs>
                                 <linearGradient id="imobBarGrad" x1="0" y1="0" x2="0" y2="1">
                                   <stop offset="0%" stopColor="var(--muted-foreground)" stopOpacity={0.25} />
@@ -689,25 +701,32 @@ export function ImobLeadScoringPanel({
                               </defs>
                               <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" strokeOpacity={0.5} />
                               <XAxis
-                                dataKey="label"
+                                dataKey="periodo"
                                 stroke="var(--muted-foreground)"
                                 fontSize={11}
                                 tickLine={false}
                                 axisLine={false}
-                                interval={agrupamento === "diario" && periodoSeries.length > 14 ? Math.ceil(periodoSeries.length / 14) - 1 : 0}
-                                angle={agrupamento === "diario" && periodoSeries.length > 14 ? -45 : 0}
-                                textAnchor={agrupamento === "diario" && periodoSeries.length > 14 ? "end" : "middle"}
-                                height={agrupamento === "diario" && periodoSeries.length > 14 ? 50 : 30}
+                                interval={isDiario && chartData.length > 14 ? Math.ceil(chartData.length / 14) - 1 : 0}
+                                angle={isDiario && chartData.length > 14 ? -45 : 0}
+                                textAnchor={isDiario && chartData.length > 14 ? "end" : "middle"}
+                                height={isDiario && chartData.length > 14 ? 50 : 30}
                               />
-                              <YAxis yAxisId="left" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
+                              <YAxis yAxisId="left" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} />
                               <YAxis yAxisId="right" orientation="right" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} allowDecimals={false} />
-                              <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [v, name]} />
+                              <Tooltip
+                                {...tooltipStyle}
+                                formatter={(value: number, name: string) =>
+                                  name === "Investimento"
+                                    ? [`R$\u00a0${value.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, name]
+                                    : [value, name]
+                                }
+                              />
                               <Legend iconType="circle" iconSize={8} wrapperStyle={{ paddingTop: 10, fontSize: 12 }} />
-                              <Bar yAxisId="left" dataKey="Leads" fill="url(#imobBarGrad)" radius={[6, 6, 0, 0]} />
+                              <Bar yAxisId="left" dataKey="Investimento" fill="url(#imobBarGrad)" radius={[6, 6, 0, 0]} />
                               <Line
                                 yAxisId="right"
                                 type="monotone"
-                                dataKey="MQL"
+                                dataKey="Leads"
                                 stroke="var(--primary)"
                                 strokeWidth={2.5}
                                 dot={{ fill: "var(--primary)", r: 4, strokeWidth: 0 }}
@@ -715,9 +734,9 @@ export function ImobLeadScoringPanel({
                               />
                             </ComposedChart>
                           </ResponsiveContainer>
-                        )}
-                      </div>
-                    </>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               </div>
@@ -799,306 +818,8 @@ export function ImobLeadScoringPanel({
             </div>
           )}
 
-          {/* ── Origem — navegação page-by-page (CampanhasPanel-style) ── */}
-          {(() => {
-            const nivel = selectedAdset ? "anuncios" : selectedCamp ? "conjuntos" : "campanhas";
-            const mqlLabel = isAcademy ? "Qualif." : "MQL";
-            const fBrl = (n: number) => `R$\u00a0${n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            const fCtr = (n: number) => `${n.toLocaleString("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}%`;
-            const rowBg = (isTop: boolean) => isTop ? "bg-[var(--primary)]/[0.07]" : "bg-white/[0.03]";
-            const countLabel =
-              nivel === "campanhas" && campanhasHierarchy.length > 0 ? `${campanhasHierarchy.length} campanha${campanhasHierarchy.length !== 1 ? "s" : ""}` :
-              nivel === "conjuntos" && selectedCamp ? `${selectedCamp.adsets.length} conjunto${selectedCamp.adsets.length !== 1 ? "s" : ""}` :
-              nivel === "anuncios" && selectedAdset ? `${selectedAdset.ads.length} anúncio${selectedAdset.ads.length !== 1 ? "s" : ""}` : null;
-            function goBack() { if (selectedAdset) setSelectedAdset(null); else setSelectedCamp(null); }
-
-            return (
-              <div>
-                <SectionHeader sub="Origem" title="Análise por Campanha" />
-                <div className="mt-4 rounded-[2rem] border border-[var(--border)] bg-[linear-gradient(180deg,rgba(20,21,26,0.98),rgba(12,12,16,1))] shadow-[0_24px_80px_rgba(0,0,0,0.38)] overflow-hidden">
-
-                  {/* Header */}
-                  <div className="px-6 py-5 sm:px-8 border-b border-white/[0.05] flex items-center gap-4">
-                    {selectedCamp && (
-                      <button onClick={goBack} className="p-2 rounded-xl hover:bg-white/[0.06] transition-colors text-[var(--muted-foreground)] hover:text-[var(--foreground)] flex-shrink-0">
-                        <ArrowLeft className="w-4 h-4" />
-                      </button>
-                    )}
-                    <div className="flex-1 min-w-0">
-                      {selectedCamp && (
-                        <nav className="flex items-center gap-1.5 text-[11px] text-[var(--muted-foreground)] mb-1 flex-wrap">
-                          <button onClick={() => { setSelectedCamp(null); setSelectedAdset(null); }} className="hover:text-[var(--foreground)] hover:underline transition-colors">Campanhas</button>
-                          <ChevronRight className="w-2.5 h-2.5 opacity-40 flex-shrink-0" />
-                          <button
-                            onClick={() => setSelectedAdset(null)}
-                            className={`truncate max-w-[220px] transition-colors ${selectedAdset ? "hover:text-[var(--foreground)] hover:underline" : "text-[var(--foreground)] font-semibold"}`}
-                          >
-                            {selectedCamp.campaignName}
-                          </button>
-                          {selectedAdset && (
-                            <>
-                              <ChevronRight className="w-2.5 h-2.5 opacity-40 flex-shrink-0" />
-                              <span className="text-[var(--foreground)] font-semibold truncate max-w-[220px]">{selectedAdset.adsetName}</span>
-                            </>
-                          )}
-                        </nav>
-                      )}
-                      <h3 className="text-xl font-black uppercase tracking-tight text-[var(--foreground)] sm:text-2xl flex items-center gap-2.5">
-                        {nivel === "campanhas" && <BarChart3 className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />}
-                        {nivel === "conjuntos" && <Target className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />}
-                        {nivel === "anuncios" && <Eye className="w-5 h-5 text-[var(--primary)] flex-shrink-0" />}
-                        {nivel === "campanhas" && "Campanhas"}
-                        {nivel === "conjuntos" && <>Conjuntos de <span className="bg-[linear-gradient(90deg,var(--accent),var(--primary))] bg-clip-text text-transparent">Anúncios</span></>}
-                        {nivel === "anuncios" && "Anúncios"}
-                      </h3>
-                      {nivel === "campanhas" && (
-                        <p className="mt-1 text-sm text-[var(--muted-foreground)]">
-                          Clique em uma campanha para ver conjuntos e anúncios · leads da lista atualizam conforme a navegação
-                        </p>
-                      )}
-                    </div>
-                    {countLabel && (
-                      <span className="rounded-full border border-[var(--primary)]/25 bg-[var(--primary)]/12 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-[var(--foreground)] flex-shrink-0">
-                        {countLabel}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Table body */}
-                  <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-
-                    {/* ── Campanhas ── */}
-                    {nivel === "campanhas" && (
-                      <div className="overflow-x-auto">
-                        <table className="w-full min-w-[640px] border-separate [border-spacing:0_6px]">
-                          <thead>
-                            <tr>
-                              <th className="pb-2 pl-4 text-left text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Campanha</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Invest.</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Leads</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">{mqlLabel}</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CPL</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CTR</th>
-                              <th className="w-8" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {campanhasHierarchy.map((camp, ci) => {
-                              const isTop = ci === 0;
-                              const bg = rowBg(isTop);
-                              const hasAdsets = camp.adsets.length > 0;
-                              return (
-                                <tr
-                                  key={camp.campaignId}
-                                  className={`group ${hasAdsets ? "cursor-pointer" : ""}`}
-                                  onClick={() => { if (hasAdsets) { setSelectedCamp(camp); setSelectedAdset(null); } }}
-                                >
-                                  <td className={`rounded-l-2xl px-4 py-4 ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    <div className="flex items-start gap-2.5">
-                                      {isTop
-                                        ? <span className="mt-0.5 shrink-0 rounded-full bg-[var(--primary)]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--primary)]">#1</span>
-                                        : <span className="mt-0.5 w-5 shrink-0 text-right text-[11px] font-bold tabular-nums text-white/20">#{ci + 1}</span>
-                                      }
-                                      <p className="text-[12px] font-semibold leading-snug text-[var(--foreground)] line-clamp-2 max-w-[360px]">{camp.campaignName ?? "—"}</p>
-                                    </div>
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {camp.invest > 0 ? fBrl(camp.invest) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {camp.leadsScored > 0
-                                      ? <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{camp.leadsScored}</span>
-                                      : camp.leadsMeta > 0
-                                        ? <span className="text-[13px] text-[var(--muted-foreground)]" title="Leads reportados pelo Meta Ads (sem atribuição de webhook)">{camp.leadsMeta}</span>
-                                        : <span className="text-[13px] text-white/20">—</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {camp.mql > 0
-                                      ? <span className={`text-[14px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{camp.mql}</span>
-                                      : <span className="text-[13px] text-white/20">—</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {camp.cpl != null ? fBrl(camp.cpl) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {camp.ctr > 0 ? fCtr(camp.ctr) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className={`rounded-r-2xl px-3 py-4 ${bg} ${hasAdsets ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {hasAdsets && <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-[var(--primary)] transition-colors ml-auto" />}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                            {campanhasHierarchy.length === 0 && (
-                              <tr><td colSpan={7} className="py-10 text-center text-sm text-[var(--muted-foreground)]">Nenhuma campanha encontrada no período</td></tr>
-                            )}
-                            {campanhasHierarchy.length > 1 && (() => {
-                              const totInvest = campanhasHierarchy.reduce((s, c) => s + c.invest, 0);
-                              const totLeads = campanhasHierarchy.reduce((s, c) => s + c.leadsScored, 0);
-                              const totMql = campanhasHierarchy.reduce((s, c) => s + c.mql, 0);
-                              const totClicks = campanhasHierarchy.reduce((s, c) => s + c.clicks, 0);
-                              const totImpressions = campanhasHierarchy.reduce((s, c) => s + c.impressions, 0);
-                              const totCtr = totImpressions > 0 ? totClicks / totImpressions * 100 : 0;
-                              const totCpl = totLeads > 0 && totInvest > 0 ? totInvest / totLeads : null;
-                              return (
-                                <tr>
-                                  <td className="rounded-l-2xl px-4 py-3 bg-white/[0.03] border-t border-[var(--border)]/40">
-                                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Total</p>
-                                  </td>
-                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)] bg-white/[0.03] border-t border-[var(--border)]/40">
-                                    {totInvest > 0 ? fBrl(totInvest) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] font-bold text-[var(--foreground)] bg-white/[0.03] border-t border-[var(--border)]/40">
-                                    {totLeads > 0 ? totLeads : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] font-bold text-[var(--primary)] bg-white/[0.03] border-t border-[var(--border)]/40">
-                                    {totMql > 0 ? totMql : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)] bg-white/[0.03] border-t border-[var(--border)]/40">
-                                    {totCpl != null ? fBrl(totCpl) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className="px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] bg-white/[0.03] border-t border-[var(--border)]/40">
-                                    {totCtr > 0 ? fCtr(totCtr) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className="rounded-r-2xl px-3 py-3 bg-white/[0.03] border-t border-[var(--border)]/40" />
-                                </tr>
-                              );
-                            })()}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-
-                    {/* ── Conjuntos ── */}
-                    {nivel === "conjuntos" && selectedCamp && (
-                      <div className="overflow-x-auto">
-                        <table className="w-full min-w-[700px] border-separate [border-spacing:0_6px]">
-                          <thead>
-                            <tr>
-                              <th className="pb-2 pl-4 text-left text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Conjunto de Anúncios</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Invest.</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Leads</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">{mqlLabel}</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CPL</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CTR</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Anúncios</th>
-                              <th className="w-8" />
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {selectedCamp.adsets.map((adset, ai) => {
-                              const isTop = ai === 0;
-                              const bg = rowBg(isTop);
-                              const hasAds = adset.ads.length > 0;
-                              return (
-                                <tr
-                                  key={adset.adsetId}
-                                  className={`group ${hasAds ? "cursor-pointer" : ""}`}
-                                  onClick={() => { if (hasAds) setSelectedAdset(adset); }}
-                                >
-                                  <td className={`rounded-l-2xl px-4 py-4 ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    <div className="flex items-start gap-2.5">
-                                      {isTop
-                                        ? <span className="mt-0.5 shrink-0 rounded-full bg-[var(--primary)]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--primary)]">#1</span>
-                                        : <span className="mt-0.5 w-5 shrink-0 text-right text-[11px] font-bold tabular-nums text-white/20">#{ai + 1}</span>
-                                      }
-                                      <p className="text-[12px] font-semibold leading-snug text-[var(--foreground)] line-clamp-2 max-w-[360px]">{adset.adsetName}</p>
-                                    </div>
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {fBrl(adset.invest)}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] ${isTop && adset.leadsMeta > 0 ? "text-[var(--primary)] font-bold text-[15px]" : "text-[var(--muted-foreground)]"} ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {adset.leadsMeta > 0 ? adset.leadsMeta : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {adset.mql > 0
-                                      ? <span className={`text-[13px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{adset.mql}</span>
-                                      : adset.leadsScored === 0
-                                        ? <span className="text-[13px] text-white/20">—</span>
-                                        : <span className="text-[13px] font-bold text-[var(--muted-foreground)]">0</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {adset.cpl != null ? fBrl(adset.cpl) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] ${adset.ctr >= 1 ? "text-emerald-400 font-semibold" : "text-[var(--muted-foreground)]"} ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {adset.ctr > 0 ? fCtr(adset.ctr) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {adset.ads.length}
-                                  </td>
-                                  <td className={`rounded-r-2xl px-3 py-4 ${bg} ${hasAds ? "transition-colors group-hover:bg-[var(--primary)]/[0.10]" : ""}`}>
-                                    {hasAds && <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-[var(--primary)] transition-colors ml-auto" />}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-
-                    {/* ── Anúncios ── */}
-                    {nivel === "anuncios" && selectedAdset && (
-                      <div className="overflow-x-auto">
-                        <table className="w-full min-w-[620px] border-separate [border-spacing:0_6px]">
-                          <thead>
-                            <tr>
-                              <th className="pb-2 pl-4 text-left text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Anúncio</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Invest.</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">Leads</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">{mqlLabel}</th>
-                              <th className="pb-2 px-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CPL</th>
-                              <th className="pb-2 pr-4 text-right text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]">CTR</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {selectedAdset.ads.map((ad, adi) => {
-                              const isTop = adi === 0;
-                              const bg = rowBg(isTop);
-                              return (
-                                <tr key={ad.adId}>
-                                  <td className={`rounded-l-2xl px-4 py-4 ${bg}`}>
-                                    <div className="flex items-start gap-2.5">
-                                      {isTop
-                                        ? <span className="mt-0.5 shrink-0 rounded-full bg-[var(--primary)]/20 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wide text-[var(--primary)]">#1</span>
-                                        : <span className="mt-0.5 w-5 shrink-0 text-right text-[11px] font-bold tabular-nums text-white/20">#{adi + 1}</span>
-                                      }
-                                      <p className="text-[12px] font-semibold leading-snug text-[var(--foreground)] line-clamp-2 max-w-[360px]">{ad.adName}</p>
-                                    </div>
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
-                                    {fBrl(ad.invest)}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] ${isTop && ad.leadsMeta > 0 ? "text-[var(--primary)] font-bold text-[15px]" : "text-[var(--muted-foreground)]"} ${bg}`}>
-                                    {ad.leadsMeta > 0 ? ad.leadsMeta : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
-                                    {ad.mql > 0
-                                      ? <span className={`text-[13px] font-bold ${isTop ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>{ad.mql}</span>
-                                      : ad.leadsScored === 0
-                                        ? <span className="text-[13px] text-white/20">—</span>
-                                        : <span className="text-[13px] font-bold text-[var(--muted-foreground)]">0</span>}
-                                  </td>
-                                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
-                                    {ad.cpl != null ? fBrl(ad.cpl) : <span className="text-white/20">—</span>}
-                                  </td>
-                                  <td className={`rounded-r-2xl px-4 py-4 text-right tabular-nums text-[13px] ${ad.ctr >= 1 ? "text-emerald-400 font-semibold" : "text-[var(--muted-foreground)]"} ${bg}`}>
-                                    {ad.ctr > 0 ? fCtr(ad.ctr) : <span className="text-white/20">—</span>}
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
-                    )}
-
-                  </div>
-                </div>
-              </div>
-            );
-          })()}
+          {/* ── Campanhas ── */}
+          <CampanhasPanel clienteId={clienteId} dateFilter={dateFilter} canal="meta" />
 
           {/* Formulários — clicáveis para filtrar leads (espelho do seletor de topo) */}
           <div>

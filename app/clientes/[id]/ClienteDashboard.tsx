@@ -1208,7 +1208,14 @@ function formatPercentage(value: number) {
 
       {/* ── Imob Lead Scoring — clientes imob (subView dentro do Meta) ── */}
       {canal === "meta" && subView === "lead-scoring" && isImobClient(cliente) && (
-        <ImobLeadScoringPanel clienteId={id} dateFilter={dateFilter} clienteNome={cliente?.nome ?? ""} />
+        <ImobLeadScoringPanel
+          clienteId={id}
+          dateFilter={dateFilter}
+          clienteNome={cliente?.nome ?? ""}
+          midia={midia}
+          chartAgrupamento={chartAgrupamento}
+          onAgrupamentoChange={isLongPeriod ? undefined : (ag: "diario" | "semanal") => setChartAgrupamento(ag)}
+        />
       )}
 
       {/* ── Default panel (KPIs, chart, weekly table, financial) ── */}
