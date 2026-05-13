@@ -116,13 +116,13 @@ export async function GET(
     totalProfileVisits += pv;
     totalAddToCart += (r as { addToCart?: number }).addToCart ?? 0;
     totalLandingPageViews += (r as { landingPageViews?: number }).landingPageViews ?? 0;
-    totalLeads += isVisitasCliente
+    totalLeads += isVisitasCliente && r.canal !== "GOOGLE"
       ? pv
-      : isKombuchaCliente
+      : isKombuchaCliente && r.canal !== "GOOGLE"
         ? ((r as { addToCart?: number }).addToCart ?? 0)
-        : isBeBlueCliente
+        : isBeBlueCliente && r.canal !== "GOOGLE"
           ? ((r as { landingPageViews?: number }).landingPageViews ?? 0)
-          : isConversasCliente
+          : isConversasCliente && r.canal !== "GOOGLE"
             ? (r.messagingConversationsStarted ?? 0)
             : outcomeCountForFato(r.canal, r.leads, r.conversoes, undefined, isComprasCliente && r.canal !== "GOOGLE");
     totalImpressoes += r.impressoes;
