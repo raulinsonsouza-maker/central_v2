@@ -15,7 +15,7 @@ import {
   Line,
   Legend,
 } from "recharts";
-import { Users, Target, TrendingUp, Zap, Building2, Clock, Wallet, RefreshCw, ChevronRight, ChevronUp, ChevronDown, ArrowLeft, BarChart3, Eye } from "lucide-react";
+import { Users, Target, TrendingUp, Zap, Building2, Wallet, RefreshCw, ChevronUp, ChevronDown, ArrowLeft, BarChart3, Eye } from "lucide-react";
 import type { DateFilter } from "@/app/clientes/[id]/ClienteDashboard";
 import { CampanhasPanel } from "@/components/clientes/CampanhasPanel";
 
@@ -51,6 +51,20 @@ const GRADE_COLORS: Record<string, string> = {
   D: "#94a3b8",
   E: "#ef4444",
 };
+
+// Mirante: grade E significa "Sem dados" (não "Fora do perfil"), por isso usa cinza neutro
+const GRADE_COLORS_MIRANTE: Record<string, string> = {
+  A: "#22c55e",
+  B: "#84cc16",
+  C: "#f59e0b",
+  D: "#94a3b8",
+  E: "#94a3b8",
+};
+
+function getGradeColor(grade: string, isMirante: boolean): string {
+  const map = isMirante ? GRADE_COLORS_MIRANTE : GRADE_COLORS;
+  return map[grade] ?? "#94a3b8";
+}
 
 const TIMING_COLORS: Record<string, string> = {
   "Agora": "#22c55e",
@@ -466,7 +480,7 @@ export function ImobLeadScoringPanel({
       ) : (
         <>
           {/* KPI row */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
             <KpiCard
               title="Total de Leads"
               value={kpis.totalLeads.toString()}
@@ -499,12 +513,6 @@ export function ImobLeadScoringPanel({
               sub="investimento / qualificado"
               icon={Zap}
               accent
-            />
-            <KpiCard
-              title="Não qualificados"
-              value={kpis.totalNonMql.toString()}
-              sub={isAcademy ? "sem graduação" : "leads não qualificados"}
-              icon={Clock}
             />
           </div>
 
@@ -643,15 +651,27 @@ export function ImobLeadScoringPanel({
                         />
                         {/* Percentage in center */}
                         <text
-                          x="80" y="78"
+                          x="80" y="70"
                           textAnchor="middle"
                           dominantBaseline="middle"
-                          fontSize="24"
+                          fontSize="34"
                           fontWeight="900"
                           fill="var(--foreground)"
                           fontFamily="inherit"
                         >
                           {mqlPct.toFixed(0)}%
+                        </text>
+                        <text
+                          x="80" y="94"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          fontSize="9"
+                          fontWeight="700"
+                          fill="var(--muted-foreground)"
+                          fontFamily="inherit"
+                          letterSpacing="1.5"
+                        >
+                          {(isAcademy ? "QUALIFICADOS" : "TAXA MQL")}
                         </text>
                       </svg>
 
@@ -677,7 +697,7 @@ export function ImobLeadScoringPanel({
                         <div className="flex flex-wrap gap-2">
                           {gradeDistribuicao.filter((g) => g.total > 0).map((g) => {
                             const isActive = gradeFilter === g.grade;
-                            const color = GRADE_COLORS[g.grade] ?? "#94a3b8";
+                            const color = getGradeColor(g.grade, isMirante);
                             return (
                               <button
                                 key={g.grade}
@@ -867,74 +887,6 @@ export function ImobLeadScoringPanel({
             mqlByAdId={new Map(campanhasHierarchy.flatMap((c) => c.adsets.flatMap((a) => a.ads.map((ad) => [ad.adId, ad.mql]))))}
           />
 
-          {/* Formulários — clicáveis para filtrar leads (espelho do seletor de topo) */}
-          <div>
-            <div className="flex items-center justify-between">
-              <SectionHeader sub="Origem" title={isAcademy ? "Leads por Formulário" : "MQL por Formulário"} />
-              {selectedFormId && (
-                <button
-                  onClick={() => setSelectedFormId(null)}
-                  className="text-xs text-[var(--primary)] underline underline-offset-2 hover:no-underline"
-                >
-                  ✕ limpar filtro
-                </button>
-              )}
-            </div>
-            <div className="mt-4 overflow-x-auto">
-              <table className="w-full min-w-[400px] text-sm">
-                <thead>
-                  <tr className="border-b border-[var(--border)]">
-                    <th className="pb-2 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Formulário</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Leads</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</th>
-                    <th className="pb-2 text-right text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Taxa</th>
-                    <th className="w-6" />
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--border)]">
-                  {formsRanking.slice(0, 8).map((f) => {
-                    const isActive = selectedFormId === f.formId;
-                    return (
-                      <tr
-                        key={f.formId}
-                        onClick={() => { setSelectedFormId(isActive ? null : f.formId); setGradeFilter(null); }}
-                        className={`cursor-pointer transition-colors ${
-                          isActive
-                            ? "bg-[var(--primary)]/8"
-                            : "hover:bg-[var(--muted)]/30"
-                        }`}
-                      >
-                        <td className="py-2.5 pr-3 text-xs text-[var(--foreground)]">
-                          <div className="flex items-center gap-2">
-                            {isActive && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary)]" />}
-                            <span className="line-clamp-1">{f.formName ?? "—"}</span>
-                          </div>
-                        </td>
-                        <td className="py-2.5 text-right text-xs tabular-nums text-[var(--muted-foreground)]">{f.total}</td>
-                        <td className="py-2.5 text-right">
-                          <span className="inline-flex items-center justify-center rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold tabular-nums text-green-400">
-                            {f.mql}
-                          </span>
-                        </td>
-                        <td className="py-2.5 pl-3 text-right text-xs tabular-nums text-[var(--muted-foreground)]">
-                          {fmtPct(f.taxaMql)}
-                        </td>
-                        <td className="py-2.5 pl-2">
-                          <ChevronRight className={`ml-auto h-3 w-3 transition-colors ${isActive ? "text-[var(--primary)]" : "text-white/15"}`} />
-                        </td>
-                      </tr>
-                    );
-                  })}
-                  {formsRanking.length === 0 && (
-                    <tr>
-                      <td colSpan={5} className="py-8 text-center text-xs text-[var(--muted-foreground)]">Nenhum formulário encontrado</td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
           {/* Tabela de leads individuais */}
           <div>
             <div className="flex flex-wrap items-start justify-between gap-3">
@@ -1014,7 +966,7 @@ export function ImobLeadScoringPanel({
                           <div className="flex items-center gap-1.5">
                             <span
                               className="inline-flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-black text-white"
-                              style={{ backgroundColor: GRADE_COLORS[lead.grade] }}
+                              style={{ backgroundColor: getGradeColor(lead.grade, isMirante) }}
                             >
                               {lead.grade}
                             </span>
@@ -1138,12 +1090,20 @@ export function ImobLeadScoringPanel({
               </div>
             ) : (
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                {[
-                  { grade: "A", color: "#22c55e", title: "Hot MQL", desc: "Agora + R$ 700k ou acima de R$ 1M" },
-                  { grade: "B", color: "#84cc16", title: "MQL", desc: "Agora + R$ 300k até R$ 700k" },
-                  { grade: "C", color: "#f59e0b", title: "MQL Morno", desc: "3 a 6 meses + qualquer valor acima de R$ 300k" },
-                  { grade: "D", color: "#94a3b8", title: "Potencial", desc: "Avaliando, mas com orçamento qualificado (≥ R$ 300k)" },
-                ].map((item) => (
+                {(isMirante
+                  ? [
+                      { grade: "A", color: "#22c55e", title: "MQL — Até 3 meses", desc: "Lead com previsão de compra de até 3 meses (único nível qualificado)" },
+                      { grade: "B", color: "#84cc16", title: "Quente — 3 a 6 meses", desc: "Lead com intenção de compra em 3 a 6 meses (não MQL)" },
+                      { grade: "C", color: "#f59e0b", title: "Em avaliação", desc: "Lead ainda avaliando a compra (não MQL)" },
+                      { grade: "E", color: "#94a3b8", title: "Sem dados", desc: "Lead não informou previsão de compra" },
+                    ]
+                  : [
+                      { grade: "A", color: "#22c55e", title: "Hot MQL", desc: "Agora + R$ 700k ou acima de R$ 1M" },
+                      { grade: "B", color: "#84cc16", title: "MQL", desc: "Agora + R$ 300k até R$ 700k" },
+                      { grade: "C", color: "#f59e0b", title: "MQL Morno", desc: "3 a 6 meses + qualquer valor acima de R$ 300k" },
+                      { grade: "D", color: "#94a3b8", title: "Potencial", desc: "Avaliando, mas com orçamento qualificado (≥ R$ 300k)" },
+                    ]
+                ).map((item) => (
                   <div key={item.grade} className="flex items-start gap-2">
                     <span
                       className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-black text-white"
