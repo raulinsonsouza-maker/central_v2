@@ -176,76 +176,89 @@ export async function syncMetaCliente(
       });
     }
 
-    const creativeSnapshotDate = new Date(`${creativeDateTo}T00:00:00`);
     const ads = await fetchAdsWithCreatives(accountId, token, {
       dateFrom: creativeDateFrom,
       dateTo: creativeDateTo,
     });
 
+    // Helpers para extrair conversões dos arrays actions/action_values
+    const getAction = (arr: Array<{ action_type: string; value: string }> | undefined, type: string) =>
+      parseInt(arr?.find(a => a.action_type === type)?.value ?? "0", 10) || 0;
+    const getActionValue = (arr: Array<{ action_type: string; value: string }> | undefined, type: string) =>
+      parseFloat(arr?.find(a => a.action_type === type)?.value ?? "0") || 0;
+
+    let dailyRowsWritten = 0;
     for (const ad of ads) {
       const creative = ad.adcreatives?.data?.[0];
-      const insight = ad.insights?.data?.[0];
       if (!creative) continue;
 
-      // Extract conversion data from actions/action_values
-      const getAction = (arr: Array<{ action_type: string; value: string }> | undefined, type: string) =>
-        parseInt(arr?.find(a => a.action_type === type)?.value ?? "0", 10) || 0;
-      const getActionValue = (arr: Array<{ action_type: string; value: string }> | undefined, type: string) =>
-        parseFloat(arr?.find(a => a.action_type === type)?.value ?? "0") || 0;
-      const actions = insight?.actions ?? [];
-      const actionValues = insight?.action_values ?? [];
+      const insightRows = ad.insights?.data ?? [];
+      // Se a Meta não retornou nenhum dia (ad sem entrega no período),
+      // ainda gravamos uma linha-zero para o creativeDateTo para preservar
+      // a presença do anúncio no painel.
+      const rowsToPersist = insightRows.length > 0
+        ? insightRows
+        : [{ date_start: creativeDateTo, date_stop: creativeDateTo } as typeof insightRows[number]];
 
-      const leads =
-        getAction(actions, "lead") ||
-        getAction(actions, "onsite_conversion.lead_grouped") ||
-        getAction(actions, "offsite_conversion.fb_pixel_lead") ||
-        getAction(actions, "website_lead");
+      for (const insight of rowsToPersist) {
+        const dayStr = insight.date_start ?? insight.date_stop ?? creativeDateTo;
+        const rowDate = new Date(`${dayStr}T00:00:00`);
+        const actions = insight.actions ?? [];
+        const actionValues = insight.action_values ?? [];
 
-      const purchases =
-        getAction(actions, "purchase") ||
-        getAction(actions, "omni_purchase") ||
-        getAction(actions, "offsite_conversion.fb_pixel_purchase") ||
-        getAction(actions, "website_purchase");
+        const leads =
+          getAction(actions, "lead") ||
+          getAction(actions, "onsite_conversion.lead_grouped") ||
+          getAction(actions, "offsite_conversion.fb_pixel_lead") ||
+          getAction(actions, "website_lead");
 
-      const revenue =
-        getActionValue(actionValues, "purchase") ||
-        getActionValue(actionValues, "omni_purchase") ||
-        getActionValue(actionValues, "offsite_conversion.fb_pixel_purchase") ||
-        getActionValue(actionValues, "website_purchase");
+        const purchases =
+          getAction(actions, "purchase") ||
+          getAction(actions, "omni_purchase") ||
+          getAction(actions, "offsite_conversion.fb_pixel_purchase") ||
+          getAction(actions, "website_purchase");
 
-      await upsertMetaAdsCriativo(clienteId, {
-        data: creativeSnapshotDate,
-        adId: ad.id,
-        creativeId: creative.id,
-        adName: ad.name,
-        effectiveStatus: ad.effective_status ?? null,
-        campaignId: ad.adset?.campaign?.id ?? null,
-        campaignName: ad.adset?.campaign?.name ?? null,
-        adsetId: ad.adset?.id ?? null,
-        adsetName: ad.adset?.name ?? null,
-        campaignObjective: ad.adset?.campaign?.objective ?? null,
-        mediaType: creative.video_source_url || creative.video_id ? "VIDEO" : "IMAGE",
-        imageUrl: creative.image_url_full ?? creative.thumbnail_url ?? creative.image_url ?? null,
-        imageUrlFull: creative.image_url_full ?? null,
-        videoId: creative.video_id ?? null,
-        videoSourceUrl: creative.video_source_url ?? null,
-        videoPictureUrl: creative.video_picture_url ?? null,
-        videoEmbedHtml: (creative as { video_embed_html?: string }).video_embed_html ?? null,
-        body: creative.body ?? null,
-        title: creative.title ?? null,
-        spend: insight?.spend ? parseFloat(insight.spend) : 0,
-        impressions: insight?.impressions ? parseInt(insight.impressions, 10) : 0,
-        clicks: insight?.clicks ? parseInt(insight.clicks, 10) : 0,
-        leads,
-        purchases,
-        websitePurchasesConversionValue: revenue,
-        ctr: insight?.ctr ? parseFloat(insight.ctr) : null,
-        cpc: insight?.cpc ? parseFloat(insight.cpc) : null,
-        contaId,
-      });
+        const revenue =
+          getActionValue(actionValues, "purchase") ||
+          getActionValue(actionValues, "omni_purchase") ||
+          getActionValue(actionValues, "offsite_conversion.fb_pixel_purchase") ||
+          getActionValue(actionValues, "website_purchase");
+
+        await upsertMetaAdsCriativo(clienteId, {
+          data: rowDate,
+          adId: ad.id,
+          creativeId: creative.id,
+          adName: ad.name,
+          effectiveStatus: ad.effective_status ?? null,
+          campaignId: ad.adset?.campaign?.id ?? null,
+          campaignName: ad.adset?.campaign?.name ?? null,
+          adsetId: ad.adset?.id ?? null,
+          adsetName: ad.adset?.name ?? null,
+          campaignObjective: ad.adset?.campaign?.objective ?? null,
+          mediaType: creative.video_source_url || creative.video_id ? "VIDEO" : "IMAGE",
+          imageUrl: creative.image_url_full ?? creative.thumbnail_url ?? creative.image_url ?? null,
+          imageUrlFull: creative.image_url_full ?? null,
+          videoId: creative.video_id ?? null,
+          videoSourceUrl: creative.video_source_url ?? null,
+          videoPictureUrl: creative.video_picture_url ?? null,
+          videoEmbedHtml: (creative as { video_embed_html?: string }).video_embed_html ?? null,
+          body: creative.body ?? null,
+          title: creative.title ?? null,
+          spend: insight.spend ? parseFloat(insight.spend) : 0,
+          impressions: insight.impressions ? parseInt(insight.impressions, 10) : 0,
+          clicks: insight.clicks ? parseInt(insight.clicks, 10) : 0,
+          leads,
+          purchases,
+          websitePurchasesConversionValue: revenue,
+          ctr: insight.ctr ? parseFloat(insight.ctr) : null,
+          cpc: insight.cpc ? parseFloat(insight.cpc) : null,
+          contaId,
+        });
+        dailyRowsWritten += 1;
+      }
     }
 
-    console.log(`[metaSync] clienteId=${clienteId} accountId=${accountId} dateFrom=${dateFrom} dateTo=${dateTo} rows=${rows.length} creatives=${ads.length}`);
+    console.log(`[metaSync] clienteId=${clienteId} accountId=${accountId} dateFrom=${dateFrom} dateTo=${dateTo} rows=${rows.length} creatives=${ads.length} dailyAdRows=${dailyRowsWritten}`);
     return { daysProcessed: rows.length, creativesProcessed: ads.length };
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);

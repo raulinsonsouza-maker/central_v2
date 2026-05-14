@@ -174,23 +174,20 @@ export async function GET(
   }
 
   if (nivel === "conjuntos" && campanha) {
-    // Fetch all rows for this campaign (no date filter) and aggregate by adset.
-    // Using all rows means cumulative data across the full sync window.
+    // Sync grava uma linha por (adId, dia). Filtramos por data e SOMAMOS
+    // todos os dias dentro do período selecionado, mantendo consistência
+    // com a agregação a nível de campanha (que também filtra por data).
     const criativos = await prisma.metaAdsCriativo.findMany({
       where: {
         clienteId: id,
         campaignName: campanha,
+        data: { gte: dataInicio, lte: dataFim },
       },
       orderBy: { data: "desc" },
     });
 
-    // De-dup to latest row per adId (sync stores cumulative rows daily —
-    // taking the most recent avoids double-counting).
-    const latestPerAd = new Map<string, typeof criativos[0]>();
-    for (const c of criativos) {
-      const prev = latestPerAd.get(c.adId);
-      if (!prev || c.data > prev.data) latestPerAd.set(c.adId, c);
-    }
+    // Conjunto de adIds vistos no período (para contar ads únicos por conjunto).
+    const adIdsByConjunto = new Map<string, Set<string>>();
 
     const byConjunto = new Map<string, {
       adsetId: string;
@@ -204,8 +201,15 @@ export async function GET(
       adCount: number;
     }>();
 
-    for (const c of latestPerAd.values()) {
+    for (const c of criativos) {
       const key = c.adsetId ?? "sem-conjunto";
+      let adIds = adIdsByConjunto.get(key);
+      if (!adIds) {
+        adIds = new Set();
+        adIdsByConjunto.set(key, adIds);
+      }
+      adIds.add(c.adId);
+
       const existing = byConjunto.get(key);
       if (existing) {
         existing.spend += Number(c.spend);
@@ -214,7 +218,6 @@ export async function GET(
         existing.leads += c.leads;
         existing.purchases += c.purchases;
         existing.faturamento += Number(c.websitePurchasesConversionValue);
-        existing.adCount += 1;
       } else {
         byConjunto.set(key, {
           adsetId: c.adsetId ?? "",
@@ -225,9 +228,14 @@ export async function GET(
           leads: c.leads,
           purchases: c.purchases,
           faturamento: Number(c.websitePurchasesConversionValue),
-          adCount: 1,
+          adCount: 0,
         });
       }
+    }
+    // adCount = total de ads únicos no conjunto dentro do período
+    for (const [key, adIds] of adIdsByConjunto.entries()) {
+      const v = byConjunto.get(key);
+      if (v) v.adCount = adIds.size;
     }
 
     const conjuntos = Array.from(byConjunto.values())
@@ -246,24 +254,20 @@ export async function GET(
   }
 
   if (nivel === "criativos" && campanha && conjunto) {
-    // Fetch all rows for this adset (no date filter) ordered by date desc.
+    // Sync grava uma linha por (adId, dia). Filtramos pelo período da UI
+    // e SOMAMOS as linhas diárias por adId. Metadados do criativo (nome,
+    // imagem, status etc.) vêm do registro mais recente dentro do período.
     const rows = await prisma.metaAdsCriativo.findMany({
       where: {
         clienteId: id,
         campaignName: campanha,
         adsetId: conjunto,
+        data: { gte: dataInicio, lte: dataFim },
       },
       orderBy: [{ data: "desc" }],
     });
 
-    // De-dup to latest row per adId to avoid double-counting cumulative records.
-    const latestPerAd = new Map<string, typeof rows[0]>();
-    for (const r of rows) {
-      const prev = latestPerAd.get(r.adId);
-      if (!prev || r.data > prev.data) latestPerAd.set(r.adId, r);
-    }
-
-    // Map by adId — one entry per ad
+    // Map by adId — soma incremental por dia
     const byAd = new Map<string, {
       adId: string; adName: string; mediaType: string;
       imageUrl: string | null; videoId: string | null;
@@ -272,12 +276,33 @@ export async function GET(
       effectiveStatus: string | null; spend: number; impressions: number; clicks: number;
       leads: number; purchases: number; faturamento: number;
       daysActive: number;
+      _latestData: Date;
     }>();
 
-    for (const r of latestPerAd.values()) {
+    for (const r of rows) {
       const existing = byAd.get(r.adId);
       if (existing) {
-        // shouldn't happen since latestPerAd already has one entry per adId
+        existing.spend += Number(r.spend);
+        existing.impressions += r.impressions;
+        existing.clicks += r.clicks;
+        existing.leads += r.leads;
+        existing.purchases += r.purchases;
+        existing.faturamento += Number(r.websitePurchasesConversionValue);
+        if (Number(r.spend) > 0 || r.impressions > 0) existing.daysActive += 1;
+        // metadados ficam com o registro mais recente
+        if (r.data > existing._latestData) {
+          existing._latestData = r.data;
+          existing.adName = r.adName;
+          existing.mediaType = r.mediaType;
+          existing.imageUrl = r.imageUrlFull ?? r.imageUrl ?? null;
+          existing.videoId = r.videoId ?? null;
+          existing.videoSourceUrl = r.videoSourceUrl ?? null;
+          existing.videoPictureUrl = r.videoPictureUrl ?? null;
+          existing.videoEmbedHtml = r.videoEmbedHtml ?? null;
+          existing.body = r.body ?? null;
+          existing.title = r.title ?? null;
+          existing.effectiveStatus = r.effectiveStatus ?? null;
+        }
       } else {
         byAd.set(r.adId, {
           adId: r.adId,
@@ -297,13 +322,14 @@ export async function GET(
           leads: r.leads,
           purchases: r.purchases,
           faturamento: Number(r.websitePurchasesConversionValue),
-          daysActive: 1,
+          daysActive: Number(r.spend) > 0 || r.impressions > 0 ? 1 : 0,
+          _latestData: r.data,
         });
       }
     }
 
     const list = Array.from(byAd.values())
-      .map((v) => ({
+      .map(({ _latestData: _ignored, ...v }) => ({
         ...v,
         ctr: v.impressions > 0 ? (v.clicks / v.impressions) * 100 : null,
         cpc: v.clicks > 0 ? v.spend / v.clicks : null,
