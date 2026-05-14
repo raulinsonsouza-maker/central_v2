@@ -633,9 +633,9 @@ export function ImobLeadScoringPanel({
                       </div>
                     </div>
 
-                    <div className="mt-4 flex flex-col items-center gap-3">
+                    <div className={`mt-4 ${isAcademy ? "flex flex-col items-center gap-3" : "flex flex-col sm:flex-row items-center gap-4 sm:gap-6"}`}>
                       {/* Gauge SVG */}
-                      <svg width="180" height="144" viewBox="0 0 180 144" aria-hidden="true">
+                      <svg width="180" height="144" viewBox="0 0 180 144" aria-hidden="true" className="shrink-0">
                         <defs>
                           <linearGradient id={`${gaugeUid}-grad`} x1="0%" y1="0%" x2="100%" y2="0%">
                             <stop offset="0%" stopColor={gaugeColor} stopOpacity="0.6" />
@@ -703,26 +703,48 @@ export function ImobLeadScoringPanel({
                       </svg>
 
                       {/* Legend stat cards */}
-                      <div className="grid w-full max-w-[260px] grid-cols-2 gap-2">
-                        <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/30 px-3 py-2">
+                      <div className={isAcademy ? "grid w-full max-w-[260px] grid-cols-2 gap-2" : "flex w-full flex-1 flex-col gap-2.5"}>
+                        <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/30 px-3.5 py-2.5">
                           <div className="flex items-center gap-1.5">
                             <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: gaugeColor, boxShadow: `0 0 6px ${gaugeColor}` }} />
                             <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">{isAcademy ? "Qualif." : "MQL"}</span>
                           </div>
-                          <p className="mt-0.5 text-xl font-black tabular-nums leading-none" style={{ color: gaugeColor }}>{kpis.totalMql.toLocaleString("pt-BR")}</p>
+                          <div className="mt-0.5 flex items-baseline justify-between gap-2">
+                            <p className="text-2xl font-black tabular-nums leading-none" style={{ color: gaugeColor }}>{kpis.totalMql.toLocaleString("pt-BR")}</p>
+                            {!isAcademy && (
+                              <span className="text-[10px] font-semibold tabular-nums text-[var(--muted-foreground)]">{mqlPct.toFixed(0)}% do total</span>
+                            )}
+                          </div>
                         </div>
-                        <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/30 px-3 py-2">
+                        <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/30 px-3.5 py-2.5">
                           <div className="flex items-center gap-1.5">
                             <span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />
-                            <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Total</span>
+                            <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Leads totais</span>
                           </div>
-                          <p className="mt-0.5 text-xl font-black tabular-nums leading-none text-[var(--foreground)]">{kpis.totalLeads.toLocaleString("pt-BR")}</p>
+                          <div className="mt-0.5 flex items-baseline justify-between gap-2">
+                            <p className="text-2xl font-black tabular-nums leading-none text-[var(--foreground)]">{kpis.totalLeads.toLocaleString("pt-BR")}</p>
+                            {!isAcademy && (
+                              <span className="text-[10px] font-semibold tabular-nums text-[var(--muted-foreground)]">no período</span>
+                            )}
+                          </div>
                         </div>
+                        {!isAcademy && (
+                          <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/30 px-3.5 py-2.5">
+                            <div className="flex items-center gap-1.5">
+                              <span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />
+                              <span className="text-[9px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Não qualificados</span>
+                            </div>
+                            <div className="mt-0.5 flex items-baseline justify-between gap-2">
+                              <p className="text-2xl font-black tabular-nums leading-none text-[var(--muted-foreground)]">{(kpis.totalLeads - kpis.totalMql).toLocaleString("pt-BR")}</p>
+                              <span className="text-[10px] font-semibold tabular-nums text-[var(--muted-foreground)]">{(100 - mqlPct).toFixed(0)}%</span>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Icaraí: grade chips clicáveis */}
-                    {!isAcademy && (
+                    {/* Icaraí (não Mirante): grade chips clicáveis */}
+                    {!isAcademy && !isMirante && (
                       <div className="mt-5 space-y-2">
                         <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Filtrar por grau</p>
                         <div className="flex flex-wrap gap-2">
@@ -794,102 +816,161 @@ export function ImobLeadScoringPanel({
                   </div>
 
                   {/* Coluna direita: Academy = Formação acadêmica; outros = Previsão/Intenção de compra */}
-                  <div className={`${isAcademy ? "lg:col-span-3 min-h-[360px] " : ""}rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 flex flex-col`}>
+                  <div className={`group/right relative overflow-hidden ${isAcademy ? "lg:col-span-3 min-h-[360px] " : ""}rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--card)] via-[var(--card)] to-[color-mix(in_srgb,var(--primary)_3%,var(--card))] p-6 flex flex-col`}>
+                    <div className="pointer-events-none absolute -left-10 -bottom-10 h-40 w-40 rounded-full bg-[var(--primary)] opacity-[0.04] blur-3xl transition-opacity duration-700 group-hover/right:opacity-[0.08]" />
                     {isAcademy ? (
-                      <>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Critério de qualificação</p>
-                        <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">Formação acadêmica dos leads</h3>
+                      <div className="relative flex h-full flex-col">
+                        <div className="flex items-start gap-2.5">
+                          <div className="mt-0.5 h-7 w-1 shrink-0 rounded-full bg-gradient-to-b from-[var(--primary)] to-[color-mix(in_srgb,var(--primary)_40%,transparent)]" />
+                          <div>
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Critério de qualificação</p>
+                            <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">Formação acadêmica dos leads</h3>
+                          </div>
+                        </div>
                         {(degreeDistribuicao ?? []).length === 0 ? (
                           <p className="mt-6 text-sm text-[var(--muted-foreground)]">Sem dados de formação no período.</p>
-                        ) : (
-                          <div className="mt-5 space-y-1.5">
-                            {(degreeDistribuicao ?? []).filter((d) => d.total > 0).map((d) => {
-                              const pct = kpis.totalLeads > 0 ? (d.total / kpis.totalLeads) * 100 : 0;
-                              const color = DEGREE_COLORS[d.degree] ?? "#94a3b8";
-                              const maxCount = Math.max(...(degreeDistribuicao ?? []).map((x) => x.total), 1);
-                              return (
-                                <div key={d.degree} className="group/row -mx-2 rounded-lg px-2 py-2 transition-colors hover:bg-white/[0.025]">
-                                  <div className="mb-1.5 flex items-center justify-between">
-                                    <div className="flex items-center gap-2">
-                                      <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}80` }} />
-                                      <span className="text-[12.5px] font-medium text-[var(--foreground)]">{d.degree}</span>
+                        ) : (() => {
+                          const filtered = (degreeDistribuicao ?? []).filter((d) => d.total > 0);
+                          const top = filtered.reduce((a, b) => (b.total > a.total ? b : a), filtered[0]);
+                          const topPct = kpis.totalLeads > 0 && top ? (top.total / kpis.totalLeads) * 100 : 0;
+                          const topColor = top ? (DEGREE_COLORS[top.degree] ?? "#94a3b8") : "#94a3b8";
+                          const maxCount = Math.max(...filtered.map((x) => x.total), 1);
+                          return (
+                            <>
+                              {top && (
+                                <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--muted)]/30 px-4 py-2.5">
+                                  <div className="min-w-0">
+                                    <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Formação predominante</p>
+                                    <p className="mt-0.5 truncate text-sm font-bold text-[var(--foreground)]">{top.degree}</p>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className="text-2xl font-black tabular-nums leading-none" style={{ color: topColor }}>{topPct.toFixed(0)}%</p>
+                                    <p className="text-[10px] font-semibold tabular-nums text-[var(--muted-foreground)]">{top.total} leads</p>
+                                  </div>
+                                </div>
+                              )}
+                              <div className="mt-4 flex-1 space-y-2.5">
+                                {filtered.map((d) => {
+                                  const pct = kpis.totalLeads > 0 ? (d.total / kpis.totalLeads) * 100 : 0;
+                                  const color = DEGREE_COLORS[d.degree] ?? "#94a3b8";
+                                  return (
+                                    <div key={d.degree} className="group/row -mx-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/[0.025]">
+                                      <div className="mb-1.5 flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                          <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}80` }} />
+                                          <span className="text-[12.5px] font-medium text-[var(--foreground)]">{d.degree}</span>
+                                        </div>
+                                        <div className="flex items-baseline gap-2">
+                                          <span className="text-[15px] font-extrabold tabular-nums text-[var(--foreground)]">{d.total}</span>
+                                          <span className="rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
+                                        </div>
+                                      </div>
+                                      <div className="relative h-3 w-full overflow-hidden rounded-full bg-[var(--muted)]/40">
+                                        <div
+                                          className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
+                                          style={{
+                                            width: `${(d.total / maxCount) * 100}%`,
+                                            background: `linear-gradient(90deg, ${color}99 0%, ${color} 100%)`,
+                                            boxShadow: `0 0 10px ${color}55`,
+                                          }}
+                                        />
+                                      </div>
                                     </div>
-                                    <div className="flex items-baseline gap-2">
-                                      <span className="text-[15px] font-extrabold tabular-nums text-[var(--foreground)]">{d.total}</span>
-                                      <span className="rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
-                                    </div>
-                                  </div>
-                                  <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-[var(--muted)]/40">
-                                    <div
-                                      className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
-                                      style={{
-                                        width: `${(d.total / maxCount) * 100}%`,
-                                        background: `linear-gradient(90deg, ${color}99 0%, ${color} 100%)`,
-                                        boxShadow: `0 0 10px ${color}55`,
-                                      }}
-                                    />
-                                  </div>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </>
-                    ) : (
-                      <>
-                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
-                          {isMirante ? "Previsão de compra" : "Intenção de compra"}
-                        </p>
-                        <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
-                          {isMirante ? "Qual é sua previsão para compra?" : "Quando pretende adquirir?"}
-                        </h3>
-                        <div className="mt-4 space-y-1.5">
-                          {timingDistribuicao.map((t) => {
-                            const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
-                            const color = TIMING_COLORS[t.timing] ?? "#94a3b8";
-                            const maxCount = Math.max(...timingDistribuicao.map((x) => x.total), 1);
-                            return (
-                              <div key={t.timing} className="group/row -mx-2 rounded-lg px-2 py-2 transition-colors hover:bg-white/[0.025]">
-                                <div className="mb-1.5 flex items-center justify-between">
-                                  <div className="flex items-center gap-2">
-                                    <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}80` }} />
-                                    <span className="text-[12.5px] font-medium text-[var(--foreground)]">{t.timing}</span>
-                                  </div>
-                                  <div className="flex items-baseline gap-2">
-                                    <span className="text-[15px] font-extrabold tabular-nums text-[var(--foreground)]">{t.total}</span>
-                                    <span className="rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
-                                  </div>
-                                </div>
-                                <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-[var(--muted)]/40">
-                                  <div
-                                    className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
-                                    style={{
-                                      width: `${(t.total / maxCount) * 100}%`,
-                                      background: `linear-gradient(90deg, ${color}99 0%, ${color} 100%)`,
-                                      boxShadow: `0 0 10px ${color}55`,
-                                    }}
-                                  />
-                                </div>
+                                  );
+                                })}
                               </div>
-                            );
-                          })}
-                          {timingDistribuicao.length === 0 && <p className="text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>}
+                            </>
+                          );
+                        })()}
+                      </div>
+                    ) : (
+                      <div className="relative flex h-full flex-col">
+                        <div className="flex items-start gap-2.5">
+                          <div className="mt-0.5 h-7 w-1 shrink-0 rounded-full bg-gradient-to-b from-[var(--primary)] to-[color-mix(in_srgb,var(--primary)_40%,transparent)]" />
+                          <div>
+                            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
+                              {isMirante ? "Previsão de compra" : "Intenção de compra"}
+                            </p>
+                            <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">
+                              {isMirante ? "Qual é sua previsão para compra?" : "Quando pretende adquirir?"}
+                            </h3>
+                          </div>
                         </div>
-                      </>
+                        {timingDistribuicao.length === 0 ? (
+                          <p className="mt-6 text-sm text-[var(--muted-foreground)]">Campo não encontrado.</p>
+                        ) : (() => {
+                          const top = timingDistribuicao.reduce((a, b) => (b.total > a.total ? b : a), timingDistribuicao[0]);
+                          const topPct = kpis.totalLeads > 0 && top ? (top.total / kpis.totalLeads) * 100 : 0;
+                          const topColor = top ? (TIMING_COLORS[top.timing] ?? "#94a3b8") : "#94a3b8";
+                          const maxCount = Math.max(...timingDistribuicao.map((x) => x.total), 1);
+                          return (
+                            <>
+                              {top && (
+                                <div className="mt-4 flex items-center justify-between gap-3 rounded-xl border border-[var(--border)] bg-[var(--muted)]/30 px-4 py-2.5">
+                                  <div className="min-w-0">
+                                    <p className="text-[9px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">Maior previsão</p>
+                                    <p className="mt-0.5 truncate text-sm font-bold text-[var(--foreground)]">{top.timing}</p>
+                                  </div>
+                                  <div className="text-right">
+                                    <p className="text-2xl font-black tabular-nums leading-none" style={{ color: topColor }}>{topPct.toFixed(0)}%</p>
+                                    <p className="text-[10px] font-semibold tabular-nums text-[var(--muted-foreground)]">{top.total} leads</p>
+                                  </div>
+                                </div>
+                              )}
+                              <div className="mt-4 flex-1 space-y-2.5">
+                                {timingDistribuicao.map((t) => {
+                                  const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
+                                  const color = TIMING_COLORS[t.timing] ?? "#94a3b8";
+                                  return (
+                                    <div key={t.timing} className="group/row -mx-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/[0.025]">
+                                      <div className="mb-1.5 flex items-center justify-between">
+                                        <div className="flex items-center gap-2">
+                                          <span className="h-2.5 w-2.5 shrink-0 rounded-full" style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}80` }} />
+                                          <span className="text-[12.5px] font-medium text-[var(--foreground)]">{t.timing}</span>
+                                        </div>
+                                        <div className="flex items-baseline gap-2">
+                                          <span className="text-[15px] font-extrabold tabular-nums text-[var(--foreground)]">{t.total}</span>
+                                          <span className="rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
+                                        </div>
+                                      </div>
+                                      <div className="relative h-3 w-full overflow-hidden rounded-full bg-[var(--muted)]/40">
+                                        <div
+                                          className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
+                                          style={{
+                                            width: `${(t.total / maxCount) * 100}%`,
+                                            background: `linear-gradient(90deg, ${color}99 0%, ${color} 100%)`,
+                                            boxShadow: `0 0 10px ${color}55`,
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </>
+                          );
+                        })()}
+                      </div>
                     )}
                   </div>
                 </div>
 
                 {/* Capacidade financeira — standalone para Icaraí (não Mirante, não Academy) */}
                 {!isAcademy && !isMirante && (
-                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
-                      Capacidade financeira
-                    </p>
-                    <h3 className="mt-0.5 text-base font-extrabold tracking-tight text-[var(--foreground)]">
-                      Quanto pretende investir?
-                    </h3>
-                    <div className="mt-4 space-y-1.5">
+                  <div className="group/cap relative overflow-hidden rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--card)] via-[var(--card)] to-[color-mix(in_srgb,var(--primary)_3%,var(--card))] p-6">
+                    <div className="pointer-events-none absolute -right-10 -bottom-10 h-40 w-40 rounded-full bg-[var(--primary)] opacity-[0.04] blur-3xl transition-opacity duration-700 group-hover/cap:opacity-[0.08]" />
+                    <div className="relative flex items-start gap-2.5">
+                      <div className="mt-0.5 h-7 w-1 shrink-0 rounded-full bg-gradient-to-b from-[var(--primary)] to-[color-mix(in_srgb,var(--primary)_40%,transparent)]" />
+                      <div>
+                        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
+                          Capacidade financeira
+                        </p>
+                        <h3 className="mt-0.5 text-lg font-extrabold tracking-tight text-[var(--foreground)]">
+                          Quanto pretende investir?
+                        </h3>
+                      </div>
+                    </div>
+                    <div className="relative mt-4 space-y-2.5">
                       {investDistribuicao.map((t) => {
                         const pct = kpis.totalLeads > 0 ? (t.total / kpis.totalLeads) * 100 : 0;
                         const color = INVEST_COLORS[t.invest] ?? "#94a3b8";
@@ -906,7 +987,7 @@ export function ImobLeadScoringPanel({
                                 <span className="rounded-md bg-white/[0.04] px-1.5 py-0.5 text-[10px] font-bold tabular-nums text-[var(--muted-foreground)]">{pct.toFixed(0)}%</span>
                               </div>
                             </div>
-                            <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-[var(--muted)]/40">
+                            <div className="relative h-3 w-full overflow-hidden rounded-full bg-[var(--muted)]/40">
                               <div
                                 className="absolute inset-y-0 left-0 rounded-full transition-all duration-700 ease-out"
                                 style={{
