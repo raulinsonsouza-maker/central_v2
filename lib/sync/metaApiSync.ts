@@ -77,14 +77,11 @@ export async function syncMetaCliente(
   const dateFrom = options?.dateFrom ?? smartDateFrom;
   const dateTo = options?.dateTo ?? today;
 
-  // Criativos e status de campanha: usa janela mínima de 7 dias
-  // para capturar pausas, ativações e renomeações recentes
-  const creativeMinDate = (() => {
-    const d = new Date();
-    d.setDate(d.getDate() - 7);
-    return formatDate(d);
-  })();
-  const creativeDateFrom = options?.creativeDateFrom ?? (smartDateFrom < creativeMinDate ? smartDateFrom : creativeMinDate);
+  // Criativos: insights agregados desde DEFAULT_DATE_FROM até hoje, para que cada
+  // snapshot contenha o total de vida do anúncio (e não só os últimos 7 dias).
+  // O filtro `effective_status` em fetchAdsWithCreatives garante que ads ativos
+  // sejam capturados independentemente da janela de insights.
+  const creativeDateFrom = options?.creativeDateFrom ?? DEFAULT_DATE_FROM;
   const creativeDateTo = options?.creativeDateTo ?? today;
 
   try {
