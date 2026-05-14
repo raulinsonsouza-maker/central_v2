@@ -285,15 +285,17 @@ export function ImobLeadScoringPanel({
   const [selectedCamp, setSelectedCamp] = React.useState<Camp | null>(null);
   const [selectedAdset, setSelectedAdset] = React.useState<Adset | null>(null);
 
+  const scoringAgrupamento = chartAgrupamento ?? agrupamento;
+
   const params = new URLSearchParams();
   if (dateFilter.dataInicio) params.set("dataInicio", dateFilter.dataInicio);
   if (dateFilter.dataFim) params.set("dataFim", dateFilter.dataFim);
-  params.set("agrupamento", agrupamento);
+  params.set("agrupamento", scoringAgrupamento);
   if (gradeFilter) params.set("grade", gradeFilter);
   if (selectedFormId) params.set("formId", selectedFormId);
 
   const { data, isLoading, error, refetch, isFetching } = useQuery<ApiResponse>({
-    queryKey: ["imob-lead-scoring", clienteId, dateFilter.dataInicio, dateFilter.dataFim, agrupamento, gradeFilter, selectedFormId],
+    queryKey: ["imob-lead-scoring", clienteId, dateFilter.dataInicio, dateFilter.dataFim, scoringAgrupamento, gradeFilter, selectedFormId],
     queryFn: async () => {
       const res = await fetch(`/api/clientes/${clienteId}/lead-scoring-imob?${params}`);
       if (!res.ok) throw new Error(await res.text());
