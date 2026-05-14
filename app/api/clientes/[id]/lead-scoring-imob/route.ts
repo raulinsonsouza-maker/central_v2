@@ -371,6 +371,7 @@ export async function GET(
   const investCount: Record<string, number> = {};
   for (const l of scored) {
     const key = l._investLabel;
+    if (key == null) continue;
     investCount[key] = (investCount[key] ?? 0) + 1;
   }
 
