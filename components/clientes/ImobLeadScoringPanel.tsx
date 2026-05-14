@@ -844,6 +844,8 @@ export function ImobLeadScoringPanel({
             dateFilter={dateFilter}
             canal="meta"
             mqlByCampaignName={new Map(campanhasHierarchy.map((c) => [c.campaignName ?? "", c.mql]))}
+            mqlByAdsetId={new Map(campanhasHierarchy.flatMap((c) => c.adsets.map((a) => [a.adsetId, a.mql])))}
+            mqlByAdId={new Map(campanhasHierarchy.flatMap((c) => c.adsets.flatMap((a) => a.ads.map((ad) => [ad.adId, ad.mql]))))}
           />
 
           {/* Formulários — clicáveis para filtrar leads (espelho do seletor de topo) */}

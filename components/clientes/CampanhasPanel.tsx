@@ -504,7 +504,7 @@ function sortConjuntos(arr: Conjunto[], col: ConjuntoSortCol, dir: SortDir): Con
   });
 }
 
-function ConjuntosTable({ conjuntos, onSelect, parentCampType }: { conjuntos: Conjunto[]; onSelect: (id: string) => void; parentCampType?: CampType | null }) {
+function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId }: { conjuntos: Conjunto[]; onSelect: (id: string) => void; parentCampType?: CampType | null; mqlByAdsetId?: Map<string, number> }) {
   const [sortCol, setSortCol] = React.useState<ConjuntoSortCol>("spend");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
 
@@ -516,7 +516,7 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType }: { conjuntos: Co
 
   const hasLeads = conjuntos.some(c => c.leads > 0) || parentCampType === "leads";
   const hasSales = conjuntos.some(c => c.purchases > 0 || c.faturamento > 0) || parentCampType === "vendas";
-  const minW = hasSales ? 1120 : hasLeads ? 860 : 720;
+  const minW = hasSales ? 1120 : (hasLeads && mqlByAdsetId) ? 980 : hasLeads ? 860 : 720;
   const sorted = sortConjuntos(conjuntos, sortCol, sortDir);
   const st = { sortCol, sortDir, onSort: handleSort };
 
@@ -532,6 +532,11 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType }: { conjuntos: Co
             <SortTh col="ctr" label="CTR" {...st} />
             <SortTh col="cpc" label="CPC" {...st} />
             {hasLeads && <SortTh col="leads" label="Leads" {...st} />}
+            {mqlByAdsetId && hasLeads && (
+              <th className="px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-right whitespace-nowrap text-emerald-400">
+                MQL
+              </th>
+            )}
             {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
             {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
             {hasSales && <SortTh col="cpa" label="CPA" {...st} />}
@@ -570,6 +575,16 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType }: { conjuntos: Co
                     {c.leads > 0 ? fmt(c.leads) : "—"}
                   </td>
                 )}
+                {mqlByAdsetId && hasLeads && (() => {
+                  const mql = mqlByAdsetId.get(c.adsetId) ?? 0;
+                  return (
+                    <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
+                      {mql > 0
+                        ? <span className="text-[14px] font-bold text-emerald-400">{fmt(mql)}</span>
+                        : <span className="text-[13px] text-white/20">0</span>}
+                    </td>
+                  );
+                })()}
                 {hasLeads && (
                   <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
                     {c.cpl !== null ? fmtBrl(c.cpl) : "—"}
@@ -758,7 +773,7 @@ function sortCriativos(arr: Criativo[], col: CriativoSortCol, dir: SortDir): Cri
   });
 }
 
-function CriativosTable({ criativos, parentCampType }: { criativos: Criativo[]; parentCampType?: CampType | null }) {
+function CriativosTable({ criativos, parentCampType, mqlByAdId }: { criativos: Criativo[]; parentCampType?: CampType | null; mqlByAdId?: Map<string, number> }) {
   const [modalCriativo, setModalCriativo] = React.useState<Criativo | null>(null);
   const [sortCol, setSortCol] = React.useState<CriativoSortCol>("spend");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
@@ -790,6 +805,11 @@ function CriativosTable({ criativos, parentCampType }: { criativos: Criativo[]; 
               <SortTh col="cpc" label="CPC" {...st} />
               <SortTh col="cpm" label="CPM" {...st} />
               {hasLeads && <SortTh col="leads" label="Leads" {...st} />}
+              {mqlByAdId && hasLeads && (
+                <th className="px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-right whitespace-nowrap text-emerald-400">
+                  MQL
+                </th>
+              )}
               {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
               {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
               {hasSales && <SortTh col="cpa" label="CPA" {...st} />}
@@ -902,8 +922,18 @@ function CriativosTable({ criativos, parentCampType }: { criativos: Criativo[]; 
                       {c.leads > 0 ? fmt(c.leads) : "—"}
                     </td>
                   )}
+                  {mqlByAdId && hasLeads && (() => {
+                    const mql = mqlByAdId.get(c.adId) ?? 0;
+                    return (
+                      <td className={`px-4 py-3 text-right tabular-nums whitespace-nowrap ${bg}`}>
+                        {mql > 0
+                          ? <span className="text-[14px] font-bold text-emerald-400">{fmt(mql)}</span>
+                          : <span className="text-[13px] text-white/20">0</span>}
+                      </td>
+                    );
+                  })()}
                   {hasLeads && (
-                    <td className={`${!hasSales ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                    <td className={`${!hasSales && !mqlByAdId ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                       {c.cpl !== null ? fmtBrl(c.cpl) : "—"}
                     </td>
                   )}
@@ -1025,9 +1055,11 @@ interface Props {
   dateFilter: DateFilter;
   canal?: string;
   mqlByCampaignName?: Map<string, number>;
+  mqlByAdsetId?: Map<string, number>;
+  mqlByAdId?: Map<string, number>;
 }
 
-export function CampanhasPanel({ clienteId, dateFilter, canal = "geral", mqlByCampaignName }: Props) {
+export function CampanhasPanel({ clienteId, dateFilter, canal = "geral", mqlByCampaignName, mqlByAdsetId, mqlByAdId }: Props) {
   const [selectedCampanha, setSelectedCampanha] = React.useState<string | null>(null);
   const [selectedConjunto, setSelectedConjunto] = React.useState<string | null>(null);
   const selectedCampanhaObjRef = React.useRef<Campanha | null>(null);
@@ -1177,7 +1209,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral", mqlByCa
           </div>
         ) : (
           <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-            <ConjuntosTable conjuntos={conjuntos} onSelect={setSelectedConjunto} parentCampType={parentCampType} />
+            <ConjuntosTable conjuntos={conjuntos} onSelect={setSelectedConjunto} parentCampType={parentCampType} mqlByAdsetId={mqlByAdsetId} />
           </div>
         )
       )}
@@ -1191,7 +1223,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral", mqlByCa
           </div>
         ) : (
           <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-            <CriativosTable criativos={criativos} parentCampType={parentCampType} />
+            <CriativosTable criativos={criativos} parentCampType={parentCampType} mqlByAdId={mqlByAdId} />
           </div>
         )
       )}
