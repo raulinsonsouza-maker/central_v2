@@ -135,7 +135,7 @@ const CAMP_TYPE_META: Record<CampType, { label: string; color: string }> = {
 };
 const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 
-type SortCol = "nome" | "status" | "diasAtivos" | "investimento" | "impressoes" | "cliques" | "ctr" | "resultados" | "custoResultado" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
+type SortCol = "nome" | "status" | "diasAtivos" | "investimento" | "impressoes" | "cliques" | "ctr" | "resultados" | "mql" | "custoResultado" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
 type SortDir = "asc" | "desc";
 
 function SortIcon({ col, sortCol, sortDir }: { col: string; sortCol: string; sortDir: SortDir }) {
@@ -177,6 +177,7 @@ function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] 
     else if (col === "ticketMedio") { va = a.ticketMedio ?? -Infinity; vb = b.ticketMedio ?? -Infinity; }
     else if (col === "resultados") { va = a.resultados ?? -Infinity; vb = b.resultados ?? -Infinity; }
     else if (col === "custoResultado") { va = a.custoResultado ?? Infinity; vb = b.custoResultado ?? Infinity; }
+    else if (col === "mql") { return 0; /* sort de MQL é feito fora (precisa do Map) */ }
     else { va = a[col] as number; vb = b[col] as number; }
     if (va < vb) return dir === "asc" ? -1 : 1;
     if (va > vb) return dir === "asc" ? 1 : -1;
@@ -198,10 +199,27 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
     }
   }
 
-  const sorted = sortCampanhas(campanhas, sortCol, sortDir);
+  // MQL só faz sentido para campanhas de geração de leads
+  const isLeadCamp = (c: Campanha) => detectCampType(c.nome, c.leads, c.purchases, c) === "leads";
+  const cappedMql = (c: Campanha) => {
+    if (!mqlByCampaignName || !isLeadCamp(c)) return 0;
+    const raw = mqlByCampaignName.get(c.nome) ?? 0;
+    return c.leads > 0 ? Math.min(raw, c.leads) : 0;
+  };
+
+  let sorted = sortCampanhas(campanhas, sortCol, sortDir);
+  if (sortCol === "mql" && mqlByCampaignName) {
+    sorted = [...campanhas].sort((a, b) => {
+      const va = cappedMql(a);
+      const vb = cappedMql(b);
+      return sortDir === "asc" ? va - vb : vb - va;
+    });
+  }
 
   const hasResultados = campanhas.some(c => (c.resultados ?? 0) > 0);
   const hasSales = campanhas.some(c => c.purchases > 0 || c.faturamento > 0 || detectCampType(c.nome, c.leads, c.purchases, c) === "vendas");
+  const hasLeadCamps = campanhas.some(isLeadCamp);
+  const showMqlCol = !!mqlByCampaignName && hasLeadCamps;
 
   // Label for the Resultado column — pick the predominant result type
   const resultTypesCounts = campanhas.reduce<Record<string, number>>((acc, c) => {
@@ -220,7 +238,7 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
     resultados: sum(campanhas.map(c => c.resultados ?? 0)),
     purchases: sum(campanhas.map(c => c.purchases)),
     faturamento: sum(campanhas.map(c => c.faturamento)),
-    mql: mqlByCampaignName ? sum(campanhas.map(c => mqlByCampaignName.get(c.nome) ?? 0)) : 0,
+    mql: mqlByCampaignName ? sum(campanhas.map(cappedMql)) : 0,
   };
   const totalCtr = totals.impressoes > 0 ? (totals.cliques / totals.impressoes) * 100 : 0;
   const totalCustoResultado = totals.resultados > 0 ? totals.investimento / totals.resultados : null;
@@ -241,9 +259,14 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
             <SortTh col="cliques" label="Cliques" {...st} />
             <SortTh col="ctr" label="CTR" {...st} />
             {hasResultados && <SortTh col="resultados" label={resultadoLabel} {...st} />}
-            {mqlByCampaignName && hasResultados && (
-              <th className="px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-right whitespace-nowrap text-emerald-400">
+            {showMqlCol && (
+              <th
+                className={`px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-right whitespace-nowrap cursor-pointer select-none transition-colors ${sortCol === "mql" ? "text-emerald-300" : "text-emerald-400 hover:text-emerald-300"}`}
+                onClick={() => handleSort("mql")}
+                title="Leads qualificados (MQL) — somente para campanhas de geração de leads"
+              >
                 MQL
+                <SortIcon col="mql" sortCol={sortCol} sortDir={sortDir} />
               </th>
             )}
             {hasResultados && <SortTh col="custoResultado" label={custoResultadoLabel} {...st} />}
@@ -364,13 +387,14 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
                   </td>
                 )}
 
-                {/* MQL por campanha */}
-                {mqlByCampaignName && hasResultados && (() => {
-                  const mql = mqlByCampaignName.get(c.nome) ?? 0;
+                {/* MQL por campanha — apenas para campanhas de geração de leads */}
+                {showMqlCol && (() => {
+                  const isLead = isLeadCamp(c);
+                  const mql = cappedMql(c);
                   return (
                     <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
-                      {isNonConversion || !hasResult ? (
-                        <span className="text-[13px] text-white/20">—</span>
+                      {!isLead ? (
+                        <span className="text-[13px] text-white/15" title="MQL aplica-se apenas a campanhas de geração de leads">—</span>
                       ) : mql > 0 ? (
                         <span className="text-[14px] font-bold text-emerald-400">{fmt(mql)}</span>
                       ) : (
@@ -452,7 +476,7 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
                 {fmt(totals.resultados)}
               </td>
             )}
-            {mqlByCampaignName && hasResultados && (
+            {showMqlCol && (
               <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[15px] font-black text-emerald-400">
                 {fmt(totals.mql)}
               </td>

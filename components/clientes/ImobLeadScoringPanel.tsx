@@ -882,7 +882,11 @@ export function ImobLeadScoringPanel({
             clienteId={clienteId}
             dateFilter={dateFilter}
             canal="meta"
-            mqlByCampaignName={new Map(campanhasHierarchy.map((c) => [c.campaignName ?? "", c.mql]))}
+            mqlByCampaignName={new Map(
+              campanhasHierarchy
+                .filter((c) => (c.campaignName ?? "").trim().length > 0)
+                .map((c) => [c.campaignName as string, c.mql])
+            )}
             mqlByAdsetId={new Map(campanhasHierarchy.flatMap((c) => c.adsets.map((a) => [a.adsetId, a.mql])))}
             mqlByAdId={new Map(campanhasHierarchy.flatMap((c) => c.adsets.flatMap((a) => a.ads.map((ad) => [ad.adId, ad.mql]))))}
           />
