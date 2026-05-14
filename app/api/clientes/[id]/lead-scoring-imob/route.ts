@@ -487,11 +487,21 @@ export async function GET(
     const campMql = mqld.mql;
     const adsetEntries = Object.entries(d.adsets);
 
-    // Se não há dados reais de adset no webhook, distribui proporcionalmente pelos leads do Meta
-    const hasRealAdsetData = adsetEntries.some(([asetId]) => (mqlByAdset[asetId]?.total ?? 0) > 0);
-    const adsetLeadCounts = adsetEntries.map(([, a]) => a.leads);
-    const adsetMqlDist = hasRealAdsetData ? null : distributeProportional(campMql, adsetLeadCounts);
-    const adsetScoredDist = hasRealAdsetData ? null : distributeProportional(mqld.total, adsetLeadCounts);
+    // Estratégia: usa dados reais do webhook por adset quando disponíveis; o residual
+    // (campMql − soma dos MQLs reais atribuídos) é redistribuído proporcionalmente entre
+    // os adsets SEM atribuição (peso = leads do Meta). Se todos têm atribuição, o residual
+    // é distribuído entre todos. Garante que a soma dos filhos == total da campanha mesmo
+    // quando o webhook não trouxe adsetId/adId em parte dos leads.
+    const realAdsetMqlSum = adsetEntries.reduce((s, [asetId]) => s + (mqlByAdset[asetId]?.mql ?? 0), 0);
+    const realAdsetScoredSum = adsetEntries.reduce((s, [asetId]) => s + (mqlByAdset[asetId]?.total ?? 0), 0);
+    const residualAdsetMql = Math.max(0, campMql - realAdsetMqlSum);
+    const residualAdsetScored = Math.max(0, mqld.total - realAdsetScoredSum);
+    const orphanWeights = adsetEntries.map(([asetId, a]) => mqlByAdset[asetId] ? 0 : a.leads);
+    const orphanWeightsSum = orphanWeights.reduce((a, b) => a + b, 0);
+    const allWeights = adsetEntries.map(([, a]) => a.leads);
+    const adsetWeights = orphanWeightsSum > 0 ? orphanWeights : allWeights;
+    const adsetMqlDist = distributeProportional(residualAdsetMql, adsetWeights);
+    const adsetScoredDist = distributeProportional(residualAdsetScored, adsetWeights);
 
     return {
       campaignId: cid,
@@ -506,16 +516,23 @@ export async function GET(
       ctr: calcCtr(d.clicks, d.impressions),
       cpl: calcCpl(d.spend, mqld.total),
       adsets: adsetEntries.map(([adsetId, a], adsetIdx) => {
-        // Usa dados reais do webhook se disponíveis, senão distribuição proporcional
+        // Real (do webhook) + parcela do residual quando aplicável
         const realAdset = mqlByAdset[adsetId];
-        const adsetMql = realAdset ? realAdset.mql : (adsetMqlDist ? adsetMqlDist[adsetIdx] : 0);
-        const adsetScored = realAdset ? realAdset.total : (adsetScoredDist ? adsetScoredDist[adsetIdx] : 0);
+        const adsetMql = (realAdset?.mql ?? 0) + (adsetMqlDist[adsetIdx] ?? 0);
+        const adsetScored = (realAdset?.total ?? 0) + (adsetScoredDist[adsetIdx] ?? 0);
 
         const adEntries = Object.entries(a.ads);
-        const hasRealAdData = adEntries.some(([aid]) => (mqlByAd[aid]?.total ?? 0) > 0);
-        const adLeadCounts = adEntries.map(([, ad]) => ad.leads);
-        const adMqlDist = hasRealAdData ? null : distributeProportional(adsetMql, adLeadCounts);
-        const adScoredDist = hasRealAdData ? null : distributeProportional(adsetScored, adLeadCounts);
+        // Mesma lógica residual no nível de anúncios dentro deste adset
+        const realAdMqlSum = adEntries.reduce((s, [aid]) => s + (mqlByAd[aid]?.mql ?? 0), 0);
+        const realAdScoredSum = adEntries.reduce((s, [aid]) => s + (mqlByAd[aid]?.total ?? 0), 0);
+        const residualAdMql = Math.max(0, adsetMql - realAdMqlSum);
+        const residualAdScored = Math.max(0, adsetScored - realAdScoredSum);
+        const adOrphanWeights = adEntries.map(([aid, ad]) => mqlByAd[aid] ? 0 : ad.leads);
+        const adOrphanWeightsSum = adOrphanWeights.reduce((a, b) => a + b, 0);
+        const adAllWeights = adEntries.map(([, ad]) => ad.leads);
+        const adWeights = adOrphanWeightsSum > 0 ? adOrphanWeights : adAllWeights;
+        const adMqlDist = distributeProportional(residualAdMql, adWeights);
+        const adScoredDist = distributeProportional(residualAdScored, adWeights);
 
         return {
           adsetId,
@@ -531,8 +548,8 @@ export async function GET(
           cpl: calcCpl(a.spend, adsetScored),
           ads: adEntries.map(([adId, ad], adIdx) => {
             const realAd = mqlByAd[adId];
-            const adMql = realAd ? realAd.mql : (adMqlDist ? adMqlDist[adIdx] : 0);
-            const adScored = realAd ? realAd.total : (adScoredDist ? adScoredDist[adIdx] : 0);
+            const adMql = (realAd?.mql ?? 0) + (adMqlDist[adIdx] ?? 0);
+            const adScored = (realAd?.total ?? 0) + (adScoredDist[adIdx] ?? 0);
             return {
               adId,
               adName: ad.adName,
