@@ -400,18 +400,41 @@ export async function GET(
     if (l._isMql) mqlByCampaign[cid].mql++;
   }
 
-  // MQL real por adset e por anúncio (MetaLeadIndividual — atribuição exata do webhook)
-  const mqlByAdset: Record<string, { total: number; mql: number }> = {};
-  const mqlByAd: Record<string, { total: number; mql: number }> = {};
+  // Árvore de atribuição REAL do webhook: campaignId → adsetId → adId
+  // Usa "_none" para níveis sem atribuição. Permite calcular órfãos POR campanha
+  // (leads/MQL que vieram nessa campanha mas sem adsetId/adId no webhook).
+  type Counter = { total: number; mql: number };
+  const mqlTree: Record<string, { total: number; mql: number; adsets: Record<string, Counter & { ads: Record<string, Counter> }> }> = {};
   for (const l of scored) {
+    const cid = l.campaignId ?? "_none";
     const asetId = l.adsetId ?? "_none";
-    if (!mqlByAdset[asetId]) mqlByAdset[asetId] = { total: 0, mql: 0 };
-    mqlByAdset[asetId].total++;
-    if (l._isMql) mqlByAdset[asetId].mql++;
     const aid = l.adId ?? "_none";
-    if (!mqlByAd[aid]) mqlByAd[aid] = { total: 0, mql: 0 };
-    mqlByAd[aid].total++;
-    if (l._isMql) mqlByAd[aid].mql++;
+    if (!mqlTree[cid]) mqlTree[cid] = { total: 0, mql: 0, adsets: {} };
+    mqlTree[cid].total++;
+    if (l._isMql) mqlTree[cid].mql++;
+    if (!mqlTree[cid].adsets[asetId]) mqlTree[cid].adsets[asetId] = { total: 0, mql: 0, ads: {} };
+    mqlTree[cid].adsets[asetId].total++;
+    if (l._isMql) mqlTree[cid].adsets[asetId].mql++;
+    if (!mqlTree[cid].adsets[asetId].ads[aid]) mqlTree[cid].adsets[asetId].ads[aid] = { total: 0, mql: 0 };
+    mqlTree[cid].adsets[asetId].ads[aid].total++;
+    if (l._isMql) mqlTree[cid].adsets[asetId].ads[aid].mql++;
+  }
+  // Mantém os índices flat para compatibilidade com retorno legacy mqlByAdset/mqlByAd
+  const mqlByAdset: Record<string, Counter> = {};
+  const mqlByAd: Record<string, Counter> = {};
+  for (const camp of Object.values(mqlTree)) {
+    for (const [asetId, aset] of Object.entries(camp.adsets)) {
+      if (asetId === "_none") continue;
+      if (!mqlByAdset[asetId]) mqlByAdset[asetId] = { total: 0, mql: 0 };
+      mqlByAdset[asetId].total += aset.total;
+      mqlByAdset[asetId].mql += aset.mql;
+      for (const [aid, ad] of Object.entries(aset.ads)) {
+        if (aid === "_none") continue;
+        if (!mqlByAd[aid]) mqlByAd[aid] = { total: 0, mql: 0 };
+        mqlByAd[aid].total += ad.total;
+        mqlByAd[aid].mql += ad.mql;
+      }
+    }
   }
 
   // Hierarquia real: Campanha → Conjunto → Anúncio (MetaAdsCriativo)
@@ -487,21 +510,23 @@ export async function GET(
     const campMql = mqld.mql;
     const adsetEntries = Object.entries(d.adsets);
 
-    // Estratégia: usa dados reais do webhook por adset quando disponíveis; o residual
-    // (campMql − soma dos MQLs reais atribuídos) é redistribuído proporcionalmente entre
-    // os adsets SEM atribuição (peso = leads do Meta). Se todos têm atribuição, o residual
-    // é distribuído entre todos. Garante que a soma dos filhos == total da campanha mesmo
-    // quando o webhook não trouxe adsetId/adId em parte dos leads.
-    const realAdsetMqlSum = adsetEntries.reduce((s, [asetId]) => s + (mqlByAdset[asetId]?.mql ?? 0), 0);
-    const realAdsetScoredSum = adsetEntries.reduce((s, [asetId]) => s + (mqlByAdset[asetId]?.total ?? 0), 0);
-    const residualAdsetMql = Math.max(0, campMql - realAdsetMqlSum);
-    const residualAdsetScored = Math.max(0, mqld.total - realAdsetScoredSum);
-    const orphanWeights = adsetEntries.map(([asetId, a]) => mqlByAdset[asetId] ? 0 : a.leads);
-    const orphanWeightsSum = orphanWeights.reduce((a, b) => a + b, 0);
-    const allWeights = adsetEntries.map(([, a]) => a.leads);
-    const adsetWeights = orphanWeightsSum > 0 ? orphanWeights : allWeights;
-    const adsetMqlDist = distributeProportional(residualAdsetMql, adsetWeights);
-    const adsetScoredDist = distributeProportional(residualAdsetScored, adsetWeights);
+    // Cruzamento REAL: para cada adset/ad da MetaAdsCriativo, busca os contadores
+    // exatos do webhook (mqlTree[cid].adsets[asetId].ads[aid]). Sem inventar.
+    // Quando o webhook trouxe leads sem adsetId/adId, expomos como "órfãos" no
+    // header da campanha — assim a soma dos filhos é sempre real e o usuário vê
+    // a verdade da atribuição parcial.
+    const campTree = mqlTree[cid];
+    let mqlOrfaosAdset = 0, leadsOrfaosAdset = 0;
+    let mqlOrfaosAd = 0, leadsOrfaosAd = 0;
+    if (campTree) {
+      const orphanAdset = campTree.adsets["_none"];
+      if (orphanAdset) { mqlOrfaosAdset += orphanAdset.mql; leadsOrfaosAdset += orphanAdset.total; }
+      for (const [asetId, aset] of Object.entries(campTree.adsets)) {
+        if (asetId === "_none") continue;
+        const orphanAd = aset.ads["_none"];
+        if (orphanAd) { mqlOrfaosAd += orphanAd.mql; leadsOrfaosAd += orphanAd.total; }
+      }
+    }
 
     return {
       campaignId: cid,
@@ -515,24 +540,15 @@ export async function GET(
       clicks: d.clicks,
       ctr: calcCtr(d.clicks, d.impressions),
       cpl: calcCpl(d.spend, mqld.total),
-      adsets: adsetEntries.map(([adsetId, a], adsetIdx) => {
-        // Real (do webhook) + parcela do residual quando aplicável
-        const realAdset = mqlByAdset[adsetId];
-        const adsetMql = (realAdset?.mql ?? 0) + (adsetMqlDist[adsetIdx] ?? 0);
-        const adsetScored = (realAdset?.total ?? 0) + (adsetScoredDist[adsetIdx] ?? 0);
-
+      // Transparência: leads/MQL contados nesta campanha mas SEM adsetId/adId no webhook
+      mqlOrfaosAdset, leadsOrfaosAdset,
+      mqlOrfaosAd, leadsOrfaosAd,
+      adsets: adsetEntries.map(([adsetId, a]) => {
+        // Atribuição EXATA do webhook por adsetId — sem redistribuição
+        const realAdset = campTree?.adsets[adsetId];
+        const adsetMql = realAdset?.mql ?? 0;
+        const adsetScored = realAdset?.total ?? 0;
         const adEntries = Object.entries(a.ads);
-        // Mesma lógica residual no nível de anúncios dentro deste adset
-        const realAdMqlSum = adEntries.reduce((s, [aid]) => s + (mqlByAd[aid]?.mql ?? 0), 0);
-        const realAdScoredSum = adEntries.reduce((s, [aid]) => s + (mqlByAd[aid]?.total ?? 0), 0);
-        const residualAdMql = Math.max(0, adsetMql - realAdMqlSum);
-        const residualAdScored = Math.max(0, adsetScored - realAdScoredSum);
-        const adOrphanWeights = adEntries.map(([aid, ad]) => mqlByAd[aid] ? 0 : ad.leads);
-        const adOrphanWeightsSum = adOrphanWeights.reduce((a, b) => a + b, 0);
-        const adAllWeights = adEntries.map(([, ad]) => ad.leads);
-        const adWeights = adOrphanWeightsSum > 0 ? adOrphanWeights : adAllWeights;
-        const adMqlDist = distributeProportional(residualAdMql, adWeights);
-        const adScoredDist = distributeProportional(residualAdScored, adWeights);
 
         return {
           adsetId,
@@ -546,10 +562,11 @@ export async function GET(
           clicks: a.clicks,
           ctr: calcCtr(a.clicks, a.impressions),
           cpl: calcCpl(a.spend, adsetScored),
-          ads: adEntries.map(([adId, ad], adIdx) => {
-            const realAd = mqlByAd[adId];
-            const adMql = (realAd?.mql ?? 0) + (adMqlDist[adIdx] ?? 0);
-            const adScored = (realAd?.total ?? 0) + (adScoredDist[adIdx] ?? 0);
+          ads: adEntries.map(([adId, ad]) => {
+            // Atribuição EXATA do webhook por adId dentro deste adset
+            const realAd = realAdset?.ads[adId];
+            const adMql = realAd?.mql ?? 0;
+            const adScored = realAd?.total ?? 0;
             return {
               adId,
               adName: ad.adName,
@@ -577,6 +594,8 @@ export async function GET(
         leadsMeta: 0, leadsScored: mqld.total, mql: mqld.mql,
         taxaMql: txMql(mqld.total, mqld.mql),
         invest: 0, impressions: 0, clicks: 0, ctr: 0, cpl: null,
+        mqlOrfaosAdset: 0, leadsOrfaosAdset: 0,
+        mqlOrfaosAd: 0, leadsOrfaosAd: 0,
         adsets: [],
       });
     }

@@ -204,9 +204,7 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
   const cappedMql = (c: Campanha) => {
     if (!mqlByCampaignName || !isLeadCamp(c)) return 0;
     const raw = mqlByCampaignName.get(c.nome) ?? 0;
-    // Sem cap por c.leads: o webhook (MetaLeadIndividual) costuma ser mais completo
-    // que MetaAdsCriativo.leads. A hierarquia da API já garante Σ filhos == pai.
-    return c.leads > 0 ? raw : 0;
+    return c.leads > 0 ? Math.min(raw, c.leads) : 0;
   };
 
   let sorted = sortCampanhas(campanhas, sortCol, sortDir);
@@ -603,7 +601,7 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId }: {
                 )}
                 {mqlByAdsetId && hasLeads && (() => {
                   const rawMql = mqlByAdsetId.get(c.adsetId) ?? 0;
-                  const mql = c.leads > 0 ? rawMql : 0;
+                  const mql = c.leads > 0 ? Math.min(rawMql, c.leads) : 0;
                   return (
                     <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
                       {mql > 0
@@ -951,7 +949,7 @@ function CriativosTable({ criativos, parentCampType, mqlByAdId }: { criativos: C
                   )}
                   {mqlByAdId && hasLeads && (() => {
                     const rawMql = mqlByAdId.get(c.adId) ?? 0;
-                    const mql = c.leads > 0 ? rawMql : 0;
+                    const mql = c.leads > 0 ? Math.min(rawMql, c.leads) : 0;
                     return (
                       <td className={`px-4 py-3 text-right tabular-nums whitespace-nowrap ${bg}`}>
                         {mql > 0
