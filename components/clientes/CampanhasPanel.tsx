@@ -184,7 +184,7 @@ function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] 
   });
 }
 
-function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSelect: (nome: string) => void }) {
+function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas: Campanha[]; onSelect: (nome: string) => void; mqlByCampaignName?: Map<string, number> }) {
   const [sortCol, setSortCol] = React.useState<SortCol>("investimento");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
 
@@ -220,6 +220,7 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
     resultados: sum(campanhas.map(c => c.resultados ?? 0)),
     purchases: sum(campanhas.map(c => c.purchases)),
     faturamento: sum(campanhas.map(c => c.faturamento)),
+    mql: mqlByCampaignName ? sum(campanhas.map(c => mqlByCampaignName.get(c.nome) ?? 0)) : 0,
   };
   const totalCtr = totals.impressoes > 0 ? (totals.cliques / totals.impressoes) * 100 : 0;
   const totalCustoResultado = totals.resultados > 0 ? totals.investimento / totals.resultados : null;
@@ -240,6 +241,11 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
             <SortTh col="cliques" label="Cliques" {...st} />
             <SortTh col="ctr" label="CTR" {...st} />
             {hasResultados && <SortTh col="resultados" label={resultadoLabel} {...st} />}
+            {mqlByCampaignName && hasResultados && (
+              <th className="px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-right whitespace-nowrap text-emerald-400">
+                MQL
+              </th>
+            )}
             {hasResultados && <SortTh col="custoResultado" label={custoResultadoLabel} {...st} />}
             {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
             {hasSales && <SortTh col="ticketMedio" label="Ticket Médio" {...st} />}
@@ -358,6 +364,22 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
                   </td>
                 )}
 
+                {/* MQL por campanha */}
+                {mqlByCampaignName && hasResultados && (() => {
+                  const mql = mqlByCampaignName.get(c.nome) ?? 0;
+                  return (
+                    <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
+                      {isNonConversion || !hasResult ? (
+                        <span className="text-[13px] text-white/20">—</span>
+                      ) : mql > 0 ? (
+                        <span className="text-[14px] font-bold text-emerald-400">{fmt(mql)}</span>
+                      ) : (
+                        <span className="text-[13px] text-white/20">0</span>
+                      )}
+                    </td>
+                  );
+                })()}
+
                 {/* Custo por resultado */}
                 {hasResultados && (
                   <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
@@ -428,6 +450,11 @@ function CampanhasTable({ campanhas, onSelect }: { campanhas: Campanha[]; onSele
             {hasResultados && (
               <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[15px] font-black text-[var(--primary)]">
                 {fmt(totals.resultados)}
+              </td>
+            )}
+            {mqlByCampaignName && hasResultados && (
+              <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[15px] font-black text-emerald-400">
+                {fmt(totals.mql)}
               </td>
             )}
             {hasResultados && (
@@ -997,9 +1024,10 @@ interface Props {
   clienteId: string;
   dateFilter: DateFilter;
   canal?: string;
+  mqlByCampaignName?: Map<string, number>;
 }
 
-export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props) {
+export function CampanhasPanel({ clienteId, dateFilter, canal = "geral", mqlByCampaignName }: Props) {
   const [selectedCampanha, setSelectedCampanha] = React.useState<string | null>(null);
   const [selectedConjunto, setSelectedConjunto] = React.useState<string | null>(null);
   const selectedCampanhaObjRef = React.useRef<Campanha | null>(null);
@@ -1135,7 +1163,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral" }: Props
           </div>
         ) : (
           <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-            <CampanhasTable campanhas={campanhas} onSelect={handleSelectCampanha} />
+            <CampanhasTable campanhas={campanhas} onSelect={handleSelectCampanha} mqlByCampaignName={mqlByCampaignName} />
           </div>
         )
       )}

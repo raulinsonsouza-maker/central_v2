@@ -839,7 +839,12 @@ export function ImobLeadScoringPanel({
           })()}
 
           {/* ── Campanhas ── */}
-          <CampanhasPanel clienteId={clienteId} dateFilter={dateFilter} canal="meta" />
+          <CampanhasPanel
+            clienteId={clienteId}
+            dateFilter={dateFilter}
+            canal="meta"
+            mqlByCampaignName={new Map(campanhasHierarchy.map((c) => [c.campaignName ?? "", c.mql]))}
+          />
 
           {/* Formulários — clicáveis para filtrar leads (espelho do seletor de topo) */}
           <div>
