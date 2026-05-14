@@ -510,10 +510,12 @@ export function ImobLeadScoringPanel({
 
           {/* ── Qualificação — redesign completo ── */}
           {(() => {
-            const ringR = 44;
-            const ringC = 2 * Math.PI * ringR;
             const mqlPct = kpis.taxaMql;
-            const fill = (mqlPct / 100) * ringC;
+            const gaugeR = 54;
+            const gaugeC = 2 * Math.PI * gaugeR;
+            const gaugeArc = gaugeC * 0.75;
+            const gaugeFill = (mqlPct / 100) * gaugeArc;
+            const gaugeColor = mqlPct >= 70 ? "#22c55e" : mqlPct >= 40 ? "#f59e0b" : "#ef4444";
             return (
               <>
                 {/* ── Performance geral — largura total (não Academy) ── */}
@@ -615,40 +617,55 @@ export function ImobLeadScoringPanel({
                       {isAcademy ? "Taxa de qualificados" : "Taxa MQL"}
                     </h3>
 
-                    <div className="mt-5 flex items-center justify-between gap-6">
-                      {/* Números */}
-                      <div className="space-y-3">
-                        <div>
-                          <p className="text-3xl font-black tabular-nums text-green-400">{kpis.totalMql}</p>
-                          <p className="text-[11px] text-[var(--muted-foreground)]">
-                            {isAcademy ? "qualificados" : "MQL"}
-                          </p>
-                        </div>
-                        <div className="h-px w-full bg-[var(--border)]" />
-                        <div>
-                          <p className="text-xl font-bold tabular-nums text-[var(--muted-foreground)]">{kpis.totalNonMql}</p>
-                          <p className="text-[11px] text-[var(--muted-foreground)]">não qualificados</p>
-                        </div>
-                      </div>
+                    <div className="mt-4 flex flex-col items-center gap-1">
+                      {/* Gauge SVG */}
+                      <svg width="160" height="128" viewBox="0 0 160 128">
+                        {/* Background arc — 270° starting at 135° */}
+                        <circle
+                          cx="80" cy="76" r={gaugeR}
+                          fill="none"
+                          stroke="var(--border)"
+                          strokeWidth="12"
+                          strokeDasharray={`${gaugeArc} ${gaugeC - gaugeArc}`}
+                          strokeLinecap="round"
+                          transform="rotate(135 80 76)"
+                        />
+                        {/* Foreground arc */}
+                        <circle
+                          cx="80" cy="76" r={gaugeR}
+                          fill="none"
+                          stroke={gaugeColor}
+                          strokeWidth="12"
+                          strokeDasharray={`${gaugeFill} ${gaugeC - gaugeFill}`}
+                          strokeLinecap="round"
+                          transform="rotate(135 80 76)"
+                          style={{ transition: "stroke-dasharray 0.6s ease" }}
+                        />
+                        {/* Percentage in center */}
+                        <text
+                          x="80" y="78"
+                          textAnchor="middle"
+                          dominantBaseline="middle"
+                          fontSize="24"
+                          fontWeight="900"
+                          fill="var(--foreground)"
+                          fontFamily="inherit"
+                        >
+                          {mqlPct.toFixed(0)}%
+                        </text>
+                      </svg>
 
-                      {/* SVG donut ring */}
-                      <div className="relative shrink-0">
-                        <svg width="104" height="104" viewBox="0 0 104 104">
-                          <circle cx="52" cy="52" r={ringR} fill="none" stroke="var(--border)" strokeWidth="11" />
-                          <circle
-                            cx="52" cy="52" r={ringR} fill="none"
-                            stroke={mqlPct >= 70 ? "#22c55e" : mqlPct >= 40 ? "#f59e0b" : "#ef4444"}
-                            strokeWidth="11"
-                            strokeDasharray={`${fill} ${ringC}`}
-                            strokeLinecap="round"
-                            transform="rotate(-90 52 52)"
-                            style={{ transition: "stroke-dasharray 0.6s ease" }}
-                          />
-                        </svg>
-                        <div className="absolute inset-0 flex flex-col items-center justify-center">
-                          <span className="text-xl font-black tabular-nums text-[var(--foreground)]">
-                            {mqlPct.toFixed(0)}%
-                          </span>
+                      {/* Legend */}
+                      <div className="flex items-center gap-6 text-xs">
+                        <div className="flex items-center gap-1.5">
+                          <span className="h-2.5 w-2.5 rounded-sm" style={{ backgroundColor: gaugeColor }} />
+                          <span className="font-bold tabular-nums text-[var(--foreground)]">{kpis.totalMql.toLocaleString("pt-BR")}</span>
+                          <span className="text-[var(--muted-foreground)]">{isAcademy ? "qualificados" : "MQL"}</span>
+                        </div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="h-2.5 w-2.5 rounded-sm bg-[var(--muted-foreground)]/30" />
+                          <span className="font-bold tabular-nums text-[var(--foreground)]">{kpis.totalLeads.toLocaleString("pt-BR")}</span>
+                          <span className="text-[var(--muted-foreground)]">Total</span>
                         </div>
                       </div>
                     </div>
