@@ -504,6 +504,8 @@ export interface MetaAdCreative {
 }
 
 export interface MetaAdInsight {
+  date_start?: string;
+  date_stop?: string;
   spend?: string;
   impressions?: string;
   clicks?: string;
