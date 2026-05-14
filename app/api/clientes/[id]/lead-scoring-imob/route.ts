@@ -391,24 +391,30 @@ export async function GET(
     if (l._isMql) formMap[fid].mql++;
   }
 
-  // MQL por campanha (MetaLeadIndividual)
+  // FILTRO DE ATRIBUIÇÃO: só consideramos leads/MQLs cujo webhook trouxe ad_id.
+  // Decisão de produto: o anúncio é a informação crítica para o usuário decidir
+  // o que escalar/pausar. Leads sem ad_id não conseguem responder a essa pergunta
+  // e são excluídos das contagens de campanha/conjunto/anúncio para garantir que
+  // 100% dos números mostrados são atribuíveis a um anúncio específico.
+  const scoredAtribuiveis = scored.filter((l) => !!l.adId && !!l.adsetId && !!l.campaignId);
+
+  // MQL por campanha (somente leads atribuíveis a um anúncio)
   const mqlByCampaign: Record<string, { name: string | null; total: number; mql: number }> = {};
-  for (const l of scored) {
-    const cid = l.campaignId ?? "_unknown";
+  for (const l of scoredAtribuiveis) {
+    const cid = l.campaignId as string;
     if (!mqlByCampaign[cid]) mqlByCampaign[cid] = { name: l.campaignName, total: 0, mql: 0 };
     mqlByCampaign[cid].total++;
     if (l._isMql) mqlByCampaign[cid].mql++;
   }
 
   // Árvore de atribuição REAL do webhook: campaignId → adsetId → adId
-  // Usa "_none" para níveis sem atribuição. Permite calcular órfãos POR campanha
-  // (leads/MQL que vieram nessa campanha mas sem adsetId/adId no webhook).
+  // Como só usamos scoredAtribuiveis, não há mais buckets "_none" — soma sempre bate.
   type Counter = { total: number; mql: number };
   const mqlTree: Record<string, { total: number; mql: number; adsets: Record<string, Counter & { ads: Record<string, Counter> }> }> = {};
-  for (const l of scored) {
-    const cid = l.campaignId ?? "_none";
-    const asetId = l.adsetId ?? "_none";
-    const aid = l.adId ?? "_none";
+  for (const l of scoredAtribuiveis) {
+    const cid = l.campaignId as string;
+    const asetId = l.adsetId as string;
+    const aid = l.adId as string;
     if (!mqlTree[cid]) mqlTree[cid] = { total: 0, mql: 0, adsets: {} };
     mqlTree[cid].total++;
     if (l._isMql) mqlTree[cid].mql++;
