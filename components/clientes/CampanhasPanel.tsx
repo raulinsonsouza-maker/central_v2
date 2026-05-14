@@ -924,11 +924,13 @@ function CriativosTable({ criativos, parentCampType, mqlByAdId }: { criativos: C
                   )}
                   {mqlByAdId && hasLeads && (() => {
                     const mql = mqlByAdId.get(c.adId) ?? 0;
+                    const leads = c.leads;
+                    const valid = leads > 0 && mql <= leads;
                     return (
                       <td className={`px-4 py-3 text-right tabular-nums whitespace-nowrap ${bg}`}>
-                        {mql > 0
+                        {valid && mql > 0
                           ? <span className="text-[14px] font-bold text-emerald-400">{fmt(mql)}</span>
-                          : <span className="text-[13px] text-white/20">0</span>}
+                          : <span className="text-[13px] text-white/20">—</span>}
                       </td>
                     );
                   })()}
