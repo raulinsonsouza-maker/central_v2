@@ -957,7 +957,7 @@ export function ImobLeadScoringPanel({
                   <tr className="border-b border-[var(--border)]">
                     {(isAcademy
                       ? ["Data", "Nome", "Status", "Formação", "Formulário", "Campanha", "Conjunto", "Anúncio"]
-                      : ["Data", "Nome", "Grau", "Timing", "Investimento", "Formulário", "Campanha", "Plataforma"]
+                      : ["Data", "Nome", "Grau", "Timing", "Campanha"]
                     ).map((h) => (
                       <th key={h} className="pb-2 pr-3 text-left text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
                         {h}
@@ -1042,30 +1042,19 @@ export function ImobLeadScoringPanel({
                         </td>
                       )}
 
-                      {/* Icaraí only: Investimento */}
-                      {!isAcademy && (
-                        <td className="py-2.5 pr-3 text-xs">
-                          <span
-                            className="rounded-full px-2 py-0.5 text-[10px] font-medium"
-                            style={{
-                              backgroundColor: `${INVEST_COLORS[lead.investLabel] ?? "#94a3b8"}20`,
-                              color: INVEST_COLORS[lead.investLabel] ?? "#94a3b8",
-                            }}
-                          >
-                            {lead.investLabel}
-                          </span>
+                      {/* Icaraí only: Investimento — removido */}
+
+                      {isAcademy && (
+                        <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
+                          <div className="max-w-[120px] truncate">{lead.formName ?? "—"}</div>
                         </td>
                       )}
-
-                      <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
-                        <div className="max-w-[120px] truncate">{lead.formName ?? "—"}</div>
-                      </td>
                       <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
                         <div className="max-w-[120px] truncate">{lead.campaignName ?? "—"}</div>
                       </td>
 
-                      {/* Academy: Conjunto + Anúncio; Icaraí: Plataforma */}
-                      {isAcademy ? (
+                      {/* Academy: Conjunto + Anúncio */}
+                      {isAcademy && (
                         <>
                           <td className="py-2.5 pr-3 text-xs text-[var(--muted-foreground)]">
                             <div className="max-w-[120px] truncate">{lead.adsetName ?? "—"}</div>
@@ -1074,10 +1063,6 @@ export function ImobLeadScoringPanel({
                             <div className="max-w-[120px] truncate">{lead.adName ?? "—"}</div>
                           </td>
                         </>
-                      ) : (
-                        <td className="py-2.5 text-xs text-[var(--muted-foreground)] capitalize">
-                          {lead.platform ?? "—"}
-                        </td>
                       )}
                     </tr>
                   ))}
