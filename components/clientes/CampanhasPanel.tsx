@@ -576,12 +576,13 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId }: {
                   </td>
                 )}
                 {mqlByAdsetId && hasLeads && (() => {
-                  const mql = mqlByAdsetId.get(c.adsetId) ?? 0;
+                  const rawMql = mqlByAdsetId.get(c.adsetId) ?? 0;
+                  const mql = c.leads > 0 ? Math.min(rawMql, c.leads) : 0;
                   return (
                     <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
                       {mql > 0
                         ? <span className="text-[14px] font-bold text-emerald-400">{fmt(mql)}</span>
-                        : <span className="text-[13px] text-white/20">0</span>}
+                        : <span className="text-[13px] text-white/20">—</span>}
                     </td>
                   );
                 })()}
@@ -923,12 +924,11 @@ function CriativosTable({ criativos, parentCampType, mqlByAdId }: { criativos: C
                     </td>
                   )}
                   {mqlByAdId && hasLeads && (() => {
-                    const mql = mqlByAdId.get(c.adId) ?? 0;
-                    const leads = c.leads;
-                    const valid = leads > 0 && mql <= leads;
+                    const rawMql = mqlByAdId.get(c.adId) ?? 0;
+                    const mql = c.leads > 0 ? Math.min(rawMql, c.leads) : 0;
                     return (
                       <td className={`px-4 py-3 text-right tabular-nums whitespace-nowrap ${bg}`}>
-                        {valid && mql > 0
+                        {mql > 0
                           ? <span className="text-[14px] font-bold text-emerald-400">{fmt(mql)}</span>
                           : <span className="text-[13px] text-white/20">—</span>}
                       </td>
