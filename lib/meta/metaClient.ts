@@ -1247,42 +1247,79 @@ export async function fetchAdsWithCreatives(
   const actId = ensureActPrefix(accountId);
   const maxPages = options?.maxPages ?? 50;
   const allAds: MetaAd[] = [];
-  const insightsField =
+  const adsById = new Map<string, MetaAd>();
+
+  // Break the date range into 30-day windows so the Meta API payload (ads × days × metrics)
+  // does not exceed Meta's "Please reduce the amount of data" limit on accounts with many ads.
+  const dateChunks: Array<[string, string] | null> =
     options?.dateFrom && options?.dateTo
+      ? splitDateRange(options.dateFrom, options.dateTo, 30)
+      : [null];
+
+  for (let chunkIdx = 0; chunkIdx < dateChunks.length; chunkIdx++) {
+    const chunk = dateChunks[chunkIdx];
+    const insightsField = chunk
       ? `insights.time_range(${JSON.stringify({
-          since: options.dateFrom,
-          until: options.dateTo,
+          since: chunk[0],
+          until: chunk[1],
         })}).time_increment(1).limit(500){date_start,date_stop,spend,impressions,clicks,inline_link_clicks,ctr,cpc,frequency,actions,action_values,video_p100_watched_actions}`
       : "insights{date_start,date_stop,spend,impressions,clicks,inline_link_clicks,ctr,cpc,frequency,actions,action_values,video_p100_watched_actions}";
-  const fields =
-    `id,name,effective_status,adset{id,name,campaign{id,name,objective}},adcreatives{id,object_story_id,thumbnail_url,image_hash,video_id,body,title,object_story_spec,asset_feed_spec{videos{video_id,thumbnail_url},images{hash,url}}},${insightsField}`;
-  const filtering = JSON.stringify([
-    { field: "effective_status", operator: "IN", value: [...DELIVERY_ACTIVE_STATUSES] },
-  ]);
-  let url: string | null = `${GRAPH_BASE}/${actId}/ads?access_token=${encodeURIComponent(token)}&fields=${encodeURIComponent(fields)}&filtering=${encodeURIComponent(filtering)}&limit=100`;
+    const fields =
+      `id,name,effective_status,adset{id,name,campaign{id,name,objective}},adcreatives{id,object_story_id,thumbnail_url,image_hash,video_id,body,title,object_story_spec,asset_feed_spec{videos{video_id,thumbnail_url},images{hash,url}}},${insightsField}`;
+    const filtering = JSON.stringify([
+      { field: "effective_status", operator: "IN", value: [...DELIVERY_ACTIVE_STATUSES] },
+    ]);
+    let url: string | null = `${GRAPH_BASE}/${actId}/ads?access_token=${encodeURIComponent(token)}&fields=${encodeURIComponent(fields)}&filtering=${encodeURIComponent(filtering)}&limit=50`;
 
-  for (let page = 0; page < maxPages && url; page++) {
-    const res = await fetch(url);
-    const data = (await res.json()) as MetaAdsResponse;
-    if (!res.ok) {
-      throw new Error(data?.error?.message ?? `Meta API error: ${res.status}`);
-    }
-    if (data.error) {
-      throw new Error(data.error.message);
-    }
-    if (data.data?.length) {
-      for (const ad of data.data) {
-        const status = ad.effective_status;
-        if (!status || !(DELIVERY_ACTIVE_STATUSES as readonly string[]).includes(status)) continue;
-        const creative = ad.adcreatives?.data?.[0];
-        if (!creative) continue;
-        if (creative.object_story_id) continue;
-        if (isPageCoverOrLikeAd(ad)) continue;
-        if (!hasDedicatedCreativePayload(creative)) continue;
-        allAds.push(ad);
+    for (let page = 0; page < maxPages && url; page++) {
+      const currentUrl = url;
+      let data: MetaAdsResponse | null = null;
+      let lastMsg = "";
+      const backoffs = [10000, 20000, 30000];
+      for (let attempt = 0; attempt <= 3; attempt++) {
+        if (attempt > 0) {
+          const waitMs = backoffs[attempt - 1] ?? 10000;
+          console.warn(`[fetchAdsWithCreatives] retry ${attempt}/3 in ${waitMs / 1000}s (chunk ${chunkIdx + 1}/${dateChunks.length}) after: ${lastMsg}`);
+          await new Promise((r) => setTimeout(r, waitMs));
+        }
+        const res = await fetch(currentUrl);
+        const d = (await res.json()) as MetaAdsResponse;
+        const errMsg = d?.error?.message ?? (res.ok ? "" : `HTTP ${res.status}`);
+        if (!res.ok || d.error) {
+          lastMsg = errMsg;
+          if (isTransientMetaError(errMsg) && attempt < 3) continue;
+          throw new Error(errMsg || `Meta API error: ${res.status}`);
+        }
+        data = d;
+        break;
       }
+      if (!data) throw new Error(lastMsg || "Max retries exceeded");
+      if (data.data?.length) {
+        for (const ad of data.data) {
+          const status = ad.effective_status;
+          if (!status || !(DELIVERY_ACTIVE_STATUSES as readonly string[]).includes(status)) continue;
+          const creative = ad.adcreatives?.data?.[0];
+          if (!creative) continue;
+          if (creative.object_story_id) continue;
+          if (isPageCoverOrLikeAd(ad)) continue;
+          if (!hasDedicatedCreativePayload(creative)) continue;
+          const existing = adsById.get(ad.id);
+          if (existing) {
+            const existingRows = existing.insights?.data ?? [];
+            const newRows = ad.insights?.data ?? [];
+            existing.insights = { data: [...existingRows, ...newRows] };
+          } else {
+            adsById.set(ad.id, ad);
+            allAds.push(ad);
+          }
+        }
+      }
+      url = data.paging?.next ?? null;
     }
-    url = data.paging?.next ?? null;
+    // Pause between date chunks to ease Meta API pressure
+    if (chunkIdx < dateChunks.length - 1) {
+      await new Promise((r) => setTimeout(r, 3000));
+    }
   }
 
   const creativeIdsToEnrich = new Set<string>();
