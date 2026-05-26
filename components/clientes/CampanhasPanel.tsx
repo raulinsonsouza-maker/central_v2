@@ -221,9 +221,13 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
   const hasLeadCamps = campanhas.some(isLeadCamp);
   const showMqlCol = !!mqlByCampaignName && hasLeadCamps;
 
-  // Label for the Resultado column — pick the predominant result type
+  // Label for the Resultado column — pick the predominant result type.
+  // "visitas" (visitas ao perfil) é métrica de engajamento e infla muito (uma campanha
+  // pode somar dezenas de milhares), então não compete pelo rótulo dominante da coluna.
+  // Campanhas de visitas continuam mostrando o sublabel "vis." em sua célula individual.
   const resultTypesCounts = campanhas.reduce<Record<string, number>>((acc, c) => {
     const rt = c.resultType ?? "alcance";
+    if (rt === "visitas") return acc;
     acc[rt] = (acc[rt] ?? 0) + (c.resultados ?? 0);
     return acc;
   }, {});
