@@ -135,7 +135,7 @@ const CAMP_TYPE_META: Record<CampType, { label: string; color: string }> = {
 };
 const thClass = "px-4 pb-2 text-[10px] font-semibold uppercase tracking-[0.20em] text-[var(--muted-foreground)]";
 
-type SortCol = "nome" | "status" | "diasAtivos" | "investimento" | "impressoes" | "cliques" | "ctr" | "resultados" | "mql" | "custoResultado" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas";
+type SortCol = "nome" | "status" | "diasAtivos" | "investimento" | "impressoes" | "cliques" | "ctr" | "resultados" | "mql" | "custoResultado" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas" | "investFaturado";
 type SortDir = "asc" | "desc";
 
 function SortIcon({ col, sortCol, sortDir }: { col: string; sortCol: string; sortDir: SortDir }) {
@@ -174,6 +174,11 @@ function sortCampanhas(arr: Campanha[], col: SortCol, dir: SortDir): Campanha[] 
     else if (col === "cpa") { va = a.cpa ?? Infinity; vb = b.cpa ?? Infinity; }
     else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
     else if (col === "ctr") { va = a.ctr ?? -Infinity; vb = b.ctr ?? -Infinity; }
+    else if (col === "investFaturado") {
+      // % Investimento / Faturamento — menor é melhor; sem faturamento vai pro fim
+      va = (a.faturamento ?? 0) > 0 ? a.investimento / a.faturamento : Infinity;
+      vb = (b.faturamento ?? 0) > 0 ? b.investimento / b.faturamento : Infinity;
+    }
     else if (col === "ticketMedio") { va = a.ticketMedio ?? -Infinity; vb = b.ticketMedio ?? -Infinity; }
     else if (col === "resultados") { va = a.resultados ?? -Infinity; vb = b.resultados ?? -Infinity; }
     else if (col === "custoResultado") { va = a.custoResultado ?? Infinity; vb = b.custoResultado ?? Infinity; }
@@ -244,7 +249,6 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
     faturamento: sum(campanhas.map(c => c.faturamento)),
     mql: mqlByCampaignName ? sum(campanhas.map(cappedMql)) : 0,
   };
-  const totalCtr = totals.impressoes > 0 ? (totals.cliques / totals.impressoes) * 100 : 0;
   const totalCustoResultado = totals.resultados > 0 ? totals.investimento / totals.resultados : null;
   const totalRoas = totals.investimento > 0 && totals.faturamento > 0 ? totals.faturamento / totals.investimento : null;
 
@@ -261,7 +265,6 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
             <SortTh col="investimento" label="Investido" {...st} />
             <SortTh col="impressoes" label="Impressões" {...st} />
             <SortTh col="cliques" label="Cliques" {...st} />
-            <SortTh col="ctr" label="CTR" {...st} />
             {hasResultados && <SortTh col="resultados" label={resultadoLabel} {...st} />}
             {showMqlCol && (
               <th
@@ -277,6 +280,7 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
             {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
             {hasSales && <SortTh col="ticketMedio" label="Ticket Médio" {...st} />}
             {hasSales && <SortTh col="roas" label="ROAS" {...st} />}
+            {hasSales && <SortTh col="investFaturado" label="I/F" {...st} />}
             <th className="w-8" />
           </tr>
         </thead>
@@ -366,11 +370,6 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
                   {fmt(c.cliques)}
                 </td>
 
-                {/* CTR */}
-                <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
-                  {c.ctr !== null ? fmtPct(c.ctr) : "—"}
-                </td>
-
                 {/* Resultado unificado (conversas / visitas / leads / vendas) */}
                 {hasResultados && (
                   <td className={`px-4 py-4 text-right tabular-nums ${bg}`}>
@@ -446,6 +445,24 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
                   </td>
                 )}
 
+                {/* I/F — Investimento / Faturamento (meta: abaixo de 10%) */}
+                {hasSales && (() => {
+                  const ratio = (c.faturamento ?? 0) > 0 ? (c.investimento / c.faturamento) * 100 : null;
+                  const color =
+                    ratio == null
+                      ? "text-white/20"
+                      : ratio <= 10
+                        ? "text-emerald-400 font-semibold"
+                        : ratio <= 15
+                          ? "text-amber-400 font-semibold"
+                          : "text-red-400 font-semibold";
+                  return (
+                    <td className={`px-4 py-4 text-right tabular-nums text-[13px] ${color} ${bg}`} title="Investimento ÷ Faturamento (meta: abaixo de 10%)">
+                      {isNonConversion || ratio == null ? <span className="text-white/20">—</span> : `${fmt(ratio, 2)}%`}
+                    </td>
+                  );
+                })()}
+
                 {/* Chevron */}
                 <td className={`rounded-r-2xl px-3 py-4 ${bg}`}>
                   <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-[var(--primary)] transition-colors ml-auto" />
@@ -471,9 +488,6 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
             </td>
             <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
               {fmt(totals.cliques)}
-            </td>
-            <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-semibold text-[var(--foreground)]">
-              {fmtPct(totalCtr)}
             </td>
             {hasResultados && (
               <td className="bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[15px] font-black text-[var(--primary)]">
@@ -505,6 +519,22 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
                 {totalRoas !== null ? fmt(totalRoas, 2) + "x" : "—"}
               </td>
             )}
+            {hasSales && (() => {
+              const ratio = totals.faturamento > 0 ? (totals.investimento / totals.faturamento) * 100 : null;
+              const color =
+                ratio == null
+                  ? "text-white/40"
+                  : ratio <= 10
+                    ? "text-emerald-400"
+                    : ratio <= 15
+                      ? "text-amber-400"
+                      : "text-red-400";
+              return (
+                <td className={`bg-white/[0.06] px-4 py-3 text-right tabular-nums text-[13px] font-bold ${color}`} title="Investimento ÷ Faturamento (meta: abaixo de 10%)">
+                  {ratio == null ? "—" : `${fmt(ratio, 2)}%`}
+                </td>
+              );
+            })()}
             <td className="rounded-r-2xl bg-white/[0.06] px-3 py-3" />
           </tr>
         </tfoot>
