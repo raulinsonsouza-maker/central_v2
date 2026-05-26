@@ -254,6 +254,7 @@ model MetaAdsCriativo {
   leads                           Int      @default(0)
   purchases                       Int      @default(0)
   websitePurchasesConversionValue Decimal  @default(0) @db.Decimal(14, 2)
+  messagingConversationsStarted   Int      @default(0)
   cliente                         Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
   conta                           Conta?   @relation(fields: [contaId], references: [id])
 

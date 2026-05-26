@@ -27,6 +27,7 @@ export interface UpsertMetaAdsCriativoPayload {
   leads?: number;
   purchases?: number;
   websitePurchasesConversionValue?: number;
+  messagingConversationsStarted?: number;
   ctr?: number | null;
   cpc?: number | null;
   contaId?: string | null;
@@ -77,6 +78,7 @@ export async function upsertMetaAdsCriativo(
       leads: payload.leads ?? 0,
       purchases: payload.purchases ?? 0,
       websitePurchasesConversionValue: revenueDecimal,
+      messagingConversationsStarted: payload.messagingConversationsStarted ?? 0,
       ctr: ctrDecimal,
       cpc: cpcDecimal,
     },
@@ -105,6 +107,7 @@ export async function upsertMetaAdsCriativo(
       leads: payload.leads ?? 0,
       purchases: payload.purchases ?? 0,
       websitePurchasesConversionValue: revenueDecimal,
+      messagingConversationsStarted: payload.messagingConversationsStarted ?? 0,
       ctr: ctrDecimal,
       cpc: cpcDecimal,
     },

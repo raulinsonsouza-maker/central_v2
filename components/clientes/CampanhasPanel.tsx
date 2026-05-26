@@ -66,11 +66,13 @@ interface Conjunto {
   leads: number;
   purchases: number;
   faturamento: number;
+  conversas: number;
   adCount: number;
   ctr: number | null;
   cpc: number | null;
   cpl: number | null;
   cpa: number | null;
+  custoConversa: number | null;
   ticketMedio: number | null;
   roas: number | null;
 }
@@ -92,11 +94,13 @@ interface Criativo {
   leads: number;
   purchases: number;
   faturamento: number;
+  conversas: number;
   ctr: number | null;
   cpc: number | null;
   cpm: number | null;
   cpl: number | null;
   cpa: number | null;
+  custoConversa: number | null;
   ticketMedio: number | null;
   roas: number | null;
   daysActive: number;
@@ -543,7 +547,7 @@ function CampanhasTable({ campanhas, onSelect, mqlByCampaignName }: { campanhas:
   );
 }
 
-type ConjuntoSortCol = "adsetName" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas" | "adCount";
+type ConjuntoSortCol = "adsetName" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas" | "adCount" | "conversas" | "custoConversa";
 
 function sortConjuntos(arr: Conjunto[], col: ConjuntoSortCol, dir: SortDir): Conjunto[] {
   return [...arr].sort((a, b) => {
@@ -555,6 +559,7 @@ function sortConjuntos(arr: Conjunto[], col: ConjuntoSortCol, dir: SortDir): Con
     else if (col === "cpa") { va = a.cpa ?? Infinity; vb = b.cpa ?? Infinity; }
     else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
     else if (col === "ticketMedio") { va = a.ticketMedio ?? -Infinity; vb = b.ticketMedio ?? -Infinity; }
+    else if (col === "custoConversa") { va = a.custoConversa ?? Infinity; vb = b.custoConversa ?? Infinity; }
     else { va = a[col] as number; vb = b[col] as number; }
     if (va < vb) return dir === "asc" ? -1 : 1;
     if (va > vb) return dir === "asc" ? 1 : -1;
@@ -569,12 +574,13 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId }: {
   function handleSort(col: string) {
     const c = col as ConjuntoSortCol;
     if (c === sortCol) setSortDir(d => d === "asc" ? "desc" : "asc");
-    else { setSortCol(c); setSortDir(["adsetName", "cpl", "cpa", "cpc"].includes(c) ? "asc" : "desc"); }
+    else { setSortCol(c); setSortDir(["adsetName", "cpl", "cpa", "cpc", "custoConversa"].includes(c) ? "asc" : "desc"); }
   }
 
   const hasLeads = conjuntos.some(c => c.leads > 0) || parentCampType === "leads";
   const hasSales = conjuntos.some(c => c.purchases > 0 || c.faturamento > 0) || parentCampType === "vendas";
-  const minW = hasSales ? 1120 : (hasLeads && mqlByAdsetId) ? 980 : hasLeads ? 860 : 720;
+  const hasConversas = conjuntos.some(c => (c.conversas ?? 0) > 0) || parentCampType === "conversas";
+  const minW = hasSales ? 1120 : (hasLeads && mqlByAdsetId) ? 980 : hasLeads ? 860 : hasConversas ? 900 : 720;
   const sorted = sortConjuntos(conjuntos, sortCol, sortDir);
   const st = { sortCol, sortDir, onSort: handleSort };
 
@@ -596,6 +602,8 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId }: {
               </th>
             )}
             {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
+            {hasConversas && <SortTh col="conversas" label="Conversas" {...st} />}
+            {hasConversas && <SortTh col="custoConversa" label="Custo/Conv" {...st} />}
             {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
             {hasSales && <SortTh col="cpa" label="CPA" {...st} />}
             {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
@@ -647,6 +655,16 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId }: {
                 {hasLeads && (
                   <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
                     {c.cpl !== null ? fmtBrl(c.cpl) : "—"}
+                  </td>
+                )}
+                {hasConversas && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] ${isTop && (c.conversas ?? 0) > 0 ? "text-[var(--primary)] font-bold text-[15px]" : (c.conversas ?? 0) > 0 ? "text-sky-300 font-semibold" : "text-white/30"} ${bg}`}>
+                    {(c.conversas ?? 0) > 0 ? fmt(c.conversas) : "—"}
+                  </td>
+                )}
+                {hasConversas && (
+                  <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>
+                    {c.custoConversa !== null ? fmtBrl(c.custoConversa) : "—"}
                   </td>
                 )}
                 {hasSales && (
@@ -812,7 +830,7 @@ function VideoModal({ c, onClose }: { c: Criativo; onClose: () => void }) {
   );
 }
 
-type CriativoSortCol = "adName" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "cpm" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas" | "daysActive";
+type CriativoSortCol = "adName" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "cpm" | "leads" | "cpl" | "purchases" | "cpa" | "faturamento" | "ticketMedio" | "roas" | "daysActive" | "conversas" | "custoConversa";
 
 function sortCriativos(arr: Criativo[], col: CriativoSortCol, dir: SortDir): Criativo[] {
   return [...arr].sort((a, b) => {
@@ -825,6 +843,7 @@ function sortCriativos(arr: Criativo[], col: CriativoSortCol, dir: SortDir): Cri
     else if (col === "cpa") { va = a.cpa ?? Infinity; vb = b.cpa ?? Infinity; }
     else if (col === "roas") { va = a.roas ?? -Infinity; vb = b.roas ?? -Infinity; }
     else if (col === "ticketMedio") { va = a.ticketMedio ?? -Infinity; vb = b.ticketMedio ?? -Infinity; }
+    else if (col === "custoConversa") { va = a.custoConversa ?? Infinity; vb = b.custoConversa ?? Infinity; }
     else { va = a[col] as number; vb = b[col] as number; }
     if (va < vb) return dir === "asc" ? -1 : 1;
     if (va > vb) return dir === "asc" ? 1 : -1;
@@ -840,12 +859,13 @@ function CriativosTable({ criativos, parentCampType, mqlByAdId }: { criativos: C
   function handleSort(col: string) {
     const c = col as CriativoSortCol;
     if (c === sortCol) setSortDir(d => d === "asc" ? "desc" : "asc");
-    else { setSortCol(c); setSortDir(["adName", "cpl", "cpa", "cpc", "cpm"].includes(c) ? "asc" : "desc"); }
+    else { setSortCol(c); setSortDir(["adName", "cpl", "cpa", "cpc", "cpm", "custoConversa"].includes(c) ? "asc" : "desc"); }
   }
 
   const hasLeads = criativos.some(c => c.leads > 0) || parentCampType === "leads";
   const hasSales = criativos.some(c => c.purchases > 0 || c.faturamento > 0) || parentCampType === "vendas";
-  const minW = hasSales ? 1080 : hasLeads ? 820 : 680;
+  const hasConversas = criativos.some(c => (c.conversas ?? 0) > 0) || parentCampType === "conversas";
+  const minW = hasSales ? 1080 : hasLeads ? 820 : hasConversas ? 900 : 680;
   const sorted = sortCriativos(criativos, sortCol, sortDir);
   const st = { sortCol, sortDir, onSort: handleSort };
 
@@ -870,6 +890,8 @@ function CriativosTable({ criativos, parentCampType, mqlByAdId }: { criativos: C
                 </th>
               )}
               {hasLeads && <SortTh col="cpl" label="CPL" {...st} />}
+              {hasConversas && <SortTh col="conversas" label="Conversas" {...st} />}
+              {hasConversas && <SortTh col="custoConversa" label="Custo/Conv" {...st} />}
               {hasSales && <SortTh col="purchases" label="Vendas" {...st} />}
               {hasSales && <SortTh col="cpa" label="CPA" {...st} />}
               {hasSales && <SortTh col="faturamento" label="Faturado" {...st} />}
@@ -973,7 +995,7 @@ function CriativosTable({ criativos, parentCampType, mqlByAdId }: { criativos: C
                   <td className={`px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                     {c.cpc !== null ? fmtBrl(c.cpc) : "—"}
                   </td>
-                  <td className={`${!hasLeads && !hasSales ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                  <td className={`${!hasLeads && !hasSales && !hasConversas ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                     {c.cpm !== null ? fmtBrl(c.cpm) : "—"}
                   </td>
                   {hasLeads && (
@@ -993,8 +1015,18 @@ function CriativosTable({ criativos, parentCampType, mqlByAdId }: { criativos: C
                     );
                   })()}
                   {hasLeads && (
-                    <td className={`${!hasSales && !mqlByAdId ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                    <td className={`${!hasSales && !hasConversas ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
                       {c.cpl !== null ? fmtBrl(c.cpl) : "—"}
+                    </td>
+                  )}
+                  {hasConversas && (
+                    <td className={`px-4 py-3 text-right tabular-nums text-[13px] whitespace-nowrap ${isTop && (c.conversas ?? 0) > 0 ? "text-[var(--primary)] font-bold text-[15px]" : (c.conversas ?? 0) > 0 ? "text-sky-300 font-semibold" : "text-white/30"} ${bg}`}>
+                      {(c.conversas ?? 0) > 0 ? fmt(c.conversas) : "—"}
+                    </td>
+                  )}
+                  {hasConversas && (
+                    <td className={`${!hasSales ? "rounded-r-2xl" : ""} px-4 py-3 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] whitespace-nowrap ${bg}`}>
+                      {c.custoConversa !== null ? fmtBrl(c.custoConversa) : "—"}
                     </td>
                   )}
                   {hasSales && (

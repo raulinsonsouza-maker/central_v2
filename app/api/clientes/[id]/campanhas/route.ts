@@ -201,6 +201,7 @@ export async function GET(
       leads: number;
       purchases: number;
       faturamento: number;
+      conversas: number;
       adCount: number;
     }>();
 
@@ -221,6 +222,7 @@ export async function GET(
         existing.leads += c.leads;
         existing.purchases += c.purchases;
         existing.faturamento += Number(c.websitePurchasesConversionValue);
+        existing.conversas += c.messagingConversationsStarted ?? 0;
       } else {
         byConjunto.set(key, {
           adsetId: c.adsetId ?? "",
@@ -231,6 +233,7 @@ export async function GET(
           leads: c.leads,
           purchases: c.purchases,
           faturamento: Number(c.websitePurchasesConversionValue),
+          conversas: c.messagingConversationsStarted ?? 0,
           adCount: 0,
         });
       }
@@ -248,6 +251,7 @@ export async function GET(
         cpc: v.clicks > 0 ? v.spend / v.clicks : null,
         cpl: v.leads > 0 ? v.spend / v.leads : null,
         cpa: v.purchases > 0 ? v.spend / v.purchases : null,
+        custoConversa: v.conversas > 0 ? v.spend / v.conversas : null,
         ticketMedio: v.purchases > 0 ? v.faturamento / v.purchases : null,
         roas: v.spend > 0 && v.faturamento > 0 ? v.faturamento / v.spend : null,
       }))
@@ -277,7 +281,7 @@ export async function GET(
       videoSourceUrl: string | null; videoPictureUrl: string | null;
       videoEmbedHtml: string | null; body: string | null; title: string | null;
       effectiveStatus: string | null; spend: number; impressions: number; clicks: number;
-      leads: number; purchases: number; faturamento: number;
+      leads: number; purchases: number; faturamento: number; conversas: number;
       daysActive: number;
       _latestData: Date;
     }>();
@@ -291,6 +295,7 @@ export async function GET(
         existing.leads += r.leads;
         existing.purchases += r.purchases;
         existing.faturamento += Number(r.websitePurchasesConversionValue);
+        existing.conversas += r.messagingConversationsStarted ?? 0;
         if (Number(r.spend) > 0 || r.impressions > 0) existing.daysActive += 1;
         // metadados ficam com o registro mais recente
         if (r.data > existing._latestData) {
@@ -325,6 +330,7 @@ export async function GET(
           leads: r.leads,
           purchases: r.purchases,
           faturamento: Number(r.websitePurchasesConversionValue),
+          conversas: r.messagingConversationsStarted ?? 0,
           daysActive: Number(r.spend) > 0 || r.impressions > 0 ? 1 : 0,
           _latestData: r.data,
         });
@@ -339,6 +345,7 @@ export async function GET(
         cpm: v.impressions > 0 ? (v.spend / v.impressions) * 1000 : null,
         cpl: v.leads > 0 ? v.spend / v.leads : null,
         cpa: v.purchases > 0 ? v.spend / v.purchases : null,
+        custoConversa: v.conversas > 0 ? v.spend / v.conversas : null,
         ticketMedio: v.purchases > 0 ? v.faturamento / v.purchases : null,
         roas: v.spend > 0 && v.faturamento > 0 ? v.faturamento / v.spend : null,
       }))

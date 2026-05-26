@@ -224,6 +224,10 @@ export async function syncMetaCliente(
           getActionValue(actionValues, "offsite_conversion.fb_pixel_purchase") ||
           getActionValue(actionValues, "website_purchase");
 
+        const messagingConversationsStarted =
+          getAction(actions, "onsite_conversion.messaging_conversation_started_7d") ||
+          getAction(actions, "messaging_conversation_started_7d");
+
         await upsertMetaAdsCriativo(clienteId, {
           data: rowDate,
           adId: ad.id,
@@ -250,6 +254,7 @@ export async function syncMetaCliente(
           leads,
           purchases,
           websitePurchasesConversionValue: revenue,
+          messagingConversationsStarted,
           ctr: insight.ctr ? parseFloat(insight.ctr) : null,
           cpc: insight.cpc ? parseFloat(insight.cpc) : null,
           contaId,

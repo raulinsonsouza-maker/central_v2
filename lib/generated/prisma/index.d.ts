@@ -14031,6 +14031,7 @@ export namespace Prisma {
     leads: number | null
     purchases: number | null
     websitePurchasesConversionValue: Decimal | null
+    messagingConversationsStarted: number | null
   }
 
   export type MetaAdsCriativoSumAggregateOutputType = {
@@ -14042,6 +14043,7 @@ export namespace Prisma {
     leads: number | null
     purchases: number | null
     websitePurchasesConversionValue: Decimal | null
+    messagingConversationsStarted: number | null
   }
 
   export type MetaAdsCriativoMinAggregateOutputType = {
@@ -14077,6 +14079,7 @@ export namespace Prisma {
     leads: number | null
     purchases: number | null
     websitePurchasesConversionValue: Decimal | null
+    messagingConversationsStarted: number | null
   }
 
   export type MetaAdsCriativoMaxAggregateOutputType = {
@@ -14112,6 +14115,7 @@ export namespace Prisma {
     leads: number | null
     purchases: number | null
     websitePurchasesConversionValue: Decimal | null
+    messagingConversationsStarted: number | null
   }
 
   export type MetaAdsCriativoCountAggregateOutputType = {
@@ -14147,6 +14151,7 @@ export namespace Prisma {
     leads: number
     purchases: number
     websitePurchasesConversionValue: number
+    messagingConversationsStarted: number
     _all: number
   }
 
@@ -14160,6 +14165,7 @@ export namespace Prisma {
     leads?: true
     purchases?: true
     websitePurchasesConversionValue?: true
+    messagingConversationsStarted?: true
   }
 
   export type MetaAdsCriativoSumAggregateInputType = {
@@ -14171,6 +14177,7 @@ export namespace Prisma {
     leads?: true
     purchases?: true
     websitePurchasesConversionValue?: true
+    messagingConversationsStarted?: true
   }
 
   export type MetaAdsCriativoMinAggregateInputType = {
@@ -14206,6 +14213,7 @@ export namespace Prisma {
     leads?: true
     purchases?: true
     websitePurchasesConversionValue?: true
+    messagingConversationsStarted?: true
   }
 
   export type MetaAdsCriativoMaxAggregateInputType = {
@@ -14241,6 +14249,7 @@ export namespace Prisma {
     leads?: true
     purchases?: true
     websitePurchasesConversionValue?: true
+    messagingConversationsStarted?: true
   }
 
   export type MetaAdsCriativoCountAggregateInputType = {
@@ -14276,6 +14285,7 @@ export namespace Prisma {
     leads?: true
     purchases?: true
     websitePurchasesConversionValue?: true
+    messagingConversationsStarted?: true
     _all?: true
   }
 
@@ -14398,6 +14408,7 @@ export namespace Prisma {
     leads: number
     purchases: number
     websitePurchasesConversionValue: Decimal
+    messagingConversationsStarted: number
     _count: MetaAdsCriativoCountAggregateOutputType | null
     _avg: MetaAdsCriativoAvgAggregateOutputType | null
     _sum: MetaAdsCriativoSumAggregateOutputType | null
@@ -14452,6 +14463,7 @@ export namespace Prisma {
     leads?: boolean
     purchases?: boolean
     websitePurchasesConversionValue?: boolean
+    messagingConversationsStarted?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["metaAdsCriativo"]>
@@ -14489,6 +14501,7 @@ export namespace Prisma {
     leads?: boolean
     purchases?: boolean
     websitePurchasesConversionValue?: boolean
+    messagingConversationsStarted?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["metaAdsCriativo"]>
@@ -14526,6 +14539,7 @@ export namespace Prisma {
     leads?: boolean
     purchases?: boolean
     websitePurchasesConversionValue?: boolean
+    messagingConversationsStarted?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
   }, ExtArgs["result"]["metaAdsCriativo"]>
@@ -14563,9 +14577,10 @@ export namespace Prisma {
     leads?: boolean
     purchases?: boolean
     websitePurchasesConversionValue?: boolean
+    messagingConversationsStarted?: boolean
   }
 
-  export type MetaAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "adId" | "creativeId" | "adName" | "effectiveStatus" | "campaignObjective" | "mediaType" | "imageUrl" | "imageUrlFull" | "videoId" | "videoSourceUrl" | "videoPictureUrl" | "videoEmbedHtml" | "body" | "title" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "createdAt" | "updatedAt" | "adsetId" | "adsetName" | "campaignId" | "campaignName" | "leads" | "purchases" | "websitePurchasesConversionValue", ExtArgs["result"]["metaAdsCriativo"]>
+  export type MetaAdsCriativoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "contaId" | "data" | "adId" | "creativeId" | "adName" | "effectiveStatus" | "campaignObjective" | "mediaType" | "imageUrl" | "imageUrlFull" | "videoId" | "videoSourceUrl" | "videoPictureUrl" | "videoEmbedHtml" | "body" | "title" | "spend" | "impressions" | "clicks" | "ctr" | "cpc" | "createdAt" | "updatedAt" | "adsetId" | "adsetName" | "campaignId" | "campaignName" | "leads" | "purchases" | "websitePurchasesConversionValue" | "messagingConversationsStarted", ExtArgs["result"]["metaAdsCriativo"]>
   export type MetaAdsCriativoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     conta?: boolean | MetaAdsCriativo$contaArgs<ExtArgs>
@@ -14618,6 +14633,7 @@ export namespace Prisma {
       leads: number
       purchases: number
       websitePurchasesConversionValue: Prisma.Decimal
+      messagingConversationsStarted: number
     }, ExtArgs["result"]["metaAdsCriativo"]>
     composites: {}
   }
@@ -15075,6 +15091,7 @@ export namespace Prisma {
     readonly leads: FieldRef<"MetaAdsCriativo", 'Int'>
     readonly purchases: FieldRef<"MetaAdsCriativo", 'Int'>
     readonly websitePurchasesConversionValue: FieldRef<"MetaAdsCriativo", 'Decimal'>
+    readonly messagingConversationsStarted: FieldRef<"MetaAdsCriativo", 'Int'>
   }
     
 
@@ -21420,7 +21437,8 @@ export namespace Prisma {
     campaignName: 'campaignName',
     leads: 'leads',
     purchases: 'purchases',
-    websitePurchasesConversionValue: 'websitePurchasesConversionValue'
+    websitePurchasesConversionValue: 'websitePurchasesConversionValue',
+    messagingConversationsStarted: 'messagingConversationsStarted'
   };
 
   export type MetaAdsCriativoScalarFieldEnum = (typeof MetaAdsCriativoScalarFieldEnum)[keyof typeof MetaAdsCriativoScalarFieldEnum]
@@ -22725,6 +22743,7 @@ export namespace Prisma {
     leads?: IntFilter<"MetaAdsCriativo"> | number
     purchases?: IntFilter<"MetaAdsCriativo"> | number
     websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFilter<"MetaAdsCriativo"> | number
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     conta?: XOR<ContaNullableScalarRelationFilter, ContaWhereInput> | null
   }
@@ -22762,6 +22781,7 @@ export namespace Prisma {
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
+    messagingConversationsStarted?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
     conta?: ContaOrderByWithRelationInput
   }
@@ -22803,6 +22823,7 @@ export namespace Prisma {
     leads?: IntFilter<"MetaAdsCriativo"> | number
     purchases?: IntFilter<"MetaAdsCriativo"> | number
     websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFilter<"MetaAdsCriativo"> | number
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
     conta?: XOR<ContaNullableScalarRelationFilter, ContaWhereInput> | null
   }, "id" | "clienteId_adId_data">
@@ -22840,6 +22861,7 @@ export namespace Prisma {
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
+    messagingConversationsStarted?: SortOrder
     _count?: MetaAdsCriativoCountOrderByAggregateInput
     _avg?: MetaAdsCriativoAvgOrderByAggregateInput
     _max?: MetaAdsCriativoMaxOrderByAggregateInput
@@ -22883,6 +22905,7 @@ export namespace Prisma {
     leads?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
     purchases?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
     websitePurchasesConversionValue?: DecimalWithAggregatesFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntWithAggregatesFilter<"MetaAdsCriativo"> | number
   }
 
   export type FatoAnalyticsDiarioWhereInput = {
@@ -24536,6 +24559,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
     cliente: ClienteCreateNestedOneWithoutMetaAdsCriativosInput
     conta?: ContaCreateNestedOneWithoutMetaAdsCriativosInput
   }
@@ -24573,6 +24597,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
   }
 
   export type MetaAdsCriativoUpdateInput = {
@@ -24606,6 +24631,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
     cliente?: ClienteUpdateOneRequiredWithoutMetaAdsCriativosNestedInput
     conta?: ContaUpdateOneWithoutMetaAdsCriativosNestedInput
   }
@@ -24643,6 +24669,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
   }
 
   export type MetaAdsCriativoCreateManyInput = {
@@ -24678,6 +24705,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
   }
 
   export type MetaAdsCriativoUpdateManyMutationInput = {
@@ -24711,6 +24739,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
   }
 
   export type MetaAdsCriativoUncheckedUpdateManyInput = {
@@ -24746,6 +24775,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
   }
 
   export type FatoAnalyticsDiarioCreateInput = {
@@ -26373,6 +26403,7 @@ export namespace Prisma {
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
+    messagingConversationsStarted?: SortOrder
   }
 
   export type MetaAdsCriativoAvgOrderByAggregateInput = {
@@ -26384,6 +26415,7 @@ export namespace Prisma {
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
+    messagingConversationsStarted?: SortOrder
   }
 
   export type MetaAdsCriativoMaxOrderByAggregateInput = {
@@ -26419,6 +26451,7 @@ export namespace Prisma {
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
+    messagingConversationsStarted?: SortOrder
   }
 
   export type MetaAdsCriativoMinOrderByAggregateInput = {
@@ -26454,6 +26487,7 @@ export namespace Prisma {
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
+    messagingConversationsStarted?: SortOrder
   }
 
   export type MetaAdsCriativoSumOrderByAggregateInput = {
@@ -26465,6 +26499,7 @@ export namespace Prisma {
     leads?: SortOrder
     purchases?: SortOrder
     websitePurchasesConversionValue?: SortOrder
+    messagingConversationsStarted?: SortOrder
   }
 
   export type FatoAnalyticsDiarioClienteIdDataCompoundUniqueInput = {
@@ -28550,6 +28585,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
     conta?: ContaCreateNestedOneWithoutMetaAdsCriativosInput
   }
 
@@ -28585,6 +28621,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
   }
 
   export type MetaAdsCriativoCreateOrConnectWithoutClienteInput = {
@@ -29077,6 +29114,7 @@ export namespace Prisma {
     leads?: IntFilter<"MetaAdsCriativo"> | number
     purchases?: IntFilter<"MetaAdsCriativo"> | number
     websitePurchasesConversionValue?: DecimalFilter<"MetaAdsCriativo"> | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFilter<"MetaAdsCriativo"> | number
   }
 
   export type MetaLeadIndividualUpsertWithWhereUniqueWithoutClienteInput = {
@@ -29471,6 +29509,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
     cliente: ClienteCreateNestedOneWithoutMetaAdsCriativosInput
   }
 
@@ -29506,6 +29545,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
   }
 
   export type MetaAdsCriativoCreateOrConnectWithoutContaInput = {
@@ -31725,6 +31765,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
   }
 
   export type MetaLeadIndividualCreateManyClienteInput = {
@@ -32252,6 +32293,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
     conta?: ContaUpdateOneWithoutMetaAdsCriativosNestedInput
   }
 
@@ -32287,6 +32329,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
   }
 
   export type MetaAdsCriativoUncheckedUpdateManyWithoutClienteInput = {
@@ -32321,6 +32364,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
   }
 
   export type MetaLeadIndividualUpdateWithoutClienteInput = {
@@ -32563,6 +32607,7 @@ export namespace Prisma {
     leads?: number
     purchases?: number
     websitePurchasesConversionValue?: Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: number
   }
 
   export type FatoAnalyticsDiarioUpdateWithoutContaInput = {
@@ -32860,6 +32905,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
     cliente?: ClienteUpdateOneRequiredWithoutMetaAdsCriativosNestedInput
   }
 
@@ -32895,6 +32941,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
   }
 
   export type MetaAdsCriativoUncheckedUpdateManyWithoutContaInput = {
@@ -32929,6 +32976,7 @@ export namespace Prisma {
     leads?: IntFieldUpdateOperationsInput | number
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
   }
 
 
