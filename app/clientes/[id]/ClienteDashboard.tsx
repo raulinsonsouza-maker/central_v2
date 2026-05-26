@@ -952,7 +952,7 @@ function formatPercentage(value: number) {
                       ? `Atualizado ${lastSyncedLabel}`
                       : "Sincronizar"
               }
-              className={`inline-flex self-stretch aspect-square items-center justify-center rounded-xl border transition-all ${
+              className={`inline-flex self-stretch w-11 items-center justify-center rounded-xl border transition-all ${
                 syncStatus === "syncing"
                   ? "border-[var(--primary)]/40 bg-[var(--primary)]/8 text-[var(--primary)] cursor-wait"
                   : syncStatus === "error"
