@@ -929,13 +929,30 @@ function formatPercentage(value: number) {
             );
           })()}
 
-          {/* Sync chip */}
+          {/* Sync chip — icon-only, same height as Saldo chip; label aparece em hover (title) */}
           {!portalMode && (
             <button
               onClick={() => triggerSync()}
               disabled={syncStatus === "syncing"}
-              title={syncStatus === "syncing" ? "Sincronizando…" : "Sincronizar dados agora"}
-              className={`inline-flex items-center gap-1.5 rounded-xl border px-3 py-2.5 text-xs transition-all ${
+              title={
+                syncStatus === "syncing"
+                  ? "Sincronizando…"
+                  : syncStatus === "error"
+                    ? "Erro ao sincronizar"
+                    : lastSyncedLabel
+                      ? `Atualizado ${lastSyncedLabel}`
+                      : "Sincronizar dados agora"
+              }
+              aria-label={
+                syncStatus === "syncing"
+                  ? "Sincronizando"
+                  : syncStatus === "error"
+                    ? "Erro ao sincronizar"
+                    : lastSyncedLabel
+                      ? `Atualizado ${lastSyncedLabel}`
+                      : "Sincronizar"
+              }
+              className={`inline-flex self-stretch aspect-square items-center justify-center rounded-xl border transition-all ${
                 syncStatus === "syncing"
                   ? "border-[var(--primary)]/40 bg-[var(--primary)]/8 text-[var(--primary)] cursor-wait"
                   : syncStatus === "error"
@@ -943,16 +960,7 @@ function formatPercentage(value: number) {
                     : "border-[var(--border)] bg-[var(--card)] text-[var(--muted-foreground)] hover:bg-[var(--muted)]/60 hover:text-[var(--foreground)]"
               }`}
             >
-              <RefreshCw className={`h-3.5 w-3.5 shrink-0 ${syncStatus === "syncing" ? "animate-spin" : ""}`} />
-              <span className="hidden sm:inline">
-                {syncStatus === "syncing"
-                  ? "Sincronizando…"
-                  : syncStatus === "error"
-                    ? "Erro ao sincronizar"
-                    : lastSyncedLabel
-                      ? `Atualizado ${lastSyncedLabel}`
-                      : "Sincronizar"}
-              </span>
+              <RefreshCw className={`h-4 w-4 shrink-0 ${syncStatus === "syncing" ? "animate-spin" : ""}`} />
             </button>
           )}
 
