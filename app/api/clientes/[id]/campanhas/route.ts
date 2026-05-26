@@ -128,11 +128,14 @@ export async function GET(
     type ResultType = "vendas" | "leads" | "conversas" | "visitas" | "alcance";
     function deriveResultType(v: { purchases: number; leads: number; conversas: number; profileVisits: number }, nome: string): ResultType {
       if (v.purchases > 0) return "vendas";
-      if (v.leads > 0) return "leads";
-      // When a campaign has both profileVisits and conversas, the dominant metric wins.
-      // Instagram engagement campaigns often register a few incidental conversas alongside many profileVisits.
+      // Dominant metric wins between leads vs conversas: WhatsApp messaging campaigns
+      // often register a handful of incidental "leads" alongside hundreds of real conversas
+      // (and vice-versa for lead-form campaigns). Pick whichever is materially bigger.
+      if (v.leads > 0 && v.leads >= v.conversas) return "leads";
+      // Same rule for profileVisits vs conversas (Instagram engagement campaigns).
       if (v.profileVisits > v.conversas) return "visitas";
       if (v.conversas > 0) return "conversas";
+      if (v.leads > 0) return "leads";
       if (v.profileVisits > 0) return "visitas";
       const n = nome.toLowerCase();
       if (/whatsapp|mensagem|message/.test(n)) return "conversas";
