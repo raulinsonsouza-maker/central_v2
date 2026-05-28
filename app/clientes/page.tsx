@@ -40,18 +40,21 @@ type SquadFilter = "todos" | "1" | "2" | "3";
 export default function CentralClientesPage() {
   const [viewMode, setViewMode] = React.useState<"lista" | "card">("lista");
   const [searchQuery, setSearchQuery] = React.useState("");
-  const [squadFilter, setSquadFilter] = React.useState<SquadFilter>("todos");
+  const [squadFilter, setSquadFilter] = React.useState<SquadFilter | null>(null);
 
   React.useEffect(() => {
+    let initial: SquadFilter = "todos";
     try {
       const raw = window.localStorage.getItem(SQUAD_STORAGE_KEY);
       if (raw === "todos" || raw === "1" || raw === "2" || raw === "3") {
-        setSquadFilter(raw);
+        initial = raw;
       }
     } catch {}
+    setSquadFilter(initial);
   }, []);
 
   React.useEffect(() => {
+    if (squadFilter === null) return;
     try {
       window.localStorage.setItem(SQUAD_STORAGE_KEY, squadFilter);
     } catch {}
@@ -72,19 +75,20 @@ export default function CentralClientesPage() {
     return [...onlyActive].sort((a, b) => a.nome.localeCompare(b.nome, "pt-BR"));
   }, [clientes]);
 
-  const filteredClientes = React.useMemo(() => {
+  const squadFilteredClientes = React.useMemo(() => {
     if (!activeClientes) return [];
-    let list = activeClientes;
-    if (squadFilter !== "todos") {
-      const target = Number(squadFilter);
-      list = list.filter((c) => c.squad === target);
-    }
-    if (searchQuery.trim()) {
-      const q = normalizeForSearch(searchQuery);
-      list = list.filter((c) => normalizeForSearch(c.nome).includes(q));
-    }
-    return list;
-  }, [activeClientes, searchQuery, squadFilter]);
+    if (!squadFilter || squadFilter === "todos") return activeClientes;
+    const target = Number(squadFilter);
+    return activeClientes.filter((c) => c.squad === target);
+  }, [activeClientes, squadFilter]);
+
+  const filteredClientes = React.useMemo(() => {
+    if (!searchQuery.trim()) return squadFilteredClientes;
+    const q = normalizeForSearch(searchQuery);
+    return squadFilteredClientes.filter((c) => normalizeForSearch(c.nome).includes(q));
+  }, [squadFilteredClientes, searchQuery]);
+
+  const hydrated = squadFilter !== null;
 
   const squadOptions: { value: SquadFilter; label: string }[] = [
     { value: "todos", label: "Todos" },
@@ -167,23 +171,33 @@ export default function CentralClientesPage() {
           </div>
 
           {/* Linha 2: chips de squad */}
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex min-h-[28px] flex-wrap items-center gap-1.5">
             <span className="mr-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
               Squad
             </span>
-            {squadOptions.map((opt) => (
-              <button
-                key={opt.value}
-                onClick={() => setSquadFilter(opt.value)}
-                className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider transition-all ${
-                  squadFilter === opt.value
-                    ? "bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20"
-                    : "border border-[var(--border)] bg-white/[0.03] text-[var(--muted-foreground)] hover:border-[var(--primary)]/30 hover:text-[var(--foreground)]"
-                }`}
-              >
-                {opt.label}
-              </button>
-            ))}
+            {hydrated
+              ? squadOptions.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setSquadFilter(opt.value)}
+                    className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider transition-all ${
+                      squadFilter === opt.value
+                        ? "bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20"
+                        : "border border-[var(--border)] bg-white/[0.03] text-[var(--muted-foreground)] hover:border-[var(--primary)]/30 hover:text-[var(--foreground)]"
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))
+              : squadOptions.map((opt) => (
+                  <span
+                    key={opt.value}
+                    aria-hidden
+                    className="rounded-full border border-transparent bg-white/[0.03] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-transparent"
+                  >
+                    {opt.label}
+                  </span>
+                ))}
           </div>
         </div>
       </section>
@@ -194,10 +208,12 @@ export default function CentralClientesPage() {
         <span className="flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
           {searchQuery
             ? `${filteredClientes.length} resultado${filteredClientes.length !== 1 ? "s" : ""}`
-            : "Clientes ativos"}
-          {!searchQuery && activeClientes.length > 0 && (
+            : squadFilter && squadFilter !== "todos"
+              ? `Squad ${squadFilter}`
+              : "Clientes ativos"}
+          {!searchQuery && filteredClientes.length > 0 && (
             <span className="rounded-full bg-[var(--primary)]/15 px-2 py-0.5 text-[10px] font-bold text-[var(--primary)] normal-case tracking-normal">
-              {activeClientes.length}
+              {filteredClientes.length}
             </span>
           )}
         </span>
@@ -228,7 +244,11 @@ export default function CentralClientesPage() {
         <div className="space-y-2">
           {filteredClientes.length === 0 ? (
             <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] px-6 py-12 text-center text-sm text-[var(--muted-foreground)]">
-              {searchQuery ? "Nenhum cliente encontrado para essa busca." : "Nenhum cliente cadastrado."}
+              {searchQuery
+                ? "Nenhum cliente encontrado para essa busca."
+                : squadFilter && squadFilter !== "todos"
+                  ? `Nenhum cliente neste squad.`
+                  : "Nenhum cliente cadastrado."}
             </div>
           ) : (
             filteredClientes.map((c) => {
@@ -277,7 +297,11 @@ export default function CentralClientesPage() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filteredClientes.length === 0 ? (
             <div className="col-span-full rounded-xl border border-[var(--border)] bg-[var(--card)] px-6 py-12 text-center text-sm text-[var(--muted-foreground)]">
-              {searchQuery ? "Nenhum cliente encontrado para essa busca." : "Nenhum cliente cadastrado."}
+              {searchQuery
+                ? "Nenhum cliente encontrado para essa busca."
+                : squadFilter && squadFilter !== "todos"
+                  ? `Nenhum cliente neste squad.`
+                  : "Nenhum cliente cadastrado."}
             </div>
           ) : (
             filteredClientes.map((c) => <ClienteCard key={c.id} cliente={c} />)
