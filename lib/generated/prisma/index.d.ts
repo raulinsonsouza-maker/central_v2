@@ -2346,11 +2346,13 @@ export namespace Prisma {
   export type ClienteAvgAggregateOutputType = {
     orcamentoMidiaGoogleMensal: Decimal | null
     orcamentoMidiaMetaMensal: Decimal | null
+    squad: number | null
   }
 
   export type ClienteSumAggregateOutputType = {
     orcamentoMidiaGoogleMensal: Decimal | null
     orcamentoMidiaMetaMensal: Decimal | null
+    squad: number | null
   }
 
   export type ClienteMinAggregateOutputType = {
@@ -2365,6 +2367,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal: Decimal | null
     orcamentoMidiaMetaMensal: Decimal | null
     gestor: string | null
+    squad: number | null
     formaPagamentoMeta: string | null
     formaPagamentoGoogle: string | null
     portalToken: string | null
@@ -2384,6 +2387,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal: Decimal | null
     orcamentoMidiaMetaMensal: Decimal | null
     gestor: string | null
+    squad: number | null
     formaPagamentoMeta: string | null
     formaPagamentoGoogle: string | null
     portalToken: string | null
@@ -2403,6 +2407,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal: number
     orcamentoMidiaMetaMensal: number
     gestor: number
+    squad: number
     formaPagamentoMeta: number
     formaPagamentoGoogle: number
     portalToken: number
@@ -2415,11 +2420,13 @@ export namespace Prisma {
   export type ClienteAvgAggregateInputType = {
     orcamentoMidiaGoogleMensal?: true
     orcamentoMidiaMetaMensal?: true
+    squad?: true
   }
 
   export type ClienteSumAggregateInputType = {
     orcamentoMidiaGoogleMensal?: true
     orcamentoMidiaMetaMensal?: true
+    squad?: true
   }
 
   export type ClienteMinAggregateInputType = {
@@ -2434,6 +2441,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: true
     orcamentoMidiaMetaMensal?: true
     gestor?: true
+    squad?: true
     formaPagamentoMeta?: true
     formaPagamentoGoogle?: true
     portalToken?: true
@@ -2453,6 +2461,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: true
     orcamentoMidiaMetaMensal?: true
     gestor?: true
+    squad?: true
     formaPagamentoMeta?: true
     formaPagamentoGoogle?: true
     portalToken?: true
@@ -2472,6 +2481,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: true
     orcamentoMidiaMetaMensal?: true
     gestor?: true
+    squad?: true
     formaPagamentoMeta?: true
     formaPagamentoGoogle?: true
     portalToken?: true
@@ -2578,6 +2588,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal: Decimal | null
     orcamentoMidiaMetaMensal: Decimal | null
     gestor: string | null
+    squad: number | null
     formaPagamentoMeta: string | null
     formaPagamentoGoogle: string | null
     portalToken: string | null
@@ -2616,6 +2627,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: boolean
     orcamentoMidiaMetaMensal?: boolean
     gestor?: boolean
+    squad?: boolean
     formaPagamentoMeta?: boolean
     formaPagamentoGoogle?: boolean
     portalToken?: boolean
@@ -2648,6 +2660,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: boolean
     orcamentoMidiaMetaMensal?: boolean
     gestor?: boolean
+    squad?: boolean
     formaPagamentoMeta?: boolean
     formaPagamentoGoogle?: boolean
     portalToken?: boolean
@@ -2667,6 +2680,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: boolean
     orcamentoMidiaMetaMensal?: boolean
     gestor?: boolean
+    squad?: boolean
     formaPagamentoMeta?: boolean
     formaPagamentoGoogle?: boolean
     portalToken?: boolean
@@ -2686,6 +2700,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: boolean
     orcamentoMidiaMetaMensal?: boolean
     gestor?: boolean
+    squad?: boolean
     formaPagamentoMeta?: boolean
     formaPagamentoGoogle?: boolean
     portalToken?: boolean
@@ -2693,7 +2708,7 @@ export namespace Prisma {
     perfilPanel?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "slug" | "logoUrl" | "ativo" | "createdAt" | "updatedAt" | "segmento" | "orcamentoMidiaGoogleMensal" | "orcamentoMidiaMetaMensal" | "gestor" | "formaPagamentoMeta" | "formaPagamentoGoogle" | "portalToken" | "leadScoringEnabled" | "perfilPanel", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "slug" | "logoUrl" | "ativo" | "createdAt" | "updatedAt" | "segmento" | "orcamentoMidiaGoogleMensal" | "orcamentoMidiaMetaMensal" | "gestor" | "squad" | "formaPagamentoMeta" | "formaPagamentoGoogle" | "portalToken" | "leadScoringEnabled" | "perfilPanel", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agregadosMensal?: boolean | Cliente$agregadosMensalArgs<ExtArgs>
     agregadosSemanal?: boolean | Cliente$agregadosSemanalArgs<ExtArgs>
@@ -2740,6 +2755,7 @@ export namespace Prisma {
       orcamentoMidiaGoogleMensal: Prisma.Decimal | null
       orcamentoMidiaMetaMensal: Prisma.Decimal | null
       gestor: string | null
+      squad: number | null
       formaPagamentoMeta: string | null
       formaPagamentoGoogle: string | null
       portalToken: string | null
@@ -3191,6 +3207,7 @@ export namespace Prisma {
     readonly orcamentoMidiaGoogleMensal: FieldRef<"Cliente", 'Decimal'>
     readonly orcamentoMidiaMetaMensal: FieldRef<"Cliente", 'Decimal'>
     readonly gestor: FieldRef<"Cliente", 'String'>
+    readonly squad: FieldRef<"Cliente", 'Int'>
     readonly formaPagamentoMeta: FieldRef<"Cliente", 'String'>
     readonly formaPagamentoGoogle: FieldRef<"Cliente", 'String'>
     readonly portalToken: FieldRef<"Cliente", 'String'>
@@ -21228,6 +21245,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal: 'orcamentoMidiaGoogleMensal',
     orcamentoMidiaMetaMensal: 'orcamentoMidiaMetaMensal',
     gestor: 'gestor',
+    squad: 'squad',
     formaPagamentoMeta: 'formaPagamentoMeta',
     formaPagamentoGoogle: 'formaPagamentoGoogle',
     portalToken: 'portalToken',
@@ -21698,6 +21716,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     gestor?: StringNullableFilter<"Cliente"> | string | null
+    squad?: IntNullableFilter<"Cliente"> | number | null
     formaPagamentoMeta?: StringNullableFilter<"Cliente"> | string | null
     formaPagamentoGoogle?: StringNullableFilter<"Cliente"> | string | null
     portalToken?: StringNullableFilter<"Cliente"> | string | null
@@ -21729,6 +21748,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: SortOrderInput | SortOrder
     orcamentoMidiaMetaMensal?: SortOrderInput | SortOrder
     gestor?: SortOrderInput | SortOrder
+    squad?: SortOrderInput | SortOrder
     formaPagamentoMeta?: SortOrderInput | SortOrder
     formaPagamentoGoogle?: SortOrderInput | SortOrder
     portalToken?: SortOrderInput | SortOrder
@@ -21764,6 +21784,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: DecimalNullableFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     gestor?: StringNullableFilter<"Cliente"> | string | null
+    squad?: IntNullableFilter<"Cliente"> | number | null
     formaPagamentoMeta?: StringNullableFilter<"Cliente"> | string | null
     formaPagamentoGoogle?: StringNullableFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolFilter<"Cliente"> | boolean
@@ -21794,6 +21815,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: SortOrderInput | SortOrder
     orcamentoMidiaMetaMensal?: SortOrderInput | SortOrder
     gestor?: SortOrderInput | SortOrder
+    squad?: SortOrderInput | SortOrder
     formaPagamentoMeta?: SortOrderInput | SortOrder
     formaPagamentoGoogle?: SortOrderInput | SortOrder
     portalToken?: SortOrderInput | SortOrder
@@ -21821,6 +21843,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: DecimalNullableWithAggregatesFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: DecimalNullableWithAggregatesFilter<"Cliente"> | Decimal | DecimalJsLike | number | string | null
     gestor?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
+    squad?: IntNullableWithAggregatesFilter<"Cliente"> | number | null
     formaPagamentoMeta?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     formaPagamentoGoogle?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     portalToken?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
@@ -23349,6 +23372,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -23380,6 +23404,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -23411,6 +23436,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23442,6 +23468,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23473,6 +23500,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -23492,6 +23520,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -23511,6 +23540,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -25321,6 +25351,17 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type AgregadoMidiaMensalListRelationFilter = {
     every?: AgregadoMidiaMensalWhereInput
     some?: AgregadoMidiaMensalWhereInput
@@ -25458,6 +25499,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: SortOrder
     orcamentoMidiaMetaMensal?: SortOrder
     gestor?: SortOrder
+    squad?: SortOrder
     formaPagamentoMeta?: SortOrder
     formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
@@ -25468,6 +25510,7 @@ export namespace Prisma {
   export type ClienteAvgOrderByAggregateInput = {
     orcamentoMidiaGoogleMensal?: SortOrder
     orcamentoMidiaMetaMensal?: SortOrder
+    squad?: SortOrder
   }
 
   export type ClienteMaxOrderByAggregateInput = {
@@ -25482,6 +25525,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: SortOrder
     orcamentoMidiaMetaMensal?: SortOrder
     gestor?: SortOrder
+    squad?: SortOrder
     formaPagamentoMeta?: SortOrder
     formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
@@ -25501,6 +25545,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: SortOrder
     orcamentoMidiaMetaMensal?: SortOrder
     gestor?: SortOrder
+    squad?: SortOrder
     formaPagamentoMeta?: SortOrder
     formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
@@ -25511,6 +25556,7 @@ export namespace Prisma {
   export type ClienteSumOrderByAggregateInput = {
     orcamentoMidiaGoogleMensal?: SortOrder
     orcamentoMidiaMetaMensal?: SortOrder
+    squad?: SortOrder
   }
 
   export type StringWithAggregatesFilter<$PrismaModel = never> = {
@@ -25585,6 +25631,22 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type ClienteScalarRelationFilter = {
@@ -25980,17 +26042,6 @@ export namespace Prisma {
     conversoes?: SortOrder
   }
 
-  export type IntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type MetaCountOrderByAggregateInput = {
     id?: SortOrder
     clienteId?: SortOrder
@@ -26040,22 +26091,6 @@ export namespace Prisma {
     ano?: SortOrder
     mes?: SortOrder
     valorMeta?: SortOrder
-  }
-
-  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
   }
 
   export type DateTimeNullableFilter<$PrismaModel = never> = {
@@ -26999,6 +27034,14 @@ export namespace Prisma {
     divide?: Decimal | DecimalJsLike | number | string
   }
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput = {
     create?: XOR<AgregadoMidiaMensalCreateWithoutClienteInput, AgregadoMidiaMensalUncheckedCreateWithoutClienteInput> | AgregadoMidiaMensalCreateWithoutClienteInput[] | AgregadoMidiaMensalUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: AgregadoMidiaMensalCreateOrConnectWithoutClienteInput | AgregadoMidiaMensalCreateOrConnectWithoutClienteInput[]
@@ -27639,14 +27682,6 @@ export namespace Prisma {
     connect?: ClienteWhereUniqueInput
   }
 
-  export type NullableIntFieldUpdateOperationsInput = {
-    set?: number | null
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
-  }
-
   export type ClienteUpdateOneRequiredWithoutMetasNestedInput = {
     create?: XOR<ClienteCreateWithoutMetasInput, ClienteUncheckedCreateWithoutMetasInput>
     connectOrCreate?: ClienteCreateOrConnectWithoutMetasInput
@@ -27892,6 +27927,17 @@ export namespace Prisma {
     not?: NestedDecimalNullableFilter<$PrismaModel> | Decimal | DecimalJsLike | number | string | null
   }
 
+  export type NestedIntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
   export type NestedStringWithAggregatesFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -27937,17 +27983,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type NestedIntNullableFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableFilter<$PrismaModel> | number | null
-  }
-
   export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
@@ -27984,6 +28019,33 @@ export namespace Prisma {
     _sum?: NestedDecimalNullableFilter<$PrismaModel>
     _min?: NestedDecimalNullableFilter<$PrismaModel>
     _max?: NestedDecimalNullableFilter<$PrismaModel>
+  }
+
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDecimalFilter<$PrismaModel = never> = {
@@ -28038,33 +28100,6 @@ export namespace Prisma {
     _sum?: NestedDecimalFilter<$PrismaModel>
     _min?: NestedDecimalFilter<$PrismaModel>
     _max?: NestedDecimalFilter<$PrismaModel>
-  }
-
-  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: number | IntFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
-    lt?: number | IntFieldRefInput<$PrismaModel>
-    lte?: number | IntFieldRefInput<$PrismaModel>
-    gt?: number | IntFieldRefInput<$PrismaModel>
-    gte?: number | IntFieldRefInput<$PrismaModel>
-    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
-    _count?: NestedIntNullableFilter<$PrismaModel>
-    _avg?: NestedFloatNullableFilter<$PrismaModel>
-    _sum?: NestedIntNullableFilter<$PrismaModel>
-    _min?: NestedIntNullableFilter<$PrismaModel>
-    _max?: NestedIntNullableFilter<$PrismaModel>
-  }
-
-  export type NestedFloatNullableFilter<$PrismaModel = never> = {
-    equals?: number | FloatFieldRefInput<$PrismaModel> | null
-    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
-    lt?: number | FloatFieldRefInput<$PrismaModel>
-    lte?: number | FloatFieldRefInput<$PrismaModel>
-    gt?: number | FloatFieldRefInput<$PrismaModel>
-    gte?: number | FloatFieldRefInput<$PrismaModel>
-    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
   }
 
   export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
@@ -29209,6 +29244,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -29239,6 +29275,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -29581,6 +29618,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29611,6 +29649,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29721,6 +29760,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -29751,6 +29791,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -29832,6 +29873,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29862,6 +29904,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29933,6 +29976,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -29963,6 +30007,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30009,6 +30054,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30039,6 +30085,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30069,6 +30116,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30099,6 +30147,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30145,6 +30194,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30175,6 +30225,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30205,6 +30256,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30235,6 +30287,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30281,6 +30334,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30311,6 +30365,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30341,6 +30396,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30371,6 +30427,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30417,6 +30474,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30447,6 +30505,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30477,6 +30536,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30507,6 +30567,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30588,6 +30649,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30618,6 +30680,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30689,6 +30752,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30719,6 +30783,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30800,6 +30865,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30830,6 +30896,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -30901,6 +30968,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -30931,6 +30999,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -31012,6 +31081,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31042,6 +31112,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31113,6 +31184,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -31143,6 +31215,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -31224,6 +31297,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31254,6 +31328,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31325,6 +31400,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -31355,6 +31431,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -31401,6 +31478,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31431,6 +31509,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31461,6 +31540,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -31491,6 +31571,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
     gestor?: string | null
+    squad?: number | null
     formaPagamentoMeta?: string | null
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
@@ -31537,6 +31618,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31567,6 +31649,7 @@ export namespace Prisma {
     orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
     formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null

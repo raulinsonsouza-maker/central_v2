@@ -8,7 +8,9 @@ export async function GET() {
     const clientes = await findAllClientes(true);
     const ids = clientes.map((c) => c.id);
     if (ids.length === 0) {
-      return NextResponse.json(clientes.map((c) => ({ ...c, totalLeads: 0, conversao: 0 })));
+      return NextResponse.json(
+        clientes.map((c) => ({ ...c, totalLeads: 0, conversao: 0, squad: c.squad ?? null }))
+      );
     }
     const fatosRows = await prisma.fatoMidiaDiario.findMany({
       where: { clienteId: { in: ids } },
@@ -36,6 +38,7 @@ export async function GET() {
         logoUrl: c.logoUrl,
         segmento: c.segmento,
         ativo: c.ativo,
+        squad: c.squad ?? null,
         totalLeads,
         conversao,
         totalCliques,

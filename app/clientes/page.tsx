@@ -34,9 +34,28 @@ function normalizeForSearch(text: string): string {
     .trim();
 }
 
+const SQUAD_STORAGE_KEY = "inout:central:squadFilter";
+type SquadFilter = "todos" | "1" | "2" | "3";
+
 export default function CentralClientesPage() {
   const [viewMode, setViewMode] = React.useState<"lista" | "card">("lista");
   const [searchQuery, setSearchQuery] = React.useState("");
+  const [squadFilter, setSquadFilter] = React.useState<SquadFilter>("todos");
+
+  React.useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(SQUAD_STORAGE_KEY);
+      if (raw === "todos" || raw === "1" || raw === "2" || raw === "3") {
+        setSquadFilter(raw);
+      }
+    } catch {}
+  }, []);
+
+  React.useEffect(() => {
+    try {
+      window.localStorage.setItem(SQUAD_STORAGE_KEY, squadFilter);
+    } catch {}
+  }, [squadFilter]);
 
   const {
     data: clientes,
@@ -55,10 +74,24 @@ export default function CentralClientesPage() {
 
   const filteredClientes = React.useMemo(() => {
     if (!activeClientes) return [];
-    if (!searchQuery.trim()) return activeClientes;
-    const q = normalizeForSearch(searchQuery);
-    return activeClientes.filter((c) => normalizeForSearch(c.nome).includes(q));
-  }, [activeClientes, searchQuery]);
+    let list = activeClientes;
+    if (squadFilter !== "todos") {
+      const target = Number(squadFilter);
+      list = list.filter((c) => c.squad === target);
+    }
+    if (searchQuery.trim()) {
+      const q = normalizeForSearch(searchQuery);
+      list = list.filter((c) => normalizeForSearch(c.nome).includes(q));
+    }
+    return list;
+  }, [activeClientes, searchQuery, squadFilter]);
+
+  const squadOptions: { value: SquadFilter; label: string }[] = [
+    { value: "todos", label: "Todos" },
+    { value: "1", label: "Squad 1" },
+    { value: "2", label: "Squad 2" },
+    { value: "3", label: "Squad 3" },
+  ];
 
   return (
     <main className="space-y-6">
@@ -133,6 +166,25 @@ export default function CentralClientesPage() {
             </div>
           </div>
 
+          {/* Linha 2: chips de squad */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="mr-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+              Squad
+            </span>
+            {squadOptions.map((opt) => (
+              <button
+                key={opt.value}
+                onClick={() => setSquadFilter(opt.value)}
+                className={`rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-wider transition-all ${
+                  squadFilter === opt.value
+                    ? "bg-[var(--primary)] text-white shadow-md shadow-[var(--primary)]/20"
+                    : "border border-[var(--border)] bg-white/[0.03] text-[var(--muted-foreground)] hover:border-[var(--primary)]/30 hover:text-[var(--foreground)]"
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -191,7 +243,14 @@ export default function CentralClientesPage() {
                     {initials}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <p className="font-semibold text-[var(--foreground)]">{c.nome}</p>
+                    <div className="flex items-center gap-2">
+                      <p className="font-semibold text-[var(--foreground)]">{c.nome}</p>
+                      {c.squad && (
+                        <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--muted)] px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                          S{c.squad}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-[var(--muted-foreground)]">
                       {c.segmento?.trim() || "Sem segmento"}
                     </p>

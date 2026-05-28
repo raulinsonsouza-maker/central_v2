@@ -48,6 +48,7 @@ export async function POST(request: NextRequest) {
     ga4PropertyId?: string | null;
     leadScoringEnabled?: boolean;
     perfilPanel?: string | null;
+    squad?: number | null;
   };
   try {
     body = await request.json();
@@ -74,6 +75,7 @@ export async function POST(request: NextRequest) {
       orcamentoMidiaMetaMensal: body.orcamentoMidiaMetaMensal ?? null,
       leadScoringEnabled: body.leadScoringEnabled ?? false,
       perfilPanel: body.perfilPanel?.trim() || null,
+      squad: body.squad === 1 || body.squad === 2 || body.squad === 3 ? body.squad : null,
     });
 
     await upsertContaPlataforma({

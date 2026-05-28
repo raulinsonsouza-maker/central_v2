@@ -43,6 +43,7 @@ interface ClienteAdmin {
   portalToken?: string | null;
   leadScoringEnabled?: boolean;
   perfilPanel?: string | null;
+  squad?: number | null;
   contas: ContaAdmin[];
 }
 
@@ -62,6 +63,7 @@ interface ClientePayload {
   ga4PropertyId?: string | null;
   leadScoringEnabled?: boolean;
   perfilPanel?: string | null;
+  squad?: number | null;
 }
 
 function getHeaders(token?: string, includeJson = false): HeadersInit {
@@ -325,6 +327,9 @@ function ClienteForm({
     initialValues.leadScoringEnabled ?? false
   );
   const [perfilPanel, setPerfilPanel] = useState(initialValues.perfilPanel ?? "");
+  const [squad, setSquad] = useState<string>(
+    initialValues.squad != null ? String(initialValues.squad) : ""
+  );
   const [showSegmentoManager, setShowSegmentoManager] = useState(false);
 
   return (
@@ -445,6 +450,19 @@ function ClienteForm({
               </select>
             </FormField>
 
+            <FormField label="Squad" hint="Time interno responsável por este cliente. Usado para filtrar a Central de Clientes.">
+              <select
+                value={squad}
+                onChange={(e) => setSquad(e.target.value)}
+                className={inputClass}
+              >
+                <option value="">(sem squad)</option>
+                <option value="1">Squad 1</option>
+                <option value="2">Squad 2</option>
+                <option value="3">Squad 3</option>
+              </select>
+            </FormField>
+
             <div className="flex flex-wrap items-center gap-5 rounded-xl bg-[var(--muted)]/30 px-4 py-3">
               <label className="flex cursor-pointer items-center gap-2.5">
                 <input
@@ -512,6 +530,7 @@ function ClienteForm({
                     syncNow: syncAfterSave,
                     leadScoringEnabled,
                     perfilPanel: perfilPanel || null,
+                    squad: squad ? Number(squad) : null,
                   })
                 }
                 disabled={pending}
@@ -868,14 +887,21 @@ export default function AdminClientesPage() {
                         </p>
                       </div>
 
-                      {cliente.segmento && (
-                        <div>
-                          <span
-                            className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white"
-                            style={{ backgroundColor: segCor }}
-                          >
-                            {cliente.segmento}
-                          </span>
+                      {(cliente.segmento || cliente.squad) && (
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {cliente.segmento && (
+                            <span
+                              className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-white"
+                              style={{ backgroundColor: segCor }}
+                            >
+                              {cliente.segmento}
+                            </span>
+                          )}
+                          {cliente.squad && (
+                            <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--muted)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                              Squad {cliente.squad}
+                            </span>
+                          )}
                         </div>
                       )}
 
@@ -1053,6 +1079,7 @@ export default function AdminClientesPage() {
             orcamentoMidiaMetaMensal: editing.orcamentoMidiaMetaMensal ?? null,
             leadScoringEnabled: editing.leadScoringEnabled ?? false,
             perfilPanel: editing.perfilPanel ?? null,
+            squad: editing.squad ?? null,
           }}
           segmentos={segmentos}
           adminToken={adminToken}

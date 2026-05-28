@@ -15,6 +15,7 @@ export interface ClienteCardData {
   conversao: number;
   totalCliques?: number;
   ativo?: boolean;
+  squad?: number | null;
   hasGoogleConta?: boolean;
   hasMetaConta?: boolean;
 }
@@ -45,6 +46,11 @@ export function ClienteCard({ cliente }: { cliente: ClienteCardData }) {
                 >
                   <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: "rgba(255,255,255,0.6)" }} />
                   {cliente.segmento.trim()}
+                </span>
+              )}
+              {cliente.squad && (
+                <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--muted)] px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-[var(--muted-foreground)]">
+                  S{cliente.squad}
                 </span>
               )}
             </div>
