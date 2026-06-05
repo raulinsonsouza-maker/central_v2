@@ -37,6 +37,19 @@ async function fetchCliente(id: string) {
   return res.json();
 }
 
+function formatRelativeTime(value: string | Date): string {
+  const then = new Date(value).getTime();
+  if (Number.isNaN(then)) return "";
+  const diffMs = Date.now() - then;
+  const min = Math.floor(diffMs / 60000);
+  if (min < 1) return "agora mesmo";
+  if (min < 60) return `há ${min} min`;
+  const hours = Math.floor(min / 60);
+  if (hours < 24) return `há ${hours}h`;
+  const days = Math.floor(hours / 24);
+  return `há ${days}d`;
+}
+
 export type DateFilter = {
   periodo: string;
   dataInicio?: string;
@@ -363,24 +376,44 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const [lastSyncedLabel, setLastSyncedLabel] = React.useState<string | null>(null);
   const queryClient = useQueryClient();
 
-  const triggerSync = React.useCallback(async () => {
+  const triggerSync = React.useCallback(async (opts?: { background?: boolean }) => {
+    const background = opts?.background ?? false;
     if (syncStatus === "syncing") return;
     setSyncStatus("syncing");
     try {
-      const res = await fetch(`/api/clientes/${id}/sync`, { method: "POST" });
+      const url = `/api/clientes/${id}/sync${background ? "?background=1" : ""}`;
+      const res = await fetch(url, { method: "POST" });
       if (res.ok) {
+        const data = await res.json().catch(() => ({} as { skipped?: boolean }));
+        if (data?.skipped) {
+          // Dados já estavam frescos — nada a atualizar, volta ao estado neutro.
+          setSyncStatus("idle");
+          return;
+        }
         setSyncStatus("done");
         setLastSyncedLabel(`agora mesmo`);
         await queryClient.invalidateQueries({ queryKey: ["resumo", id] });
         await queryClient.invalidateQueries({ queryKey: ["midia", id] });
         await queryClient.invalidateQueries({ queryKey: ["campanhas", id] });
       } else {
-        setSyncStatus("error");
+        // Em segundo plano não alarmamos o usuário (ex.: portal do cliente).
+        setSyncStatus(background ? "idle" : "error");
       }
     } catch {
-      setSyncStatus("error");
+      setSyncStatus(background ? "idle" : "error");
     }
   }, [id, syncStatus, queryClient]);
+
+  // Auto-sync em segundo plano ao abrir o cliente (uma vez por cliente).
+  // O servidor decide se realmente sincroniza (só se os dados estiverem velhos),
+  // então isso não trava a página nem martela as APIs.
+  const autoSyncedRef = React.useRef<string | null>(null);
+  React.useEffect(() => {
+    if (!id) return;
+    if (autoSyncedRef.current === id) return;
+    autoSyncedRef.current = id;
+    void triggerSync({ background: true });
+  }, [id, triggerSync]);
 
   React.useEffect(() => {
     localStorage.setItem("inout-date-preset", presetPeriodo);
@@ -463,6 +496,13 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     queryFn: () => fetchCliente(id),
   });
 
+  // Inicializa o rótulo "atualizado há…" a partir do último sync salvo,
+  // a menos que já tenhamos sincronizado nesta sessão ("agora mesmo").
+  React.useEffect(() => {
+    if (!cliente?.ultimoSyncAt) return;
+    setLastSyncedLabel((prev) => (prev ? prev : formatRelativeTime(cliente.ultimoSyncAt)));
+  }, [cliente?.ultimoSyncAt]);
+
   // Controls the fullscreen loader: visible until first cliente data arrives
   const [loaderVisible, setLoaderVisible] = React.useState(true);
   const [loaderFading, setLoaderFading] = React.useState(false);
@@ -492,7 +532,8 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     yesterday.setDate(today.getDate() - 1);
     if (last < yesterday) {
       autoSyncFiredRef.current = true;
-      triggerSync();
+      // Sempre pelo caminho com trava/throttle no servidor (nunca força).
+      void triggerSync({ background: true });
     } else {
       const diffDays = Math.floor((today.getTime() - last.getTime()) / (24 * 60 * 60 * 1000));
       if (diffDays === 0) {

@@ -1,34 +1,69 @@
 import { NextRequest, NextResponse } from "next/server";
 import { syncClienteCanais } from "@/lib/sync/syncClienteCanais";
+import { prisma } from "@/lib/db";
 
 /**
  * Sincroniza os canais configurados deste cliente para o banco.
- * Pode ser chamado pela UI (botão "Sync").
- * Opcional: proteger com header x-admin-token ou x-cron-token em produção.
+ *
+ * Modos:
+ * - Manual (botão "Atualizar agora"): POST sem query — sempre roda.
+ * - Background (auto ao abrir o cliente): POST ?background=1 — só roda se os
+ *   dados estiverem "velhos" (última sync > STALE_THRESHOLD). Usa um claim
+ *   atômico no banco (updateMany condicional) para evitar syncs duplicados/
+ *   concorrentes mesmo com várias instâncias (autoscale) e não martelar as
+ *   APIs da Meta/Google.
  */
+const STALE_THRESHOLD_MS = 3 * 60 * 60 * 1000; // 3h
+
 export async function POST(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
+  const isBackground = request.nextUrl.searchParams.get("background") === "1";
+
   try {
+    if (isBackground) {
+      const threshold = new Date(Date.now() - STALE_THRESHOLD_MS);
+      // Claim atômico: só prossegue se nunca sincronizou ou se está velho.
+      // Marca ultimoSyncAt=now já aqui, funcionando como trava entre instâncias.
+      const claim = await prisma.cliente.updateMany({
+        where: {
+          id,
+          OR: [{ ultimoSyncAt: null }, { ultimoSyncAt: { lt: threshold } }],
+        },
+        data: { ultimoSyncAt: new Date() },
+      });
+      if (claim.count === 0) {
+        // Dados ainda frescos (ou já há um sync em andamento) — nada a fazer.
+        return NextResponse.json({ ok: true, skipped: true, reason: "fresh_or_running" });
+      }
+    }
+
     const result = await syncClienteCanais(id);
+
+    // Atualiza o carimbo de tempo ao concluir (não bloqueia a resposta em caso de falha).
+    await prisma.cliente
+      .update({ where: { id }, data: { ultimoSyncAt: new Date() } })
+      .catch(() => {});
+
     if (!result.ok) {
       return NextResponse.json(
         {
           ok: false,
           sync: result,
           error:
-          result.googleAds?.error ||
-          result.meta?.error ||
-          result.analytics?.error ||
-          "Falha na sincronização",
+            result.googleAds?.error ||
+            result.meta?.error ||
+            result.analytics?.error ||
+            "Falha na sincronização",
         },
         { status: 400 }
       );
     }
     return NextResponse.json({
       ok: true,
+      synced: true,
       sync: result,
     });
   } catch (e) {

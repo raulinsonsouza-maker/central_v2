@@ -26,6 +26,7 @@ model Cliente {
   portalToken                String?                 @unique @default(dbgenerated("(gen_random_uuid())::text"))
   leadScoringEnabled         Boolean                 @default(false)
   perfilPanel                String?
+  ultimoSyncAt               DateTime?
   agregadosMensal            AgregadoMidiaMensal[]
   agregadosSemanal           AgregadoMidiaSemanal[]
   contas                     Conta[]

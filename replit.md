@@ -88,6 +88,14 @@ A atualização diária de todas as contas Meta Ads, Google Ads e GA4 roda via *
 - **Token Meta expira periodicamente** — quando vence, o sync da Meta falha com `Session has expired` e os dados de Meta param de atualizar. Renovar via app ou `scripts/update-meta-token.ts`.
 - Endpoints HTTP (`/api/sync/*`, `/api/admin/sync-all`) seguem existindo para trigger manual/externo; em produção exigem `SYNC_CRON_TOKEN` (senão ficam sem auth).
 
+### Sync sob demanda (ao abrir o cliente)
+Mecanismo principal hoje (substitui o cron diário, que não roda no Replit sem Scheduled Deployment).
+- Ao abrir um cliente (admin **ou** portal), o `ClienteDashboard` dispara em segundo plano `POST /api/clientes/[id]/sync?background=1` (fire-and-forget, não trava a página).
+- **Throttle/trava no servidor:** `Cliente.ultimoSyncAt` + claim atômico (`prisma.cliente.updateMany` condicional, janela de 3h). Só sincroniza se os dados estiverem velhos; evita syncs duplicados/concorrentes entre instâncias (autoscale) e não martela as APIs. Toda atualização automática (mount + check de `lastFatoDate`) passa por esse caminho com `background: true` — nunca força.
+- O `ultimoSyncAt` é marcado **no claim** (antes do sync). Tradeoff deliberado: se o sync falhar, não retenta por 3h (prioriza não martelar API que está falhando). O botão manual contorna isso.
+- **Botão "Atualizar agora"** (chip de refresh, só admin / `!portalMode`): `POST /api/clientes/[id]/sync` sem `background` → força o sync ignorando o throttle.
+- Limitações conhecidas: clientes que ninguém abre no dia não atualizam; **alertas diários** (`runDailyAlerts`) não rodam por esse caminho — continuam dependendo do `npm run sync:daily` (Scheduled Deployment) se/quando configurado. Endpoint de sync por cliente é público (sem auth) — hardening não aplicado por opção do usuário.
+
 ## Metrics / Data Layer
 
 ### `outcomeCountForFato` (`lib/metrics/fatoMidiaOutcome.ts`)
