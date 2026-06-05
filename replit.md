@@ -76,6 +76,18 @@ Uses Replit's built-in PostgreSQL. Schema managed via Prisma.
 - Uses `@vercel/blob` when `BLOB_READ_WRITE_TOKEN` is set (production), falls back to filesystem in dev
 - `LogoUploadField` component: shows preview + "Trocar"/"Remover" buttons when logo exists; shows dashed upload button when empty
 
+## Sincronização Automática (Sync Diário)
+
+A atualização diária de todas as contas Meta Ads, Google Ads e GA4 roda via **Replit Scheduled Deployment** (NÃO via `vercel.json` — os crons da Vercel não funcionam no Replit e nunca disparam aqui).
+
+- **Job:** `npm run sync:daily` → `scripts/daily-sync.ts`
+- Executa Meta → Google Ads → GA4 (sequencial, evita rate limits) + `runDailyAlerts`, **direto contra o banco** (sem HTTP, sem `SYNC_CRON_TOKEN`, sem cold-start, sem limite de 300s).
+- Resiliente: erro por cliente é logado e o job continua; erro fatal em uma plataforma não impede as outras; idempotente (upserts + incremental: última data − 3 dias). Exit 0 = ok (mesmo com erros pontuais); exit 1 = falha fatal.
+- **Agendamento:** criar Scheduled Deployment no Replit com run `npm run sync:daily`, schedule `0 8 * * *` (05:00 BRT). Ver `docs/sync-cron.md`.
+- **Credenciais** ficam no banco (`getIntegrationsConfig()`), com fallback para env. Renovar em Administração → Integrações.
+- **Token Meta expira periodicamente** — quando vence, o sync da Meta falha com `Session has expired` e os dados de Meta param de atualizar. Renovar via app ou `scripts/update-meta-token.ts`.
+- Endpoints HTTP (`/api/sync/*`, `/api/admin/sync-all`) seguem existindo para trigger manual/externo; em produção exigem `SYNC_CRON_TOKEN` (senão ficam sem auth).
+
 ## Metrics / Data Layer
 
 ### `outcomeCountForFato` (`lib/metrics/fatoMidiaOutcome.ts`)

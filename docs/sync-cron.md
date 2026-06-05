@@ -1,124 +1,69 @@
 # Sync diário — Meta Ads, Google Ads e GA4
 
-Este documento descreve a rotina de sincronização diária às **05:00 horário de Brasília (America/Sao_Paulo)**, que busca os dados de Meta Ads, Google Ads e GA4 na API de cada plataforma e persiste no banco, mantendo os dashboards atualizados todos os dias.
+Este documento descreve a rotina de sincronização diária que busca os dados de Meta Ads, Google Ads e GA4 na API de cada plataforma e persiste no banco, mantendo os dashboards atualizados todos os dias.
 
-## Decisão de host
+## ⚠️ Importante: este app roda no Replit
 
-A aplicação pode rodar em dois cenários:
+A aplicação está publicada no **Replit** (deployment autoscale em `https://central-inout.replit.app`).
+Os Cron Jobs definidos em `vercel.json` **só funcionam quando o deploy é na Vercel** — no Replit eles são ignorados e **nunca disparam**. Por isso a atualização automática precisa ser feita por um **Scheduled Deployment** do Replit (cron nativo da plataforma).
 
-| Host | Como o cron é disparado |
-|------|-------------------------|
-| **Vercel** | Cron configurado no próprio projeto via `vercel.json`. A Vercel chama a URL do deployment (GET) no horário agendado. **Recomendado** se o deploy já for na Vercel. |
-| **VPS / VM / Docker / outro** | Cron externo (crontab do SO, GitHub Actions ou outro agendador) faz POST (ou GET) na URL do endpoint em produção. Ver [Caminho B](#caminho-b-deploy-fora-da-vercel) abaixo. |
+O `vercel.json` é mantido apenas como referência/fallback caso o projeto seja migrado para a Vercel no futuro.
+
+---
+
+## ✅ Caminho recomendado — Scheduled Deployment no Replit
+
+A forma robusta e oficial de agendar a sincronização no Replit é um **Scheduled Deployment** que executa o script `scripts/daily-sync.ts`.
+
+### Por que o script direto (e não chamar os endpoints HTTP)?
+
+O script `npm run sync:daily` roda a lógica de sync **direto contra o banco**, e isso é muito mais confiável do que disparar os endpoints HTTP:
+
+- **Sem token** — não depende de `SYNC_CRON_TOKEN` configurado corretamente.
+- **Sem cold-start** — não acorda o autoscale nem sofre com o tempo de inicialização.
+- **Sem limite de 300s** — não esbarra no `maxDuration` das funções serverless; o job pode levar quantos minutos forem necessários.
+- **Resiliente** — Meta, Google Ads e GA4 rodam em sequência (evita estourar rate limits); erro em um cliente é logado e o job continua nos demais; erro fatal em uma plataforma não impede as outras.
+- **Idempotente** — usa upserts e sync incremental (última data registrada − 3 dias), então rodar de novo é seguro.
+
+### Como configurar (uma vez)
+
+1. No painel do Replit, abra **Deployments** → **Create Deployment** → escolha o tipo **Scheduled**.
+2. Configure:
+   - **Build command:** `npm install`
+   - **Run command:** `npm run sync:daily`
+   - **Schedule:** todos os dias às **08:00 UTC** (= **05:00 horário de Brasília**). Em cron: `0 8 * * *`.
+   - **Timeout:** algo folgado (ex.: 30 minutos) — o job sincroniza todas as contas em sequência.
+3. Publique. A partir daí o Replit executa o script automaticamente todo dia no horário definido.
+
+### Execução manual
+
+```bash
+# Sync incremental de todas as plataformas + alertas (o mesmo que o cron roda)
+npm run sync:daily
+
+# Forçar re-sync de um período específico (YYYY-MM-DD)
+npm run sync:daily 2026-01-01 2026-06-05
+```
+
+O script imprime um resumo por plataforma e retorna exit code 0 (sucesso, mesmo com erros pontuais por cliente) ou 1 (falha fatal — aparece como deployment "failed" no Replit).
+
+---
+
+## 🔑 Credenciais (tokens das APIs)
+
+As credenciais das integrações ficam **no banco** (tabela de configuração de integrações, lida por `getIntegrationsConfig()`), com fallback para variáveis de ambiente. Renove-as pela área de **Administração → Integrações** do app.
+
+> **Atenção — tokens da Meta expiram.** O `META_ACCESS_TOKEN` é de vida curta/limitada e precisa ser renovado periodicamente. Quando ele expira, o sync da Meta passa a falhar com `Error validating access token: Session has expired` (os dashboards param de atualizar os dados de Meta). Gere um novo token de longa duração no Meta e atualize-o pelo app (ou via `META_ACCESS_TOKEN=<token> npx tsx scripts/update-meta-token.ts`).
 
 ---
 
 ## Horário e timezone
 
-Todos os crons rodam entre **05:00h e 05:40h Brasília (BRT = UTC-3)**.
+| Sync | Horário recomendado | Cron (UTC) |
+|------|---------------------|------------|
+| Job diário (Meta + Google + GA4 + alertas) | 05:00 BRT | `0 8 * * *` |
 
-| Sync | Horário BRT | Expressão cron (UTC) |
-|------|------------|----------------------|
-| Meta Ads | 05:00h | `0 8 * * *` |
-| Google Ads | 05:20h | `20 8 * * *` |
-| GA4 / Analytics | 05:40h | `40 8 * * *` |
-
----
-
-## Caminho A — Deploy na Vercel
-
-### Configuração no repositório
-
-O arquivo **`vercel.json`** na raiz já define os três Cron Jobs:
-
-| Path | Schedule | Horário BRT |
-|------|----------|-------------|
-| `/api/sync/meta` | `0 8 * * *` | 05:00h |
-| `/api/sync/google-ads` | `20 8 * * *` | 05:20h |
-| `/api/sync/analytics` | `40 8 * * *` | 05:40h |
-
-Cada rota aceita **GET** (usado pela Vercel ao disparar o cron) e **POST** (para chamadas manuais ou crons externos). A autenticação é feita por:
-
-- Header `Authorization: Bearer <token>` (a Vercel envia `CRON_SECRET` assim)
-- Header `x-cron-token: <token>`
-- Query `?token=<token>`
-
-Todos são validados contra a variável de ambiente **`SYNC_CRON_TOKEN`**.
-
-### Variáveis de ambiente na Vercel
-
-1. **SYNC_CRON_TOKEN** (obrigatório em produção)
-   - Gere um valor seguro: `openssl rand -hex 32`
-   - Adicione em **Project Settings → Environment Variables** para Production.
-   - **CRON_SECRET:** defina com o **mesmo valor** de `SYNC_CRON_TOKEN`. A Vercel envia esse valor no header `Authorization: Bearer` ao chamar o cron.
-
-2. Confirme também: **META_ACCESS_TOKEN**, **GOOGLE_ADS_DEVELOPER_TOKEN**, **GOOGLE_CLIENT_EMAIL**, **GOOGLE_PRIVATE_KEY**, **DATABASE_URL**.
-
-Após o deploy, os três crons passam a rodar automaticamente todos os dias a partir de 05:00h BRT.
-
----
-
-## Caminho B — Deploy fora da Vercel (VPS, Docker, etc.)
-
-### Endpoints
-
-| Sync | URL |
-|------|-----|
-| Meta Ads | `POST https://<seu-dominio>/api/sync/meta` |
-| Google Ads | `POST https://<seu-dominio>/api/sync/google-ads` |
-| GA4 | `POST https://<seu-dominio>/api/sync/analytics` |
-
-**Autenticação:** envie o token em um dos formatos:
-- Header: `x-cron-token: SEU_SYNC_CRON_TOKEN`
-- Header: `Authorization: Bearer SEU_SYNC_CRON_TOKEN`
-- Query: `?token=SEU_SYNC_CRON_TOKEN`
-
-### Crontab (05:00h BRT)
-
-Para servidor em UTC (BRT = UTC-3):
-
-```cron
-# Meta Ads — 05:00h BRT (08:00 UTC)
-0 8 * * * curl -s -X POST "https://seu-dominio.com/api/sync/meta" -H "x-cron-token: SEU_TOKEN" > /dev/null 2>&1
-
-# Google Ads — 05:20h BRT (08:20 UTC)
-20 8 * * * curl -s -X POST "https://seu-dominio.com/api/sync/google-ads" -H "x-cron-token: SEU_TOKEN" > /dev/null 2>&1
-
-# GA4 / Analytics — 05:40h BRT (08:40 UTC)
-40 8 * * * curl -s -X POST "https://seu-dominio.com/api/sync/analytics" -H "x-cron-token: SEU_TOKEN" > /dev/null 2>&1
-```
-
-### Exemplo de chamada manual (curl)
-
-```bash
-# Sync Meta — todos os clientes
-curl -X POST "https://seu-dominio.com/api/sync/meta" \
-  -H "x-cron-token: SEU_SYNC_CRON_TOKEN"
-
-# Sync Meta — cliente específico
-curl -X POST "https://seu-dominio.com/api/sync/meta" \
-  -H "x-cron-token: SEU_SYNC_CRON_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d '{"clienteId": "id-do-cliente"}'
-
-# Sync Google Ads — todos os clientes
-curl -X POST "https://seu-dominio.com/api/sync/google-ads" \
-  -H "x-cron-token: SEU_SYNC_CRON_TOKEN"
-
-# Sync GA4 — todos os clientes
-curl -X POST "https://seu-dominio.com/api/sync/analytics" \
-  -H "x-cron-token: SEU_SYNC_CRON_TOKEN"
-```
-
----
-
-## Configurar SYNC_CRON_TOKEN em produção
-
-1. Gere um token forte: `openssl rand -hex 32`
-2. Guarde em cofre de segredos (1Password, variáveis do host, etc.); **não** commite no repositório.
-3. No painel do host (Vercel, servidor, etc.):
-   - Defina **SYNC_CRON_TOKEN** com esse valor.
-   - Na Vercel, defina também **CRON_SECRET** com o mesmo valor.
+> O script faz tudo em uma única execução sequencial, então basta **um** agendamento.
 
 ---
 
@@ -126,16 +71,33 @@ curl -X POST "https://seu-dominio.com/api/sync/analytics" \
 
 ### Onde ver os logs
 
-- **Vercel:** Dashboard do projeto → **Logs**. Filtre por path `/api/sync/meta`, `/api/sync/google-ads` ou `/api/sync/analytics`, ou por horário próximo de 05:00h BRT (08:00 UTC).
-- **Outro host:** Logs do servidor (stdout/stderr) ou do agendador.
+- **Replit:** Deployments → selecione o Scheduled Deployment → aba de logs de cada execução. Procure pelo resumo `📊 RESUMO` no fim do log.
 
 ### Como reexecutar o sync manualmente
 
-1. **Pela aplicação:** em **Administração** > **Clientes**, use o botão **Sincronizar** do cliente desejado.
-2. **Pela API** (ver exemplos acima em Caminho B).
+1. **Pela aplicação:** em **Administração → Clientes**, use o botão **Sincronizar** do cliente desejado.
+2. **Pelo terminal:** `npm run sync:daily` (todos) — ver exemplos acima.
 
 ### Resumo para a equipe
 
-- **O quê:** Sync diário das APIs de Meta Ads, Google Ads e GA4 para o Postgres; os dashboards leem do banco, então ficam atualizados após cada sync.
-- **Quando:** Todos os dias entre **05:00h e 05:40h horário de Brasília**.
-- **Onde configurar:** `vercel.json` (Vercel) ou crontab (outro host); variável **SYNC_CRON_TOKEN** (e **CRON_SECRET** na Vercel) em produção.
+- **O quê:** Sync diário das APIs de Meta Ads, Google Ads e GA4 para o Postgres + alertas de gestão; os dashboards leem do banco, então ficam atualizados após cada sync.
+- **Quando:** Todos os dias às **05:00 horário de Brasília** (08:00 UTC), via Scheduled Deployment do Replit.
+- **Onde configurar:** Deployments do Replit (tipo Scheduled, comando `npm run sync:daily`).
+- **Se os dados pararem de atualizar:** verifique (1) se o Scheduled Deployment está ativo e sem erro, e (2) se o token da Meta não expirou.
+
+---
+
+## Caminho alternativo — endpoints HTTP (Vercel ou cron externo)
+
+Caso o app seja migrado para a Vercel ou você prefira um agendador externo (crontab, GitHub Actions), cada rota aceita **GET** e **POST**, autenticadas por `SYNC_CRON_TOKEN`:
+
+| Sync | URL |
+|------|-----|
+| Meta Ads | `/api/sync/meta` |
+| Google Ads | `/api/sync/google-ads` |
+| GA4 | `/api/sync/analytics` |
+| Tudo de uma vez (admin) | `POST /api/admin/sync-all` (header `x-admin-token: <ADMIN_SECRET>`) |
+
+**Autenticação** (um dos formatos): header `x-cron-token: <token>`, header `Authorization: Bearer <token>`, ou query `?token=<token>` — todos validados contra `SYNC_CRON_TOKEN`.
+
+> Defina `SYNC_CRON_TOKEN` em produção antes de expor esses endpoints; sem ele, as rotas de sync ficam **sem autenticação**.
