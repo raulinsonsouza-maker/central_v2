@@ -347,6 +347,11 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }
 
 /* ─── main page ─── */
 
+// Guard de sessão: o disparo global "1x/dia ao abrir o painel" roda uma única
+// vez por carregamento da aba (a trava real é no servidor; isto só evita repetir
+// a chamada a cada troca de cliente na mesma sessão).
+let dailyGlobalSyncFired = false;
+
 export function ClienteDashboard({ id, portalMode = false }: { id: string; portalMode?: boolean }) {
   const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring">("geral");
   const [subView, setSubView] = React.useState<"dados" | "criativos" | "lead-scoring">("dados");
@@ -414,6 +419,17 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     autoSyncedRef.current = id;
     void triggerSync({ background: true });
   }, [id, triggerSync]);
+
+  // Disparo "1x por dia ao abrir o painel" (apenas admin): sincroniza TODAS as
+  // contas + alertas em segundo plano. O servidor aplica a trava global (no
+  // máximo 1x/dia), então isto é fire-and-forget e não trava a página. Roda uma
+  // vez por sessão (guard de módulo) para não repetir a cada troca de cliente.
+  React.useEffect(() => {
+    if (portalMode) return;
+    if (dailyGlobalSyncFired) return;
+    dailyGlobalSyncFired = true;
+    void fetch("/api/sync/daily-global", { method: "POST" }).catch(() => {});
+  }, [portalMode]);
 
   React.useEffect(() => {
     localStorage.setItem("inout-date-preset", presetPeriodo);

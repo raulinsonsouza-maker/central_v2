@@ -308,6 +308,13 @@ model SystemConfig {
   value String
 }
 
+model SyncState {
+  id        String    @id
+  attemptAt DateTime?
+  successAt DateTime?
+  updatedAt DateTime  @updatedAt
+}
+
 model Segmento {
   id        String   @id @default(cuid())
   nome      String   @unique

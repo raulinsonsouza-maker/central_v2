@@ -94,7 +94,17 @@ Mecanismo principal hoje (substitui o cron diário, que não roda no Replit sem 
 - **Throttle/trava no servidor:** `Cliente.ultimoSyncAt` + claim atômico (`prisma.cliente.updateMany` condicional, janela de 3h). Só sincroniza se os dados estiverem velhos; evita syncs duplicados/concorrentes entre instâncias (autoscale) e não martela as APIs. Toda atualização automática (mount + check de `lastFatoDate`) passa por esse caminho com `background: true` — nunca força.
 - O `ultimoSyncAt` é marcado **no claim** (antes do sync). Tradeoff deliberado: se o sync falhar, não retenta por 3h (prioriza não martelar API que está falhando). O botão manual contorna isso.
 - **Botão "Atualizar agora"** (chip de refresh, só admin / `!portalMode`): `POST /api/clientes/[id]/sync` sem `background` → força o sync ignorando o throttle.
-- Limitações conhecidas: clientes que ninguém abre no dia não atualizam; **alertas diários** (`runDailyAlerts`) não rodam por esse caminho — continuam dependendo do `npm run sync:daily` (Scheduled Deployment) se/quando configurado. Endpoint de sync por cliente é público (sem auth) — hardening não aplicado por opção do usuário.
+- Limitações conhecidas: o sync por-cliente só atualiza o cliente aberto. A cobertura de "todos + alertas" é feita pelo disparo global abaixo. Endpoint de sync por cliente é público (sem auth) — hardening não aplicado por opção do usuário.
+
+### Sync global "1x por dia ao abrir o painel" (todos + alertas)
+Complementa o sync por-cliente: garante que **todas** as contas e os **alertas diários** rodem mesmo sem Scheduled Deployment, desde que alguém abra o painel admin no dia.
+- Gatilho: no mount do `ClienteDashboard` **apenas em admin** (`!portalMode`), fire-and-forget `POST /api/sync/daily-global`. Guard de módulo (`dailyGlobalSyncFired`) → uma chamada por sessão; o portal do cliente **nunca** dispara isso.
+- Endpoint `app/api/sync/daily-global/route.ts`: claim atômico global via modelo `SyncState` (singleton `id="global"`, campos `attemptAt`/`successAt`), depois `runDailySync()` e marca `successAt` só se `fatalCount === 0`.
+  - `successAt` → janela de **20h** ("já rodou hoje", evita repetir).
+  - `attemptAt` → trava curta de **30min** (evita disparos concorrentes; se falhar no meio, retenta após 30min em vez de prender o dia todo).
+  - A requisição fica aberta enquanto o sync roda (mantém a instância autoscale viva). `maxDuration = 300`; se estourar, o desenho incremental/idempotente se completa nos disparos seguintes.
+- Lógica compartilhada: `lib/sync/runDailySync.ts` (`runDailySync()`) é a **fonte única** da orquestração Meta→Google→GA4 + `runDailyAlerts`, usada tanto pelo endpoint quanto pelo `scripts/daily-sync.ts` (CLI / Scheduled Deployment).
+- Limitação aceita: se ninguém abrir o painel admin no dia, não roda; em dias de pouco acesso o "todos" pode se completar ao longo de 2–3 acessos. Para garantia absoluta independente de acesso, só Scheduled Deployment / servidor sempre-ligado.
 
 ## Metrics / Data Layer
 

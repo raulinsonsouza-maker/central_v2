@@ -23,3 +23,29 @@ Pattern that avoids the obvious pitfalls (slow page, API hammering, dup runs):
 **Limitations to call out to the user:** entities nobody opens never refresh, and
 side-effects that aren't viewer-driven (e.g. daily alert emails) still need a real
 scheduled job.
+
+## Global "once-a-day on panel open" variant (covers all entities + alerts)
+To also cover entities nobody opens AND run daily side-effects (alerts) without a
+cron, add a *second* fire-and-forget trigger on panel mount (admin-only) that runs
+the **full** daily job under a **global** atomic claim:
+- Singleton lock row (a dedicated `SyncState` model, `id="global"`) with **two**
+  timestamps, not one:
+  - `successAt` → long window (e.g. 20h) = "already ran today, skip".
+  - `attemptAt` → short window (e.g. 30min) = in-progress lock.
+  Claim = `updateMany` where `(successAt null OR < dayAgo) AND (attemptAt null OR <
+  lockAgo)` set `attemptAt=now`; `count===1` wins. Set `successAt=now` **only after
+  success** (fatalCount===0). This fixes the single-timestamp flaw: a mid-run
+  failure only blocks 30min, not the whole day.
+- `await` the long job inside the route (browser fetch is fire-and-forget anyway) so
+  the autoscale instance stays alive until done; set `maxDuration` high. If it still
+  gets cut at the platform cap, idempotent/incremental sync self-heals next trigger.
+- **Gate to admin only** (`!portalMode`) — a client opening their portal must not
+  trigger a full-org sync + alert emails. Use a module-level `let fired=false` guard
+  so it fires once per tab session, not per entity switch.
+- Extract the orchestration into ONE shared lib fn (`runDailySync()`) used by both
+  the CLI/scheduled script and this endpoint — avoids logic drift between them.
+
+**Why over "sync ALL on every open":** triggering a full all-accounts sync on every
+visit hammers upstream APIs and risks rate limits + concurrent runs. The global
+once/day claim gives near-daily coverage at ~zero cost; the accepted tradeoff is it
+only runs if someone opens the admin panel that day.
