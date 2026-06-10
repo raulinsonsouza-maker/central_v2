@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ChevronDown,
   Copy,
+  ExternalLink,
   Eye,
   KeyRound,
   Pencil,
@@ -287,6 +288,7 @@ function ClienteForm({
   initialValues,
   segmentos,
   adminToken,
+  clienteId,
   pending,
   error,
   success,
@@ -298,6 +300,7 @@ function ClienteForm({
   initialValues: ClientePayload;
   segmentos: Segmento[];
   adminToken: string;
+  clienteId?: string;
   pending: boolean;
   error: string;
   success: string;
@@ -493,6 +496,10 @@ function ClienteForm({
               </label>
             </div>
 
+            {clienteId && (
+              <CrmConfigSection clienteId={clienteId} adminToken={adminToken} />
+            )}
+
             {error && (
               <div className="flex items-center gap-2 rounded-lg bg-[var(--accent)]/10 px-3 py-2 text-sm text-[var(--accent)]">
                 <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
@@ -553,6 +560,377 @@ function ClienteForm({
   );
 }
 
+const CRM_TIPOS = [
+  { value: "", label: "Nenhum (sem integração CRM)" },
+  { value: "CVCRM", label: "CV CRM" },
+  { value: "RDSTATION_CRM", label: "RD Station CRM" },
+  { value: "KOMMO", label: "Kommo" },
+];
+
+function CrmConfigSection({
+  clienteId,
+  adminToken,
+}: {
+  clienteId: string;
+  adminToken: string;
+}) {
+  const [tipo, setTipo] = useState("");
+  const [dominio, setDominio] = useState("");
+  const [email, setEmail] = useState("");
+  const [token, setToken] = useState("");
+  const [rdClientId, setRdClientId] = useState("");
+  const [rdClientSecret, setRdClientSecret] = useState("");
+  const [rdConnected, setRdConnected] = useState(false);
+  const [ativo, setAtivo] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [testLoading, setTestLoading] = useState(false);
+  const [statusMsg, setStatusMsg] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [initialLoaded, setInitialLoaded] = useState(false);
+
+  useEffect(() => {
+    if (initialLoaded) return;
+    setInitialLoaded(true);
+    fetch(`/api/admin/clientes/${clienteId}/crm`, {
+      headers: { "x-admin-token": adminToken },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data) return;
+        setTipo(data.tipo ?? "");
+        setDominio(data.dominio ?? "");
+        setAtivo(data.ativo ?? true);
+        const creds = data.credenciais ?? {};
+        setEmail(creds.email ?? "");
+        setToken(creds.token ?? "");
+        if (data.tipo === "RDSTATION_CRM") {
+          setRdClientId(creds.clientId ?? "");
+          setRdConnected(!!creds.connected);
+          if (creds.clientSecret) setRdClientSecret("••••••••");
+        }
+      })
+      .catch(() => {});
+  }, [clienteId, adminToken, initialLoaded]);
+
+  async function handleSave() {
+    setLoading(true);
+    setStatusMsg(null);
+    try {
+      const credenciais: Record<string, string> = {};
+      if (tipo === "CVCRM") {
+        credenciais.email = email.trim();
+        credenciais.token = token.trim();
+      } else if (tipo === "RDSTATION_CRM") {
+        if (rdClientId.trim()) credenciais.clientId = rdClientId.trim();
+        if (rdClientSecret && !rdClientSecret.startsWith("•"))
+          credenciais.clientSecret = rdClientSecret.trim();
+      } else if (tipo === "KOMMO") {
+        credenciais.token = token.trim();
+      }
+      const res = await fetch(`/api/admin/clientes/${clienteId}/crm`, {
+        method: "PUT",
+        headers: { "x-admin-token": adminToken, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipo: tipo || undefined,
+          dominio: dominio.trim() || null,
+          credenciais,
+          ativo,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatusMsg({ ok: false, msg: data.error ?? "Erro ao salvar" });
+      } else {
+        setStatusMsg({
+          ok: true,
+          msg: tipo ? "Credenciais salvas com sucesso." : "Integração CRM removida.",
+        });
+      }
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleTest() {
+    setTestLoading(true);
+    setStatusMsg(null);
+    try {
+      const credenciais: Record<string, string> = {};
+      if (tipo === "CVCRM") {
+        credenciais.email = email.trim();
+        credenciais.token = token.trim();
+      } else if (tipo === "KOMMO") {
+        credenciais.token = token.trim();
+      }
+      const res = await fetch(`/api/admin/clientes/${clienteId}/crm?action=test`, {
+        method: "POST",
+        headers: { "x-admin-token": adminToken, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tipo,
+          dominio: dominio.trim() || null,
+          credenciais: tipo === "RDSTATION_CRM" ? undefined : credenciais,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      setStatusMsg({
+        ok: !!data.ok,
+        msg: data.ok ? "Conexão testada com sucesso!" : (data.error ?? "Falha na conexão"),
+      });
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setTestLoading(false);
+    }
+  }
+
+  async function handleRemove() {
+    setLoading(true);
+    setStatusMsg(null);
+    try {
+      await fetch(`/api/admin/clientes/${clienteId}/crm`, {
+        method: "DELETE",
+        headers: { "x-admin-token": adminToken },
+      });
+      setTipo("");
+      setDominio("");
+      setEmail("");
+      setToken("");
+      setRdClientId("");
+      setRdClientSecret("");
+      setRdConnected(false);
+      setStatusMsg({ ok: true, msg: "Integração CRM removida." });
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro ao remover" });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  const inputClass =
+    "w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm focus:border-[var(--primary)]/40 focus:outline-none";
+
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/10 p-4 space-y-4">
+      <div className="flex items-center gap-2">
+        <div className="h-1 w-1 rounded-full bg-[var(--primary)]" />
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+          Integração CRM
+        </p>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-[var(--muted-foreground)]">Plataforma CRM</label>
+        <select value={tipo} onChange={(e) => setTipo(e.target.value)} className={inputClass}>
+          {CRM_TIPOS.map((t) => (
+            <option key={t.value} value={t.value}>
+              {t.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {tipo === "CVCRM" && (
+        <>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-[var(--muted-foreground)]">
+              Domínio CV CRM
+            </label>
+            <input
+              type="text"
+              value={dominio}
+              onChange={(e) => setDominio(e.target.value)}
+              placeholder="Ex.: meuseguro (de meuseguro.cvcrm.com.br)"
+              className={inputClass}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-[var(--muted-foreground)]">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="email@exemplo.com"
+              className={inputClass}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-[var(--muted-foreground)]">Token de API</label>
+            <input
+              type="password"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              placeholder="••••••••••••••••"
+              className={inputClass}
+            />
+          </div>
+        </>
+      )}
+
+      {tipo === "RDSTATION_CRM" && (
+        <>
+          <div className="space-y-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+              Credenciais do App RD Station
+            </p>
+            <div className="rounded-lg bg-[var(--muted)]/30 px-3 py-2 text-[11px] text-[var(--muted-foreground)] space-y-1">
+              <p>
+                Crie um app em{" "}
+                <strong>app.rdstation.com.br → App Store → Meus Apps</strong> com a URL de
+                callback:
+              </p>
+              <code className="block break-all rounded bg-[var(--muted)]/60 px-1.5 py-1 font-mono text-[10px] select-all">
+                {typeof window !== "undefined"
+                  ? `${window.location.origin}/api/auth/rd-station/callback`
+                  : "/api/auth/rd-station/callback"}
+              </code>
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-[var(--muted-foreground)]">Client ID</label>
+              <input
+                type="text"
+                value={rdClientId}
+                onChange={(e) => setRdClientId(e.target.value)}
+                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+                className={inputClass}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-[var(--muted-foreground)]">
+                Client Secret
+              </label>
+              <input
+                type="password"
+                value={rdClientSecret}
+                onChange={(e) => setRdClientSecret(e.target.value)}
+                placeholder={rdConnected ? "Deixe em branco para manter" : "••••••••••••••••"}
+                className={inputClass}
+              />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+              Autenticação OAuth
+            </p>
+            {rdConnected ? (
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+                  <CheckCircle2 className="h-3 w-3" /> Conectado
+                </span>
+                <a
+                  href={`/api/auth/rd-station/start?clienteId=${clienteId}`}
+                  className="flex items-center gap-1 text-xs text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors"
+                >
+                  <RefreshCw className="h-3 w-3" /> Reconectar
+                </a>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <p className="text-[11px] text-[var(--muted-foreground)]">
+                  Salve as credenciais acima e depois clique para autorizar.
+                </p>
+                <a
+                  href={`/api/auth/rd-station/start?clienteId=${clienteId}`}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#1877F2] px-4 py-2 text-xs font-semibold text-white transition hover:opacity-90"
+                >
+                  <ExternalLink className="h-3.5 w-3.5" />
+                  Conectar via RD Station
+                </a>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+      {tipo === "KOMMO" && (
+        <>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-[var(--muted-foreground)]">
+              Subdomínio Kommo
+            </label>
+            <input
+              type="text"
+              value={dominio}
+              onChange={(e) => setDominio(e.target.value)}
+              placeholder="Ex.: minhaempresa (de minhaempresa.kommo.com)"
+              className={inputClass}
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-[var(--muted-foreground)]">
+              Access Token
+            </label>
+            <input
+              type="password"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              placeholder="••••••••••••••••"
+              className={inputClass}
+            />
+          </div>
+        </>
+      )}
+
+      {tipo && (
+        <label className="flex cursor-pointer items-center gap-2.5">
+          <input
+            type="checkbox"
+            checked={ativo}
+            onChange={(e) => setAtivo(e.target.checked)}
+            className="h-4 w-4 rounded border-[var(--border)] accent-[var(--primary)]"
+          />
+          <span className="text-sm text-[var(--foreground)]">Integração ativa</span>
+        </label>
+      )}
+
+      {statusMsg && (
+        <div
+          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
+            statusMsg.ok
+              ? "bg-emerald-500/10 text-emerald-600"
+              : "bg-[var(--accent)]/10 text-[var(--accent)]"
+          }`}
+        >
+          {statusMsg.ok ? (
+            <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+          ) : (
+            <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+          )}
+          {statusMsg.msg}
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={handleSave}
+          disabled={loading}
+          className="rounded-xl bg-[var(--primary)] px-4 py-2 text-xs font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+        >
+          {loading ? "Salvando..." : "Salvar CRM"}
+        </button>
+        {tipo && tipo !== "RDSTATION_CRM" && (
+          <button
+            onClick={handleTest}
+            disabled={testLoading}
+            className="rounded-xl border border-[var(--border)] px-4 py-2 text-xs font-semibold text-[var(--foreground)] transition hover:bg-[var(--muted)] disabled:opacity-50"
+          >
+            {testLoading ? "Testando..." : "Testar conexão"}
+          </button>
+        )}
+        {tipo && (
+          <button
+            onClick={handleRemove}
+            disabled={loading}
+            className="ml-auto rounded-xl border border-[var(--border)] px-4 py-2 text-xs font-medium text-[var(--muted-foreground)] transition hover:bg-[var(--muted)]"
+          >
+            Remover CRM
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminClientesPage() {
   const [adminToken, setAdminToken] = useState("");
   const [tokenInput, setTokenInput] = useState("");
@@ -565,6 +943,7 @@ export default function AdminClientesPage() {
   const [filterStatus, setFilterStatus] = useState<"ativos" | "churn">("ativos");
   const [copiedPortalId, setCopiedPortalId] = useState<string | null>(null);
   const [confirmRegenId, setConfirmRegenId] = useState<string | null>(null);
+  const [rdNotification, setRdNotification] = useState<{ ok: boolean; msg: string } | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -584,6 +963,26 @@ export default function AdminClientesPage() {
     for (const s of segmentos) map[s.nome] = s;
     return map;
   }, [segmentos]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const rdConnected = params.get("rdConnected");
+    const rdError = params.get("rdError");
+    const connectedClienteId = params.get("clienteId");
+    if (rdConnected === "1") {
+      setRdNotification({ ok: true, msg: "RD Station conectado com sucesso!" });
+      if (connectedClienteId && clientes) {
+        const c = clientes.find((x) => x.id === connectedClienteId);
+        if (c) setEditing(c);
+      }
+      window.history.replaceState({}, "", "/admin/clientes");
+    } else if (rdError) {
+      setRdNotification({ ok: false, msg: `Erro ao conectar RD Station: ${decodeURIComponent(rdError)}` });
+      window.history.replaceState({}, "", "/admin/clientes");
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [clientes]);
 
   const createMutation = useMutation({
     mutationFn: (body: ClientePayload) => createCliente(body, adminToken || undefined),
@@ -739,6 +1138,29 @@ export default function AdminClientesPage() {
 
   return (
     <main className="space-y-8 pb-12">
+      {rdNotification && (
+        <div
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium shadow-lg ${
+            rdNotification.ok
+              ? "bg-emerald-600 text-white"
+              : "bg-[var(--accent)] text-white"
+          }`}
+        >
+          {rdNotification.ok ? (
+            <CheckCircle2 className="h-4 w-4 shrink-0" />
+          ) : (
+            <AlertTriangle className="h-4 w-4 shrink-0" />
+          )}
+          {rdNotification.msg}
+          <button
+            onClick={() => setRdNotification(null)}
+            className="ml-2 opacity-80 hover:opacity-100"
+          >
+            <X className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
+
       <section className="space-y-5">
         <Link
           href="/clientes"
@@ -1083,6 +1505,7 @@ export default function AdminClientesPage() {
           }}
           segmentos={segmentos}
           adminToken={adminToken}
+          clienteId={editing.id}
           pending={updateMutation.isPending}
           error={editError}
           success={editSuccess}

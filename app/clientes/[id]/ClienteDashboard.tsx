@@ -10,6 +10,7 @@ import { AnalyticsGA4Section } from "@/components/clientes/AnalyticsGA4Section";
 import { ImoveisPanel } from "@/components/clientes/ImoveisPanel";
 import { LeadScoringPanel } from "@/components/clientes/LeadScoringPanel";
 import { ImobLeadScoringPanel } from "@/components/clientes/ImobLeadScoringPanel";
+import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
 import { HotelFazendaSaoJoaoPanel } from "@/components/clientes/HotelFazendaSaoJoaoPanel";
 import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
@@ -1542,6 +1543,9 @@ function formatPercentage(value: number) {
       {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && analytics?.hasAnalytics && (
         <AnalyticsGA4Section data={analytics} />
       )}
+
+      {/* ── Funil CRM (geral only) ── */}
+      {id && canal === "geral" && <FunilCrmSection clienteId={id} />}
 
       {/* ── Pauta da semana (geral only, internal only) ── */}
       {id && canal === "geral" && !portalMode && <PautaDaSemana clienteId={id} />}

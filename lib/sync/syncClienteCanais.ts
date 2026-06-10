@@ -2,6 +2,7 @@ import { syncGoogleAdsCliente } from "@/lib/sync/googleAdsApiSync";
 import { syncMetaCliente } from "@/lib/sync/metaApiSync";
 import { syncAnalyticsCliente } from "@/lib/sync/analyticsApiSync";
 import { syncMetaLeadsCliente } from "@/lib/sync/metaLeadsSync";
+import { syncCrmCliente } from "@/lib/sync/crmSync";
 import { prisma } from "@/lib/db";
 import { isImobClient } from "@/lib/clientProfiles";
 
@@ -59,6 +60,8 @@ export async function syncClienteCanais(clienteId: string): Promise<SyncClienteC
       : null,
     shouldSyncLeads ? syncMetaLeadsCliente(clienteId) : null,
   ]);
+
+  syncCrmCliente(clienteId).catch(() => {});
 
   return {
     ok: !googleAdsResult?.error && !metaResult?.error && !analyticsResult?.error,

@@ -1,0 +1,137 @@
+import type { CrmAdapter, NormalizedLead, RdStationCredentials } from "./types";
+
+interface RdContact {
+  emails?: Array<{ email?: string }>;
+  phones?: Array<{ phone?: string; number?: string }>;
+}
+
+interface RdDeal {
+  id: string;
+  name?: string;
+  stage?: { name?: string } | null;
+  deal_stage?: { name?: string } | null;
+  created_at?: string;
+  closed_at?: string | null;
+  amount?: number | null;
+  value?: number | null;
+  contacts?: RdContact[] | null;
+  contact?: RdContact | null;
+}
+
+function parseDate(v?: string | null): Date | null {
+  if (!v) return null;
+  const d = new Date(v);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+function extractContactInfo(deal: RdDeal): { telefone: string | null; email: string | null } {
+  const contacts = deal.contacts ?? (deal.contact ? [deal.contact] : []);
+  let telefone: string | null = null;
+  let email: string | null = null;
+
+  for (const c of contacts) {
+    if (!email && c.emails && c.emails.length > 0) {
+      email = c.emails[0]?.email ?? null;
+    }
+    if (!telefone && c.phones && c.phones.length > 0) {
+      telefone = c.phones[0]?.phone ?? c.phones[0]?.number ?? null;
+    }
+    if (telefone && email) break;
+  }
+
+  return { telefone, email };
+}
+
+export class RdStationCrmAdapter implements CrmAdapter {
+  private accessToken: string;
+  private static BASE_URL = "https://api.rd.services/crm/v2";
+
+  constructor(creds: RdStationCredentials) {
+    const token = creds.accessToken ?? creds.token;
+    if (!token) throw new Error("RD Station CRM requer accessToken ou token.");
+    this.accessToken = token;
+  }
+
+  private headers(): HeadersInit {
+    return {
+      Authorization: `Bearer ${this.accessToken}`,
+      "Content-Type": "application/json",
+    };
+  }
+
+  async fetchLeads(opts?: { since?: Date }): Promise<NormalizedLead[]> {
+    const deals: RdDeal[] = [];
+    let page = 1;
+    const perPage = 100;
+
+    while (true) {
+      const params = new URLSearchParams({
+        page: String(page),
+        per_page: String(perPage),
+        order: "created_at",
+        direction: "desc",
+      });
+      if (opts?.since) {
+        params.set("start_created_at", opts.since.toISOString());
+      }
+
+      const res = await fetch(`${RdStationCrmAdapter.BASE_URL}/deals?${params}`, {
+        headers: this.headers(),
+      });
+
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        throw new Error(`RD Station CRM API error ${res.status}: ${text.slice(0, 200)}`);
+      }
+
+      const data = await res.json() as {
+        deals?: RdDeal[];
+        data?: RdDeal[];
+        pagination?: { total_pages?: number; next_page?: string | null };
+        has_more?: boolean;
+      };
+
+      const batch: RdDeal[] = data.deals ?? data.data ?? [];
+      deals.push(...batch);
+
+      const hasMore =
+        data.has_more === true ||
+        (data.pagination?.next_page != null && data.pagination.next_page !== null) ||
+        (typeof data.pagination?.total_pages === "number" && page < data.pagination.total_pages);
+
+      if (!hasMore || batch.length < perPage) break;
+      page++;
+      if (page > 50) break;
+    }
+
+    const now = new Date();
+    return deals.map((d): NormalizedLead => {
+      const stage = d.stage ?? d.deal_stage;
+      const { telefone, email } = extractContactInfo(d);
+      return {
+        crmLeadId: String(d.id),
+        etapa: stage?.name ?? "Desconhecido",
+        telefone,
+        email,
+        dataEntrada: parseDate(d.created_at) ?? now,
+        dataFechamento: parseDate(d.closed_at),
+        valor: d.amount ?? d.value ?? null,
+      };
+    });
+  }
+
+  async testConnection(): Promise<{ ok: boolean; error?: string }> {
+    try {
+      const res = await fetch(`${RdStationCrmAdapter.BASE_URL}/deals?page=1&per_page=1`, {
+        headers: this.headers(),
+      });
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        return { ok: false, error: `Status ${res.status}: ${text.slice(0, 100)}` };
+      }
+      return { ok: true };
+    } catch (e) {
+      return { ok: false, error: e instanceof Error ? e.message : String(e) };
+    }
+  }
+}

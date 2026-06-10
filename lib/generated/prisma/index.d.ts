@@ -93,6 +93,34 @@ export type Segmento = $Result.DefaultSelection<Prisma.$SegmentoPayload>
  * 
  */
 export type MetaLeadIndividual = $Result.DefaultSelection<Prisma.$MetaLeadIndividualPayload>
+/**
+ * Model CrmConfig
+ * 
+ */
+export type CrmConfig = $Result.DefaultSelection<Prisma.$CrmConfigPayload>
+/**
+ * Model LeadCrm
+ * 
+ */
+export type LeadCrm = $Result.DefaultSelection<Prisma.$LeadCrmPayload>
+
+/**
+ * Enums
+ */
+export namespace $Enums {
+  export const CrmTipo: {
+  CVCRM: 'CVCRM',
+  RDSTATION_CRM: 'RDSTATION_CRM',
+  KOMMO: 'KOMMO'
+};
+
+export type CrmTipo = (typeof CrmTipo)[keyof typeof CrmTipo]
+
+}
+
+export type CrmTipo = $Enums.CrmTipo
+
+export const CrmTipo: typeof $Enums.CrmTipo
 
 /**
  * ##  Prisma Client ʲˢ
@@ -371,6 +399,26 @@ export class PrismaClient<
     * ```
     */
   get metaLeadIndividual(): Prisma.MetaLeadIndividualDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.crmConfig`: Exposes CRUD operations for the **CrmConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CrmConfigs
+    * const crmConfigs = await prisma.crmConfig.findMany()
+    * ```
+    */
+  get crmConfig(): Prisma.CrmConfigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.leadCrm`: Exposes CRUD operations for the **LeadCrm** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more LeadCrms
+    * const leadCrms = await prisma.leadCrm.findMany()
+    * ```
+    */
+  get leadCrm(): Prisma.LeadCrmDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -827,7 +875,9 @@ export namespace Prisma {
     SystemConfig: 'SystemConfig',
     SyncState: 'SyncState',
     Segmento: 'Segmento',
-    MetaLeadIndividual: 'MetaLeadIndividual'
+    MetaLeadIndividual: 'MetaLeadIndividual',
+    CrmConfig: 'CrmConfig',
+    LeadCrm: 'LeadCrm'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -846,7 +896,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "conta" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual"
+      modelProps: "cliente" | "conta" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2034,6 +2084,154 @@ export namespace Prisma {
           }
         }
       }
+      CrmConfig: {
+        payload: Prisma.$CrmConfigPayload<ExtArgs>
+        fields: Prisma.CrmConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CrmConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CrmConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.CrmConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CrmConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>
+          }
+          findMany: {
+            args: Prisma.CrmConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>[]
+          }
+          create: {
+            args: Prisma.CrmConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>
+          }
+          createMany: {
+            args: Prisma.CrmConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CrmConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.CrmConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>
+          }
+          update: {
+            args: Prisma.CrmConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.CrmConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CrmConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CrmConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.CrmConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CrmConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.CrmConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCrmConfig>
+          }
+          groupBy: {
+            args: Prisma.CrmConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CrmConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CrmConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<CrmConfigCountAggregateOutputType> | number
+          }
+        }
+      }
+      LeadCrm: {
+        payload: Prisma.$LeadCrmPayload<ExtArgs>
+        fields: Prisma.LeadCrmFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.LeadCrmFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.LeadCrmFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>
+          }
+          findFirst: {
+            args: Prisma.LeadCrmFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.LeadCrmFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>
+          }
+          findMany: {
+            args: Prisma.LeadCrmFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>[]
+          }
+          create: {
+            args: Prisma.LeadCrmCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>
+          }
+          createMany: {
+            args: Prisma.LeadCrmCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.LeadCrmCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>[]
+          }
+          delete: {
+            args: Prisma.LeadCrmDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>
+          }
+          update: {
+            args: Prisma.LeadCrmUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>
+          }
+          deleteMany: {
+            args: Prisma.LeadCrmDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.LeadCrmUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.LeadCrmUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>[]
+          }
+          upsert: {
+            args: Prisma.LeadCrmUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$LeadCrmPayload>
+          }
+          aggregate: {
+            args: Prisma.LeadCrmAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateLeadCrm>
+          }
+          groupBy: {
+            args: Prisma.LeadCrmGroupByArgs<ExtArgs>
+            result: $Utils.Optional<LeadCrmGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.LeadCrmCountArgs<ExtArgs>
+            result: $Utils.Optional<LeadCrmCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2146,6 +2344,8 @@ export namespace Prisma {
     syncState?: SyncStateOmit
     segmento?: SegmentoOmit
     metaLeadIndividual?: MetaLeadIndividualOmit
+    crmConfig?: CrmConfigOmit
+    leadCrm?: LeadCrmOmit
   }
 
   /* Types for Logging */
@@ -2237,6 +2437,7 @@ export namespace Prisma {
     metas: number
     metaAdsCriativos: number
     metaLeadsIndividuais: number
+    leadsCrm: number
     pautasReuniao: number
   }
 
@@ -2252,6 +2453,7 @@ export namespace Prisma {
     metas?: boolean | ClienteCountOutputTypeCountMetasArgs
     metaAdsCriativos?: boolean | ClienteCountOutputTypeCountMetaAdsCriativosArgs
     metaLeadsIndividuais?: boolean | ClienteCountOutputTypeCountMetaLeadsIndividuaisArgs
+    leadsCrm?: boolean | ClienteCountOutputTypeCountLeadsCrmArgs
     pautasReuniao?: boolean | ClienteCountOutputTypeCountPautasReuniaoArgs
   }
 
@@ -2346,6 +2548,13 @@ export namespace Prisma {
   /**
    * ClienteCountOutputType without action
    */
+  export type ClienteCountOutputTypeCountLeadsCrmArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadCrmWhereInput
+  }
+
+  /**
+   * ClienteCountOutputType without action
+   */
   export type ClienteCountOutputTypeCountPautasReuniaoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PautaReuniaoWhereInput
   }
@@ -2415,6 +2624,37 @@ export namespace Prisma {
    */
   export type ContaCountOutputTypeCountMetaAdsCriativosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MetaAdsCriativoWhereInput
+  }
+
+
+  /**
+   * Count Type CrmConfigCountOutputType
+   */
+
+  export type CrmConfigCountOutputType = {
+    leads: number
+  }
+
+  export type CrmConfigCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    leads?: boolean | CrmConfigCountOutputTypeCountLeadsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * CrmConfigCountOutputType without action
+   */
+  export type CrmConfigCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfigCountOutputType
+     */
+    select?: CrmConfigCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * CrmConfigCountOutputType without action
+   */
+  export type CrmConfigCountOutputTypeCountLeadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadCrmWhereInput
   }
 
 
@@ -2743,6 +2983,8 @@ export namespace Prisma {
     metas?: boolean | Cliente$metasArgs<ExtArgs>
     metaAdsCriativos?: boolean | Cliente$metaAdsCriativosArgs<ExtArgs>
     metaLeadsIndividuais?: boolean | Cliente$metaLeadsIndividuaisArgs<ExtArgs>
+    crmConfig?: boolean | Cliente$crmConfigArgs<ExtArgs>
+    leadsCrm?: boolean | Cliente$leadsCrmArgs<ExtArgs>
     pautasReuniao?: boolean | Cliente$pautasReuniaoArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cliente"]>
@@ -2823,6 +3065,8 @@ export namespace Prisma {
     metas?: boolean | Cliente$metasArgs<ExtArgs>
     metaAdsCriativos?: boolean | Cliente$metaAdsCriativosArgs<ExtArgs>
     metaLeadsIndividuais?: boolean | Cliente$metaLeadsIndividuaisArgs<ExtArgs>
+    crmConfig?: boolean | Cliente$crmConfigArgs<ExtArgs>
+    leadsCrm?: boolean | Cliente$leadsCrmArgs<ExtArgs>
     pautasReuniao?: boolean | Cliente$pautasReuniaoArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -2843,6 +3087,8 @@ export namespace Prisma {
       metas: Prisma.$MetaPayload<ExtArgs>[]
       metaAdsCriativos: Prisma.$MetaAdsCriativoPayload<ExtArgs>[]
       metaLeadsIndividuais: Prisma.$MetaLeadIndividualPayload<ExtArgs>[]
+      crmConfig: Prisma.$CrmConfigPayload<ExtArgs> | null
+      leadsCrm: Prisma.$LeadCrmPayload<ExtArgs>[]
       pautasReuniao: Prisma.$PautaReuniaoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3269,6 +3515,8 @@ export namespace Prisma {
     metas<T extends Cliente$metasArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$metasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MetaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     metaAdsCriativos<T extends Cliente$metaAdsCriativosArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$metaAdsCriativosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MetaAdsCriativoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     metaLeadsIndividuais<T extends Cliente$metaLeadsIndividuaisArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$metaLeadsIndividuaisArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MetaLeadIndividualPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    crmConfig<T extends Cliente$crmConfigArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$crmConfigArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    leadsCrm<T extends Cliente$leadsCrmArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$leadsCrmArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     pautasReuniao<T extends Cliente$pautasReuniaoArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$pautasReuniaoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PautaReuniaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -3966,6 +4214,49 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: MetaLeadIndividualScalarFieldEnum | MetaLeadIndividualScalarFieldEnum[]
+  }
+
+  /**
+   * Cliente.crmConfig
+   */
+  export type Cliente$crmConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    where?: CrmConfigWhereInput
+  }
+
+  /**
+   * Cliente.leadsCrm
+   */
+  export type Cliente$leadsCrmArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    where?: LeadCrmWhereInput
+    orderBy?: LeadCrmOrderByWithRelationInput | LeadCrmOrderByWithRelationInput[]
+    cursor?: LeadCrmWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadCrmScalarFieldEnum | LeadCrmScalarFieldEnum[]
   }
 
   /**
@@ -22306,6 +22597,2363 @@ export namespace Prisma {
 
 
   /**
+   * Model CrmConfig
+   */
+
+  export type AggregateCrmConfig = {
+    _count: CrmConfigCountAggregateOutputType | null
+    _min: CrmConfigMinAggregateOutputType | null
+    _max: CrmConfigMaxAggregateOutputType | null
+  }
+
+  export type CrmConfigMinAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    tipo: $Enums.CrmTipo | null
+    dominio: string | null
+    ativo: boolean | null
+    ultimoSyncAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CrmConfigMaxAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    tipo: $Enums.CrmTipo | null
+    dominio: string | null
+    ativo: boolean | null
+    ultimoSyncAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CrmConfigCountAggregateOutputType = {
+    id: number
+    clienteId: number
+    tipo: number
+    dominio: number
+    credenciais: number
+    ativo: number
+    ultimoSyncAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CrmConfigMinAggregateInputType = {
+    id?: true
+    clienteId?: true
+    tipo?: true
+    dominio?: true
+    ativo?: true
+    ultimoSyncAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CrmConfigMaxAggregateInputType = {
+    id?: true
+    clienteId?: true
+    tipo?: true
+    dominio?: true
+    ativo?: true
+    ultimoSyncAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CrmConfigCountAggregateInputType = {
+    id?: true
+    clienteId?: true
+    tipo?: true
+    dominio?: true
+    credenciais?: true
+    ativo?: true
+    ultimoSyncAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CrmConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CrmConfig to aggregate.
+     */
+    where?: CrmConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrmConfigs to fetch.
+     */
+    orderBy?: CrmConfigOrderByWithRelationInput | CrmConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CrmConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrmConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrmConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CrmConfigs
+    **/
+    _count?: true | CrmConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CrmConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CrmConfigMaxAggregateInputType
+  }
+
+  export type GetCrmConfigAggregateType<T extends CrmConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateCrmConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCrmConfig[P]>
+      : GetScalarType<T[P], AggregateCrmConfig[P]>
+  }
+
+
+
+
+  export type CrmConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CrmConfigWhereInput
+    orderBy?: CrmConfigOrderByWithAggregationInput | CrmConfigOrderByWithAggregationInput[]
+    by: CrmConfigScalarFieldEnum[] | CrmConfigScalarFieldEnum
+    having?: CrmConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CrmConfigCountAggregateInputType | true
+    _min?: CrmConfigMinAggregateInputType
+    _max?: CrmConfigMaxAggregateInputType
+  }
+
+  export type CrmConfigGroupByOutputType = {
+    id: string
+    clienteId: string
+    tipo: $Enums.CrmTipo
+    dominio: string | null
+    credenciais: JsonValue
+    ativo: boolean
+    ultimoSyncAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CrmConfigCountAggregateOutputType | null
+    _min: CrmConfigMinAggregateOutputType | null
+    _max: CrmConfigMaxAggregateOutputType | null
+  }
+
+  type GetCrmConfigGroupByPayload<T extends CrmConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CrmConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CrmConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CrmConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], CrmConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CrmConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    tipo?: boolean
+    dominio?: boolean
+    credenciais?: boolean
+    ativo?: boolean
+    ultimoSyncAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    leads?: boolean | CrmConfig$leadsArgs<ExtArgs>
+    _count?: boolean | CrmConfigCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["crmConfig"]>
+
+  export type CrmConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    tipo?: boolean
+    dominio?: boolean
+    credenciais?: boolean
+    ativo?: boolean
+    ultimoSyncAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["crmConfig"]>
+
+  export type CrmConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    tipo?: boolean
+    dominio?: boolean
+    credenciais?: boolean
+    ativo?: boolean
+    ultimoSyncAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["crmConfig"]>
+
+  export type CrmConfigSelectScalar = {
+    id?: boolean
+    clienteId?: boolean
+    tipo?: boolean
+    dominio?: boolean
+    credenciais?: boolean
+    ativo?: boolean
+    ultimoSyncAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CrmConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "tipo" | "dominio" | "credenciais" | "ativo" | "ultimoSyncAt" | "createdAt" | "updatedAt", ExtArgs["result"]["crmConfig"]>
+  export type CrmConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    leads?: boolean | CrmConfig$leadsArgs<ExtArgs>
+    _count?: boolean | CrmConfigCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type CrmConfigIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type CrmConfigIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+
+  export type $CrmConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CrmConfig"
+    objects: {
+      cliente: Prisma.$ClientePayload<ExtArgs>
+      leads: Prisma.$LeadCrmPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      clienteId: string
+      tipo: $Enums.CrmTipo
+      dominio: string | null
+      credenciais: Prisma.JsonValue
+      ativo: boolean
+      ultimoSyncAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["crmConfig"]>
+    composites: {}
+  }
+
+  type CrmConfigGetPayload<S extends boolean | null | undefined | CrmConfigDefaultArgs> = $Result.GetResult<Prisma.$CrmConfigPayload, S>
+
+  type CrmConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CrmConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CrmConfigCountAggregateInputType | true
+    }
+
+  export interface CrmConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CrmConfig'], meta: { name: 'CrmConfig' } }
+    /**
+     * Find zero or one CrmConfig that matches the filter.
+     * @param {CrmConfigFindUniqueArgs} args - Arguments to find a CrmConfig
+     * @example
+     * // Get one CrmConfig
+     * const crmConfig = await prisma.crmConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CrmConfigFindUniqueArgs>(args: SelectSubset<T, CrmConfigFindUniqueArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CrmConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CrmConfigFindUniqueOrThrowArgs} args - Arguments to find a CrmConfig
+     * @example
+     * // Get one CrmConfig
+     * const crmConfig = await prisma.crmConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CrmConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, CrmConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CrmConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrmConfigFindFirstArgs} args - Arguments to find a CrmConfig
+     * @example
+     * // Get one CrmConfig
+     * const crmConfig = await prisma.crmConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CrmConfigFindFirstArgs>(args?: SelectSubset<T, CrmConfigFindFirstArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CrmConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrmConfigFindFirstOrThrowArgs} args - Arguments to find a CrmConfig
+     * @example
+     * // Get one CrmConfig
+     * const crmConfig = await prisma.crmConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CrmConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, CrmConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CrmConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrmConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CrmConfigs
+     * const crmConfigs = await prisma.crmConfig.findMany()
+     * 
+     * // Get first 10 CrmConfigs
+     * const crmConfigs = await prisma.crmConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const crmConfigWithIdOnly = await prisma.crmConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CrmConfigFindManyArgs>(args?: SelectSubset<T, CrmConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CrmConfig.
+     * @param {CrmConfigCreateArgs} args - Arguments to create a CrmConfig.
+     * @example
+     * // Create one CrmConfig
+     * const CrmConfig = await prisma.crmConfig.create({
+     *   data: {
+     *     // ... data to create a CrmConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends CrmConfigCreateArgs>(args: SelectSubset<T, CrmConfigCreateArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CrmConfigs.
+     * @param {CrmConfigCreateManyArgs} args - Arguments to create many CrmConfigs.
+     * @example
+     * // Create many CrmConfigs
+     * const crmConfig = await prisma.crmConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CrmConfigCreateManyArgs>(args?: SelectSubset<T, CrmConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CrmConfigs and returns the data saved in the database.
+     * @param {CrmConfigCreateManyAndReturnArgs} args - Arguments to create many CrmConfigs.
+     * @example
+     * // Create many CrmConfigs
+     * const crmConfig = await prisma.crmConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CrmConfigs and only return the `id`
+     * const crmConfigWithIdOnly = await prisma.crmConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CrmConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, CrmConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CrmConfig.
+     * @param {CrmConfigDeleteArgs} args - Arguments to delete one CrmConfig.
+     * @example
+     * // Delete one CrmConfig
+     * const CrmConfig = await prisma.crmConfig.delete({
+     *   where: {
+     *     // ... filter to delete one CrmConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CrmConfigDeleteArgs>(args: SelectSubset<T, CrmConfigDeleteArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CrmConfig.
+     * @param {CrmConfigUpdateArgs} args - Arguments to update one CrmConfig.
+     * @example
+     * // Update one CrmConfig
+     * const crmConfig = await prisma.crmConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CrmConfigUpdateArgs>(args: SelectSubset<T, CrmConfigUpdateArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CrmConfigs.
+     * @param {CrmConfigDeleteManyArgs} args - Arguments to filter CrmConfigs to delete.
+     * @example
+     * // Delete a few CrmConfigs
+     * const { count } = await prisma.crmConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CrmConfigDeleteManyArgs>(args?: SelectSubset<T, CrmConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CrmConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrmConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CrmConfigs
+     * const crmConfig = await prisma.crmConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CrmConfigUpdateManyArgs>(args: SelectSubset<T, CrmConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CrmConfigs and returns the data updated in the database.
+     * @param {CrmConfigUpdateManyAndReturnArgs} args - Arguments to update many CrmConfigs.
+     * @example
+     * // Update many CrmConfigs
+     * const crmConfig = await prisma.crmConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CrmConfigs and only return the `id`
+     * const crmConfigWithIdOnly = await prisma.crmConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CrmConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, CrmConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CrmConfig.
+     * @param {CrmConfigUpsertArgs} args - Arguments to update or create a CrmConfig.
+     * @example
+     * // Update or create a CrmConfig
+     * const crmConfig = await prisma.crmConfig.upsert({
+     *   create: {
+     *     // ... data to create a CrmConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CrmConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CrmConfigUpsertArgs>(args: SelectSubset<T, CrmConfigUpsertArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CrmConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrmConfigCountArgs} args - Arguments to filter CrmConfigs to count.
+     * @example
+     * // Count the number of CrmConfigs
+     * const count = await prisma.crmConfig.count({
+     *   where: {
+     *     // ... the filter for the CrmConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends CrmConfigCountArgs>(
+      args?: Subset<T, CrmConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CrmConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CrmConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrmConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CrmConfigAggregateArgs>(args: Subset<T, CrmConfigAggregateArgs>): Prisma.PrismaPromise<GetCrmConfigAggregateType<T>>
+
+    /**
+     * Group by CrmConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CrmConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CrmConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CrmConfigGroupByArgs['orderBy'] }
+        : { orderBy?: CrmConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CrmConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCrmConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CrmConfig model
+   */
+  readonly fields: CrmConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CrmConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CrmConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    leads<T extends CrmConfig$leadsArgs<ExtArgs> = {}>(args?: Subset<T, CrmConfig$leadsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CrmConfig model
+   */
+  interface CrmConfigFieldRefs {
+    readonly id: FieldRef<"CrmConfig", 'String'>
+    readonly clienteId: FieldRef<"CrmConfig", 'String'>
+    readonly tipo: FieldRef<"CrmConfig", 'CrmTipo'>
+    readonly dominio: FieldRef<"CrmConfig", 'String'>
+    readonly credenciais: FieldRef<"CrmConfig", 'Json'>
+    readonly ativo: FieldRef<"CrmConfig", 'Boolean'>
+    readonly ultimoSyncAt: FieldRef<"CrmConfig", 'DateTime'>
+    readonly createdAt: FieldRef<"CrmConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"CrmConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CrmConfig findUnique
+   */
+  export type CrmConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CrmConfig to fetch.
+     */
+    where: CrmConfigWhereUniqueInput
+  }
+
+  /**
+   * CrmConfig findUniqueOrThrow
+   */
+  export type CrmConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CrmConfig to fetch.
+     */
+    where: CrmConfigWhereUniqueInput
+  }
+
+  /**
+   * CrmConfig findFirst
+   */
+  export type CrmConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CrmConfig to fetch.
+     */
+    where?: CrmConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrmConfigs to fetch.
+     */
+    orderBy?: CrmConfigOrderByWithRelationInput | CrmConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CrmConfigs.
+     */
+    cursor?: CrmConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrmConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrmConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CrmConfigs.
+     */
+    distinct?: CrmConfigScalarFieldEnum | CrmConfigScalarFieldEnum[]
+  }
+
+  /**
+   * CrmConfig findFirstOrThrow
+   */
+  export type CrmConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CrmConfig to fetch.
+     */
+    where?: CrmConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrmConfigs to fetch.
+     */
+    orderBy?: CrmConfigOrderByWithRelationInput | CrmConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CrmConfigs.
+     */
+    cursor?: CrmConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrmConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrmConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CrmConfigs.
+     */
+    distinct?: CrmConfigScalarFieldEnum | CrmConfigScalarFieldEnum[]
+  }
+
+  /**
+   * CrmConfig findMany
+   */
+  export type CrmConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which CrmConfigs to fetch.
+     */
+    where?: CrmConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CrmConfigs to fetch.
+     */
+    orderBy?: CrmConfigOrderByWithRelationInput | CrmConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CrmConfigs.
+     */
+    cursor?: CrmConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CrmConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CrmConfigs.
+     */
+    skip?: number
+    distinct?: CrmConfigScalarFieldEnum | CrmConfigScalarFieldEnum[]
+  }
+
+  /**
+   * CrmConfig create
+   */
+  export type CrmConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to create a CrmConfig.
+     */
+    data: XOR<CrmConfigCreateInput, CrmConfigUncheckedCreateInput>
+  }
+
+  /**
+   * CrmConfig createMany
+   */
+  export type CrmConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CrmConfigs.
+     */
+    data: CrmConfigCreateManyInput | CrmConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CrmConfig createManyAndReturn
+   */
+  export type CrmConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many CrmConfigs.
+     */
+    data: CrmConfigCreateManyInput | CrmConfigCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CrmConfig update
+   */
+  export type CrmConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to update a CrmConfig.
+     */
+    data: XOR<CrmConfigUpdateInput, CrmConfigUncheckedUpdateInput>
+    /**
+     * Choose, which CrmConfig to update.
+     */
+    where: CrmConfigWhereUniqueInput
+  }
+
+  /**
+   * CrmConfig updateMany
+   */
+  export type CrmConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CrmConfigs.
+     */
+    data: XOR<CrmConfigUpdateManyMutationInput, CrmConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which CrmConfigs to update
+     */
+    where?: CrmConfigWhereInput
+    /**
+     * Limit how many CrmConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrmConfig updateManyAndReturn
+   */
+  export type CrmConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update CrmConfigs.
+     */
+    data: XOR<CrmConfigUpdateManyMutationInput, CrmConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which CrmConfigs to update
+     */
+    where?: CrmConfigWhereInput
+    /**
+     * Limit how many CrmConfigs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * CrmConfig upsert
+   */
+  export type CrmConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * The filter to search for the CrmConfig to update in case it exists.
+     */
+    where: CrmConfigWhereUniqueInput
+    /**
+     * In case the CrmConfig found by the `where` argument doesn't exist, create a new CrmConfig with this data.
+     */
+    create: XOR<CrmConfigCreateInput, CrmConfigUncheckedCreateInput>
+    /**
+     * In case the CrmConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CrmConfigUpdateInput, CrmConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * CrmConfig delete
+   */
+  export type CrmConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+    /**
+     * Filter which CrmConfig to delete.
+     */
+    where: CrmConfigWhereUniqueInput
+  }
+
+  /**
+   * CrmConfig deleteMany
+   */
+  export type CrmConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CrmConfigs to delete
+     */
+    where?: CrmConfigWhereInput
+    /**
+     * Limit how many CrmConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CrmConfig.leads
+   */
+  export type CrmConfig$leadsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    where?: LeadCrmWhereInput
+    orderBy?: LeadCrmOrderByWithRelationInput | LeadCrmOrderByWithRelationInput[]
+    cursor?: LeadCrmWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: LeadCrmScalarFieldEnum | LeadCrmScalarFieldEnum[]
+  }
+
+  /**
+   * CrmConfig without action
+   */
+  export type CrmConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CrmConfig
+     */
+    select?: CrmConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CrmConfig
+     */
+    omit?: CrmConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: CrmConfigInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model LeadCrm
+   */
+
+  export type AggregateLeadCrm = {
+    _count: LeadCrmCountAggregateOutputType | null
+    _avg: LeadCrmAvgAggregateOutputType | null
+    _sum: LeadCrmSumAggregateOutputType | null
+    _min: LeadCrmMinAggregateOutputType | null
+    _max: LeadCrmMaxAggregateOutputType | null
+  }
+
+  export type LeadCrmAvgAggregateOutputType = {
+    ordemEtapa: number | null
+    valor: Decimal | null
+  }
+
+  export type LeadCrmSumAggregateOutputType = {
+    ordemEtapa: number | null
+    valor: Decimal | null
+  }
+
+  export type LeadCrmMinAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    crmConfigId: string | null
+    crmLeadId: string | null
+    etapa: string | null
+    ordemEtapa: number | null
+    telefone: string | null
+    email: string | null
+    metaLeadId: string | null
+    dataEntrada: Date | null
+    dataFechamento: Date | null
+    valor: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LeadCrmMaxAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    crmConfigId: string | null
+    crmLeadId: string | null
+    etapa: string | null
+    ordemEtapa: number | null
+    telefone: string | null
+    email: string | null
+    metaLeadId: string | null
+    dataEntrada: Date | null
+    dataFechamento: Date | null
+    valor: Decimal | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type LeadCrmCountAggregateOutputType = {
+    id: number
+    clienteId: number
+    crmConfigId: number
+    crmLeadId: number
+    etapa: number
+    ordemEtapa: number
+    telefone: number
+    email: number
+    metaLeadId: number
+    dataEntrada: number
+    dataFechamento: number
+    valor: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type LeadCrmAvgAggregateInputType = {
+    ordemEtapa?: true
+    valor?: true
+  }
+
+  export type LeadCrmSumAggregateInputType = {
+    ordemEtapa?: true
+    valor?: true
+  }
+
+  export type LeadCrmMinAggregateInputType = {
+    id?: true
+    clienteId?: true
+    crmConfigId?: true
+    crmLeadId?: true
+    etapa?: true
+    ordemEtapa?: true
+    telefone?: true
+    email?: true
+    metaLeadId?: true
+    dataEntrada?: true
+    dataFechamento?: true
+    valor?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LeadCrmMaxAggregateInputType = {
+    id?: true
+    clienteId?: true
+    crmConfigId?: true
+    crmLeadId?: true
+    etapa?: true
+    ordemEtapa?: true
+    telefone?: true
+    email?: true
+    metaLeadId?: true
+    dataEntrada?: true
+    dataFechamento?: true
+    valor?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type LeadCrmCountAggregateInputType = {
+    id?: true
+    clienteId?: true
+    crmConfigId?: true
+    crmLeadId?: true
+    etapa?: true
+    ordemEtapa?: true
+    telefone?: true
+    email?: true
+    metaLeadId?: true
+    dataEntrada?: true
+    dataFechamento?: true
+    valor?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type LeadCrmAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LeadCrm to aggregate.
+     */
+    where?: LeadCrmWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadCrms to fetch.
+     */
+    orderBy?: LeadCrmOrderByWithRelationInput | LeadCrmOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: LeadCrmWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadCrms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadCrms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned LeadCrms
+    **/
+    _count?: true | LeadCrmCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: LeadCrmAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: LeadCrmSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: LeadCrmMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: LeadCrmMaxAggregateInputType
+  }
+
+  export type GetLeadCrmAggregateType<T extends LeadCrmAggregateArgs> = {
+        [P in keyof T & keyof AggregateLeadCrm]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateLeadCrm[P]>
+      : GetScalarType<T[P], AggregateLeadCrm[P]>
+  }
+
+
+
+
+  export type LeadCrmGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: LeadCrmWhereInput
+    orderBy?: LeadCrmOrderByWithAggregationInput | LeadCrmOrderByWithAggregationInput[]
+    by: LeadCrmScalarFieldEnum[] | LeadCrmScalarFieldEnum
+    having?: LeadCrmScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: LeadCrmCountAggregateInputType | true
+    _avg?: LeadCrmAvgAggregateInputType
+    _sum?: LeadCrmSumAggregateInputType
+    _min?: LeadCrmMinAggregateInputType
+    _max?: LeadCrmMaxAggregateInputType
+  }
+
+  export type LeadCrmGroupByOutputType = {
+    id: string
+    clienteId: string
+    crmConfigId: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa: number | null
+    telefone: string | null
+    email: string | null
+    metaLeadId: string | null
+    dataEntrada: Date
+    dataFechamento: Date | null
+    valor: Decimal | null
+    createdAt: Date
+    updatedAt: Date
+    _count: LeadCrmCountAggregateOutputType | null
+    _avg: LeadCrmAvgAggregateOutputType | null
+    _sum: LeadCrmSumAggregateOutputType | null
+    _min: LeadCrmMinAggregateOutputType | null
+    _max: LeadCrmMaxAggregateOutputType | null
+  }
+
+  type GetLeadCrmGroupByPayload<T extends LeadCrmGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<LeadCrmGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof LeadCrmGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], LeadCrmGroupByOutputType[P]>
+            : GetScalarType<T[P], LeadCrmGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type LeadCrmSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    crmConfigId?: boolean
+    crmLeadId?: boolean
+    etapa?: boolean
+    ordemEtapa?: boolean
+    telefone?: boolean
+    email?: boolean
+    metaLeadId?: boolean
+    dataEntrada?: boolean
+    dataFechamento?: boolean
+    valor?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadCrm"]>
+
+  export type LeadCrmSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    crmConfigId?: boolean
+    crmLeadId?: boolean
+    etapa?: boolean
+    ordemEtapa?: boolean
+    telefone?: boolean
+    email?: boolean
+    metaLeadId?: boolean
+    dataEntrada?: boolean
+    dataFechamento?: boolean
+    valor?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadCrm"]>
+
+  export type LeadCrmSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    crmConfigId?: boolean
+    crmLeadId?: boolean
+    etapa?: boolean
+    ordemEtapa?: boolean
+    telefone?: boolean
+    email?: boolean
+    metaLeadId?: boolean
+    dataEntrada?: boolean
+    dataFechamento?: boolean
+    valor?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["leadCrm"]>
+
+  export type LeadCrmSelectScalar = {
+    id?: boolean
+    clienteId?: boolean
+    crmConfigId?: boolean
+    crmLeadId?: boolean
+    etapa?: boolean
+    ordemEtapa?: boolean
+    telefone?: boolean
+    email?: boolean
+    metaLeadId?: boolean
+    dataEntrada?: boolean
+    dataFechamento?: boolean
+    valor?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "telefone" | "email" | "metaLeadId" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
+  export type LeadCrmInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
+  }
+  export type LeadCrmIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
+  }
+  export type LeadCrmIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
+  }
+
+  export type $LeadCrmPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "LeadCrm"
+    objects: {
+      cliente: Prisma.$ClientePayload<ExtArgs>
+      crmConfig: Prisma.$CrmConfigPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      clienteId: string
+      crmConfigId: string
+      crmLeadId: string
+      etapa: string
+      ordemEtapa: number | null
+      telefone: string | null
+      email: string | null
+      metaLeadId: string | null
+      dataEntrada: Date
+      dataFechamento: Date | null
+      valor: Prisma.Decimal | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["leadCrm"]>
+    composites: {}
+  }
+
+  type LeadCrmGetPayload<S extends boolean | null | undefined | LeadCrmDefaultArgs> = $Result.GetResult<Prisma.$LeadCrmPayload, S>
+
+  type LeadCrmCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<LeadCrmFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: LeadCrmCountAggregateInputType | true
+    }
+
+  export interface LeadCrmDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['LeadCrm'], meta: { name: 'LeadCrm' } }
+    /**
+     * Find zero or one LeadCrm that matches the filter.
+     * @param {LeadCrmFindUniqueArgs} args - Arguments to find a LeadCrm
+     * @example
+     * // Get one LeadCrm
+     * const leadCrm = await prisma.leadCrm.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends LeadCrmFindUniqueArgs>(args: SelectSubset<T, LeadCrmFindUniqueArgs<ExtArgs>>): Prisma__LeadCrmClient<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one LeadCrm that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {LeadCrmFindUniqueOrThrowArgs} args - Arguments to find a LeadCrm
+     * @example
+     * // Get one LeadCrm
+     * const leadCrm = await prisma.leadCrm.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends LeadCrmFindUniqueOrThrowArgs>(args: SelectSubset<T, LeadCrmFindUniqueOrThrowArgs<ExtArgs>>): Prisma__LeadCrmClient<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LeadCrm that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadCrmFindFirstArgs} args - Arguments to find a LeadCrm
+     * @example
+     * // Get one LeadCrm
+     * const leadCrm = await prisma.leadCrm.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends LeadCrmFindFirstArgs>(args?: SelectSubset<T, LeadCrmFindFirstArgs<ExtArgs>>): Prisma__LeadCrmClient<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first LeadCrm that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadCrmFindFirstOrThrowArgs} args - Arguments to find a LeadCrm
+     * @example
+     * // Get one LeadCrm
+     * const leadCrm = await prisma.leadCrm.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends LeadCrmFindFirstOrThrowArgs>(args?: SelectSubset<T, LeadCrmFindFirstOrThrowArgs<ExtArgs>>): Prisma__LeadCrmClient<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more LeadCrms that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadCrmFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all LeadCrms
+     * const leadCrms = await prisma.leadCrm.findMany()
+     * 
+     * // Get first 10 LeadCrms
+     * const leadCrms = await prisma.leadCrm.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const leadCrmWithIdOnly = await prisma.leadCrm.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends LeadCrmFindManyArgs>(args?: SelectSubset<T, LeadCrmFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a LeadCrm.
+     * @param {LeadCrmCreateArgs} args - Arguments to create a LeadCrm.
+     * @example
+     * // Create one LeadCrm
+     * const LeadCrm = await prisma.leadCrm.create({
+     *   data: {
+     *     // ... data to create a LeadCrm
+     *   }
+     * })
+     * 
+     */
+    create<T extends LeadCrmCreateArgs>(args: SelectSubset<T, LeadCrmCreateArgs<ExtArgs>>): Prisma__LeadCrmClient<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many LeadCrms.
+     * @param {LeadCrmCreateManyArgs} args - Arguments to create many LeadCrms.
+     * @example
+     * // Create many LeadCrms
+     * const leadCrm = await prisma.leadCrm.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends LeadCrmCreateManyArgs>(args?: SelectSubset<T, LeadCrmCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many LeadCrms and returns the data saved in the database.
+     * @param {LeadCrmCreateManyAndReturnArgs} args - Arguments to create many LeadCrms.
+     * @example
+     * // Create many LeadCrms
+     * const leadCrm = await prisma.leadCrm.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many LeadCrms and only return the `id`
+     * const leadCrmWithIdOnly = await prisma.leadCrm.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends LeadCrmCreateManyAndReturnArgs>(args?: SelectSubset<T, LeadCrmCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a LeadCrm.
+     * @param {LeadCrmDeleteArgs} args - Arguments to delete one LeadCrm.
+     * @example
+     * // Delete one LeadCrm
+     * const LeadCrm = await prisma.leadCrm.delete({
+     *   where: {
+     *     // ... filter to delete one LeadCrm
+     *   }
+     * })
+     * 
+     */
+    delete<T extends LeadCrmDeleteArgs>(args: SelectSubset<T, LeadCrmDeleteArgs<ExtArgs>>): Prisma__LeadCrmClient<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one LeadCrm.
+     * @param {LeadCrmUpdateArgs} args - Arguments to update one LeadCrm.
+     * @example
+     * // Update one LeadCrm
+     * const leadCrm = await prisma.leadCrm.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends LeadCrmUpdateArgs>(args: SelectSubset<T, LeadCrmUpdateArgs<ExtArgs>>): Prisma__LeadCrmClient<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more LeadCrms.
+     * @param {LeadCrmDeleteManyArgs} args - Arguments to filter LeadCrms to delete.
+     * @example
+     * // Delete a few LeadCrms
+     * const { count } = await prisma.leadCrm.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends LeadCrmDeleteManyArgs>(args?: SelectSubset<T, LeadCrmDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LeadCrms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadCrmUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many LeadCrms
+     * const leadCrm = await prisma.leadCrm.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends LeadCrmUpdateManyArgs>(args: SelectSubset<T, LeadCrmUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more LeadCrms and returns the data updated in the database.
+     * @param {LeadCrmUpdateManyAndReturnArgs} args - Arguments to update many LeadCrms.
+     * @example
+     * // Update many LeadCrms
+     * const leadCrm = await prisma.leadCrm.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more LeadCrms and only return the `id`
+     * const leadCrmWithIdOnly = await prisma.leadCrm.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends LeadCrmUpdateManyAndReturnArgs>(args: SelectSubset<T, LeadCrmUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one LeadCrm.
+     * @param {LeadCrmUpsertArgs} args - Arguments to update or create a LeadCrm.
+     * @example
+     * // Update or create a LeadCrm
+     * const leadCrm = await prisma.leadCrm.upsert({
+     *   create: {
+     *     // ... data to create a LeadCrm
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the LeadCrm we want to update
+     *   }
+     * })
+     */
+    upsert<T extends LeadCrmUpsertArgs>(args: SelectSubset<T, LeadCrmUpsertArgs<ExtArgs>>): Prisma__LeadCrmClient<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of LeadCrms.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadCrmCountArgs} args - Arguments to filter LeadCrms to count.
+     * @example
+     * // Count the number of LeadCrms
+     * const count = await prisma.leadCrm.count({
+     *   where: {
+     *     // ... the filter for the LeadCrms we want to count
+     *   }
+     * })
+    **/
+    count<T extends LeadCrmCountArgs>(
+      args?: Subset<T, LeadCrmCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], LeadCrmCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a LeadCrm.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadCrmAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends LeadCrmAggregateArgs>(args: Subset<T, LeadCrmAggregateArgs>): Prisma.PrismaPromise<GetLeadCrmAggregateType<T>>
+
+    /**
+     * Group by LeadCrm.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {LeadCrmGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends LeadCrmGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: LeadCrmGroupByArgs['orderBy'] }
+        : { orderBy?: LeadCrmGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, LeadCrmGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetLeadCrmGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the LeadCrm model
+   */
+  readonly fields: LeadCrmFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for LeadCrm.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__LeadCrmClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    crmConfig<T extends CrmConfigDefaultArgs<ExtArgs> = {}>(args?: Subset<T, CrmConfigDefaultArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the LeadCrm model
+   */
+  interface LeadCrmFieldRefs {
+    readonly id: FieldRef<"LeadCrm", 'String'>
+    readonly clienteId: FieldRef<"LeadCrm", 'String'>
+    readonly crmConfigId: FieldRef<"LeadCrm", 'String'>
+    readonly crmLeadId: FieldRef<"LeadCrm", 'String'>
+    readonly etapa: FieldRef<"LeadCrm", 'String'>
+    readonly ordemEtapa: FieldRef<"LeadCrm", 'Int'>
+    readonly telefone: FieldRef<"LeadCrm", 'String'>
+    readonly email: FieldRef<"LeadCrm", 'String'>
+    readonly metaLeadId: FieldRef<"LeadCrm", 'String'>
+    readonly dataEntrada: FieldRef<"LeadCrm", 'DateTime'>
+    readonly dataFechamento: FieldRef<"LeadCrm", 'DateTime'>
+    readonly valor: FieldRef<"LeadCrm", 'Decimal'>
+    readonly createdAt: FieldRef<"LeadCrm", 'DateTime'>
+    readonly updatedAt: FieldRef<"LeadCrm", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * LeadCrm findUnique
+   */
+  export type LeadCrmFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadCrm to fetch.
+     */
+    where: LeadCrmWhereUniqueInput
+  }
+
+  /**
+   * LeadCrm findUniqueOrThrow
+   */
+  export type LeadCrmFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadCrm to fetch.
+     */
+    where: LeadCrmWhereUniqueInput
+  }
+
+  /**
+   * LeadCrm findFirst
+   */
+  export type LeadCrmFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadCrm to fetch.
+     */
+    where?: LeadCrmWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadCrms to fetch.
+     */
+    orderBy?: LeadCrmOrderByWithRelationInput | LeadCrmOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LeadCrms.
+     */
+    cursor?: LeadCrmWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadCrms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadCrms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LeadCrms.
+     */
+    distinct?: LeadCrmScalarFieldEnum | LeadCrmScalarFieldEnum[]
+  }
+
+  /**
+   * LeadCrm findFirstOrThrow
+   */
+  export type LeadCrmFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadCrm to fetch.
+     */
+    where?: LeadCrmWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadCrms to fetch.
+     */
+    orderBy?: LeadCrmOrderByWithRelationInput | LeadCrmOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for LeadCrms.
+     */
+    cursor?: LeadCrmWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadCrms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadCrms.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of LeadCrms.
+     */
+    distinct?: LeadCrmScalarFieldEnum | LeadCrmScalarFieldEnum[]
+  }
+
+  /**
+   * LeadCrm findMany
+   */
+  export type LeadCrmFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * Filter, which LeadCrms to fetch.
+     */
+    where?: LeadCrmWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of LeadCrms to fetch.
+     */
+    orderBy?: LeadCrmOrderByWithRelationInput | LeadCrmOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing LeadCrms.
+     */
+    cursor?: LeadCrmWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` LeadCrms from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` LeadCrms.
+     */
+    skip?: number
+    distinct?: LeadCrmScalarFieldEnum | LeadCrmScalarFieldEnum[]
+  }
+
+  /**
+   * LeadCrm create
+   */
+  export type LeadCrmCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * The data needed to create a LeadCrm.
+     */
+    data: XOR<LeadCrmCreateInput, LeadCrmUncheckedCreateInput>
+  }
+
+  /**
+   * LeadCrm createMany
+   */
+  export type LeadCrmCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many LeadCrms.
+     */
+    data: LeadCrmCreateManyInput | LeadCrmCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * LeadCrm createManyAndReturn
+   */
+  export type LeadCrmCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * The data used to create many LeadCrms.
+     */
+    data: LeadCrmCreateManyInput | LeadCrmCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LeadCrm update
+   */
+  export type LeadCrmUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * The data needed to update a LeadCrm.
+     */
+    data: XOR<LeadCrmUpdateInput, LeadCrmUncheckedUpdateInput>
+    /**
+     * Choose, which LeadCrm to update.
+     */
+    where: LeadCrmWhereUniqueInput
+  }
+
+  /**
+   * LeadCrm updateMany
+   */
+  export type LeadCrmUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update LeadCrms.
+     */
+    data: XOR<LeadCrmUpdateManyMutationInput, LeadCrmUncheckedUpdateManyInput>
+    /**
+     * Filter which LeadCrms to update
+     */
+    where?: LeadCrmWhereInput
+    /**
+     * Limit how many LeadCrms to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * LeadCrm updateManyAndReturn
+   */
+  export type LeadCrmUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * The data used to update LeadCrms.
+     */
+    data: XOR<LeadCrmUpdateManyMutationInput, LeadCrmUncheckedUpdateManyInput>
+    /**
+     * Filter which LeadCrms to update
+     */
+    where?: LeadCrmWhereInput
+    /**
+     * Limit how many LeadCrms to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * LeadCrm upsert
+   */
+  export type LeadCrmUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * The filter to search for the LeadCrm to update in case it exists.
+     */
+    where: LeadCrmWhereUniqueInput
+    /**
+     * In case the LeadCrm found by the `where` argument doesn't exist, create a new LeadCrm with this data.
+     */
+    create: XOR<LeadCrmCreateInput, LeadCrmUncheckedCreateInput>
+    /**
+     * In case the LeadCrm was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<LeadCrmUpdateInput, LeadCrmUncheckedUpdateInput>
+  }
+
+  /**
+   * LeadCrm delete
+   */
+  export type LeadCrmDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+    /**
+     * Filter which LeadCrm to delete.
+     */
+    where: LeadCrmWhereUniqueInput
+  }
+
+  /**
+   * LeadCrm deleteMany
+   */
+  export type LeadCrmDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which LeadCrms to delete
+     */
+    where?: LeadCrmWhereInput
+    /**
+     * Limit how many LeadCrms to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * LeadCrm without action
+   */
+  export type LeadCrmDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the LeadCrm
+     */
+    select?: LeadCrmSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the LeadCrm
+     */
+    omit?: LeadCrmOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: LeadCrmInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -22644,6 +25292,41 @@ export namespace Prisma {
   export type MetaLeadIndividualScalarFieldEnum = (typeof MetaLeadIndividualScalarFieldEnum)[keyof typeof MetaLeadIndividualScalarFieldEnum]
 
 
+  export const CrmConfigScalarFieldEnum: {
+    id: 'id',
+    clienteId: 'clienteId',
+    tipo: 'tipo',
+    dominio: 'dominio',
+    credenciais: 'credenciais',
+    ativo: 'ativo',
+    ultimoSyncAt: 'ultimoSyncAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CrmConfigScalarFieldEnum = (typeof CrmConfigScalarFieldEnum)[keyof typeof CrmConfigScalarFieldEnum]
+
+
+  export const LeadCrmScalarFieldEnum: {
+    id: 'id',
+    clienteId: 'clienteId',
+    crmConfigId: 'crmConfigId',
+    crmLeadId: 'crmLeadId',
+    etapa: 'etapa',
+    ordemEtapa: 'ordemEtapa',
+    telefone: 'telefone',
+    email: 'email',
+    metaLeadId: 'metaLeadId',
+    dataEntrada: 'dataEntrada',
+    dataFechamento: 'dataFechamento',
+    valor: 'valor',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type LeadCrmScalarFieldEnum = (typeof LeadCrmScalarFieldEnum)[keyof typeof LeadCrmScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -22658,6 +25341,13 @@ export namespace Prisma {
   };
 
   export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
+  export const JsonNullValueInput: {
+    JsonNull: typeof JsonNull
+  };
+
+  export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
 
 
   export const QueryMode: {
@@ -22793,6 +25483,20 @@ export namespace Prisma {
    */
   export type EnumQueryModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'QueryMode'>
     
+
+
+  /**
+   * Reference to a field of type 'CrmTipo'
+   */
+  export type EnumCrmTipoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CrmTipo'>
+    
+
+
+  /**
+   * Reference to a field of type 'CrmTipo[]'
+   */
+  export type ListEnumCrmTipoFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CrmTipo[]'>
+    
   /**
    * Deep Input Types
    */
@@ -22831,6 +25535,8 @@ export namespace Prisma {
     metas?: MetaListRelationFilter
     metaAdsCriativos?: MetaAdsCriativoListRelationFilter
     metaLeadsIndividuais?: MetaLeadIndividualListRelationFilter
+    crmConfig?: XOR<CrmConfigNullableScalarRelationFilter, CrmConfigWhereInput> | null
+    leadsCrm?: LeadCrmListRelationFilter
     pautasReuniao?: PautaReuniaoListRelationFilter
   }
 
@@ -22864,6 +25570,8 @@ export namespace Prisma {
     metas?: MetaOrderByRelationAggregateInput
     metaAdsCriativos?: MetaAdsCriativoOrderByRelationAggregateInput
     metaLeadsIndividuais?: MetaLeadIndividualOrderByRelationAggregateInput
+    crmConfig?: CrmConfigOrderByWithRelationInput
+    leadsCrm?: LeadCrmOrderByRelationAggregateInput
     pautasReuniao?: PautaReuniaoOrderByRelationAggregateInput
   }
 
@@ -22900,6 +25608,8 @@ export namespace Prisma {
     metas?: MetaListRelationFilter
     metaAdsCriativos?: MetaAdsCriativoListRelationFilter
     metaLeadsIndividuais?: MetaLeadIndividualListRelationFilter
+    crmConfig?: XOR<CrmConfigNullableScalarRelationFilter, CrmConfigWhereInput> | null
+    leadsCrm?: LeadCrmListRelationFilter
     pautasReuniao?: PautaReuniaoListRelationFilter
   }, "id" | "slug" | "portalToken">
 
@@ -24509,6 +27219,190 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"MetaLeadIndividual"> | Date | string
   }
 
+  export type CrmConfigWhereInput = {
+    AND?: CrmConfigWhereInput | CrmConfigWhereInput[]
+    OR?: CrmConfigWhereInput[]
+    NOT?: CrmConfigWhereInput | CrmConfigWhereInput[]
+    id?: StringFilter<"CrmConfig"> | string
+    clienteId?: StringFilter<"CrmConfig"> | string
+    tipo?: EnumCrmTipoFilter<"CrmConfig"> | $Enums.CrmTipo
+    dominio?: StringNullableFilter<"CrmConfig"> | string | null
+    credenciais?: JsonFilter<"CrmConfig">
+    ativo?: BoolFilter<"CrmConfig"> | boolean
+    ultimoSyncAt?: DateTimeNullableFilter<"CrmConfig"> | Date | string | null
+    createdAt?: DateTimeFilter<"CrmConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"CrmConfig"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    leads?: LeadCrmListRelationFilter
+  }
+
+  export type CrmConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    tipo?: SortOrder
+    dominio?: SortOrderInput | SortOrder
+    credenciais?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cliente?: ClienteOrderByWithRelationInput
+    leads?: LeadCrmOrderByRelationAggregateInput
+  }
+
+  export type CrmConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    clienteId?: string
+    AND?: CrmConfigWhereInput | CrmConfigWhereInput[]
+    OR?: CrmConfigWhereInput[]
+    NOT?: CrmConfigWhereInput | CrmConfigWhereInput[]
+    tipo?: EnumCrmTipoFilter<"CrmConfig"> | $Enums.CrmTipo
+    dominio?: StringNullableFilter<"CrmConfig"> | string | null
+    credenciais?: JsonFilter<"CrmConfig">
+    ativo?: BoolFilter<"CrmConfig"> | boolean
+    ultimoSyncAt?: DateTimeNullableFilter<"CrmConfig"> | Date | string | null
+    createdAt?: DateTimeFilter<"CrmConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"CrmConfig"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    leads?: LeadCrmListRelationFilter
+  }, "id" | "clienteId">
+
+  export type CrmConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    tipo?: SortOrder
+    dominio?: SortOrderInput | SortOrder
+    credenciais?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CrmConfigCountOrderByAggregateInput
+    _max?: CrmConfigMaxOrderByAggregateInput
+    _min?: CrmConfigMinOrderByAggregateInput
+  }
+
+  export type CrmConfigScalarWhereWithAggregatesInput = {
+    AND?: CrmConfigScalarWhereWithAggregatesInput | CrmConfigScalarWhereWithAggregatesInput[]
+    OR?: CrmConfigScalarWhereWithAggregatesInput[]
+    NOT?: CrmConfigScalarWhereWithAggregatesInput | CrmConfigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CrmConfig"> | string
+    clienteId?: StringWithAggregatesFilter<"CrmConfig"> | string
+    tipo?: EnumCrmTipoWithAggregatesFilter<"CrmConfig"> | $Enums.CrmTipo
+    dominio?: StringNullableWithAggregatesFilter<"CrmConfig"> | string | null
+    credenciais?: JsonWithAggregatesFilter<"CrmConfig">
+    ativo?: BoolWithAggregatesFilter<"CrmConfig"> | boolean
+    ultimoSyncAt?: DateTimeNullableWithAggregatesFilter<"CrmConfig"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CrmConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CrmConfig"> | Date | string
+  }
+
+  export type LeadCrmWhereInput = {
+    AND?: LeadCrmWhereInput | LeadCrmWhereInput[]
+    OR?: LeadCrmWhereInput[]
+    NOT?: LeadCrmWhereInput | LeadCrmWhereInput[]
+    id?: StringFilter<"LeadCrm"> | string
+    clienteId?: StringFilter<"LeadCrm"> | string
+    crmConfigId?: StringFilter<"LeadCrm"> | string
+    crmLeadId?: StringFilter<"LeadCrm"> | string
+    etapa?: StringFilter<"LeadCrm"> | string
+    ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
+    telefone?: StringNullableFilter<"LeadCrm"> | string | null
+    email?: StringNullableFilter<"LeadCrm"> | string | null
+    metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
+    dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
+    valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
+    updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    crmConfig?: XOR<CrmConfigScalarRelationFilter, CrmConfigWhereInput>
+  }
+
+  export type LeadCrmOrderByWithRelationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    crmConfigId?: SortOrder
+    crmLeadId?: SortOrder
+    etapa?: SortOrder
+    ordemEtapa?: SortOrderInput | SortOrder
+    telefone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    metaLeadId?: SortOrderInput | SortOrder
+    dataEntrada?: SortOrder
+    dataFechamento?: SortOrderInput | SortOrder
+    valor?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cliente?: ClienteOrderByWithRelationInput
+    crmConfig?: CrmConfigOrderByWithRelationInput
+  }
+
+  export type LeadCrmWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    clienteId_crmLeadId?: LeadCrmClienteIdCrmLeadIdCompoundUniqueInput
+    AND?: LeadCrmWhereInput | LeadCrmWhereInput[]
+    OR?: LeadCrmWhereInput[]
+    NOT?: LeadCrmWhereInput | LeadCrmWhereInput[]
+    clienteId?: StringFilter<"LeadCrm"> | string
+    crmConfigId?: StringFilter<"LeadCrm"> | string
+    crmLeadId?: StringFilter<"LeadCrm"> | string
+    etapa?: StringFilter<"LeadCrm"> | string
+    ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
+    telefone?: StringNullableFilter<"LeadCrm"> | string | null
+    email?: StringNullableFilter<"LeadCrm"> | string | null
+    metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
+    dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
+    valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
+    updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    crmConfig?: XOR<CrmConfigScalarRelationFilter, CrmConfigWhereInput>
+  }, "id" | "clienteId_crmLeadId">
+
+  export type LeadCrmOrderByWithAggregationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    crmConfigId?: SortOrder
+    crmLeadId?: SortOrder
+    etapa?: SortOrder
+    ordemEtapa?: SortOrderInput | SortOrder
+    telefone?: SortOrderInput | SortOrder
+    email?: SortOrderInput | SortOrder
+    metaLeadId?: SortOrderInput | SortOrder
+    dataEntrada?: SortOrder
+    dataFechamento?: SortOrderInput | SortOrder
+    valor?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: LeadCrmCountOrderByAggregateInput
+    _avg?: LeadCrmAvgOrderByAggregateInput
+    _max?: LeadCrmMaxOrderByAggregateInput
+    _min?: LeadCrmMinOrderByAggregateInput
+    _sum?: LeadCrmSumOrderByAggregateInput
+  }
+
+  export type LeadCrmScalarWhereWithAggregatesInput = {
+    AND?: LeadCrmScalarWhereWithAggregatesInput | LeadCrmScalarWhereWithAggregatesInput[]
+    OR?: LeadCrmScalarWhereWithAggregatesInput[]
+    NOT?: LeadCrmScalarWhereWithAggregatesInput | LeadCrmScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"LeadCrm"> | string
+    clienteId?: StringWithAggregatesFilter<"LeadCrm"> | string
+    crmConfigId?: StringWithAggregatesFilter<"LeadCrm"> | string
+    crmLeadId?: StringWithAggregatesFilter<"LeadCrm"> | string
+    etapa?: StringWithAggregatesFilter<"LeadCrm"> | string
+    ordemEtapa?: IntNullableWithAggregatesFilter<"LeadCrm"> | number | null
+    telefone?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
+    email?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
+    metaLeadId?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
+    dataEntrada?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
+    dataFechamento?: DateTimeNullableWithAggregatesFilter<"LeadCrm"> | Date | string | null
+    valor?: DecimalNullableWithAggregatesFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
+  }
+
   export type ClienteCreateInput = {
     id?: string
     nome: string
@@ -24539,6 +27433,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -24572,6 +27468,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -24605,6 +27503,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -24638,6 +27538,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -26499,6 +29401,210 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CrmConfigCreateInput = {
+    id?: string
+    tipo: $Enums.CrmTipo
+    dominio?: string | null
+    credenciais: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutCrmConfigInput
+    leads?: LeadCrmCreateNestedManyWithoutCrmConfigInput
+  }
+
+  export type CrmConfigUncheckedCreateInput = {
+    id?: string
+    clienteId: string
+    tipo: $Enums.CrmTipo
+    dominio?: string | null
+    credenciais: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadCrmUncheckedCreateNestedManyWithoutCrmConfigInput
+  }
+
+  export type CrmConfigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumCrmTipoFieldUpdateOperationsInput | $Enums.CrmTipo
+    dominio?: NullableStringFieldUpdateOperationsInput | string | null
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutCrmConfigNestedInput
+    leads?: LeadCrmUpdateManyWithoutCrmConfigNestedInput
+  }
+
+  export type CrmConfigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumCrmTipoFieldUpdateOperationsInput | $Enums.CrmTipo
+    dominio?: NullableStringFieldUpdateOperationsInput | string | null
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadCrmUncheckedUpdateManyWithoutCrmConfigNestedInput
+  }
+
+  export type CrmConfigCreateManyInput = {
+    id?: string
+    clienteId: string
+    tipo: $Enums.CrmTipo
+    dominio?: string | null
+    credenciais: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CrmConfigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumCrmTipoFieldUpdateOperationsInput | $Enums.CrmTipo
+    dominio?: NullableStringFieldUpdateOperationsInput | string | null
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CrmConfigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumCrmTipoFieldUpdateOperationsInput | $Enums.CrmTipo
+    dominio?: NullableStringFieldUpdateOperationsInput | string | null
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadCrmCreateInput = {
+    id?: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutLeadsCrmInput
+    crmConfig: CrmConfigCreateNestedOneWithoutLeadsInput
+  }
+
+  export type LeadCrmUncheckedCreateInput = {
+    id?: string
+    clienteId: string
+    crmConfigId: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCrmUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutLeadsCrmNestedInput
+    crmConfig?: CrmConfigUpdateOneRequiredWithoutLeadsNestedInput
+  }
+
+  export type LeadCrmUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    crmConfigId?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadCrmCreateManyInput = {
+    id?: string
+    clienteId: string
+    crmConfigId: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCrmUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadCrmUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    crmConfigId?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -26644,6 +29750,17 @@ export namespace Prisma {
     none?: MetaLeadIndividualWhereInput
   }
 
+  export type CrmConfigNullableScalarRelationFilter = {
+    is?: CrmConfigWhereInput | null
+    isNot?: CrmConfigWhereInput | null
+  }
+
+  export type LeadCrmListRelationFilter = {
+    every?: LeadCrmWhereInput
+    some?: LeadCrmWhereInput
+    none?: LeadCrmWhereInput
+  }
+
   export type PautaReuniaoListRelationFilter = {
     every?: PautaReuniaoWhereInput
     some?: PautaReuniaoWhereInput
@@ -26696,6 +29813,10 @@ export namespace Prisma {
   }
 
   export type MetaLeadIndividualOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type LeadCrmOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -28071,6 +31192,177 @@ export namespace Prisma {
     _max?: NestedJsonNullableFilter<$PrismaModel>
   }
 
+  export type EnumCrmTipoFilter<$PrismaModel = never> = {
+    equals?: $Enums.CrmTipo | EnumCrmTipoFieldRefInput<$PrismaModel>
+    in?: $Enums.CrmTipo[] | ListEnumCrmTipoFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CrmTipo[] | ListEnumCrmTipoFieldRefInput<$PrismaModel>
+    not?: NestedEnumCrmTipoFilter<$PrismaModel> | $Enums.CrmTipo
+  }
+  export type JsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type CrmConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    tipo?: SortOrder
+    dominio?: SortOrder
+    credenciais?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CrmConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    tipo?: SortOrder
+    dominio?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CrmConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    tipo?: SortOrder
+    dominio?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumCrmTipoWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CrmTipo | EnumCrmTipoFieldRefInput<$PrismaModel>
+    in?: $Enums.CrmTipo[] | ListEnumCrmTipoFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CrmTipo[] | ListEnumCrmTipoFieldRefInput<$PrismaModel>
+    not?: NestedEnumCrmTipoWithAggregatesFilter<$PrismaModel> | $Enums.CrmTipo
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCrmTipoFilter<$PrismaModel>
+    _max?: NestedEnumCrmTipoFilter<$PrismaModel>
+  }
+  export type JsonWithAggregatesFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, Exclude<keyof Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>,
+        Required<JsonWithAggregatesFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<JsonWithAggregatesFilterBase<$PrismaModel>>, 'path'>>
+
+  export type JsonWithAggregatesFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedJsonFilter<$PrismaModel>
+    _max?: NestedJsonFilter<$PrismaModel>
+  }
+
+  export type CrmConfigScalarRelationFilter = {
+    is?: CrmConfigWhereInput
+    isNot?: CrmConfigWhereInput
+  }
+
+  export type LeadCrmClienteIdCrmLeadIdCompoundUniqueInput = {
+    clienteId: string
+    crmLeadId: string
+  }
+
+  export type LeadCrmCountOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    crmConfigId?: SortOrder
+    crmLeadId?: SortOrder
+    etapa?: SortOrder
+    ordemEtapa?: SortOrder
+    telefone?: SortOrder
+    email?: SortOrder
+    metaLeadId?: SortOrder
+    dataEntrada?: SortOrder
+    dataFechamento?: SortOrder
+    valor?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LeadCrmAvgOrderByAggregateInput = {
+    ordemEtapa?: SortOrder
+    valor?: SortOrder
+  }
+
+  export type LeadCrmMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    crmConfigId?: SortOrder
+    crmLeadId?: SortOrder
+    etapa?: SortOrder
+    ordemEtapa?: SortOrder
+    telefone?: SortOrder
+    email?: SortOrder
+    metaLeadId?: SortOrder
+    dataEntrada?: SortOrder
+    dataFechamento?: SortOrder
+    valor?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LeadCrmMinOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    crmConfigId?: SortOrder
+    crmLeadId?: SortOrder
+    etapa?: SortOrder
+    ordemEtapa?: SortOrder
+    telefone?: SortOrder
+    email?: SortOrder
+    metaLeadId?: SortOrder
+    dataEntrada?: SortOrder
+    dataFechamento?: SortOrder
+    valor?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type LeadCrmSumOrderByAggregateInput = {
+    ordemEtapa?: SortOrder
+    valor?: SortOrder
+  }
+
   export type AgregadoMidiaMensalCreateNestedManyWithoutClienteInput = {
     create?: XOR<AgregadoMidiaMensalCreateWithoutClienteInput, AgregadoMidiaMensalUncheckedCreateWithoutClienteInput> | AgregadoMidiaMensalCreateWithoutClienteInput[] | AgregadoMidiaMensalUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: AgregadoMidiaMensalCreateOrConnectWithoutClienteInput | AgregadoMidiaMensalCreateOrConnectWithoutClienteInput[]
@@ -28146,6 +31438,19 @@ export namespace Prisma {
     connectOrCreate?: MetaLeadIndividualCreateOrConnectWithoutClienteInput | MetaLeadIndividualCreateOrConnectWithoutClienteInput[]
     createMany?: MetaLeadIndividualCreateManyClienteInputEnvelope
     connect?: MetaLeadIndividualWhereUniqueInput | MetaLeadIndividualWhereUniqueInput[]
+  }
+
+  export type CrmConfigCreateNestedOneWithoutClienteInput = {
+    create?: XOR<CrmConfigCreateWithoutClienteInput, CrmConfigUncheckedCreateWithoutClienteInput>
+    connectOrCreate?: CrmConfigCreateOrConnectWithoutClienteInput
+    connect?: CrmConfigWhereUniqueInput
+  }
+
+  export type LeadCrmCreateNestedManyWithoutClienteInput = {
+    create?: XOR<LeadCrmCreateWithoutClienteInput, LeadCrmUncheckedCreateWithoutClienteInput> | LeadCrmCreateWithoutClienteInput[] | LeadCrmUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: LeadCrmCreateOrConnectWithoutClienteInput | LeadCrmCreateOrConnectWithoutClienteInput[]
+    createMany?: LeadCrmCreateManyClienteInputEnvelope
+    connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
   }
 
   export type PautaReuniaoCreateNestedManyWithoutClienteInput = {
@@ -28230,6 +31535,19 @@ export namespace Prisma {
     connectOrCreate?: MetaLeadIndividualCreateOrConnectWithoutClienteInput | MetaLeadIndividualCreateOrConnectWithoutClienteInput[]
     createMany?: MetaLeadIndividualCreateManyClienteInputEnvelope
     connect?: MetaLeadIndividualWhereUniqueInput | MetaLeadIndividualWhereUniqueInput[]
+  }
+
+  export type CrmConfigUncheckedCreateNestedOneWithoutClienteInput = {
+    create?: XOR<CrmConfigCreateWithoutClienteInput, CrmConfigUncheckedCreateWithoutClienteInput>
+    connectOrCreate?: CrmConfigCreateOrConnectWithoutClienteInput
+    connect?: CrmConfigWhereUniqueInput
+  }
+
+  export type LeadCrmUncheckedCreateNestedManyWithoutClienteInput = {
+    create?: XOR<LeadCrmCreateWithoutClienteInput, LeadCrmUncheckedCreateWithoutClienteInput> | LeadCrmCreateWithoutClienteInput[] | LeadCrmUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: LeadCrmCreateOrConnectWithoutClienteInput | LeadCrmCreateOrConnectWithoutClienteInput[]
+    createMany?: LeadCrmCreateManyClienteInputEnvelope
+    connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
   }
 
   export type PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput = {
@@ -28429,6 +31747,30 @@ export namespace Prisma {
     deleteMany?: MetaLeadIndividualScalarWhereInput | MetaLeadIndividualScalarWhereInput[]
   }
 
+  export type CrmConfigUpdateOneWithoutClienteNestedInput = {
+    create?: XOR<CrmConfigCreateWithoutClienteInput, CrmConfigUncheckedCreateWithoutClienteInput>
+    connectOrCreate?: CrmConfigCreateOrConnectWithoutClienteInput
+    upsert?: CrmConfigUpsertWithoutClienteInput
+    disconnect?: CrmConfigWhereInput | boolean
+    delete?: CrmConfigWhereInput | boolean
+    connect?: CrmConfigWhereUniqueInput
+    update?: XOR<XOR<CrmConfigUpdateToOneWithWhereWithoutClienteInput, CrmConfigUpdateWithoutClienteInput>, CrmConfigUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type LeadCrmUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<LeadCrmCreateWithoutClienteInput, LeadCrmUncheckedCreateWithoutClienteInput> | LeadCrmCreateWithoutClienteInput[] | LeadCrmUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: LeadCrmCreateOrConnectWithoutClienteInput | LeadCrmCreateOrConnectWithoutClienteInput[]
+    upsert?: LeadCrmUpsertWithWhereUniqueWithoutClienteInput | LeadCrmUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: LeadCrmCreateManyClienteInputEnvelope
+    set?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    disconnect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    delete?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    update?: LeadCrmUpdateWithWhereUniqueWithoutClienteInput | LeadCrmUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: LeadCrmUpdateManyWithWhereWithoutClienteInput | LeadCrmUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: LeadCrmScalarWhereInput | LeadCrmScalarWhereInput[]
+  }
+
   export type PautaReuniaoUpdateManyWithoutClienteNestedInput = {
     create?: XOR<PautaReuniaoCreateWithoutClienteInput, PautaReuniaoUncheckedCreateWithoutClienteInput> | PautaReuniaoCreateWithoutClienteInput[] | PautaReuniaoUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: PautaReuniaoCreateOrConnectWithoutClienteInput | PautaReuniaoCreateOrConnectWithoutClienteInput[]
@@ -28595,6 +31937,30 @@ export namespace Prisma {
     update?: MetaLeadIndividualUpdateWithWhereUniqueWithoutClienteInput | MetaLeadIndividualUpdateWithWhereUniqueWithoutClienteInput[]
     updateMany?: MetaLeadIndividualUpdateManyWithWhereWithoutClienteInput | MetaLeadIndividualUpdateManyWithWhereWithoutClienteInput[]
     deleteMany?: MetaLeadIndividualScalarWhereInput | MetaLeadIndividualScalarWhereInput[]
+  }
+
+  export type CrmConfigUncheckedUpdateOneWithoutClienteNestedInput = {
+    create?: XOR<CrmConfigCreateWithoutClienteInput, CrmConfigUncheckedCreateWithoutClienteInput>
+    connectOrCreate?: CrmConfigCreateOrConnectWithoutClienteInput
+    upsert?: CrmConfigUpsertWithoutClienteInput
+    disconnect?: CrmConfigWhereInput | boolean
+    delete?: CrmConfigWhereInput | boolean
+    connect?: CrmConfigWhereUniqueInput
+    update?: XOR<XOR<CrmConfigUpdateToOneWithWhereWithoutClienteInput, CrmConfigUpdateWithoutClienteInput>, CrmConfigUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type LeadCrmUncheckedUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<LeadCrmCreateWithoutClienteInput, LeadCrmUncheckedCreateWithoutClienteInput> | LeadCrmCreateWithoutClienteInput[] | LeadCrmUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: LeadCrmCreateOrConnectWithoutClienteInput | LeadCrmCreateOrConnectWithoutClienteInput[]
+    upsert?: LeadCrmUpsertWithWhereUniqueWithoutClienteInput | LeadCrmUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: LeadCrmCreateManyClienteInputEnvelope
+    set?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    disconnect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    delete?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    update?: LeadCrmUpdateWithWhereUniqueWithoutClienteInput | LeadCrmUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: LeadCrmUpdateManyWithWhereWithoutClienteInput | LeadCrmUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: LeadCrmScalarWhereInput | LeadCrmScalarWhereInput[]
   }
 
   export type PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput = {
@@ -29101,6 +32467,94 @@ export namespace Prisma {
     update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutMetaLeadsIndividuaisInput, ClienteUpdateWithoutMetaLeadsIndividuaisInput>, ClienteUncheckedUpdateWithoutMetaLeadsIndividuaisInput>
   }
 
+  export type ClienteCreateNestedOneWithoutCrmConfigInput = {
+    create?: XOR<ClienteCreateWithoutCrmConfigInput, ClienteUncheckedCreateWithoutCrmConfigInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutCrmConfigInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type LeadCrmCreateNestedManyWithoutCrmConfigInput = {
+    create?: XOR<LeadCrmCreateWithoutCrmConfigInput, LeadCrmUncheckedCreateWithoutCrmConfigInput> | LeadCrmCreateWithoutCrmConfigInput[] | LeadCrmUncheckedCreateWithoutCrmConfigInput[]
+    connectOrCreate?: LeadCrmCreateOrConnectWithoutCrmConfigInput | LeadCrmCreateOrConnectWithoutCrmConfigInput[]
+    createMany?: LeadCrmCreateManyCrmConfigInputEnvelope
+    connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+  }
+
+  export type LeadCrmUncheckedCreateNestedManyWithoutCrmConfigInput = {
+    create?: XOR<LeadCrmCreateWithoutCrmConfigInput, LeadCrmUncheckedCreateWithoutCrmConfigInput> | LeadCrmCreateWithoutCrmConfigInput[] | LeadCrmUncheckedCreateWithoutCrmConfigInput[]
+    connectOrCreate?: LeadCrmCreateOrConnectWithoutCrmConfigInput | LeadCrmCreateOrConnectWithoutCrmConfigInput[]
+    createMany?: LeadCrmCreateManyCrmConfigInputEnvelope
+    connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+  }
+
+  export type EnumCrmTipoFieldUpdateOperationsInput = {
+    set?: $Enums.CrmTipo
+  }
+
+  export type ClienteUpdateOneRequiredWithoutCrmConfigNestedInput = {
+    create?: XOR<ClienteCreateWithoutCrmConfigInput, ClienteUncheckedCreateWithoutCrmConfigInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutCrmConfigInput
+    upsert?: ClienteUpsertWithoutCrmConfigInput
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutCrmConfigInput, ClienteUpdateWithoutCrmConfigInput>, ClienteUncheckedUpdateWithoutCrmConfigInput>
+  }
+
+  export type LeadCrmUpdateManyWithoutCrmConfigNestedInput = {
+    create?: XOR<LeadCrmCreateWithoutCrmConfigInput, LeadCrmUncheckedCreateWithoutCrmConfigInput> | LeadCrmCreateWithoutCrmConfigInput[] | LeadCrmUncheckedCreateWithoutCrmConfigInput[]
+    connectOrCreate?: LeadCrmCreateOrConnectWithoutCrmConfigInput | LeadCrmCreateOrConnectWithoutCrmConfigInput[]
+    upsert?: LeadCrmUpsertWithWhereUniqueWithoutCrmConfigInput | LeadCrmUpsertWithWhereUniqueWithoutCrmConfigInput[]
+    createMany?: LeadCrmCreateManyCrmConfigInputEnvelope
+    set?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    disconnect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    delete?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    update?: LeadCrmUpdateWithWhereUniqueWithoutCrmConfigInput | LeadCrmUpdateWithWhereUniqueWithoutCrmConfigInput[]
+    updateMany?: LeadCrmUpdateManyWithWhereWithoutCrmConfigInput | LeadCrmUpdateManyWithWhereWithoutCrmConfigInput[]
+    deleteMany?: LeadCrmScalarWhereInput | LeadCrmScalarWhereInput[]
+  }
+
+  export type LeadCrmUncheckedUpdateManyWithoutCrmConfigNestedInput = {
+    create?: XOR<LeadCrmCreateWithoutCrmConfigInput, LeadCrmUncheckedCreateWithoutCrmConfigInput> | LeadCrmCreateWithoutCrmConfigInput[] | LeadCrmUncheckedCreateWithoutCrmConfigInput[]
+    connectOrCreate?: LeadCrmCreateOrConnectWithoutCrmConfigInput | LeadCrmCreateOrConnectWithoutCrmConfigInput[]
+    upsert?: LeadCrmUpsertWithWhereUniqueWithoutCrmConfigInput | LeadCrmUpsertWithWhereUniqueWithoutCrmConfigInput[]
+    createMany?: LeadCrmCreateManyCrmConfigInputEnvelope
+    set?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    disconnect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    delete?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+    update?: LeadCrmUpdateWithWhereUniqueWithoutCrmConfigInput | LeadCrmUpdateWithWhereUniqueWithoutCrmConfigInput[]
+    updateMany?: LeadCrmUpdateManyWithWhereWithoutCrmConfigInput | LeadCrmUpdateManyWithWhereWithoutCrmConfigInput[]
+    deleteMany?: LeadCrmScalarWhereInput | LeadCrmScalarWhereInput[]
+  }
+
+  export type ClienteCreateNestedOneWithoutLeadsCrmInput = {
+    create?: XOR<ClienteCreateWithoutLeadsCrmInput, ClienteUncheckedCreateWithoutLeadsCrmInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutLeadsCrmInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type CrmConfigCreateNestedOneWithoutLeadsInput = {
+    create?: XOR<CrmConfigCreateWithoutLeadsInput, CrmConfigUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: CrmConfigCreateOrConnectWithoutLeadsInput
+    connect?: CrmConfigWhereUniqueInput
+  }
+
+  export type ClienteUpdateOneRequiredWithoutLeadsCrmNestedInput = {
+    create?: XOR<ClienteCreateWithoutLeadsCrmInput, ClienteUncheckedCreateWithoutLeadsCrmInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutLeadsCrmInput
+    upsert?: ClienteUpsertWithoutLeadsCrmInput
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutLeadsCrmInput, ClienteUpdateWithoutLeadsCrmInput>, ClienteUncheckedUpdateWithoutLeadsCrmInput>
+  }
+
+  export type CrmConfigUpdateOneRequiredWithoutLeadsNestedInput = {
+    create?: XOR<CrmConfigCreateWithoutLeadsInput, CrmConfigUncheckedCreateWithoutLeadsInput>
+    connectOrCreate?: CrmConfigCreateOrConnectWithoutLeadsInput
+    upsert?: CrmConfigUpsertWithoutLeadsInput
+    connect?: CrmConfigWhereUniqueInput
+    update?: XOR<XOR<CrmConfigUpdateToOneWithWhereWithoutLeadsInput, CrmConfigUpdateWithoutLeadsInput>, CrmConfigUncheckedUpdateWithoutLeadsInput>
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -29406,6 +32860,46 @@ export namespace Prisma {
     | OptionalFlat<Omit<Required<NestedJsonNullableFilterBase<$PrismaModel>>, 'path'>>
 
   export type NestedJsonNullableFilterBase<$PrismaModel = never> = {
+    equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+    path?: string[]
+    mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
+    string_contains?: string | StringFieldRefInput<$PrismaModel>
+    string_starts_with?: string | StringFieldRefInput<$PrismaModel>
+    string_ends_with?: string | StringFieldRefInput<$PrismaModel>
+    array_starts_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_ends_with?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    array_contains?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | null
+    lt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    lte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gt?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    gte?: InputJsonValue | JsonFieldRefInput<$PrismaModel>
+    not?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
+  }
+
+  export type NestedEnumCrmTipoFilter<$PrismaModel = never> = {
+    equals?: $Enums.CrmTipo | EnumCrmTipoFieldRefInput<$PrismaModel>
+    in?: $Enums.CrmTipo[] | ListEnumCrmTipoFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CrmTipo[] | ListEnumCrmTipoFieldRefInput<$PrismaModel>
+    not?: NestedEnumCrmTipoFilter<$PrismaModel> | $Enums.CrmTipo
+  }
+
+  export type NestedEnumCrmTipoWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.CrmTipo | EnumCrmTipoFieldRefInput<$PrismaModel>
+    in?: $Enums.CrmTipo[] | ListEnumCrmTipoFieldRefInput<$PrismaModel>
+    notIn?: $Enums.CrmTipo[] | ListEnumCrmTipoFieldRefInput<$PrismaModel>
+    not?: NestedEnumCrmTipoWithAggregatesFilter<$PrismaModel> | $Enums.CrmTipo
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumCrmTipoFilter<$PrismaModel>
+    _max?: NestedEnumCrmTipoFilter<$PrismaModel>
+  }
+  export type NestedJsonFilter<$PrismaModel = never> =
+    | PatchUndefined<
+        Either<Required<NestedJsonFilterBase<$PrismaModel>>, Exclude<keyof Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>,
+        Required<NestedJsonFilterBase<$PrismaModel>>
+      >
+    | OptionalFlat<Omit<Required<NestedJsonFilterBase<$PrismaModel>>, 'path'>>
+
+  export type NestedJsonFilterBase<$PrismaModel = never> = {
     equals?: InputJsonValue | JsonFieldRefInput<$PrismaModel> | JsonNullValueFilter
     path?: string[]
     mode?: QueryMode | EnumQueryModeFieldRefInput<$PrismaModel>
@@ -29962,6 +33456,77 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type CrmConfigCreateWithoutClienteInput = {
+    id?: string
+    tipo: $Enums.CrmTipo
+    dominio?: string | null
+    credenciais: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadCrmCreateNestedManyWithoutCrmConfigInput
+  }
+
+  export type CrmConfigUncheckedCreateWithoutClienteInput = {
+    id?: string
+    tipo: $Enums.CrmTipo
+    dominio?: string | null
+    credenciais: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    leads?: LeadCrmUncheckedCreateNestedManyWithoutCrmConfigInput
+  }
+
+  export type CrmConfigCreateOrConnectWithoutClienteInput = {
+    where: CrmConfigWhereUniqueInput
+    create: XOR<CrmConfigCreateWithoutClienteInput, CrmConfigUncheckedCreateWithoutClienteInput>
+  }
+
+  export type LeadCrmCreateWithoutClienteInput = {
+    id?: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    crmConfig: CrmConfigCreateNestedOneWithoutLeadsInput
+  }
+
+  export type LeadCrmUncheckedCreateWithoutClienteInput = {
+    id?: string
+    crmConfigId: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCrmCreateOrConnectWithoutClienteInput = {
+    where: LeadCrmWhereUniqueInput
+    create: XOR<LeadCrmCreateWithoutClienteInput, LeadCrmUncheckedCreateWithoutClienteInput>
+  }
+
+  export type LeadCrmCreateManyClienteInputEnvelope = {
+    data: LeadCrmCreateManyClienteInput | LeadCrmCreateManyClienteInput[]
+    skipDuplicates?: boolean
+  }
+
   export type PautaReuniaoCreateWithoutClienteInput = {
     id?: string
     semanaIso: number
@@ -30428,6 +33993,77 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"MetaLeadIndividual"> | Date | string
   }
 
+  export type CrmConfigUpsertWithoutClienteInput = {
+    update: XOR<CrmConfigUpdateWithoutClienteInput, CrmConfigUncheckedUpdateWithoutClienteInput>
+    create: XOR<CrmConfigCreateWithoutClienteInput, CrmConfigUncheckedCreateWithoutClienteInput>
+    where?: CrmConfigWhereInput
+  }
+
+  export type CrmConfigUpdateToOneWithWhereWithoutClienteInput = {
+    where?: CrmConfigWhereInput
+    data: XOR<CrmConfigUpdateWithoutClienteInput, CrmConfigUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type CrmConfigUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumCrmTipoFieldUpdateOperationsInput | $Enums.CrmTipo
+    dominio?: NullableStringFieldUpdateOperationsInput | string | null
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadCrmUpdateManyWithoutCrmConfigNestedInput
+  }
+
+  export type CrmConfigUncheckedUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumCrmTipoFieldUpdateOperationsInput | $Enums.CrmTipo
+    dominio?: NullableStringFieldUpdateOperationsInput | string | null
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    leads?: LeadCrmUncheckedUpdateManyWithoutCrmConfigNestedInput
+  }
+
+  export type LeadCrmUpsertWithWhereUniqueWithoutClienteInput = {
+    where: LeadCrmWhereUniqueInput
+    update: XOR<LeadCrmUpdateWithoutClienteInput, LeadCrmUncheckedUpdateWithoutClienteInput>
+    create: XOR<LeadCrmCreateWithoutClienteInput, LeadCrmUncheckedCreateWithoutClienteInput>
+  }
+
+  export type LeadCrmUpdateWithWhereUniqueWithoutClienteInput = {
+    where: LeadCrmWhereUniqueInput
+    data: XOR<LeadCrmUpdateWithoutClienteInput, LeadCrmUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type LeadCrmUpdateManyWithWhereWithoutClienteInput = {
+    where: LeadCrmScalarWhereInput
+    data: XOR<LeadCrmUpdateManyMutationInput, LeadCrmUncheckedUpdateManyWithoutClienteInput>
+  }
+
+  export type LeadCrmScalarWhereInput = {
+    AND?: LeadCrmScalarWhereInput | LeadCrmScalarWhereInput[]
+    OR?: LeadCrmScalarWhereInput[]
+    NOT?: LeadCrmScalarWhereInput | LeadCrmScalarWhereInput[]
+    id?: StringFilter<"LeadCrm"> | string
+    clienteId?: StringFilter<"LeadCrm"> | string
+    crmConfigId?: StringFilter<"LeadCrm"> | string
+    crmLeadId?: StringFilter<"LeadCrm"> | string
+    etapa?: StringFilter<"LeadCrm"> | string
+    ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
+    telefone?: StringNullableFilter<"LeadCrm"> | string | null
+    email?: StringNullableFilter<"LeadCrm"> | string | null
+    metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
+    dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
+    valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
+    updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
+  }
+
   export type PautaReuniaoUpsertWithWhereUniqueWithoutClienteInput = {
     where: PautaReuniaoWhereUniqueInput
     update: XOR<PautaReuniaoUpdateWithoutClienteInput, PautaReuniaoUncheckedUpdateWithoutClienteInput>
@@ -30490,6 +34126,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -30522,6 +34160,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -30866,6 +34506,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -30898,6 +34540,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -31010,6 +34654,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -31042,6 +34688,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -31125,6 +34773,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -31157,6 +34807,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -31230,6 +34882,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -31262,6 +34916,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -31310,6 +34966,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -31342,6 +35000,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -31374,6 +35034,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -31406,6 +35068,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -31454,6 +35118,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -31486,6 +35152,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -31518,6 +35186,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -31550,6 +35220,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -31598,6 +35270,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -31630,6 +35304,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -31663,6 +35339,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutPautasReuniaoInput = {
@@ -31695,6 +35373,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutPautasReuniaoInput = {
@@ -31743,6 +35423,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutPautasReuniaoInput = {
@@ -31775,6 +35457,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateWithoutGoogleAdsCriativosInput = {
@@ -31806,6 +35490,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -31838,6 +35524,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -31921,6 +35609,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -31953,6 +35643,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -32026,6 +35718,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -32058,6 +35752,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -32141,6 +35837,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -32173,6 +35871,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -32246,6 +35946,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -32278,6 +35980,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -32361,6 +36065,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -32393,6 +36099,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -32466,6 +36174,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -32498,6 +36208,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -32581,6 +36293,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -32613,6 +36327,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -32686,6 +36402,8 @@ export namespace Prisma {
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -32718,6 +36436,8 @@ export namespace Prisma {
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -32766,6 +36486,8 @@ export namespace Prisma {
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -32798,6 +36520,8 @@ export namespace Prisma {
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -32830,6 +36554,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
     metas?: MetaCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -32862,6 +36588,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -32910,6 +36638,8 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
     metas?: MetaUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -32942,7 +36672,435 @@ export namespace Prisma {
     googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteCreateWithoutCrmConfigInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    squad?: number | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    ultimoSyncAt?: Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
+    contas?: ContaCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
+    metas?: MetaCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutCrmConfigInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    squad?: number | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    ultimoSyncAt?: Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
+    contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutCrmConfigInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutCrmConfigInput, ClienteUncheckedCreateWithoutCrmConfigInput>
+  }
+
+  export type LeadCrmCreateWithoutCrmConfigInput = {
+    id?: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutLeadsCrmInput
+  }
+
+  export type LeadCrmUncheckedCreateWithoutCrmConfigInput = {
+    id?: string
+    clienteId: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCrmCreateOrConnectWithoutCrmConfigInput = {
+    where: LeadCrmWhereUniqueInput
+    create: XOR<LeadCrmCreateWithoutCrmConfigInput, LeadCrmUncheckedCreateWithoutCrmConfigInput>
+  }
+
+  export type LeadCrmCreateManyCrmConfigInputEnvelope = {
+    data: LeadCrmCreateManyCrmConfigInput | LeadCrmCreateManyCrmConfigInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ClienteUpsertWithoutCrmConfigInput = {
+    update: XOR<ClienteUpdateWithoutCrmConfigInput, ClienteUncheckedUpdateWithoutCrmConfigInput>
+    create: XOR<ClienteCreateWithoutCrmConfigInput, ClienteUncheckedCreateWithoutCrmConfigInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutCrmConfigInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutCrmConfigInput, ClienteUncheckedUpdateWithoutCrmConfigInput>
+  }
+
+  export type ClienteUpdateWithoutCrmConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
+    contas?: ContaUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
+    metas?: MetaUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutCrmConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
+    contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type LeadCrmUpsertWithWhereUniqueWithoutCrmConfigInput = {
+    where: LeadCrmWhereUniqueInput
+    update: XOR<LeadCrmUpdateWithoutCrmConfigInput, LeadCrmUncheckedUpdateWithoutCrmConfigInput>
+    create: XOR<LeadCrmCreateWithoutCrmConfigInput, LeadCrmUncheckedCreateWithoutCrmConfigInput>
+  }
+
+  export type LeadCrmUpdateWithWhereUniqueWithoutCrmConfigInput = {
+    where: LeadCrmWhereUniqueInput
+    data: XOR<LeadCrmUpdateWithoutCrmConfigInput, LeadCrmUncheckedUpdateWithoutCrmConfigInput>
+  }
+
+  export type LeadCrmUpdateManyWithWhereWithoutCrmConfigInput = {
+    where: LeadCrmScalarWhereInput
+    data: XOR<LeadCrmUpdateManyMutationInput, LeadCrmUncheckedUpdateManyWithoutCrmConfigInput>
+  }
+
+  export type ClienteCreateWithoutLeadsCrmInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    squad?: number | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    ultimoSyncAt?: Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
+    contas?: ContaCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
+    metas?: MetaCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutLeadsCrmInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    squad?: number | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    ultimoSyncAt?: Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
+    contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutLeadsCrmInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutLeadsCrmInput, ClienteUncheckedCreateWithoutLeadsCrmInput>
+  }
+
+  export type CrmConfigCreateWithoutLeadsInput = {
+    id?: string
+    tipo: $Enums.CrmTipo
+    dominio?: string | null
+    credenciais: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutCrmConfigInput
+  }
+
+  export type CrmConfigUncheckedCreateWithoutLeadsInput = {
+    id?: string
+    clienteId: string
+    tipo: $Enums.CrmTipo
+    dominio?: string | null
+    credenciais: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CrmConfigCreateOrConnectWithoutLeadsInput = {
+    where: CrmConfigWhereUniqueInput
+    create: XOR<CrmConfigCreateWithoutLeadsInput, CrmConfigUncheckedCreateWithoutLeadsInput>
+  }
+
+  export type ClienteUpsertWithoutLeadsCrmInput = {
+    update: XOR<ClienteUpdateWithoutLeadsCrmInput, ClienteUncheckedUpdateWithoutLeadsCrmInput>
+    create: XOR<ClienteCreateWithoutLeadsCrmInput, ClienteUncheckedCreateWithoutLeadsCrmInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutLeadsCrmInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutLeadsCrmInput, ClienteUncheckedUpdateWithoutLeadsCrmInput>
+  }
+
+  export type ClienteUpdateWithoutLeadsCrmInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
+    contas?: ContaUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
+    metas?: MetaUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutLeadsCrmInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
+    contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type CrmConfigUpsertWithoutLeadsInput = {
+    update: XOR<CrmConfigUpdateWithoutLeadsInput, CrmConfigUncheckedUpdateWithoutLeadsInput>
+    create: XOR<CrmConfigCreateWithoutLeadsInput, CrmConfigUncheckedCreateWithoutLeadsInput>
+    where?: CrmConfigWhereInput
+  }
+
+  export type CrmConfigUpdateToOneWithWhereWithoutLeadsInput = {
+    where?: CrmConfigWhereInput
+    data: XOR<CrmConfigUpdateWithoutLeadsInput, CrmConfigUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type CrmConfigUpdateWithoutLeadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumCrmTipoFieldUpdateOperationsInput | $Enums.CrmTipo
+    dominio?: NullableStringFieldUpdateOperationsInput | string | null
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutCrmConfigNestedInput
+  }
+
+  export type CrmConfigUncheckedUpdateWithoutLeadsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    tipo?: EnumCrmTipoFieldUpdateOperationsInput | $Enums.CrmTipo
+    dominio?: NullableStringFieldUpdateOperationsInput | string | null
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type AgregadoMidiaMensalCreateManyClienteInput = {
@@ -33151,6 +37309,22 @@ export namespace Prisma {
     platform?: string | null
     statusCrm?: string | null
     rawFieldData?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCrmCreateManyClienteInput = {
+    id?: string
+    crmConfigId: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33808,6 +37982,54 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type LeadCrmUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    crmConfig?: CrmConfigUpdateOneRequiredWithoutLeadsNestedInput
+  }
+
+  export type LeadCrmUncheckedUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crmConfigId?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadCrmUncheckedUpdateManyWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crmConfigId?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type PautaReuniaoUpdateWithoutClienteInput = {
     id?: StringFieldUpdateOperationsInput | string
     semanaIso?: IntFieldUpdateOperationsInput | number
@@ -34337,6 +38559,70 @@ export namespace Prisma {
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type LeadCrmCreateManyCrmConfigInput = {
+    id?: string
+    clienteId: string
+    crmLeadId: string
+    etapa: string
+    ordemEtapa?: number | null
+    telefone?: string | null
+    email?: string | null
+    metaLeadId?: string | null
+    dataEntrada: Date | string
+    dataFechamento?: Date | string | null
+    valor?: Decimal | DecimalJsLike | number | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type LeadCrmUpdateWithoutCrmConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutLeadsCrmNestedInput
+  }
+
+  export type LeadCrmUncheckedUpdateWithoutCrmConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type LeadCrmUncheckedUpdateManyWithoutCrmConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    crmLeadId?: StringFieldUpdateOperationsInput | string
+    etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    telefone?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
+    dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
 

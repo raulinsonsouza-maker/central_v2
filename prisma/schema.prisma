@@ -38,6 +38,8 @@ model Cliente {
   metas                      Meta[]
   metaAdsCriativos           MetaAdsCriativo[]
   metaLeadsIndividuais       MetaLeadIndividual[]
+  crmConfig                  CrmConfig?
+  leadsCrm                   LeadCrm[]
   pautasReuniao              PautaReuniao[]
 }
 
@@ -356,4 +358,48 @@ model MetaLeadIndividual {
   @@index([clienteId, tipoEmpresa])
   @@index([clienteId, estado])
   @@index([clienteId, platform])
+}
+
+enum CrmTipo {
+  CVCRM
+  RDSTATION_CRM
+  KOMMO
+}
+
+model CrmConfig {
+  id           String    @id @default(cuid())
+  clienteId    String    @unique
+  tipo         CrmTipo
+  dominio      String?
+  credenciais  Json
+  ativo        Boolean   @default(true)
+  ultimoSyncAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  cliente      Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  leads        LeadCrm[]
+}
+
+model LeadCrm {
+  id             String    @id @default(cuid())
+  clienteId      String
+  crmConfigId    String
+  crmLeadId      String
+  etapa          String
+  ordemEtapa     Int?
+  telefone       String?
+  email          String?
+  metaLeadId     String?
+  dataEntrada    DateTime
+  dataFechamento DateTime?
+  valor          Decimal?  @db.Decimal(14, 2)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  cliente        Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  crmConfig      CrmConfig @relation(fields: [crmConfigId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteId, crmLeadId])
+  @@index([clienteId, dataEntrada])
+  @@index([clienteId, etapa])
+  @@index([clienteId, metaLeadId])
 }

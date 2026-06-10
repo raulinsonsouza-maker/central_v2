@@ -11,6 +11,7 @@
 import { syncMetaTodosClientes } from "@/lib/sync/metaApiSync";
 import { syncGoogleAdsTodosClientes } from "@/lib/sync/googleAdsApiSync";
 import { syncAnalyticsTodosClientes } from "@/lib/sync/analyticsApiSync";
+import { syncCrmTodosClientes } from "@/lib/sync/crmSync";
 import { runDailyAlerts } from "@/lib/alerts/sendAlerts";
 
 type SyncResult = { clienteId: string; error?: string };
@@ -112,6 +113,7 @@ export async function runDailySync(options?: {
   const meta = await runStage("Meta Ads", () => syncMetaTodosClientes(opts));
   const google = await runStage("Google Ads", () => syncGoogleAdsTodosClientes(opts));
   const ga4 = await runStage("Google Analytics", () => syncAnalyticsTodosClientes(opts));
+  await runStage("CRM", () => syncCrmTodosClientes());
 
   let fatalCount = [meta, google, ga4].filter((r) => r.fatal).length;
 
