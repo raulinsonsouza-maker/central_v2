@@ -1,33 +1,24 @@
 import type { CrmAdapter, NormalizedLead, CvCrmCredentials } from "./types";
 
 interface CvLead {
-  id: number | string;
-  etapa?: string;
-  stage?: string;
-  fase?: string;
-  status?: string;
-  created_at?: string;
-  data_criacao?: string;
-  data_entrada?: string;
-  closed_at?: string;
-  data_fechamento?: string;
-  valor?: number | string | null;
+  idlead: number | string;
+  situacao?: string;
+  idsituacao?: number | null;
+  data_cad?: string | null;
+  data_cancelamento?: string | null;
+  nome?: string | null;
+  email?: string | null;
+  telefone?: string | null;
+}
+
+interface CvDwResponse {
+  dados?: CvLead[];
 }
 
 function parseDate(v?: string | null): Date | null {
   if (!v) return null;
   const d = new Date(v);
   return isNaN(d.getTime()) ? null : d;
-}
-
-function parseValor(v?: number | string | null): number | null {
-  if (v == null || v === "") return null;
-  const n = Number(v);
-  return isNaN(n) ? null : n;
-}
-
-function extractEtapa(lead: CvLead): string {
-  return lead.etapa ?? lead.stage ?? lead.fase ?? lead.status ?? "Desconhecido";
 }
 
 export class CvCrmAdapter implements CrmAdapter {
@@ -42,7 +33,8 @@ export class CvCrmAdapter implements CrmAdapter {
   }
 
   private get baseUrl() {
-    return `https://${this.domain}.cvcrm.com.br/api/v1`;
+    // CVDW é a API analítica de leitura — /comercial/leads é só escrita (POST)
+    return `https://${this.domain}.cvcrm.com.br/api/v1/cvdw`;
   }
 
   private headers(): HeadersInit {
@@ -55,65 +47,65 @@ export class CvCrmAdapter implements CrmAdapter {
 
   async fetchLeads(opts?: { since?: Date }): Promise<NormalizedLead[]> {
     const leads: CvLead[] = [];
-    let page = 1;
-    const limit = 100;
+    let pagina = 1;
+    const registrosPorPagina = 500; // máximo permitido pelo CVDW
 
     while (true) {
       const params = new URLSearchParams({
-        limit: String(limit),
-        page: String(page),
+        pagina: String(pagina),
+        registros_por_pagina: String(registrosPorPagina),
       });
+
       if (opts?.since) {
-        params.set("data_inicio", opts.since.toISOString().slice(0, 10));
+        // Filtro incremental correto: a_partir_data_referencia
+        params.set("a_partir_data_referencia", opts.since.toISOString().slice(0, 10));
       }
 
-      const res = await fetch(`${this.baseUrl}/comercial/leads?${params}`, {
+      const res = await fetch(`${this.baseUrl}/leads?${params}`, {
         headers: this.headers(),
       });
+
+      // 204 = sem dados para o filtro/página — fim da paginação
+      if (res.status === 204) break;
 
       if (!res.ok) {
         const text = await res.text().catch(() => "");
         throw new Error(`CV CRM API error ${res.status}: ${text.slice(0, 200)}`);
       }
 
-      const data = await res.json() as { data?: CvLead[]; leads?: CvLead[] } | CvLead[];
-
-      let batch: CvLead[] = [];
-      if (Array.isArray(data)) {
-        batch = data;
-      } else if (Array.isArray((data as { data?: CvLead[] }).data)) {
-        batch = (data as { data: CvLead[] }).data;
-      } else if (Array.isArray((data as { leads?: CvLead[] }).leads)) {
-        batch = (data as { leads: CvLead[] }).leads;
-      }
+      const data = await res.json() as CvDwResponse;
+      const batch: CvLead[] = data.dados ?? [];
 
       leads.push(...batch);
 
-      if (batch.length < limit) break;
-      page++;
-      if (page > 50) break;
+      if (batch.length < registrosPorPagina) break;
+      pagina++;
+      if (pagina > 100) break;
     }
 
     const now = new Date();
     return leads.map((l): NormalizedLead => ({
-      crmLeadId: String(l.id),
-      etapa: extractEtapa(l),
-      dataEntrada: parseDate(l.created_at ?? l.data_criacao ?? l.data_entrada) ?? now,
-      dataFechamento: parseDate(l.closed_at ?? l.data_fechamento ?? null),
-      valor: parseValor(l.valor),
+      crmLeadId: String(l.idlead),
+      etapa: l.situacao ?? "Desconhecido",
+      // idsituacao é o ID numérico da etapa — funciona como proxy de ordenação
+      ordemEtapa: l.idsituacao ?? null,
+      nome: l.nome ?? null,
+      email: l.email ?? null,
+      telefone: l.telefone ?? null,
+      dataEntrada: parseDate(l.data_cad) ?? now,
+      dataFechamento: parseDate(l.data_cancelamento),
     }));
   }
 
   async testConnection(): Promise<{ ok: boolean; error?: string }> {
     try {
-      const res = await fetch(`${this.baseUrl}/comercial/leads?limit=1&page=1`, {
+      const res = await fetch(`${this.baseUrl}/leads?pagina=1&registros_por_pagina=1`, {
         headers: this.headers(),
       });
-      if (!res.ok) {
-        const text = await res.text().catch(() => "");
-        return { ok: false, error: `Status ${res.status}: ${text.slice(0, 100)}` };
-      }
-      return { ok: true };
+      // 204 = autenticado mas sem dados — conexão válida
+      if (res.status === 204 || res.ok) return { ok: true };
+      const text = await res.text().catch(() => "");
+      return { ok: false, error: `Status ${res.status}: ${text.slice(0, 100)}` };
     } catch (e) {
       return { ok: false, error: e instanceof Error ? e.message : String(e) };
     }
