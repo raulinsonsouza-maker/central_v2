@@ -23769,6 +23769,7 @@ export namespace Prisma {
     metaLeadId: string | null
     fonte: string | null
     rating: number | null
+    status: string | null
     dataEntrada: Date | null
     dataFechamento: Date | null
     valor: Decimal | null
@@ -23789,6 +23790,7 @@ export namespace Prisma {
     metaLeadId: string | null
     fonte: string | null
     rating: number | null
+    status: string | null
     dataEntrada: Date | null
     dataFechamento: Date | null
     valor: Decimal | null
@@ -23809,6 +23811,7 @@ export namespace Prisma {
     metaLeadId: number
     fonte: number
     rating: number
+    status: number
     dataEntrada: number
     dataFechamento: number
     valor: number
@@ -23843,6 +23846,7 @@ export namespace Prisma {
     metaLeadId?: true
     fonte?: true
     rating?: true
+    status?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -23863,6 +23867,7 @@ export namespace Prisma {
     metaLeadId?: true
     fonte?: true
     rating?: true
+    status?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -23883,6 +23888,7 @@ export namespace Prisma {
     metaLeadId?: true
     fonte?: true
     rating?: true
+    status?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -23990,6 +23996,7 @@ export namespace Prisma {
     metaLeadId: string | null
     fonte: string | null
     rating: number | null
+    status: string | null
     dataEntrada: Date
     dataFechamento: Date | null
     valor: Decimal | null
@@ -24029,6 +24036,7 @@ export namespace Prisma {
     metaLeadId?: boolean
     fonte?: boolean
     rating?: boolean
+    status?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -24051,6 +24059,7 @@ export namespace Prisma {
     metaLeadId?: boolean
     fonte?: boolean
     rating?: boolean
+    status?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -24073,6 +24082,7 @@ export namespace Prisma {
     metaLeadId?: boolean
     fonte?: boolean
     rating?: boolean
+    status?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -24095,6 +24105,7 @@ export namespace Prisma {
     metaLeadId?: boolean
     fonte?: boolean
     rating?: boolean
+    status?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -24102,7 +24113,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "fonte" | "rating" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
+  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "fonte" | "rating" | "status" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
   export type LeadCrmInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
@@ -24135,6 +24146,7 @@ export namespace Prisma {
       metaLeadId: string | null
       fonte: string | null
       rating: number | null
+      status: string | null
       dataEntrada: Date
       dataFechamento: Date | null
       valor: Prisma.Decimal | null
@@ -24577,6 +24589,7 @@ export namespace Prisma {
     readonly metaLeadId: FieldRef<"LeadCrm", 'String'>
     readonly fonte: FieldRef<"LeadCrm", 'String'>
     readonly rating: FieldRef<"LeadCrm", 'Int'>
+    readonly status: FieldRef<"LeadCrm", 'String'>
     readonly dataEntrada: FieldRef<"LeadCrm", 'DateTime'>
     readonly dataFechamento: FieldRef<"LeadCrm", 'DateTime'>
     readonly valor: FieldRef<"LeadCrm", 'Decimal'>
@@ -25363,6 +25376,7 @@ export namespace Prisma {
     metaLeadId: 'metaLeadId',
     fonte: 'fonte',
     rating: 'rating',
+    status: 'status',
     dataEntrada: 'dataEntrada',
     dataFechamento: 'dataFechamento',
     valor: 'valor',
@@ -27359,6 +27373,7 @@ export namespace Prisma {
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
     fonte?: StringNullableFilter<"LeadCrm"> | string | null
     rating?: IntNullableFilter<"LeadCrm"> | number | null
+    status?: StringNullableFilter<"LeadCrm"> | string | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -27381,6 +27396,7 @@ export namespace Prisma {
     metaLeadId?: SortOrderInput | SortOrder
     fonte?: SortOrderInput | SortOrder
     rating?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
@@ -27407,6 +27423,7 @@ export namespace Prisma {
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
     fonte?: StringNullableFilter<"LeadCrm"> | string | null
     rating?: IntNullableFilter<"LeadCrm"> | number | null
+    status?: StringNullableFilter<"LeadCrm"> | string | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -27429,6 +27446,7 @@ export namespace Prisma {
     metaLeadId?: SortOrderInput | SortOrder
     fonte?: SortOrderInput | SortOrder
     rating?: SortOrderInput | SortOrder
+    status?: SortOrderInput | SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
@@ -27457,6 +27475,7 @@ export namespace Prisma {
     metaLeadId?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     fonte?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     rating?: IntNullableWithAggregatesFilter<"LeadCrm"> | number | null
+    status?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     dataEntrada?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableWithAggregatesFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableWithAggregatesFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -29560,6 +29579,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -29582,6 +29602,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -29600,6 +29621,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -29622,6 +29644,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -29642,6 +29665,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -29660,6 +29684,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -29680,6 +29705,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -31397,6 +31423,7 @@ export namespace Prisma {
     metaLeadId?: SortOrder
     fonte?: SortOrder
     rating?: SortOrder
+    status?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -31423,6 +31450,7 @@ export namespace Prisma {
     metaLeadId?: SortOrder
     fonte?: SortOrder
     rating?: SortOrder
+    status?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -31443,6 +31471,7 @@ export namespace Prisma {
     metaLeadId?: SortOrder
     fonte?: SortOrder
     rating?: SortOrder
+    status?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -33589,6 +33618,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -33609,6 +33639,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -34159,6 +34190,7 @@ export namespace Prisma {
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
     fonte?: StringNullableFilter<"LeadCrm"> | string | null
     rating?: IntNullableFilter<"LeadCrm"> | number | null
+    status?: StringNullableFilter<"LeadCrm"> | string | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -36863,6 +36895,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -36883,6 +36916,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -37433,6 +37467,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -38104,6 +38139,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38124,6 +38160,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38143,6 +38180,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38693,6 +38731,7 @@ export namespace Prisma {
     metaLeadId?: string | null
     fonte?: string | null
     rating?: number | null
+    status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -38711,6 +38750,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38731,6 +38771,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38750,6 +38791,7 @@ export namespace Prisma {
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
+    status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null

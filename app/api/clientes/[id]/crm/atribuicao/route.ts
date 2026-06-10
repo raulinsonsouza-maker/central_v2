@@ -2,10 +2,84 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
 /**
+ * Normaliza a fonte do RD Station CRM para um canal de mídia canônico.
+ * A lista de termos cobre os nomes mais comuns que os usuários configuram.
+ */
+export function canalFromFonte(
+  fonte: string | null,
+): "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO" {
+  if (!fonte) return "OUTRO";
+  const f = fonte
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, ""); // remove acentos para comparação
+
+  // Meta / Instagram / Facebook
+  if (
+    f.includes("facebook") ||
+    f.includes("meta") ||
+    f.includes("instagram") ||
+    f.includes("fb ads") ||
+    f.includes("meta ads") ||
+    f.includes("ig ads")
+  )
+    return "META";
+
+  // Google (Ads, Search, Display, PMax, YouTube)
+  if (
+    f.includes("google") ||
+    f.includes("busca paga") ||
+    f.includes("youtube") ||
+    f.includes("display") ||
+    f.includes("pmax") ||
+    f.includes("performance max")
+  )
+    return "GOOGLE";
+
+  // Orgânico / SEO / Redes sociais não pagas
+  if (
+    f.includes("organic") ||
+    f.includes("organico") ||
+    f.includes("organica") ||
+    f.includes("seo") ||
+    f.includes("busca organica") ||
+    f.includes("social organico") ||
+    f.includes("social organic")
+  )
+    return "ORGANICO";
+
+  // Indicação / Referência
+  if (
+    f.includes("indica") ||
+    f.includes("referral") ||
+    f.includes("referencia") ||
+    f.includes("parceiro") ||
+    f.includes("boca a boca") ||
+    f.includes("word of mouth")
+  )
+    return "INDICACAO";
+
+  // Direto / Site / WhatsApp / Landing page sem mídia
+  if (
+    f.includes("direto") ||
+    f.includes("direct") ||
+    f.includes("whatsapp") ||
+    f.includes("site") ||
+    f.includes("landing") ||
+    f.includes("formulario") ||
+    f.includes("email")
+  )
+    return "DIRETO";
+
+  return "OUTRO";
+}
+
+/**
  * GET /api/clientes/[id]/crm/atribuicao
  *
- * Agrupa leads CRM por fonte e cruza com investimento de mídia (Meta + Google)
- * no mesmo período para calcular CPL real e taxa de fechamento por canal.
+ * Agrupa leads CRM por fonte, mostra status real de cada canal
+ * (ganhos / perdidos / em andamento) e cruza com o investimento
+ * de mídia (Meta + Google) do mesmo período.
  */
 export async function GET(
   request: NextRequest,
@@ -14,7 +88,6 @@ export async function GET(
   const { id } = await params;
   const url = request.nextUrl;
 
-  // Período: padrão = YTD
   const now = new Date();
   const defaultFrom = new Date(now.getFullYear(), 0, 1);
   const fromParam = url.searchParams.get("from");
@@ -22,7 +95,6 @@ export async function GET(
   const dateFrom = fromParam ? new Date(fromParam) : defaultFrom;
   const dateTo = toParam ? new Date(toParam) : now;
 
-  // Verifica se CRM está configurado
   const config = await prisma.crmConfig.findUnique({
     where: { clienteId: id },
     select: { ativo: true, tipo: true, ultimoSyncAt: true },
@@ -31,13 +103,13 @@ export async function GET(
     return NextResponse.json({ configured: false });
   }
 
-  // Busca todos os leads no período
+  // Busca todos os leads no período com os campos necessários
   const leads = await prisma.leadCrm.findMany({
     where: { clienteId: id, dataEntrada: { gte: dateFrom, lte: dateTo } },
-    select: { fonte: true, valor: true, dataFechamento: true, rating: true },
+    select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true },
   });
 
-  // Busca investimento de mídia no período (META e GOOGLE)
+  // Investimento de mídia no período
   const fatoRows = await prisma.fatoMidiaDiario.findMany({
     where: {
       clienteId: id,
@@ -47,13 +119,14 @@ export async function GET(
     select: { canal: true, investimento: true, leads: true, conversoes: true },
   });
 
-  // Soma investimento por canal de mídia
   const investMeta = fatoRows
     .filter((r) => r.canal === "META")
     .reduce((s, r) => s + Number(r.investimento), 0);
   const investGoogle = fatoRows
     .filter((r) => r.canal === "GOOGLE")
     .reduce((s, r) => s + Number(r.investimento), 0);
+
+  // Leads de campanha (platform side — para CPL de campanha)
   const leadsMeta = fatoRows
     .filter((r) => r.canal === "META")
     .reduce((s, r) => s + Math.max(r.leads, r.conversoes), 0);
@@ -61,87 +134,100 @@ export async function GET(
     .filter((r) => r.canal === "GOOGLE")
     .reduce((s, r) => s + Math.max(r.leads, r.conversoes), 0);
 
-  // Classifica fonte em canal de mídia
-  function canalFromFonte(fonte: string | null): "META" | "GOOGLE" | "ORGANICO" | "OUTRO" {
-    if (!fonte) return "OUTRO";
-    const f = fonte.toLowerCase();
-    if (f.includes("facebook") || f.includes("meta") || f.includes("instagram")) return "META";
-    if (f.includes("google") || f.includes("busca paga | google")) return "GOOGLE";
-    if (f.includes("orgân") || f.includes("organic") || f.includes("busca orgânica")) return "ORGANICO";
-    return "OUTRO";
-  }
+  // ── Agrupa por fonte ────────────────────────────────────────────────────────
+  type Bucket = {
+    leads: number;
+    ganhos: number;   // status = won
+    perdidos: number; // status = lost
+    andamento: number; // ongoing | paused | null
+    valor: number;
+    ratingSum: number;
+    ratingCount: number;
+  };
 
-  // Agrupa por fonte
-  const fonteMap = new Map<
-    string,
-    { leads: number; fechados: number; valor: number; ratingSum: number; ratingCount: number }
-  >();
+  const fonteMap = new Map<string, Bucket>();
 
   for (const lead of leads) {
     const key = lead.fonte ?? "(sem fonte)";
-    const existing = fonteMap.get(key);
-    const isFechado = lead.dataFechamento != null;
-    const val = lead.valor ? Number(lead.valor) : 0;
-    const rat = lead.rating != null ? lead.rating : null;
-
-    if (!existing) {
-      fonteMap.set(key, {
-        leads: 1,
-        fechados: isFechado ? 1 : 0,
-        valor: val,
-        ratingSum: rat ?? 0,
-        ratingCount: rat != null ? 1 : 0,
-      });
+    let bucket = fonteMap.get(key);
+    if (!bucket) {
+      bucket = { leads: 0, ganhos: 0, perdidos: 0, andamento: 0, valor: 0, ratingSum: 0, ratingCount: 0 };
+      fonteMap.set(key, bucket);
+    }
+    bucket.leads++;
+    if (lead.status === "won") {
+      bucket.ganhos++;
+      bucket.valor += lead.valor ? Number(lead.valor) : 0;
+    } else if (lead.status === "lost") {
+      bucket.perdidos++;
     } else {
-      existing.leads++;
-      if (isFechado) existing.fechados++;
-      existing.valor += val;
-      if (rat != null) {
-        existing.ratingSum += rat;
-        existing.ratingCount++;
-      }
+      bucket.andamento++;
+    }
+    if (lead.rating != null) {
+      bucket.ratingSum += lead.rating;
+      bucket.ratingCount++;
     }
   }
 
-  // Monta resultado por fonte, ordenado por nº de leads
+  // ── Monta resposta por fonte ────────────────────────────────────────────────
   const porFonte = [...fonteMap.entries()]
-    .map(([fonte, agg]) => {
+    .map(([fonte, b]) => {
       const canal = canalFromFonte(fonte === "(sem fonte)" ? null : fonte);
       const invest =
         canal === "META" ? investMeta :
         canal === "GOOGLE" ? investGoogle :
         null;
 
+      const taxaGanho = b.leads > 0 ? Math.round((b.ganhos / b.leads) * 100) : 0;
+      const taxaPerda = b.leads > 0 ? Math.round((b.perdidos / b.leads) * 100) : 0;
+
       return {
         fonte,
         canal,
-        leads: agg.leads,
-        fechados: agg.fechados,
-        valor: agg.valor,
-        taxaFechamento: agg.leads > 0 ? Math.round((agg.fechados / agg.leads) * 100) : 0,
-        ratingMedio: agg.ratingCount > 0 ? Math.round((agg.ratingSum / agg.ratingCount) * 10) / 10 : null,
-        // CPL real só faz sentido para canais pagos — divide o investimento proporcional pelo nº de CRM leads
-        // (nota: aproximação; o invest é do canal todo, não só dessa fonte)
+        leads: b.leads,
+        ganhos: b.ganhos,
+        perdidos: b.perdidos,
+        andamento: b.andamento,
+        valor: b.valor,
+        taxaGanho,
+        taxaPerda,
+        ratingMedio: b.ratingCount > 0 ? Math.round((b.ratingSum / b.ratingCount) * 10) / 10 : null,
         investCanal: invest,
       };
     })
     .sort((a, b) => b.leads - a.leads);
 
-  // Totais globais
+  // ── Totais globais ──────────────────────────────────────────────────────────
   const totalLeads = leads.length;
-  const totalFechados = leads.filter((l) => l.dataFechamento != null).length;
-  const totalValor = leads.reduce((s, l) => s + (l.valor ? Number(l.valor) : 0), 0);
+  const totalGanhos = leads.filter((l) => l.status === "won").length;
+  const totalPerdidos = leads.filter((l) => l.status === "lost").length;
+  const totalAndamento = totalLeads - totalGanhos - totalPerdidos;
+  const totalValor = leads
+    .filter((l) => l.status === "won")
+    .reduce((s, l) => s + (l.valor ? Number(l.valor) : 0), 0);
+
+  // ── CPL real: investimento do canal ÷ leads CRM atribuídos ao canal ─────────
+  const metaCrmLeads = porFonte.filter((f) => f.canal === "META").reduce((s, f) => s + f.leads, 0);
+  const googleCrmLeads = porFonte.filter((f) => f.canal === "GOOGLE").reduce((s, f) => s + f.leads, 0);
 
   return NextResponse.json({
     configured: true,
     periodo: { from: dateFrom, to: dateTo },
     totalLeads,
-    totalFechados,
+    totalGanhos,
+    totalPerdidos,
+    totalAndamento,
     totalValor,
     investMeta,
     investGoogle,
     leadsMeta,
     leadsGoogle,
+    metaCrmLeads,
+    googleCrmLeads,
+    cplMetaCampanha: leadsMeta > 0 ? investMeta / leadsMeta : null,
+    cplGoogleCampanha: leadsGoogle > 0 ? investGoogle / leadsGoogle : null,
+    cplMetaCrm: metaCrmLeads > 0 ? investMeta / metaCrmLeads : null,
+    cplGoogleCrm: googleCrmLeads > 0 ? investGoogle / googleCrmLeads : null,
     porFonte,
     ultimoSyncAt: config.ultimoSyncAt,
   });

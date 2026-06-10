@@ -40,6 +40,7 @@ export async function GET(
       telefone: true,
       fonte: true,
       rating: true,
+      status: true,
     },
     orderBy: { dataEntrada: "desc" },
     take: 500,
@@ -59,6 +60,7 @@ export async function GET(
       contato: l.nome ?? l.email ?? l.telefone ?? null,
       fonte: l.fonte ?? null,
       rating: l.rating ?? null,
+      status: l.status ?? null,
     })),
     total: leads.length,
   });

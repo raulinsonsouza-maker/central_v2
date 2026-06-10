@@ -7,6 +7,8 @@ export interface NormalizedLead {
   email?: string | null;
   fonte?: string | null;
   rating?: number | null;
+  /** won | lost | ongoing | paused */
+  status?: string | null;
   dataEntrada: Date;
   dataFechamento?: Date | null;
   valor?: number | null;

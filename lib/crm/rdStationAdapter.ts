@@ -325,6 +325,9 @@ export class RdStationCrmAdapter implements CrmAdapter {
       // ── Rating (1–5 estrelas no RD Station) ────────────────────────────────
       const rating = d.rating != null ? Number(d.rating) : null;
 
+      // ── Status: won | lost | ongoing | paused ──────────────────────────────
+      const status = d.status ?? null;
+
       // ── Contato ────────────────────────────────────────────────────────────
       let nome: string | null = null;
       let email: string | null = null;
@@ -352,6 +355,7 @@ export class RdStationCrmAdapter implements CrmAdapter {
         telefone,
         fonte,
         rating,
+        status,
         dataEntrada: parseDate(d.created_at) ?? now,
         dataFechamento: parseDate(d.closed_at),
         valor: rawValor != null ? Number(rawValor) : null,
