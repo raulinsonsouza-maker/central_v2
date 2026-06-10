@@ -11,7 +11,6 @@
 import { syncMetaTodosClientes } from "@/lib/sync/metaApiSync";
 import { syncGoogleAdsTodosClientes } from "@/lib/sync/googleAdsApiSync";
 import { syncAnalyticsTodosClientes } from "@/lib/sync/analyticsApiSync";
-import { syncCrmTodosClientes } from "@/lib/sync/crmSync";
 import { runDailyAlerts } from "@/lib/alerts/sendAlerts";
 
 type SyncResult = { clienteId: string; error?: string };
@@ -26,7 +25,6 @@ export interface DailySyncSummary {
   meta: StageResult;
   google: StageResult;
   ga4: StageResult;
-  crm: StageResult;
   alertas: { ok: boolean; saldosBaixos: number; anomalias: number; error?: string };
   fatalCount: number;
   durationMs: number;
@@ -114,9 +112,8 @@ export async function runDailySync(options?: {
   const meta = await runStage("Meta Ads", () => syncMetaTodosClientes(opts));
   const google = await runStage("Google Ads", () => syncGoogleAdsTodosClientes(opts));
   const ga4 = await runStage("Google Analytics", () => syncAnalyticsTodosClientes(opts));
-  const crm = await runStage("CRM", () => syncCrmTodosClientes());
 
-  let fatalCount = [meta, google, ga4, crm].filter((r) => r.fatal).length;
+  let fatalCount = [meta, google, ga4].filter((r) => r.fatal).length;
 
   // Alertas rodam por último, após os dados estarem atualizados.
   console.log(`[${ts()}] ▶️  Alertas de gestão: iniciando...`);
@@ -144,9 +141,8 @@ export async function runDailySync(options?: {
   console.log(`   Meta Ads:         ${meta.ok} ok / ${meta.erros} erros${meta.fatal ? " (FATAL)" : ""}`);
   console.log(`   Google Ads:       ${google.ok} ok / ${google.erros} erros${google.fatal ? " (FATAL)" : ""}`);
   console.log(`   Google Analytics: ${ga4.ok} ok / ${ga4.erros} erros${ga4.fatal ? " (FATAL)" : ""}`);
-  console.log(`   CRM:              ${crm.ok} ok / ${crm.erros} erros${crm.fatal ? " (FATAL)" : ""}`);
   console.log(`   Tempo total:      ${fmtDuration(durationMs)}`);
   console.log("============================================================");
 
-  return { meta, google, ga4, crm, alertas, fatalCount, durationMs };
+  return { meta, google, ga4, alertas, fatalCount, durationMs };
 }

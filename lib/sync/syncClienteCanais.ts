@@ -2,7 +2,6 @@ import { syncGoogleAdsCliente } from "@/lib/sync/googleAdsApiSync";
 import { syncMetaCliente } from "@/lib/sync/metaApiSync";
 import { syncAnalyticsCliente } from "@/lib/sync/analyticsApiSync";
 import { syncMetaLeadsCliente } from "@/lib/sync/metaLeadsSync";
-import { syncCrmCliente } from "@/lib/sync/crmSync";
 import { prisma } from "@/lib/db";
 import { isImobClient } from "@/lib/clientProfiles";
 
@@ -30,12 +29,6 @@ export interface SyncClienteCanaisResult {
     daysProcessed: number;
     error?: string;
   };
-  crm?: {
-    ok: boolean;
-    leadsProcessed: number;
-    leadsUpserted: number;
-    error?: string;
-  };
 }
 
 export async function syncClienteCanais(clienteId: string): Promise<SyncClienteCanaisResult> {
@@ -58,14 +51,13 @@ export async function syncClienteCanais(clienteId: string): Promise<SyncClienteC
 
   const shouldSyncLeads = metaConta && (isImobClient(cliente) || (cliente?.leadScoringEnabled ?? false));
 
-  const [googleAdsResult, metaResult, analyticsResult, metaLeadsResult, crmResult] = await Promise.all([
+  const [googleAdsResult, metaResult, analyticsResult, metaLeadsResult] = await Promise.all([
     googleConta ? syncGoogleAdsCliente(clienteId, { customerId: googleConta.accountIdPlataforma ?? undefined }) : null,
     metaConta ? syncMetaCliente(clienteId, { accountId: metaConta.accountIdPlataforma ?? undefined }) : null,
     analyticsConta
       ? syncAnalyticsCliente(clienteId, { propertyId: analyticsConta.accountIdPlataforma ?? undefined })
       : null,
     shouldSyncLeads ? syncMetaLeadsCliente(clienteId) : null,
-    syncCrmCliente(clienteId),
   ]);
 
   return {
@@ -100,14 +92,5 @@ export async function syncClienteCanais(clienteId: string): Promise<SyncClienteC
           error: analyticsResult.error,
         }
       : undefined,
-    crm:
-      crmResult && (crmResult.leadsProcessed > 0 || crmResult.error)
-        ? {
-            ok: crmResult.ok,
-            leadsProcessed: crmResult.leadsProcessed,
-            leadsUpserted: crmResult.leadsUpserted,
-            error: crmResult.error,
-          }
-        : undefined,
   };
 }
