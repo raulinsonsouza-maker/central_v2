@@ -70,6 +70,9 @@ model LeadCrm {
   crmLeadId      String
   etapa          String
   ordemEtapa     Int?
+  telefone       String?
+  email          String?
+  metaLeadId     String?
   dataEntrada    DateTime
   dataFechamento DateTime?
   valor          Decimal?  @db.Decimal(14, 2)
@@ -81,6 +84,7 @@ model LeadCrm {
   @@unique([clienteId, crmLeadId])
   @@index([clienteId, dataEntrada])
   @@index([clienteId, etapa])
+  @@index([clienteId, metaLeadId])
 }
 
 model Conta {

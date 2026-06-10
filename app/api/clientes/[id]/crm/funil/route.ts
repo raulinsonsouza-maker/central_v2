@@ -18,7 +18,14 @@ export async function GET(
 
   const leads = await prisma.leadCrm.findMany({
     where: { clienteId: id },
-    select: { etapa: true, ordemEtapa: true, valor: true, dataEntrada: true, dataFechamento: true },
+    select: {
+      etapa: true,
+      ordemEtapa: true,
+      valor: true,
+      dataEntrada: true,
+      dataFechamento: true,
+      metaLeadId: true,
+    },
   });
 
   const etapaMap = new Map<
@@ -32,6 +39,9 @@ export async function GET(
       minEntrada: Date;
     }
   >();
+
+  let totalAtribuidos = 0;
+  let atribuidosFechados = 0;
 
   for (const lead of leads) {
     const existing = etapaMap.get(lead.etapa);
@@ -48,12 +58,20 @@ export async function GET(
       existing.count++;
       existing.valor += lead.valor ? Number(lead.valor) : 0;
       if (lead.dataFechamento) existing.fechados++;
-      if (lead.ordemEtapa != null && (existing.minOrdem == null || lead.ordemEtapa < existing.minOrdem)) {
+      if (
+        lead.ordemEtapa != null &&
+        (existing.minOrdem == null || lead.ordemEtapa < existing.minOrdem)
+      ) {
         existing.minOrdem = lead.ordemEtapa;
       }
       if (lead.dataEntrada < existing.minEntrada) {
         existing.minEntrada = lead.dataEntrada;
       }
+    }
+
+    if (lead.metaLeadId) {
+      totalAtribuidos++;
+      if (lead.dataFechamento) atribuidosFechados++;
     }
   }
 
@@ -86,6 +104,14 @@ export async function GET(
       ? Math.round((sorted[sorted.length - 1].count / sorted[0].count) * 1000) / 10
       : null;
 
+  const atribuicaoRate =
+    totalLeads > 0 ? Math.round((totalAtribuidos / totalLeads) * 1000) / 10 : null;
+
+  const metaConversionRate =
+    totalAtribuidos > 0
+      ? Math.round((atribuidosFechados / totalAtribuidos) * 1000) / 10
+      : null;
+
   return NextResponse.json({
     configured: true,
     tipo: config.tipo,
@@ -95,5 +121,11 @@ export async function GET(
     totalFechados,
     overallConversion,
     etapas,
+    atribuicao: {
+      totalAtribuidos,
+      atribuidosFechados,
+      atribuicaoRate,
+      metaConversionRate,
+    },
   });
 }

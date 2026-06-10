@@ -3,7 +3,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RefreshCw, ArrowDown } from "lucide-react";
+import { RefreshCw, ArrowDown, Link2 } from "lucide-react";
 
 interface EtapaFunil {
   etapa: string;
@@ -11,6 +11,13 @@ interface EtapaFunil {
   valor: number;
   fechados: number;
   conversionFromPrev: number | null;
+}
+
+interface Atribuicao {
+  totalAtribuidos: number;
+  atribuidosFechados: number;
+  atribuicaoRate: number | null;
+  metaConversionRate: number | null;
 }
 
 interface FunilData {
@@ -22,6 +29,7 @@ interface FunilData {
   totalFechados: number;
   overallConversion: number | null;
   etapas: EtapaFunil[];
+  atribuicao?: Atribuicao;
 }
 
 const CRM_LABELS: Record<string, string> = {
@@ -68,6 +76,8 @@ export function FunilCrmSection({ clienteId }: { clienteId: string }) {
   if (!data?.configured) return null;
 
   const maxCount = Math.max(...(data.etapas ?? []).map((e) => e.count), 1);
+  const attr = data.atribuicao;
+  const hasAttribution = attr && attr.totalAtribuidos > 0;
 
   return (
     <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
@@ -98,11 +108,15 @@ export function FunilCrmSection({ clienteId }: { clienteId: string }) {
       </CardHeader>
 
       <CardContent className="space-y-5">
+        {/* KPI strip */}
         <div className="grid grid-cols-3 divide-x divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--muted)]/20">
           {[
             { label: "LEADS TOTAIS", value: data.totalLeads.toLocaleString("pt-BR") },
             { label: "FECHADOS", value: data.totalFechados.toLocaleString("pt-BR") },
-            { label: "VALOR TOTAL", value: data.totalValor > 0 ? formatCurrencyBR(data.totalValor) : "—" },
+            {
+              label: "VALOR TOTAL",
+              value: data.totalValor > 0 ? formatCurrencyBR(data.totalValor) : "—",
+            },
           ].map((item) => (
             <div key={item.label} className="px-4 py-3 text-center">
               <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
@@ -115,6 +129,7 @@ export function FunilCrmSection({ clienteId }: { clienteId: string }) {
           ))}
         </div>
 
+        {/* Stage funnel */}
         {data.etapas && data.etapas.length > 0 && (
           <div className="space-y-1">
             {data.etapas.map((etapa, idx) => {
@@ -161,6 +176,66 @@ export function FunilCrmSection({ clienteId }: { clienteId: string }) {
                 </React.Fragment>
               );
             })}
+          </div>
+        )}
+
+        {/* Attribution Meta Ads section */}
+        {hasAttribution && attr && (
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/10 p-4 space-y-3">
+            <div className="flex items-center gap-2">
+              <Link2 className="h-3.5 w-3.5 text-[#1877F2]" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#1877F2]">
+                Atribuição Meta Ads
+              </p>
+            </div>
+
+            <p className="text-[11px] text-[var(--muted-foreground)]">
+              <span className="font-semibold text-[var(--foreground)]">
+                {attr.totalAtribuidos.toLocaleString("pt-BR")}
+              </span>{" "}
+              de{" "}
+              <span className="font-semibold text-[var(--foreground)]">
+                {data.totalLeads.toLocaleString("pt-BR")}
+              </span>{" "}
+              leads no CRM foram originados por campanhas Meta Ads
+              {attr.atribuicaoRate != null && (
+                <span className="ml-1 font-semibold text-[#1877F2]">
+                  ({attr.atribuicaoRate}%)
+                </span>
+              )}
+              .
+            </p>
+
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-center">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+                  LEADS ATRIBUÍDOS
+                </p>
+                <p className="mt-0.5 text-base font-extrabold tabular-nums text-[var(--foreground)]">
+                  {attr.totalAtribuidos.toLocaleString("pt-BR")}
+                </p>
+              </div>
+
+              <div className="rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-center">
+                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+                  FECHAMENTOS
+                </p>
+                <p className="mt-0.5 text-base font-extrabold tabular-nums text-emerald-500">
+                  {attr.atribuidosFechados.toLocaleString("pt-BR")}
+                </p>
+              </div>
+
+              {attr.metaConversionRate != null && (
+                <div className="col-span-2 sm:col-span-1 rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-center">
+                  <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+                    CONVERSÃO META
+                  </p>
+                  <p className="mt-0.5 text-base font-extrabold tabular-nums text-[#1877F2]">
+                    {attr.metaConversionRate}%
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         )}
       </CardContent>

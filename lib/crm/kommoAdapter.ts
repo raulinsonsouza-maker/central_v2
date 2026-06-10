@@ -1,5 +1,19 @@
 import type { CrmAdapter, NormalizedLead, KommoCredentials } from "./types";
 
+interface KommoContactValue {
+  value?: string;
+  enum_id?: number;
+}
+
+interface KommoContact {
+  id?: number;
+  custom_fields_values?: Array<{
+    field_code?: string;
+    field_type?: string;
+    values?: KommoContactValue[];
+  }>;
+}
+
 interface KommoLead {
   id: number;
   name?: string;
@@ -10,6 +24,7 @@ interface KommoLead {
   price?: number | null;
   _embedded?: {
     stages?: Array<{ id?: number; name?: string }>;
+    contacts?: KommoContact[];
   };
   custom_fields_values?: Array<{ field_id: number; values: Array<{ value: unknown }> }>;
 }
@@ -29,6 +44,26 @@ function parseUnixDate(v?: number | null): Date | null {
   if (v == null) return null;
   const d = new Date(v * 1000);
   return isNaN(d.getTime()) ? null : d;
+}
+
+function extractContactInfo(lead: KommoLead): { telefone: string | null; email: string | null } {
+  const contacts = lead._embedded?.contacts ?? [];
+  let telefone: string | null = null;
+  let email: string | null = null;
+
+  for (const contact of contacts) {
+    const fields = contact.custom_fields_values ?? [];
+    for (const field of fields) {
+      const code = field.field_code?.toUpperCase() ?? "";
+      const val = field.values?.[0]?.value;
+      if (!val) continue;
+      if (code === "PHONE" && !telefone) telefone = val;
+      if (code === "EMAIL" && !email) email = val;
+    }
+    if (telefone && email) break;
+  }
+
+  return { telefone, email };
 }
 
 export class KommoAdapter implements CrmAdapter {
@@ -72,7 +107,7 @@ export class KommoAdapter implements CrmAdapter {
         }
       }
     } catch {
-      /* ignore — we'll fall back to status_id */
+      /* ignore — fall back to status_id */
     }
   }
 
@@ -87,6 +122,7 @@ export class KommoAdapter implements CrmAdapter {
         limit: "250",
         page: String(page),
         order: "created_at",
+        with: "contacts",
       });
       if (opts?.since) {
         params.set("filter[created_at][from]", String(Math.floor(opts.since.getTime() / 1000)));
@@ -123,10 +159,13 @@ export class KommoAdapter implements CrmAdapter {
         l.status_id != null ? (this.stageMap.get(l.status_id) ?? `Etapa ${l.status_id}`) : "Desconhecido";
       const ordemEtapa =
         l.status_id != null ? (this.stageOrderMap.get(l.status_id) ?? null) : null;
+      const { telefone, email } = extractContactInfo(l);
       return {
         crmLeadId: String(l.id),
         etapa: stageName,
         ordemEtapa,
+        telefone,
+        email,
         dataEntrada: parseUnixDate(l.created_at) ?? now,
         dataFechamento: parseUnixDate(l.closed_at ?? null),
         valor: l.price ?? null,

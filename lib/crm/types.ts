@@ -2,6 +2,8 @@ export interface NormalizedLead {
   crmLeadId: string;
   etapa: string;
   ordemEtapa?: number | null;
+  telefone?: string | null;
+  email?: string | null;
   dataEntrada: Date;
   dataFechamento?: Date | null;
   valor?: number | null;

@@ -1,5 +1,10 @@
 import type { CrmAdapter, NormalizedLead, RdStationCredentials } from "./types";
 
+interface RdContact {
+  emails?: Array<{ email?: string }>;
+  phones?: Array<{ phone?: string; number?: string }>;
+}
+
 interface RdDeal {
   id: string;
   name?: string;
@@ -9,12 +14,32 @@ interface RdDeal {
   closed_at?: string | null;
   amount?: number | null;
   value?: number | null;
+  contacts?: RdContact[] | null;
+  contact?: RdContact | null;
 }
 
 function parseDate(v?: string | null): Date | null {
   if (!v) return null;
   const d = new Date(v);
   return isNaN(d.getTime()) ? null : d;
+}
+
+function extractContactInfo(deal: RdDeal): { telefone: string | null; email: string | null } {
+  const contacts = deal.contacts ?? (deal.contact ? [deal.contact] : []);
+  let telefone: string | null = null;
+  let email: string | null = null;
+
+  for (const c of contacts) {
+    if (!email && c.emails && c.emails.length > 0) {
+      email = c.emails[0]?.email ?? null;
+    }
+    if (!telefone && c.phones && c.phones.length > 0) {
+      telefone = c.phones[0]?.phone ?? c.phones[0]?.number ?? null;
+    }
+    if (telefone && email) break;
+  }
+
+  return { telefone, email };
 }
 
 export class RdStationCrmAdapter implements CrmAdapter {
@@ -80,9 +105,12 @@ export class RdStationCrmAdapter implements CrmAdapter {
     const now = new Date();
     return deals.map((d): NormalizedLead => {
       const stage = d.stage ?? d.deal_stage;
+      const { telefone, email } = extractContactInfo(d);
       return {
         crmLeadId: String(d.id),
         etapa: stage?.name ?? "Desconhecido",
+        telefone,
+        email,
         dataEntrada: parseDate(d.created_at) ?? now,
         dataFechamento: parseDate(d.closed_at),
         valor: d.amount ?? d.value ?? null,

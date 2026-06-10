@@ -12,6 +12,17 @@ interface CvLead {
   closed_at?: string;
   data_fechamento?: string;
   valor?: number | string | null;
+  telefone?: string | null;
+  phone?: string | null;
+  celular?: string | null;
+  email?: string | null;
+  email_lead?: string | null;
+  contato?: {
+    telefone?: string | null;
+    celular?: string | null;
+    email?: string | null;
+    phone?: string | null;
+  } | null;
 }
 
 function parseDate(v?: string | null): Date | null {
@@ -28,6 +39,17 @@ function parseValor(v?: number | string | null): number | null {
 
 function extractEtapa(lead: CvLead): string {
   return lead.etapa ?? lead.stage ?? lead.fase ?? lead.status ?? "Desconhecido";
+}
+
+function extractTelefone(lead: CvLead): string | null {
+  return (
+    lead.telefone ?? lead.celular ?? lead.phone ??
+    lead.contato?.telefone ?? lead.contato?.celular ?? lead.contato?.phone ?? null
+  );
+}
+
+function extractEmail(lead: CvLead): string | null {
+  return lead.email ?? lead.email_lead ?? lead.contato?.email ?? null;
 }
 
 export class CvCrmAdapter implements CrmAdapter {
@@ -98,6 +120,8 @@ export class CvCrmAdapter implements CrmAdapter {
     return leads.map((l): NormalizedLead => ({
       crmLeadId: String(l.id),
       etapa: extractEtapa(l),
+      telefone: extractTelefone(l),
+      email: extractEmail(l),
       dataEntrada: parseDate(l.created_at ?? l.data_criacao ?? l.data_entrada) ?? now,
       dataFechamento: parseDate(l.closed_at ?? l.data_fechamento ?? null),
       valor: parseValor(l.valor),
