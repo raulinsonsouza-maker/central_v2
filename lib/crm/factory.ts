@@ -20,7 +20,7 @@ interface RdTokenResponse {
 
 /**
  * Renova o access_token do RD Station usando o refresh_token.
- * Lê client_id e client_secret das credenciais salvas no banco (por cliente).
+ * Endpoint oficial v2: POST https://api.rd.services/oauth2/token (form-encoded)
  */
 async function refreshRdStationToken(
   creds: Record<string, unknown>,
@@ -41,14 +41,17 @@ async function refreshRdStationToken(
     );
   }
 
-  const res = await fetch("https://api.rd.services/auth/token", {
+  const body = new URLSearchParams({
+    client_id: clientId,
+    client_secret: clientSecret,
+    refresh_token: refreshToken,
+    grant_type: "refresh_token",
+  });
+
+  const res = await fetch("https://api.rd.services/oauth2/token", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      client_id: clientId,
-      client_secret: clientSecret,
-      refresh_token: refreshToken,
-    }),
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: body.toString(),
   });
 
   if (!res.ok) {
@@ -65,7 +68,7 @@ async function refreshRdStationToken(
     ...creds,
     accessToken: data.access_token,
     refreshToken: data.refresh_token ?? refreshToken,
-    expiresAt: Date.now() + (data.expires_in ?? 86400) * 1000,
+    expiresAt: Date.now() + (data.expires_in ?? 7200) * 1000,
   };
 
   if (configId) {

@@ -387,6 +387,7 @@ model LeadCrm {
   crmLeadId      String
   etapa          String
   ordemEtapa     Int?
+  nome           String?
   telefone       String?
   email          String?
   metaLeadId     String?

@@ -23761,6 +23761,7 @@ export namespace Prisma {
     crmLeadId: string | null
     etapa: string | null
     ordemEtapa: number | null
+    nome: string | null
     telefone: string | null
     email: string | null
     metaLeadId: string | null
@@ -23778,6 +23779,7 @@ export namespace Prisma {
     crmLeadId: string | null
     etapa: string | null
     ordemEtapa: number | null
+    nome: string | null
     telefone: string | null
     email: string | null
     metaLeadId: string | null
@@ -23795,6 +23797,7 @@ export namespace Prisma {
     crmLeadId: number
     etapa: number
     ordemEtapa: number
+    nome: number
     telefone: number
     email: number
     metaLeadId: number
@@ -23824,6 +23827,7 @@ export namespace Prisma {
     crmLeadId?: true
     etapa?: true
     ordemEtapa?: true
+    nome?: true
     telefone?: true
     email?: true
     metaLeadId?: true
@@ -23841,6 +23845,7 @@ export namespace Prisma {
     crmLeadId?: true
     etapa?: true
     ordemEtapa?: true
+    nome?: true
     telefone?: true
     email?: true
     metaLeadId?: true
@@ -23858,6 +23863,7 @@ export namespace Prisma {
     crmLeadId?: true
     etapa?: true
     ordemEtapa?: true
+    nome?: true
     telefone?: true
     email?: true
     metaLeadId?: true
@@ -23962,6 +23968,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa: number | null
+    nome: string | null
     telefone: string | null
     email: string | null
     metaLeadId: string | null
@@ -23998,6 +24005,7 @@ export namespace Prisma {
     crmLeadId?: boolean
     etapa?: boolean
     ordemEtapa?: boolean
+    nome?: boolean
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
@@ -24017,6 +24025,7 @@ export namespace Prisma {
     crmLeadId?: boolean
     etapa?: boolean
     ordemEtapa?: boolean
+    nome?: boolean
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
@@ -24036,6 +24045,7 @@ export namespace Prisma {
     crmLeadId?: boolean
     etapa?: boolean
     ordemEtapa?: boolean
+    nome?: boolean
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
@@ -24055,6 +24065,7 @@ export namespace Prisma {
     crmLeadId?: boolean
     etapa?: boolean
     ordemEtapa?: boolean
+    nome?: boolean
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
@@ -24065,7 +24076,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "telefone" | "email" | "metaLeadId" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
+  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
   export type LeadCrmInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
@@ -24092,6 +24103,7 @@ export namespace Prisma {
       crmLeadId: string
       etapa: string
       ordemEtapa: number | null
+      nome: string | null
       telefone: string | null
       email: string | null
       metaLeadId: string | null
@@ -24531,6 +24543,7 @@ export namespace Prisma {
     readonly crmLeadId: FieldRef<"LeadCrm", 'String'>
     readonly etapa: FieldRef<"LeadCrm", 'String'>
     readonly ordemEtapa: FieldRef<"LeadCrm", 'Int'>
+    readonly nome: FieldRef<"LeadCrm", 'String'>
     readonly telefone: FieldRef<"LeadCrm", 'String'>
     readonly email: FieldRef<"LeadCrm", 'String'>
     readonly metaLeadId: FieldRef<"LeadCrm", 'String'>
@@ -25314,6 +25327,7 @@ export namespace Prisma {
     crmLeadId: 'crmLeadId',
     etapa: 'etapa',
     ordemEtapa: 'ordemEtapa',
+    nome: 'nome',
     telefone: 'telefone',
     email: 'email',
     metaLeadId: 'metaLeadId',
@@ -27307,6 +27321,7 @@ export namespace Prisma {
     crmLeadId?: StringFilter<"LeadCrm"> | string
     etapa?: StringFilter<"LeadCrm"> | string
     ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
+    nome?: StringNullableFilter<"LeadCrm"> | string | null
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
@@ -27326,6 +27341,7 @@ export namespace Prisma {
     crmLeadId?: SortOrder
     etapa?: SortOrder
     ordemEtapa?: SortOrderInput | SortOrder
+    nome?: SortOrderInput | SortOrder
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     metaLeadId?: SortOrderInput | SortOrder
@@ -27349,6 +27365,7 @@ export namespace Prisma {
     crmLeadId?: StringFilter<"LeadCrm"> | string
     etapa?: StringFilter<"LeadCrm"> | string
     ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
+    nome?: StringNullableFilter<"LeadCrm"> | string | null
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
@@ -27368,6 +27385,7 @@ export namespace Prisma {
     crmLeadId?: SortOrder
     etapa?: SortOrder
     ordemEtapa?: SortOrderInput | SortOrder
+    nome?: SortOrderInput | SortOrder
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     metaLeadId?: SortOrderInput | SortOrder
@@ -27393,6 +27411,7 @@ export namespace Prisma {
     crmLeadId?: StringWithAggregatesFilter<"LeadCrm"> | string
     etapa?: StringWithAggregatesFilter<"LeadCrm"> | string
     ordemEtapa?: IntNullableWithAggregatesFilter<"LeadCrm"> | number | null
+    nome?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     telefone?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     email?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
@@ -29493,6 +29512,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -29512,6 +29532,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -29527,6 +29548,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29546,6 +29568,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29563,6 +29586,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -29578,6 +29602,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -29595,6 +29620,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -31309,6 +31335,7 @@ export namespace Prisma {
     crmLeadId?: SortOrder
     etapa?: SortOrder
     ordemEtapa?: SortOrder
+    nome?: SortOrder
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
@@ -31331,6 +31358,7 @@ export namespace Prisma {
     crmLeadId?: SortOrder
     etapa?: SortOrder
     ordemEtapa?: SortOrder
+    nome?: SortOrder
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
@@ -31348,6 +31376,7 @@ export namespace Prisma {
     crmLeadId?: SortOrder
     etapa?: SortOrder
     ordemEtapa?: SortOrder
+    nome?: SortOrder
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
@@ -33490,6 +33519,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -33507,6 +33537,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -34054,6 +34085,7 @@ export namespace Prisma {
     crmLeadId?: StringFilter<"LeadCrm"> | string
     etapa?: StringFilter<"LeadCrm"> | string
     ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
+    nome?: StringNullableFilter<"LeadCrm"> | string | null
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
@@ -36755,6 +36787,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -36772,6 +36805,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -37319,6 +37353,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -37987,6 +38022,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38004,6 +38040,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38020,6 +38057,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38567,6 +38605,7 @@ export namespace Prisma {
     crmLeadId: string
     etapa: string
     ordemEtapa?: number | null
+    nome?: string | null
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
@@ -38582,6 +38621,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38599,6 +38639,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38615,6 +38656,7 @@ export namespace Prisma {
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
     ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null

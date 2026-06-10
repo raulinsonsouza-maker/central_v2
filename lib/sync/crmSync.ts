@@ -34,6 +34,7 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
           crmLeadId: lead.crmLeadId,
           etapa: lead.etapa,
           ordemEtapa: lead.ordemEtapa ?? null,
+          nome: lead.nome ?? null,
           dataEntrada: lead.dataEntrada,
           dataFechamento: lead.dataFechamento ?? null,
           valor: lead.valor ?? null,
@@ -43,6 +44,7 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
         update: {
           etapa: lead.etapa,
           ordemEtapa: lead.ordemEtapa ?? null,
+          nome: lead.nome ?? null,
           dataFechamento: lead.dataFechamento ?? null,
           valor: lead.valor ?? null,
           email: lead.email ?? null,

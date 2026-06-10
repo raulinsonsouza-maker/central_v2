@@ -31,7 +31,7 @@ export async function GET(request: NextRequest) {
     JSON.stringify({ clienteId, ts: Date.now() }),
   ).toString("base64");
 
-  const authUrl = new URL("https://api.rd.services/auth/dialog");
+  const authUrl = new URL("https://accounts.rdstation.com/oauth/authorize");
   authUrl.searchParams.set("client_id", clientId);
   authUrl.searchParams.set("redirect_uri", redirectUri);
   authUrl.searchParams.set("response_type", "code");

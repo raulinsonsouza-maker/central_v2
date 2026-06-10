@@ -35,6 +35,7 @@ export async function GET(
       valor: true,
       dataEntrada: true,
       dataFechamento: true,
+      nome: true,
       email: true,
       telefone: true,
     },
@@ -50,7 +51,8 @@ export async function GET(
       valor: l.valor ? Number(l.valor) : null,
       dataEntrada: l.dataEntrada,
       dataFechamento: l.dataFechamento ?? null,
-      contato: l.email ?? l.telefone ?? null,
+      nome: l.nome ?? null,
+      contato: l.nome ?? l.email ?? l.telefone ?? null,
     })),
     total: leads.length,
   });

@@ -54,14 +54,18 @@ export async function GET(request: NextRequest) {
   const redirectUri = `${appUrl}/api/auth/rd-station/callback`;
 
   try {
-    const tokenRes = await fetch("https://api.rd.services/auth/token?token_by=code", {
+    const body = new URLSearchParams({
+      client_id: clientId,
+      client_secret: clientSecret,
+      code,
+      redirect_uri: redirectUri,
+      grant_type: "authorization_code",
+    });
+
+    const tokenRes = await fetch("https://api.rd.services/oauth2/token", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-        code,
-      }),
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: body.toString(),
     });
 
     const tokenData: RdTokenResponse = await tokenRes.json();
@@ -73,7 +77,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${redirectBase}?rdError=${errMsg}`);
     }
 
-    const expiresAt = Date.now() + (tokenData.expires_in ?? 86400) * 1000;
+    const expiresAt = Date.now() + (tokenData.expires_in ?? 7200) * 1000;
 
     const credenciais = {
       ...existingCreds,
@@ -96,8 +100,6 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    // Fire-and-forget: inicia o primeiro sync assim que os tokens são salvos,
-    // para que os dados apareçam já na primeira visita ao dashboard.
     syncCrmCliente(clienteId).catch(() => {});
 
     return NextResponse.redirect(

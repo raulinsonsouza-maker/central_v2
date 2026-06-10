@@ -1,21 +1,58 @@
 import type { CrmAdapter, NormalizedLead, RdStationCredentials } from "./types";
 
-interface RdContact {
+const BASE_URL_V2 = "https://api.rd.services/crm/v2";
+const BASE_URL_V1 = "https://api.rd.services/crm/v1";
+
+interface RdDealV2 {
+  id: string;
+  name?: string;
+  stage_id?: string | null;
+  contact_ids?: string[] | null;
+  total_price?: number | null;
+  recurrence_price?: number | null;
+  one_time_price?: number | null;
+  created_at?: string;
+  updated_at?: string;
+  closed_at?: string | null;
+  status?: string;
+  pipeline_id?: string | null;
+  // v1-embedded fields still returned by some accounts / backward-compat
+  deal_stage?: {
+    id?: string;
+    name?: string;
+    order?: number;
+    nickname?: string;
+  } | null;
+  contacts?: Array<{
+    id?: string;
+    name?: string;
+    emails?: Array<{ email?: string }>;
+    phones?: Array<{ phone?: string; number?: string }>;
+  }> | null;
+  contact?: {
+    id?: string;
+    name?: string;
+    emails?: Array<{ email?: string }>;
+    phones?: Array<{ phone?: string; number?: string }>;
+  } | null;
+  // v1 field names kept for forward-compat with accounts on v1 endpoint
+  amount_total?: number | null;
+  amount?: number | null;
+  value?: number | null;
+}
+
+interface RdContactV2 {
+  id?: string;
+  name?: string;
   emails?: Array<{ email?: string }>;
   phones?: Array<{ phone?: string; number?: string }>;
 }
 
-interface RdDeal {
-  id: string;
+interface RdStageV1 {
+  _id?: string;
+  id?: string;
   name?: string;
-  stage?: { name?: string } | null;
-  deal_stage?: { name?: string } | null;
-  created_at?: string;
-  closed_at?: string | null;
-  amount?: number | null;
-  value?: number | null;
-  contacts?: RdContact[] | null;
-  contact?: RdContact | null;
+  order?: number;
 }
 
 function parseDate(v?: string | null): Date | null {
@@ -24,27 +61,22 @@ function parseDate(v?: string | null): Date | null {
   return isNaN(d.getTime()) ? null : d;
 }
 
-function extractContactInfo(deal: RdDeal): { telefone: string | null; email: string | null } {
-  const contacts = deal.contacts ?? (deal.contact ? [deal.contact] : []);
-  let telefone: string | null = null;
-  let email: string | null = null;
-
-  for (const c of contacts) {
-    if (!email && c.emails && c.emails.length > 0) {
-      email = c.emails[0]?.email ?? null;
-    }
-    if (!telefone && c.phones && c.phones.length > 0) {
-      telefone = c.phones[0]?.phone ?? c.phones[0]?.number ?? null;
-    }
-    if (telefone && email) break;
+async function runBatched<T, R>(
+  items: T[],
+  fn: (item: T) => Promise<R>,
+  batchSize = 10,
+): Promise<R[]> {
+  const results: R[] = [];
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    results.push(...(await Promise.all(batch.map(fn))));
   }
-
-  return { telefone, email };
+  return results;
 }
 
 export class RdStationCrmAdapter implements CrmAdapter {
   private accessToken: string;
-  private static BASE_URL = "https://api.rd.services/crm/v2";
+  private stagesCache: Map<string, { name: string; order: number }> | null = null;
 
   constructor(creds: RdStationCredentials) {
     const token = creds.accessToken ?? creds.token;
@@ -59,23 +91,87 @@ export class RdStationCrmAdapter implements CrmAdapter {
     };
   }
 
+  /**
+   * Tenta buscar etapas do funil pela API v1.
+   * A API v1 pode aceitar Bearer token do OAuth — se não aceitar retorna mapa vazio
+   * e o adapter usa o deal_stage embutido (quando presente) ou mantém "Desconhecido".
+   */
+  private async fetchStagesMap(): Promise<Map<string, { name: string; order: number }>> {
+    if (this.stagesCache !== null) return this.stagesCache;
+
+    const map = new Map<string, { name: string; order: number }>();
+    try {
+      const res = await fetch(`${BASE_URL_V1}/deal_stages?limit=50&page=1`, {
+        headers: this.headers(),
+      });
+      if (res.ok) {
+        const body = await res.json() as {
+          deal_stages?: RdStageV1[];
+          data?: RdStageV1[];
+        };
+        const stages: RdStageV1[] = body.deal_stages ?? body.data ?? [];
+        for (const s of stages) {
+          const id = s._id ?? s.id;
+          if (id && s.name) {
+            map.set(id, { name: s.name, order: s.order ?? 0 });
+          }
+        }
+      }
+    } catch {
+      // v1 API inacessível — degrada graciosamente
+    }
+
+    this.stagesCache = map;
+    return map;
+  }
+
+  private async fetchContactById(id: string): Promise<RdContactV2 | null> {
+    try {
+      const res = await fetch(`${BASE_URL_V2}/contacts/${id}`, {
+        headers: this.headers(),
+      });
+      if (!res.ok) return null;
+      const body = await res.json() as { data?: RdContactV2 } | RdContactV2;
+      return (body as { data?: RdContactV2 }).data ?? (body as RdContactV2) ?? null;
+    } catch {
+      return null;
+    }
+  }
+
+  private parseContactInfo(c: {
+    name?: string;
+    emails?: Array<{ email?: string }>;
+    phones?: Array<{ phone?: string; number?: string }>;
+  }): { nome: string | null; email: string | null; telefone: string | null } {
+    return {
+      nome: c.name ?? null,
+      email: c.emails?.[0]?.email ?? null,
+      telefone: c.phones?.[0]?.phone ?? c.phones?.[0]?.number ?? null,
+    };
+  }
+
   async fetchLeads(opts?: { since?: Date }): Promise<NormalizedLead[]> {
-    const deals: RdDeal[] = [];
-    let page = 1;
-    const perPage = 100;
+    const stagesMap = await this.fetchStagesMap();
+    const deals: RdDealV2[] = [];
+    let pageNumber = 1;
+    const pageSize = 25;
 
     while (true) {
-      const params = new URLSearchParams({
-        page: String(page),
-        per_page: String(perPage),
-        order: "created_at",
-        direction: "desc",
-      });
+      const params = new URLSearchParams();
+      params.set("page[number]", String(pageNumber));
+      params.set("page[size]", String(pageSize));
+      params.set("sort[updated_at]", "desc");
+
       if (opts?.since) {
-        params.set("start_created_at", opts.since.toISOString());
+        // RDQL datetime format: "YYYY-MM-DD HH:MM:SS"
+        const sinceStr = opts.since
+          .toISOString()
+          .replace("T", " ")
+          .replace(/\.\d{3}Z$/, "");
+        params.set("filter", `updated_at:>="${sinceStr}"`);
       }
 
-      const res = await fetch(`${RdStationCrmAdapter.BASE_URL}/deals?${params}`, {
+      const res = await fetch(`${BASE_URL_V2}/deals?${params}`, {
         headers: this.headers(),
       });
 
@@ -84,45 +180,120 @@ export class RdStationCrmAdapter implements CrmAdapter {
         throw new Error(`RD Station CRM API error ${res.status}: ${text.slice(0, 200)}`);
       }
 
-      const data = await res.json() as {
-        deals?: RdDeal[];
-        data?: RdDeal[];
-        pagination?: { total_pages?: number; next_page?: string | null };
+      const body = await res.json() as {
+        data?: RdDealV2[];
+        deals?: RdDealV2[];
+        meta?: {
+          pagination?: {
+            total_pages?: number;
+            next_page?: number | null;
+            current_page?: number;
+          };
+        };
+        pagination?: {
+          total_pages?: number;
+          next_page?: string | number | null;
+        };
         has_more?: boolean;
       };
 
-      const batch: RdDeal[] = data.deals ?? data.data ?? [];
+      const batch: RdDealV2[] = body.data ?? body.deals ?? [];
       deals.push(...batch);
 
-      const hasMore =
-        data.has_more === true ||
-        (data.pagination?.next_page != null && data.pagination.next_page !== null) ||
-        (typeof data.pagination?.total_pages === "number" && page < data.pagination.total_pages);
+      const totalPages =
+        body.meta?.pagination?.total_pages ?? body.pagination?.total_pages;
 
-      if (!hasMore || batch.length < perPage) break;
-      page++;
-      if (page > 50) break;
+      const hasMore =
+        body.has_more === true ||
+        (body.meta?.pagination?.next_page != null) ||
+        (body.pagination?.next_page != null && body.pagination.next_page !== null) ||
+        (typeof totalPages === "number" && pageNumber < totalPages);
+
+      if (!hasMore || batch.length < pageSize) break;
+      pageNumber++;
+      if (pageNumber > 100) break;
+    }
+
+    // Collect unique contact IDs that need API lookup (when not embedded)
+    const contactIdsToFetch = new Set<string>();
+    for (const deal of deals) {
+      if (!deal.contacts?.length && !deal.contact) {
+        const firstId = deal.contact_ids?.[0];
+        if (firstId) contactIdsToFetch.add(firstId);
+      }
+    }
+
+    // Fetch contacts in batches of 10 — cap at 200 to avoid rate-limit hammering
+    const contactMap = new Map<string, RdContactV2>();
+    if (contactIdsToFetch.size > 0) {
+      const ids = Array.from(contactIdsToFetch).slice(0, 200);
+      await runBatched(ids, async (id) => {
+        const c = await this.fetchContactById(id);
+        if (c) contactMap.set(id, c);
+      });
     }
 
     const now = new Date();
     return deals.map((d): NormalizedLead => {
-      const stage = d.stage ?? d.deal_stage;
-      const { telefone, email } = extractContactInfo(d);
+      // ── Stage ──────────────────────────────────────────────────────────────
+      // Priority: v1 embedded object → stagesMap from API → "Desconhecido"
+      let etapa = "Desconhecido";
+      let ordemEtapa: number | null = null;
+
+      if (d.deal_stage?.name) {
+        etapa = d.deal_stage.name;
+        ordemEtapa = d.deal_stage.order ?? null;
+      } else if (d.stage_id && stagesMap.has(d.stage_id)) {
+        const s = stagesMap.get(d.stage_id)!;
+        etapa = s.name;
+        ordemEtapa = s.order;
+      }
+
+      // ── Contact ────────────────────────────────────────────────────────────
+      // Priority: v1 embedded contacts → v2 lookup by contact_ids[0]
+      let nome: string | null = null;
+      let email: string | null = null;
+      let telefone: string | null = null;
+
+      const embedded = d.contacts?.[0] ?? d.contact ?? null;
+      if (embedded) {
+        ({ nome, email, telefone } = this.parseContactInfo(embedded));
+      } else {
+        const firstId = d.contact_ids?.[0];
+        if (firstId && contactMap.has(firstId)) {
+          ({ nome, email, telefone } = this.parseContactInfo(contactMap.get(firstId)!));
+        }
+      }
+
+      // ── Valor ──────────────────────────────────────────────────────────────
+      // v2: total_price | v1 fallback: amount_total / amount / value
+      const rawValor =
+        d.total_price ??
+        d.amount_total ??
+        d.amount ??
+        d.value ??
+        null;
+
       return {
         crmLeadId: String(d.id),
-        etapa: stage?.name ?? "Desconhecido",
-        telefone,
+        etapa,
+        ordemEtapa,
+        nome,
         email,
+        telefone,
         dataEntrada: parseDate(d.created_at) ?? now,
         dataFechamento: parseDate(d.closed_at),
-        valor: d.amount ?? d.value ?? null,
+        valor: rawValor != null ? Number(rawValor) : null,
       };
     });
   }
 
   async testConnection(): Promise<{ ok: boolean; error?: string }> {
     try {
-      const res = await fetch(`${RdStationCrmAdapter.BASE_URL}/deals?page=1&per_page=1`, {
+      const params = new URLSearchParams();
+      params.set("page[number]", "1");
+      params.set("page[size]", "1");
+      const res = await fetch(`${BASE_URL_V2}/deals?${params}`, {
         headers: this.headers(),
       });
       if (!res.ok) {
