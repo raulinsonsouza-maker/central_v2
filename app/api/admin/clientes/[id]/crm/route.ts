@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/db";
 import { getCrmAdapter } from "@/lib/crm/factory";
 
@@ -90,13 +91,13 @@ export async function PUT(
       clienteId: id,
       tipo: body.tipo as "CVCRM" | "RDSTATION_CRM" | "KOMMO",
       dominio: body.dominio ?? null,
-      credenciais,
+      credenciais: credenciais as Prisma.InputJsonValue,
       ativo: body.ativo ?? true,
     },
     update: {
       tipo: body.tipo as "CVCRM" | "RDSTATION_CRM" | "KOMMO",
       dominio: body.dominio ?? null,
-      credenciais,
+      credenciais: credenciais as Prisma.InputJsonValue,
       ativo: body.ativo ?? true,
     },
   });
