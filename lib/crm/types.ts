@@ -5,6 +5,8 @@ export interface NormalizedLead {
   nome?: string | null;
   telefone?: string | null;
   email?: string | null;
+  fonte?: string | null;
+  rating?: number | null;
   dataEntrada: Date;
   dataFechamento?: Date | null;
   valor?: number | null;

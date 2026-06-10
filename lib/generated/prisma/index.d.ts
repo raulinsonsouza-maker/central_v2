@@ -23746,11 +23746,13 @@ export namespace Prisma {
 
   export type LeadCrmAvgAggregateOutputType = {
     ordemEtapa: number | null
+    rating: number | null
     valor: Decimal | null
   }
 
   export type LeadCrmSumAggregateOutputType = {
     ordemEtapa: number | null
+    rating: number | null
     valor: Decimal | null
   }
 
@@ -23765,6 +23767,8 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     metaLeadId: string | null
+    fonte: string | null
+    rating: number | null
     dataEntrada: Date | null
     dataFechamento: Date | null
     valor: Decimal | null
@@ -23783,6 +23787,8 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     metaLeadId: string | null
+    fonte: string | null
+    rating: number | null
     dataEntrada: Date | null
     dataFechamento: Date | null
     valor: Decimal | null
@@ -23801,6 +23807,8 @@ export namespace Prisma {
     telefone: number
     email: number
     metaLeadId: number
+    fonte: number
+    rating: number
     dataEntrada: number
     dataFechamento: number
     valor: number
@@ -23812,11 +23820,13 @@ export namespace Prisma {
 
   export type LeadCrmAvgAggregateInputType = {
     ordemEtapa?: true
+    rating?: true
     valor?: true
   }
 
   export type LeadCrmSumAggregateInputType = {
     ordemEtapa?: true
+    rating?: true
     valor?: true
   }
 
@@ -23831,6 +23841,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     metaLeadId?: true
+    fonte?: true
+    rating?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -23849,6 +23861,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     metaLeadId?: true
+    fonte?: true
+    rating?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -23867,6 +23881,8 @@ export namespace Prisma {
     telefone?: true
     email?: true
     metaLeadId?: true
+    fonte?: true
+    rating?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -23972,6 +23988,8 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     metaLeadId: string | null
+    fonte: string | null
+    rating: number | null
     dataEntrada: Date
     dataFechamento: Date | null
     valor: Decimal | null
@@ -24009,6 +24027,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
+    fonte?: boolean
+    rating?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -24029,6 +24049,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
+    fonte?: boolean
+    rating?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -24049,6 +24071,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
+    fonte?: boolean
+    rating?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -24069,6 +24093,8 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
+    fonte?: boolean
+    rating?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -24076,7 +24102,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
+  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "fonte" | "rating" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
   export type LeadCrmInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
@@ -24107,6 +24133,8 @@ export namespace Prisma {
       telefone: string | null
       email: string | null
       metaLeadId: string | null
+      fonte: string | null
+      rating: number | null
       dataEntrada: Date
       dataFechamento: Date | null
       valor: Prisma.Decimal | null
@@ -24547,6 +24575,8 @@ export namespace Prisma {
     readonly telefone: FieldRef<"LeadCrm", 'String'>
     readonly email: FieldRef<"LeadCrm", 'String'>
     readonly metaLeadId: FieldRef<"LeadCrm", 'String'>
+    readonly fonte: FieldRef<"LeadCrm", 'String'>
+    readonly rating: FieldRef<"LeadCrm", 'Int'>
     readonly dataEntrada: FieldRef<"LeadCrm", 'DateTime'>
     readonly dataFechamento: FieldRef<"LeadCrm", 'DateTime'>
     readonly valor: FieldRef<"LeadCrm", 'Decimal'>
@@ -25331,6 +25361,8 @@ export namespace Prisma {
     telefone: 'telefone',
     email: 'email',
     metaLeadId: 'metaLeadId',
+    fonte: 'fonte',
+    rating: 'rating',
     dataEntrada: 'dataEntrada',
     dataFechamento: 'dataFechamento',
     valor: 'valor',
@@ -27325,6 +27357,8 @@ export namespace Prisma {
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    fonte?: StringNullableFilter<"LeadCrm"> | string | null
+    rating?: IntNullableFilter<"LeadCrm"> | number | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -27345,6 +27379,8 @@ export namespace Prisma {
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     metaLeadId?: SortOrderInput | SortOrder
+    fonte?: SortOrderInput | SortOrder
+    rating?: SortOrderInput | SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
@@ -27369,6 +27405,8 @@ export namespace Prisma {
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    fonte?: StringNullableFilter<"LeadCrm"> | string | null
+    rating?: IntNullableFilter<"LeadCrm"> | number | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -27389,6 +27427,8 @@ export namespace Prisma {
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     metaLeadId?: SortOrderInput | SortOrder
+    fonte?: SortOrderInput | SortOrder
+    rating?: SortOrderInput | SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
@@ -27415,6 +27455,8 @@ export namespace Prisma {
     telefone?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     email?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
+    fonte?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
+    rating?: IntNullableWithAggregatesFilter<"LeadCrm"> | number | null
     dataEntrada?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableWithAggregatesFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableWithAggregatesFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -29516,6 +29558,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -29536,6 +29580,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -29552,6 +29598,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -29572,6 +29620,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -29590,6 +29640,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -29606,6 +29658,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -29624,6 +29678,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -31339,6 +31395,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
+    fonte?: SortOrder
+    rating?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -31348,6 +31406,7 @@ export namespace Prisma {
 
   export type LeadCrmAvgOrderByAggregateInput = {
     ordemEtapa?: SortOrder
+    rating?: SortOrder
     valor?: SortOrder
   }
 
@@ -31362,6 +31421,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
+    fonte?: SortOrder
+    rating?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -31380,6 +31441,8 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
+    fonte?: SortOrder
+    rating?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -31389,6 +31452,7 @@ export namespace Prisma {
 
   export type LeadCrmSumOrderByAggregateInput = {
     ordemEtapa?: SortOrder
+    rating?: SortOrder
     valor?: SortOrder
   }
 
@@ -33523,6 +33587,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -33541,6 +33607,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -34089,6 +34157,8 @@ export namespace Prisma {
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    fonte?: StringNullableFilter<"LeadCrm"> | string | null
+    rating?: IntNullableFilter<"LeadCrm"> | number | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -36791,6 +36861,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -36809,6 +36881,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -37357,6 +37431,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -38026,6 +38102,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38044,6 +38122,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38061,6 +38141,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38609,6 +38691,8 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    fonte?: string | null
+    rating?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -38625,6 +38709,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38643,6 +38729,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -38660,6 +38748,8 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    fonte?: NullableStringFieldUpdateOperationsInput | string | null
+    rating?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null

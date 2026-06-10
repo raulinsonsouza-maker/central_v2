@@ -391,6 +391,8 @@ model LeadCrm {
   telefone       String?
   email          String?
   metaLeadId     String?
+  fonte          String?
+  rating         Int?
   dataEntrada    DateTime
   dataFechamento DateTime?
   valor          Decimal?  @db.Decimal(14, 2)

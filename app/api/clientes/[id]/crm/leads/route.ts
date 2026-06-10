@@ -38,6 +38,8 @@ export async function GET(
       nome: true,
       email: true,
       telefone: true,
+      fonte: true,
+      rating: true,
     },
     orderBy: { dataEntrada: "desc" },
     take: 500,
@@ -55,6 +57,8 @@ export async function GET(
       email: l.email ?? null,
       telefone: l.telefone ?? null,
       contato: l.nome ?? l.email ?? l.telefone ?? null,
+      fonte: l.fonte ?? null,
+      rating: l.rating ?? null,
     })),
     total: leads.length,
   });

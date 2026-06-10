@@ -40,6 +40,8 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
           valor: lead.valor ?? null,
           email: lead.email ?? null,
           telefone: lead.telefone ?? null,
+          fonte: lead.fonte ?? null,
+          rating: lead.rating ?? null,
         },
         update: {
           etapa: lead.etapa,
@@ -49,6 +51,8 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
           valor: lead.valor ?? null,
           email: lead.email ?? null,
           telefone: lead.telefone ?? null,
+          fonte: lead.fonte ?? null,
+          rating: lead.rating ?? null,
         },
       });
       upserted++;
