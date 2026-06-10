@@ -8,11 +8,15 @@ interface KommoLead {
   created_at?: number;
   closed_at?: number | null;
   price?: number | null;
+  _embedded?: {
+    contacts?: Array<{ id: number; is_main?: boolean }>;
+  };
 }
 
 interface KommoStatus {
   id: number;
   name: string;
+  sort?: number;
 }
 
 interface KommoPipeline {
@@ -21,10 +25,32 @@ interface KommoPipeline {
   _embedded?: { statuses?: KommoStatus[] };
 }
 
+interface KommoContact {
+  id: number;
+  name?: string;
+  custom_fields_values?: Array<{
+    field_code?: string;
+    values?: Array<{ value?: string }>;
+  }>;
+}
+
 function parseUnixDate(v?: number | null): Date | null {
   if (v == null) return null;
   const d = new Date(v * 1000);
   return isNaN(d.getTime()) ? null : d;
+}
+
+async function runBatched<T, R>(
+  items: T[],
+  fn: (item: T) => Promise<R>,
+  batchSize = 10,
+): Promise<R[]> {
+  const results: R[] = [];
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    results.push(...(await Promise.all(batch.map(fn))));
+  }
+  return results;
 }
 
 export class KommoAdapter implements CrmAdapter {
@@ -59,17 +85,39 @@ export class KommoAdapter implements CrmAdapter {
         _embedded?: { pipelines?: KommoPipeline[] };
       };
       const pipelines = data._embedded?.pipelines ?? [];
-      let globalOrder = 0;
       for (const pipeline of pipelines) {
         const statuses = pipeline._embedded?.statuses ?? [];
         for (const status of statuses) {
           this.stageMap.set(status.id, status.name);
-          this.stageOrderMap.set(status.id, globalOrder++);
+          // Use the API's official `sort` value for ordering (10, 20, 30 … 10000, 11000)
+          this.stageOrderMap.set(status.id, status.sort ?? 0);
         }
       }
     } catch {
       /* fallback para status_id */
     }
+  }
+
+  private async fetchContactById(id: number): Promise<KommoContact | null> {
+    try {
+      const res = await fetch(`${this.baseUrl}/contacts/${id}`, {
+        headers: this.headers(),
+      });
+      if (!res.ok) return null;
+      return await res.json() as KommoContact;
+    } catch {
+      return null;
+    }
+  }
+
+  private extractContactField(
+    contact: KommoContact,
+    fieldCode: string,
+  ): string | null {
+    const field = contact.custom_fields_values?.find(
+      (f) => f.field_code === fieldCode,
+    );
+    return field?.values?.[0]?.value ?? null;
   }
 
   async fetchLeads(opts?: { since?: Date }): Promise<NormalizedLead[]> {
@@ -82,10 +130,17 @@ export class KommoAdapter implements CrmAdapter {
       const params = new URLSearchParams({
         limit: "250",
         page: String(page),
-        order: "created_at",
+        with: "contacts",
       });
+      // Sort descending by updated_at to get most-recently-changed leads first
+      params.set("order[updated_at]", "desc");
+
       if (opts?.since) {
-        params.set("filter[created_at][from]", String(Math.floor(opts.since.getTime() / 1000)));
+        // Filter by updated_at so deals that changed stage/value after last sync are re-fetched
+        params.set(
+          "filter[updated_at][from]",
+          String(Math.floor(opts.since.getTime() / 1000)),
+        );
       }
 
       const res = await fetch(`${this.baseUrl}/leads?${params}`, {
@@ -112,16 +167,49 @@ export class KommoAdapter implements CrmAdapter {
       if (page > 40) break;
     }
 
+    // Collect unique main-contact IDs that need enrichment (name, phone, email)
+    const contactIdsToFetch = new Set<number>();
+    for (const lead of leads) {
+      const contacts = lead._embedded?.contacts ?? [];
+      const main = contacts.find((c) => c.is_main) ?? contacts[0];
+      if (main) contactIdsToFetch.add(main.id);
+    }
+
+    // Fetch contact details in batches of 10 (rate limit: 7 req/s)
+    const contactMap = new Map<number, KommoContact>();
+    if (contactIdsToFetch.size > 0) {
+      const ids = Array.from(contactIdsToFetch).slice(0, 200);
+      await runBatched(ids, async (id) => {
+        const c = await this.fetchContactById(id);
+        if (c) contactMap.set(id, c);
+      });
+    }
+
     const now = new Date();
     return leads.map((l): NormalizedLead => {
       const stageName =
-        l.status_id != null ? (this.stageMap.get(l.status_id) ?? `Etapa ${l.status_id}`) : "Desconhecido";
+        l.status_id != null
+          ? (this.stageMap.get(l.status_id) ?? `Etapa ${l.status_id}`)
+          : "Desconhecido";
       const ordemEtapa =
         l.status_id != null ? (this.stageOrderMap.get(l.status_id) ?? null) : null;
+
+      // Resolve contact: prefer is_main, then first
+      const contacts = l._embedded?.contacts ?? [];
+      const mainContactRef = contacts.find((c) => c.is_main) ?? contacts[0];
+      const contact = mainContactRef ? contactMap.get(mainContactRef.id) : null;
+
+      const nome = contact?.name ?? null;
+      const email = contact ? this.extractContactField(contact, "EMAIL") : null;
+      const telefone = contact ? this.extractContactField(contact, "PHONE") : null;
+
       return {
         crmLeadId: String(l.id),
         etapa: stageName,
         ordemEtapa,
+        nome,
+        email,
+        telefone,
         dataEntrada: parseUnixDate(l.created_at) ?? now,
         dataFechamento: parseUnixDate(l.closed_at ?? null),
         valor: l.price ?? null,
