@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { Prisma } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/db";
 
 function getAppUrl(): string {
@@ -52,15 +53,13 @@ export async function GET(request: NextRequest) {
   const redirectUri = `${appUrl}/api/auth/rd-station/callback`;
 
   try {
-    const tokenRes = await fetch("https://api.rd.services/auth/token", {
+    const tokenRes = await fetch("https://api.rd.services/auth/token?token_by=code", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         client_id: clientId,
         client_secret: clientSecret,
         code,
-        redirect_uri: redirectUri,
-        grant_type: "authorization_code",
       }),
     });
 
@@ -87,12 +86,12 @@ export async function GET(request: NextRequest) {
       create: {
         clienteId,
         tipo: "RDSTATION_CRM",
-        credenciais,
+        credenciais: credenciais as Prisma.InputJsonValue,
         ativo: true,
       },
       update: {
         tipo: "RDSTATION_CRM",
-        credenciais,
+        credenciais: credenciais as Prisma.InputJsonValue,
       },
     });
 

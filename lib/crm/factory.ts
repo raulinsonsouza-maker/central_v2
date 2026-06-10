@@ -1,4 +1,5 @@
 import type { CrmAdapter } from "./types";
+import { Prisma } from "@/lib/generated/prisma";
 import { CvCrmAdapter } from "./cvCrmAdapter";
 import { RdStationCrmAdapter } from "./rdStationAdapter";
 import { KommoAdapter } from "./kommoAdapter";
@@ -47,7 +48,6 @@ async function refreshRdStationToken(
       client_id: clientId,
       client_secret: clientSecret,
       refresh_token: refreshToken,
-      grant_type: "refresh_token",
     }),
   });
 
@@ -71,7 +71,7 @@ async function refreshRdStationToken(
   if (configId) {
     await prisma.crmConfig.update({
       where: { id: configId },
-      data: { credenciais: newCreds },
+      data: { credenciais: newCreds as Prisma.InputJsonValue },
     });
   }
 
