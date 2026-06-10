@@ -108,10 +108,37 @@ export async function POST(
   const action = url.searchParams.get("action");
 
   if (action === "test") {
-    const config = await prisma.crmConfig.findUnique({ where: { clienteId: id } });
-    if (!config) return NextResponse.json({ ok: false, error: "CRM não configurado" }, { status: 404 });
+    let draftConfig: {
+      tipo?: string;
+      dominio?: string | null;
+      credenciais?: Record<string, string>;
+    } | null = null;
+
     try {
-      const adapter = getCrmAdapter(config);
+      const body = await request.json();
+      if (body && body.tipo) draftConfig = body;
+    } catch {
+      /* no body or invalid JSON — fall back to saved config */
+    }
+
+    try {
+      let adapterConfig: { tipo: string; dominio?: string | null; credenciais: unknown };
+
+      if (draftConfig?.tipo) {
+        adapterConfig = {
+          tipo: draftConfig.tipo,
+          dominio: draftConfig.dominio ?? null,
+          credenciais: draftConfig.credenciais ?? {},
+        };
+      } else {
+        const saved = await prisma.crmConfig.findUnique({ where: { clienteId: id } });
+        if (!saved) {
+          return NextResponse.json({ ok: false, error: "CRM não configurado" }, { status: 404 });
+        }
+        adapterConfig = saved;
+      }
+
+      const adapter = getCrmAdapter(adapterConfig);
       const result = await adapter.testConnection();
       return NextResponse.json(result);
     } catch (e) {

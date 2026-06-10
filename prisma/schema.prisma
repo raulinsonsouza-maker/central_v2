@@ -69,6 +69,7 @@ model LeadCrm {
   crmConfigId    String
   crmLeadId      String
   etapa          String
+  ordemEtapa     Int?
   dataEntrada    DateTime
   dataFechamento DateTime?
   valor          Decimal?  @db.Decimal(14, 2)

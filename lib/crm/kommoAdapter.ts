@@ -35,6 +35,7 @@ export class KommoAdapter implements CrmAdapter {
   private subdomain: string;
   private token: string;
   private stageMap: Map<number, string> = new Map();
+  private stageOrderMap: Map<number, number> = new Map();
 
   constructor(subdomain: string, creds: KommoCredentials) {
     this.subdomain = subdomain.replace(/^https?:\/\//, "").replace(/\.kommo\.com.*$/, "");
@@ -62,10 +63,12 @@ export class KommoAdapter implements CrmAdapter {
         _embedded?: { pipelines?: KommoPipeline[] };
       };
       const pipelines = data._embedded?.pipelines ?? [];
+      let globalOrder = 0;
       for (const pipeline of pipelines) {
         const statuses = pipeline._embedded?.statuses ?? [];
         for (const status of statuses) {
           this.stageMap.set(status.id, status.name);
+          this.stageOrderMap.set(status.id, globalOrder++);
         }
       }
     } catch {
@@ -118,9 +121,12 @@ export class KommoAdapter implements CrmAdapter {
     return leads.map((l): NormalizedLead => {
       const stageName =
         l.status_id != null ? (this.stageMap.get(l.status_id) ?? `Etapa ${l.status_id}`) : "Desconhecido";
+      const ordemEtapa =
+        l.status_id != null ? (this.stageOrderMap.get(l.status_id) ?? null) : null;
       return {
         crmLeadId: String(l.id),
         etapa: stageName,
+        ordemEtapa,
         dataEntrada: parseUnixDate(l.created_at) ?? now,
         dataFechamento: parseUnixDate(l.closed_at ?? null),
         valor: l.price ?? null,

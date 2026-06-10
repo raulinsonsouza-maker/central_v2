@@ -357,9 +357,17 @@ function CrmConfigSection({
     setTestLoading(true);
     setStatusMsg(null);
     try {
+      const credenciais: Record<string, string> = {};
+      if (tipo === "CVCRM") {
+        credenciais.email = email.trim();
+        credenciais.token = token.trim();
+      } else {
+        credenciais.token = token.trim();
+      }
       const res = await fetch(`/api/admin/clientes/${clienteId}/crm?action=test`, {
         method: "POST",
-        headers: { "x-admin-token": adminToken },
+        headers: { "x-admin-token": adminToken, "Content-Type": "application/json" },
+        body: JSON.stringify({ tipo, dominio: dominio.trim() || null, credenciais }),
       });
       const data = await res.json().catch(() => ({}));
       setStatusMsg({ ok: !!data.ok, msg: data.ok ? "Conexão testada com sucesso!" : (data.error ?? "Falha na conexão") });

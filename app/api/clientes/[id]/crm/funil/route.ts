@@ -18,32 +18,73 @@ export async function GET(
 
   const leads = await prisma.leadCrm.findMany({
     where: { clienteId: id },
-    select: { etapa: true, valor: true, dataEntrada: true, dataFechamento: true },
+    select: { etapa: true, ordemEtapa: true, valor: true, dataEntrada: true, dataFechamento: true },
   });
 
   const etapaMap = new Map<
     string,
-    { etapa: string; count: number; valor: number; fechados: number }
+    {
+      etapa: string;
+      count: number;
+      valor: number;
+      fechados: number;
+      minOrdem: number | null;
+      minEntrada: Date;
+    }
   >();
 
   for (const lead of leads) {
-    const entry = etapaMap.get(lead.etapa) ?? {
-      etapa: lead.etapa,
-      count: 0,
-      valor: 0,
-      fechados: 0,
-    };
-    entry.count++;
-    entry.valor += lead.valor ? Number(lead.valor) : 0;
-    if (lead.dataFechamento) entry.fechados++;
-    etapaMap.set(lead.etapa, entry);
+    const existing = etapaMap.get(lead.etapa);
+    if (!existing) {
+      etapaMap.set(lead.etapa, {
+        etapa: lead.etapa,
+        count: 1,
+        valor: lead.valor ? Number(lead.valor) : 0,
+        fechados: lead.dataFechamento ? 1 : 0,
+        minOrdem: lead.ordemEtapa ?? null,
+        minEntrada: lead.dataEntrada,
+      });
+    } else {
+      existing.count++;
+      existing.valor += lead.valor ? Number(lead.valor) : 0;
+      if (lead.dataFechamento) existing.fechados++;
+      if (lead.ordemEtapa != null && (existing.minOrdem == null || lead.ordemEtapa < existing.minOrdem)) {
+        existing.minOrdem = lead.ordemEtapa;
+      }
+      if (lead.dataEntrada < existing.minEntrada) {
+        existing.minEntrada = lead.dataEntrada;
+      }
+    }
   }
 
-  const etapas = Array.from(etapaMap.values()).sort((a, b) => b.count - a.count);
+  const sorted = Array.from(etapaMap.values()).sort((a, b) => {
+    if (a.minOrdem != null && b.minOrdem != null) return a.minOrdem - b.minOrdem;
+    if (a.minOrdem != null) return -1;
+    if (b.minOrdem != null) return 1;
+    return a.minEntrada.getTime() - b.minEntrada.getTime();
+  });
+
+  const etapas = sorted.map((e, idx) => {
+    const prev = idx > 0 ? sorted[idx - 1] : null;
+    const conversionFromPrev =
+      prev && prev.count > 0 ? Math.round((e.count / prev.count) * 1000) / 10 : null;
+    return {
+      etapa: e.etapa,
+      count: e.count,
+      valor: e.valor,
+      fechados: e.fechados,
+      conversionFromPrev,
+    };
+  });
 
   const totalLeads = leads.length;
-  const totalValor = etapas.reduce((s, e) => s + e.valor, 0);
-  const totalFechados = etapas.reduce((s, e) => s + e.fechados, 0);
+  const totalValor = sorted.reduce((s, e) => s + e.valor, 0);
+  const totalFechados = sorted.reduce((s, e) => s + e.fechados, 0);
+
+  const overallConversion =
+    etapas.length >= 2 && sorted[0].count > 0
+      ? Math.round((sorted[sorted.length - 1].count / sorted[0].count) * 1000) / 10
+      : null;
 
   return NextResponse.json({
     configured: true,
@@ -52,6 +93,7 @@ export async function GET(
     totalLeads,
     totalValor,
     totalFechados,
+    overallConversion,
     etapas,
   });
 }

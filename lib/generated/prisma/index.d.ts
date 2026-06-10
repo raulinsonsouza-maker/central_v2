@@ -5451,10 +5451,12 @@ export namespace Prisma {
   }
 
   export type LeadCrmAvgAggregateOutputType = {
+    ordemEtapa: number | null
     valor: Decimal | null
   }
 
   export type LeadCrmSumAggregateOutputType = {
+    ordemEtapa: number | null
     valor: Decimal | null
   }
 
@@ -5464,6 +5466,7 @@ export namespace Prisma {
     crmConfigId: string | null
     crmLeadId: string | null
     etapa: string | null
+    ordemEtapa: number | null
     dataEntrada: Date | null
     dataFechamento: Date | null
     valor: Decimal | null
@@ -5477,6 +5480,7 @@ export namespace Prisma {
     crmConfigId: string | null
     crmLeadId: string | null
     etapa: string | null
+    ordemEtapa: number | null
     dataEntrada: Date | null
     dataFechamento: Date | null
     valor: Decimal | null
@@ -5490,6 +5494,7 @@ export namespace Prisma {
     crmConfigId: number
     crmLeadId: number
     etapa: number
+    ordemEtapa: number
     dataEntrada: number
     dataFechamento: number
     valor: number
@@ -5500,10 +5505,12 @@ export namespace Prisma {
 
 
   export type LeadCrmAvgAggregateInputType = {
+    ordemEtapa?: true
     valor?: true
   }
 
   export type LeadCrmSumAggregateInputType = {
+    ordemEtapa?: true
     valor?: true
   }
 
@@ -5513,6 +5520,7 @@ export namespace Prisma {
     crmConfigId?: true
     crmLeadId?: true
     etapa?: true
+    ordemEtapa?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -5526,6 +5534,7 @@ export namespace Prisma {
     crmConfigId?: true
     crmLeadId?: true
     etapa?: true
+    ordemEtapa?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -5539,6 +5548,7 @@ export namespace Prisma {
     crmConfigId?: true
     crmLeadId?: true
     etapa?: true
+    ordemEtapa?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
@@ -5639,6 +5649,7 @@ export namespace Prisma {
     crmConfigId: string
     crmLeadId: string
     etapa: string
+    ordemEtapa: number | null
     dataEntrada: Date
     dataFechamento: Date | null
     valor: Decimal | null
@@ -5671,6 +5682,7 @@ export namespace Prisma {
     crmConfigId?: boolean
     crmLeadId?: boolean
     etapa?: boolean
+    ordemEtapa?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -5686,6 +5698,7 @@ export namespace Prisma {
     crmConfigId?: boolean
     crmLeadId?: boolean
     etapa?: boolean
+    ordemEtapa?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -5701,6 +5714,7 @@ export namespace Prisma {
     crmConfigId?: boolean
     crmLeadId?: boolean
     etapa?: boolean
+    ordemEtapa?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -5716,6 +5730,7 @@ export namespace Prisma {
     crmConfigId?: boolean
     crmLeadId?: boolean
     etapa?: boolean
+    ordemEtapa?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
@@ -5723,7 +5738,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
+  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
   export type LeadCrmInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
@@ -5749,6 +5764,7 @@ export namespace Prisma {
       crmConfigId: string
       crmLeadId: string
       etapa: string
+      ordemEtapa: number | null
       dataEntrada: Date
       dataFechamento: Date | null
       valor: Prisma.Decimal | null
@@ -6184,6 +6200,7 @@ export namespace Prisma {
     readonly crmConfigId: FieldRef<"LeadCrm", 'String'>
     readonly crmLeadId: FieldRef<"LeadCrm", 'String'>
     readonly etapa: FieldRef<"LeadCrm", 'String'>
+    readonly ordemEtapa: FieldRef<"LeadCrm", 'Int'>
     readonly dataEntrada: FieldRef<"LeadCrm", 'DateTime'>
     readonly dataFechamento: FieldRef<"LeadCrm", 'DateTime'>
     readonly valor: FieldRef<"LeadCrm", 'Decimal'>
@@ -24956,6 +24973,7 @@ export namespace Prisma {
     crmConfigId: 'crmConfigId',
     crmLeadId: 'crmLeadId',
     etapa: 'etapa',
+    ordemEtapa: 'ordemEtapa',
     dataEntrada: 'dataEntrada',
     dataFechamento: 'dataFechamento',
     valor: 'valor',
@@ -25690,6 +25708,7 @@ export namespace Prisma {
     crmConfigId?: StringFilter<"LeadCrm"> | string
     crmLeadId?: StringFilter<"LeadCrm"> | string
     etapa?: StringFilter<"LeadCrm"> | string
+    ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -25705,6 +25724,7 @@ export namespace Prisma {
     crmConfigId?: SortOrder
     crmLeadId?: SortOrder
     etapa?: SortOrder
+    ordemEtapa?: SortOrderInput | SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
@@ -25724,6 +25744,7 @@ export namespace Prisma {
     crmConfigId?: StringFilter<"LeadCrm"> | string
     crmLeadId?: StringFilter<"LeadCrm"> | string
     etapa?: StringFilter<"LeadCrm"> | string
+    ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -25739,6 +25760,7 @@ export namespace Prisma {
     crmConfigId?: SortOrder
     crmLeadId?: SortOrder
     etapa?: SortOrder
+    ordemEtapa?: SortOrderInput | SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
@@ -25760,6 +25782,7 @@ export namespace Prisma {
     crmConfigId?: StringWithAggregatesFilter<"LeadCrm"> | string
     crmLeadId?: StringWithAggregatesFilter<"LeadCrm"> | string
     etapa?: StringWithAggregatesFilter<"LeadCrm"> | string
+    ordemEtapa?: IntNullableWithAggregatesFilter<"LeadCrm"> | number | null
     dataEntrada?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableWithAggregatesFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableWithAggregatesFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -27617,6 +27640,7 @@ export namespace Prisma {
     id?: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -27632,6 +27656,7 @@ export namespace Prisma {
     crmConfigId: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -27643,6 +27668,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -27658,6 +27684,7 @@ export namespace Prisma {
     crmConfigId?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -27671,6 +27698,7 @@ export namespace Prisma {
     crmConfigId: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -27682,6 +27710,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -27695,6 +27724,7 @@ export namespace Prisma {
     crmConfigId?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -30016,6 +30046,7 @@ export namespace Prisma {
     crmConfigId?: SortOrder
     crmLeadId?: SortOrder
     etapa?: SortOrder
+    ordemEtapa?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -30024,6 +30055,7 @@ export namespace Prisma {
   }
 
   export type LeadCrmAvgOrderByAggregateInput = {
+    ordemEtapa?: SortOrder
     valor?: SortOrder
   }
 
@@ -30033,6 +30065,7 @@ export namespace Prisma {
     crmConfigId?: SortOrder
     crmLeadId?: SortOrder
     etapa?: SortOrder
+    ordemEtapa?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -30046,6 +30079,7 @@ export namespace Prisma {
     crmConfigId?: SortOrder
     crmLeadId?: SortOrder
     etapa?: SortOrder
+    ordemEtapa?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
@@ -30054,6 +30088,7 @@ export namespace Prisma {
   }
 
   export type LeadCrmSumOrderByAggregateInput = {
+    ordemEtapa?: SortOrder
     valor?: SortOrder
   }
 
@@ -33189,6 +33224,7 @@ export namespace Prisma {
     id?: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -33202,6 +33238,7 @@ export namespace Prisma {
     crmConfigId: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -33789,6 +33826,7 @@ export namespace Prisma {
     crmConfigId?: StringFilter<"LeadCrm"> | string
     crmLeadId?: StringFilter<"LeadCrm"> | string
     etapa?: StringFilter<"LeadCrm"> | string
+    ordemEtapa?: IntNullableFilter<"LeadCrm"> | number | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
@@ -34040,6 +34078,7 @@ export namespace Prisma {
     id?: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -34053,6 +34092,7 @@ export namespace Prisma {
     clienteId: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -37102,6 +37142,7 @@ export namespace Prisma {
     crmConfigId: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -37618,6 +37659,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -37631,6 +37673,7 @@ export namespace Prisma {
     crmConfigId?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -37643,6 +37686,7 @@ export namespace Prisma {
     crmConfigId?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -37916,6 +37960,7 @@ export namespace Prisma {
     clienteId: string
     crmLeadId: string
     etapa: string
+    ordemEtapa?: number | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
@@ -37927,6 +37972,7 @@ export namespace Prisma {
     id?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -37940,6 +37986,7 @@ export namespace Prisma {
     clienteId?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
@@ -37952,6 +37999,7 @@ export namespace Prisma {
     clienteId?: StringFieldUpdateOperationsInput | string
     crmLeadId?: StringFieldUpdateOperationsInput | string
     etapa?: StringFieldUpdateOperationsInput | string
+    ordemEtapa?: NullableIntFieldUpdateOperationsInput | number | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
