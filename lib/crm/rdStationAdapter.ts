@@ -1,27 +1,26 @@
 import type { CrmAdapter, NormalizedLead, RdStationCredentials } from "./types";
 
+// v2: OAuth Bearer — base para deals, pipelines, stages, contacts
 const BASE_URL_V2 = "https://api.rd.services/crm/v2";
-const BASE_URL_V1 = "https://api.rd.services/crm/v1";
+// v1: URL base correta (diferente da v2!)
+const BASE_URL_V1 = "https://crm.rdstation.com/api/v1";
 
 interface RdDealV2 {
   id: string;
   name?: string;
   stage_id?: string | null;
+  pipeline_id?: string | null;
   contact_ids?: string[] | null;
   total_price?: number | null;
-  recurrence_price?: number | null;
-  one_time_price?: number | null;
   created_at?: string;
   updated_at?: string;
   closed_at?: string | null;
   status?: string;
-  pipeline_id?: string | null;
-  // v1-embedded fields still returned by some accounts / backward-compat
+  // Alguns planos mais antigos ainda podem embutir deal_stage — mantemos como last resort
   deal_stage?: {
     id?: string;
     name?: string;
     order?: number;
-    nickname?: string;
   } | null;
   contacts?: Array<{
     id?: string;
@@ -35,10 +34,6 @@ interface RdDealV2 {
     emails?: Array<{ email?: string }>;
     phones?: Array<{ phone?: string; number?: string }>;
   } | null;
-  // v1 field names kept for forward-compat with accounts on v1 endpoint
-  amount_total?: number | null;
-  amount?: number | null;
-  value?: number | null;
 }
 
 interface RdContactV2 {
@@ -48,11 +43,16 @@ interface RdContactV2 {
   phones?: Array<{ phone?: string; number?: string }>;
 }
 
-interface RdStageV1 {
-  _id?: string;
+interface RdStageV2 {
   id?: string;
+  _id?: string;
   name?: string;
   order?: number;
+}
+
+interface RdPipelineV2 {
+  id?: string;
+  name?: string;
 }
 
 function parseDate(v?: string | null): Date | null {
@@ -93,47 +93,72 @@ export class RdStationCrmAdapter implements CrmAdapter {
 
   /**
    * Carrega mapa de etapas { stage_id → {name, order} }.
-   * Ordem de tentativas:
-   *   1. API v2  GET /crm/v2/stages  (contrato oficial)
-   *   2. API v1  GET /crm/v1/deal_stages  (fallback — aceita Bearer em muitas contas)
-   *   3. Mapa vazio → adapter usa deal_stage embutido ou "Desconhecido" como último recurso
+   *
+   * Fluxo correto conforme docs v2:
+   *   1. GET /crm/v2/pipelines — lista todos os funis
+   *   2. GET /crm/v2/pipelines/{pipeline_id}/stages — etapas de cada funil
+   *   3. Fallback v1: GET https://crm.rdstation.com/api/v1/deal_stages?token=...
+   *   4. Mapa vazio → usa deal_stage embutido ou "Desconhecido" como último recurso
    */
   private async fetchStagesMap(): Promise<Map<string, { name: string; order: number }>> {
     if (this.stagesCache !== null) return this.stagesCache;
 
     const map = new Map<string, { name: string; order: number }>();
 
-    const tryPopulate = (stages: RdStageV1[]) => {
-      for (const s of stages) {
-        const id = s._id ?? s.id;
-        if (id && s.name) map.set(id, { name: s.name, order: s.order ?? 0 });
-      }
+    const addStage = (s: RdStageV2) => {
+      const id = s.id ?? s._id;
+      if (id && s.name) map.set(id, { name: s.name, order: s.order ?? 0 });
     };
 
-    // 1) v2 endpoint
+    // ── 1) v2: lista pipelines → para cada um lista suas stages ──────────────
     try {
-      const res = await fetch(`${BASE_URL_V2}/stages`, { headers: this.headers() });
-      if (res.ok) {
-        const body = await res.json() as { data?: RdStageV1[]; stages?: RdStageV1[] };
-        tryPopulate(body.data ?? body.stages ?? []);
+      const pipelinesRes = await fetch(`${BASE_URL_V2}/pipelines?page[size]=50`, {
+        headers: this.headers(),
+      });
+      if (pipelinesRes.ok) {
+        const body = await pipelinesRes.json() as {
+          data?: RdPipelineV2[];
+          pipelines?: RdPipelineV2[];
+        };
+        const pipelines: RdPipelineV2[] = body.data ?? body.pipelines ?? [];
+
+        await Promise.all(
+          pipelines.map(async (pipeline) => {
+            const pid = pipeline.id;
+            if (!pid) return;
+            try {
+              const stagesRes = await fetch(
+                `${BASE_URL_V2}/pipelines/${pid}/stages?sort[order]=asc&page[size]=100`,
+                { headers: this.headers() },
+              );
+              if (stagesRes.ok) {
+                const sb = await stagesRes.json() as { data?: RdStageV2[] };
+                (sb.data ?? []).forEach(addStage);
+              }
+            } catch { /* pula funil que falhou */ }
+          }),
+        );
       }
     } catch { /* continua para fallback */ }
 
-    // 2) v1 endpoint (fallback quando v2 não existe ou retornou vazio)
+    // ── 2) Fallback v1 (URL base diferente!) — tenta se v2 retornou vazio ────
     if (map.size === 0) {
       try {
-        const res = await fetch(`${BASE_URL_V1}/deal_stages?limit=50&page=1`, {
-          headers: this.headers(),
-        });
+        // v1 aceita token como query param
+        const url = `${BASE_URL_V1}/deal_stages?token=${encodeURIComponent(this.accessToken)}&limit=12&page=1`;
+        const res = await fetch(url);
         if (res.ok) {
-          const body = await res.json() as { deal_stages?: RdStageV1[]; data?: RdStageV1[] };
-          tryPopulate(body.deal_stages ?? body.data ?? []);
+          const body = await res.json() as { deal_stages?: RdStageV2[] };
+          (body.deal_stages ?? []).forEach(addStage);
         }
       } catch { /* degrada graciosamente */ }
     }
 
     if (map.size === 0) {
-      console.warn("[RdStationCrmAdapter] Não foi possível carregar etapas — as negociações mostrarão 'Desconhecido' até o endpoint de stages estar acessível.");
+      console.warn(
+        "[RdStationCrmAdapter] Não foi possível carregar etapas — " +
+        "negociações mostrarão 'Desconhecido' até o endpoint de stages responder.",
+      );
     }
 
     this.stagesCache = map;
@@ -175,10 +200,11 @@ export class RdStationCrmAdapter implements CrmAdapter {
       const params = new URLSearchParams();
       params.set("page[number]", String(pageNumber));
       params.set("page[size]", String(pageSize));
+      // Formato correto de ordenação v2: sort[campo]=direção
       params.set("sort[updated_at]", "desc");
 
       if (opts?.since) {
-        // RDQL datetime format: "YYYY-MM-DD HH:MM:SS"
+        // RDQL: DateTime entre aspas, formato "YYYY-MM-DD HH:MM:SS"
         const sinceStr = opts.since
           .toISOString()
           .replace("T", " ")
@@ -198,38 +224,36 @@ export class RdStationCrmAdapter implements CrmAdapter {
       const body = await res.json() as {
         data?: RdDealV2[];
         deals?: RdDealV2[];
-        meta?: {
-          pagination?: {
-            total_pages?: number;
-            next_page?: number | null;
-            current_page?: number;
-          };
+        // v2 usa links.next para paginação
+        links?: {
+          next?: string | null;
+          prev?: string | null;
+          self?: string | null;
+          first?: string | null;
+          last?: string | null;
         };
-        pagination?: {
-          total_pages?: number;
-          next_page?: string | number | null;
-        };
+        // Manter suporte a campos legados de respostas v1-like
+        meta?: { pagination?: { total_pages?: number; next_page?: number | null } };
+        pagination?: { total_pages?: number; next_page?: string | number | null };
         has_more?: boolean;
       };
 
       const batch: RdDealV2[] = body.data ?? body.deals ?? [];
       deals.push(...batch);
 
-      const totalPages =
-        body.meta?.pagination?.total_pages ?? body.pagination?.total_pages;
-
-      const hasMore =
+      // v2 sinaliza "tem próxima página" via links.next (URL da próxima página ou null)
+      const hasMoreV2 = !!body.links?.next;
+      const hasMoreLegacy =
         body.has_more === true ||
-        (body.meta?.pagination?.next_page != null) ||
-        (body.pagination?.next_page != null && body.pagination.next_page !== null) ||
-        (typeof totalPages === "number" && pageNumber < totalPages);
+        body.meta?.pagination?.next_page != null ||
+        (body.pagination?.next_page != null && body.pagination.next_page !== "");
 
-      if (!hasMore || batch.length < pageSize) break;
+      if ((!hasMoreV2 && !hasMoreLegacy) || batch.length < pageSize) break;
       pageNumber++;
       if (pageNumber > 100) break;
     }
 
-    // Collect unique contact IDs that need API lookup (when not embedded)
+    // Coleta IDs de contato que precisam de lookup (quando não vêm embutidos)
     const contactIdsToFetch = new Set<string>();
     for (const deal of deals) {
       if (!deal.contacts?.length && !deal.contact) {
@@ -238,7 +262,7 @@ export class RdStationCrmAdapter implements CrmAdapter {
       }
     }
 
-    // Fetch contacts in batches of 10 — cap at 200 to avoid rate-limit hammering
+    // Busca contatos em lotes de 10 — limite de 200 para evitar hammering de rate limit
     const contactMap = new Map<string, RdContactV2>();
     if (contactIdsToFetch.size > 0) {
       const ids = Array.from(contactIdsToFetch).slice(0, 200);
@@ -250,8 +274,8 @@ export class RdStationCrmAdapter implements CrmAdapter {
 
     const now = new Date();
     return deals.map((d): NormalizedLead => {
-      // ── Stage ──────────────────────────────────────────────────────────────
-      // Priority: stage_id + stagesMap (v2 contract) → deal_stage embedded (legacy fallback)
+      // ── Etapa ──────────────────────────────────────────────────────────────
+      // Prioridade: stage_id + stagesMap (v2) → deal_stage embutido (last resort)
       let etapa = "Desconhecido";
       let ordemEtapa: number | null = null;
 
@@ -260,13 +284,11 @@ export class RdStationCrmAdapter implements CrmAdapter {
         etapa = s.name;
         ordemEtapa = s.order;
       } else if (d.deal_stage?.name) {
-        // Legacy fallback: some accounts return deal_stage embedded for backward compat
         etapa = d.deal_stage.name;
         ordemEtapa = d.deal_stage.order ?? null;
       }
 
-      // ── Contact ────────────────────────────────────────────────────────────
-      // Priority: v1 embedded contacts → v2 lookup by contact_ids[0]
+      // ── Contato ────────────────────────────────────────────────────────────
       let nome: string | null = null;
       let email: string | null = null;
       let telefone: string | null = null;
@@ -282,13 +304,7 @@ export class RdStationCrmAdapter implements CrmAdapter {
       }
 
       // ── Valor ──────────────────────────────────────────────────────────────
-      // v2: total_price | v1 fallback: amount_total / amount / value
-      const rawValor =
-        d.total_price ??
-        d.amount_total ??
-        d.amount ??
-        d.value ??
-        null;
+      const rawValor = d.total_price ?? null;
 
       return {
         crmLeadId: String(d.id),
