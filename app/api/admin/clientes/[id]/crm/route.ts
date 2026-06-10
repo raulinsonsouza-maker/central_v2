@@ -63,19 +63,28 @@ export async function PUT(
     return NextResponse.json({ error: "Tipo CRM inválido" }, { status: 400 });
   }
 
+  let credenciais: Record<string, unknown> = body.credenciais ?? {};
+
+  if (body.tipo === "RDSTATION_CRM" && Object.keys(credenciais).length === 0) {
+    const existing = await prisma.crmConfig.findUnique({ where: { clienteId: id } });
+    if (existing?.tipo === "RDSTATION_CRM") {
+      credenciais = existing.credenciais as Record<string, unknown>;
+    }
+  }
+
   const config = await prisma.crmConfig.upsert({
     where: { clienteId: id },
     create: {
       clienteId: id,
       tipo: body.tipo as "CVCRM" | "RDSTATION_CRM" | "KOMMO",
       dominio: body.dominio ?? null,
-      credenciais: body.credenciais ?? {},
+      credenciais,
       ativo: body.ativo ?? true,
     },
     update: {
       tipo: body.tipo as "CVCRM" | "RDSTATION_CRM" | "KOMMO",
       dominio: body.dominio ?? null,
-      credenciais: body.credenciais ?? {},
+      credenciais,
       ativo: body.ativo ?? true,
     },
   });
@@ -138,7 +147,7 @@ export async function POST(
         adapterConfig = saved;
       }
 
-      const adapter = getCrmAdapter(adapterConfig);
+      const adapter = await getCrmAdapter(adapterConfig);
       const result = await adapter.testConnection();
       return NextResponse.json(result);
     } catch (e) {

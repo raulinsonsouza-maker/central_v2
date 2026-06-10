@@ -10,6 +10,7 @@ import {
   CheckCircle2,
   ChevronDown,
   Copy,
+  ExternalLink,
   Eye,
   KeyRound,
   Pencil,
@@ -300,6 +301,7 @@ function CrmConfigSection({
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [ativo, setAtivo] = useState(true);
+  const [rdConnected, setRdConnected] = useState(false);
   const [loading, setLoading] = useState(false);
   const [testLoading, setTestLoading] = useState(false);
   const [statusMsg, setStatusMsg] = useState<{ ok: boolean; msg: string } | null>(null);
@@ -320,6 +322,9 @@ function CrmConfigSection({
         const creds = data.credenciais ?? {};
         setEmail(creds.email ?? "");
         setToken(creds.token ?? "");
+        if (data.tipo === "RDSTATION_CRM") {
+          setRdConnected(!!creds.accessToken);
+        }
       })
       .catch(() => {});
   }, [clienteId, adminToken, initialLoaded]);
@@ -332,7 +337,7 @@ function CrmConfigSection({
       if (tipo === "CVCRM") {
         credenciais.email = email.trim();
         credenciais.token = token.trim();
-      } else {
+      } else if (tipo !== "RDSTATION_CRM") {
         credenciais.token = token.trim();
       }
       const res = await fetch(`/api/admin/clientes/${clienteId}/crm`, {
@@ -361,13 +366,13 @@ function CrmConfigSection({
       if (tipo === "CVCRM") {
         credenciais.email = email.trim();
         credenciais.token = token.trim();
-      } else {
+      } else if (tipo !== "RDSTATION_CRM") {
         credenciais.token = token.trim();
       }
       const res = await fetch(`/api/admin/clientes/${clienteId}/crm?action=test`, {
         method: "POST",
         headers: { "x-admin-token": adminToken, "Content-Type": "application/json" },
-        body: JSON.stringify({ tipo, dominio: dominio.trim() || null, credenciais }),
+        body: JSON.stringify({ tipo, dominio: dominio.trim() || null, credenciais: tipo === "RDSTATION_CRM" ? undefined : credenciais }),
       });
       const data = await res.json().catch(() => ({}));
       setStatusMsg({ ok: !!data.ok, msg: data.ok ? "Conexão testada com sucesso!" : (data.error ?? "Falha na conexão") });
@@ -421,24 +426,54 @@ function CrmConfigSection({
             </FormField>
           )}
 
-          <FormField
-            label="Token de API"
-            hint={
-              tipo === "CVCRM"
-                ? "Token disponível em Configurações → Integrações no CV CRM."
-                : tipo === "RDSTATION_CRM"
-                ? "Token de longa duração do RD Station CRM."
-                : "Access token de longa duração do Kommo (Integrações → API)."
-            }
-          >
-            <input
-              type="password"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
-              placeholder="••••••••••••••••"
-              className={inputClass}
-            />
-          </FormField>
+          {tipo === "RDSTATION_CRM" ? (
+            <div className="rounded-xl border border-[var(--border)] bg-[var(--card)] p-3 space-y-2">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Autenticação OAuth</p>
+              {rdConnected ? (
+                <div className="flex items-center gap-3 flex-wrap">
+                  <span className="flex items-center gap-1.5 rounded-full bg-[var(--success)]/10 px-2.5 py-1 text-xs font-semibold text-[var(--success)]">
+                    <CheckCircle2 className="h-3 w-3" /> Conectado
+                  </span>
+                  <a
+                    href={`/api/auth/rd-station/start?clienteId=${clienteId}`}
+                    className="flex items-center gap-1 text-xs text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors"
+                  >
+                    <RefreshCw className="h-3 w-3" /> Reconectar
+                  </a>
+                </div>
+              ) : (
+                <div className="space-y-1.5">
+                  <a
+                    href={`/api/auth/rd-station/start?clienteId=${clienteId}`}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#1877F2] px-4 py-2 text-xs font-semibold text-white transition hover:opacity-90"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5" />
+                    Conectar via RD Station
+                  </a>
+                  <p className="text-[11px] text-[var(--muted-foreground)]">
+                    Você será redirecionado para autorizar o acesso à sua conta RD Station CRM.
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <FormField
+              label="Token de API"
+              hint={
+                tipo === "CVCRM"
+                  ? "Token disponível em Configurações → Integrações no CV CRM."
+                  : "Access token de longa duração do Kommo (Integrações → API)."
+              }
+            >
+              <input
+                type="password"
+                value={token}
+                onChange={(e) => setToken(e.target.value)}
+                placeholder="••••••••••••••••"
+                className={inputClass}
+              />
+            </FormField>
+          )}
 
           <label className="flex cursor-pointer items-center gap-2.5">
             <input

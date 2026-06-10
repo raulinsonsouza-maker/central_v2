@@ -81,7 +81,7 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
   }
 
   try {
-    const adapter = getCrmAdapter(config);
+    const adapter = await getCrmAdapter(config);
 
     const since = config.ultimoSyncAt
       ? new Date(config.ultimoSyncAt.getTime() - 3 * 24 * 60 * 60 * 1000)

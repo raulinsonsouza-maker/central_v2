@@ -20,7 +20,10 @@ export interface CvCrmCredentials {
 }
 
 export interface RdStationCredentials {
-  token: string;
+  accessToken?: string;
+  refreshToken?: string;
+  expiresAt?: number;
+  token?: string;
 }
 
 export interface KommoCredentials {

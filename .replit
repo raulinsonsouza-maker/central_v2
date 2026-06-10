@@ -46,6 +46,8 @@ build = ["npm", "run", "build"]
 
 [userenv.shared]
 ADMIN_SECRET = "admin"
+RD_STATION_CLIENT_ID = "c43d45cb-0a80-40cf-8b75-873b93e8128a"
+RD_STATION_CLIENT_SECRET = "992a9650c8ff40879f2834237d66ce33"
 
 [postMerge]
 path = "scripts/post-merge.sh"

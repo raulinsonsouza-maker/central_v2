@@ -43,16 +43,18 @@ function extractContactInfo(deal: RdDeal): { telefone: string | null; email: str
 }
 
 export class RdStationCrmAdapter implements CrmAdapter {
-  private token: string;
+  private accessToken: string;
   private static BASE_URL = "https://api.rd.services/crm/v2";
 
   constructor(creds: RdStationCredentials) {
-    this.token = creds.token;
+    const token = creds.accessToken ?? creds.token;
+    if (!token) throw new Error("RD Station CRM requer accessToken ou token.");
+    this.accessToken = token;
   }
 
   private headers(): HeadersInit {
     return {
-      Authorization: `Bearer ${this.token}`,
+      Authorization: `Bearer ${this.accessToken}`,
       "Content-Type": "application/json",
     };
   }
