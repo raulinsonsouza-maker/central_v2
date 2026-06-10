@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/db";
+import { syncCrmCliente } from "@/lib/sync/crmSync";
 
 function getAppUrl(): string {
   if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
@@ -94,6 +95,10 @@ export async function GET(request: NextRequest) {
         credenciais: credenciais as Prisma.InputJsonValue,
       },
     });
+
+    // Fire-and-forget: inicia o primeiro sync assim que os tokens são salvos,
+    // para que os dados apareçam já na primeira visita ao dashboard.
+    syncCrmCliente(clienteId).catch(() => {});
 
     return NextResponse.redirect(
       `${redirectBase}?rdConnected=1&clienteId=${encodeURIComponent(clienteId)}`,

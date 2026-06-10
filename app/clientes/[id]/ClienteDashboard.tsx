@@ -10,7 +10,7 @@ import { AnalyticsGA4Section } from "@/components/clientes/AnalyticsGA4Section";
 import { ImoveisPanel } from "@/components/clientes/ImoveisPanel";
 import { LeadScoringPanel } from "@/components/clientes/LeadScoringPanel";
 import { ImobLeadScoringPanel } from "@/components/clientes/ImobLeadScoringPanel";
-import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
+import { CrmTab } from "@/components/clientes/CrmTab";
 import { HotelFazendaSaoJoaoPanel } from "@/components/clientes/HotelFazendaSaoJoaoPanel";
 import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
@@ -354,7 +354,7 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }
 let dailyGlobalSyncFired = false;
 
 export function ClienteDashboard({ id, portalMode = false }: { id: string; portalMode?: boolean }) {
-  const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring">("geral");
+  const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring" | "crm">("geral");
   const [subView, setSubView] = React.useState<"dados" | "criativos" | "lead-scoring">("dados");
   const [saldoVisible, setSaldoVisible] = React.useState(false);
   const [presetPeriodo, setPresetPeriodo] = React.useState<PresetPeriodo>("mesAtual");
@@ -533,7 +533,7 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const { data: resumo } = useQuery({
     queryKey: ["resumo", id, canal, dateFilter.periodo, dateFilter.dataInicio, dateFilter.dataFim],
     queryFn: () => fetchResumo(id, canal as "geral" | "meta" | "google", dateFilter),
-    enabled: !!id && canal !== "imoveis",
+    enabled: !!id && canal !== "imoveis" && canal !== "crm",
   });
 
   // Auto-sync when data is stale (last fato more than 24h behind today)
@@ -567,7 +567,7 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const { data: midia } = useQuery({
     queryKey: ["midia", id, canal, presetPeriodo, dateFilter.dataInicio, dateFilter.dataFim, chartAgrupamento],
     queryFn: () => fetchMidia(id, canal as string, dateFilter, presetPeriodo, isLongPeriod ? undefined : chartAgrupamento),
-    enabled: !!id && canal !== "imoveis",
+    enabled: !!id && canal !== "imoveis" && canal !== "crm",
   });
 
   const { data: financeiro } = useQuery({
@@ -585,10 +585,19 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
     queryFn: () => fetchGoogleKeywords(id, dateFilter),
     enabled: !!id && canal === "google" && subView === "criativos",
   });
-  const isHotelPanel = isHotelFazendaSaoJoao(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring";
-  const isTertuliaPanel = isTertulia(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring";
-  const isVarellaPanel = isVarellaMotos(cliente) && canal !== "imoveis" && canal !== "lead-scoring";
-  const isMiguelImoveisPanel = isMiguelImoveis(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring";
+
+  const { data: crmFunil } = useQuery<{ configured: boolean }>({
+    queryKey: ["crm-funil-status", id],
+    queryFn: () => fetch(`/api/clientes/${id}/crm/funil`).then((r) => r.json()),
+    staleTime: 5 * 60 * 1000,
+    refetchOnWindowFocus: false,
+  });
+  const hasCrm = crmFunil?.configured === true;
+
+  const isHotelPanel = isHotelFazendaSaoJoao(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
+  const isTertuliaPanel = isTertulia(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
+  const isVarellaPanel = isVarellaMotos(cliente) && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
+  const isMiguelImoveisPanel = isMiguelImoveis(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
   const isMiguelGooglePanel = isMiguelImoveis(cliente) && canal === "google";
   const isMiguelPanel = isDrFernandoGuena(cliente) && canal !== "google";
   const isClinicaESpaPanel = isClinicaESpa(cliente) && canal !== "google";
@@ -906,6 +915,7 @@ function formatPercentage(value: number) {
               "google",
               ...(cliente?.leadScoringEnabled ? ["lead-scoring"] : []),
               ...(isMiguelImoveis(cliente) ? ["imoveis"] : []),
+              ...(!portalMode && hasCrm ? ["crm"] : []),
             ] as const).map((c) => (
               <button
                 key={c}
@@ -920,7 +930,7 @@ function formatPercentage(value: number) {
                     : "text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
                 }`}
               >
-                {c === "geral" ? "Geral" : c === "meta" ? "META" : c === "google" ? "Google" : c === "imoveis" ? "Imóveis" : "Lead Scoring"}
+                {c === "geral" ? "Geral" : c === "meta" ? "META" : c === "google" ? "Google" : c === "imoveis" ? "Imóveis" : c === "crm" ? "CRM" : "Lead Scoring"}
               </button>
             ))}
           </div>
@@ -932,7 +942,7 @@ function formatPercentage(value: number) {
         {/* Linha 1: Saldo chip (esquerda) + Filtro de data (direita) */}
         <div className="flex items-center gap-2">
           {/* Saldo chip — só em Meta/Google */}
-          {canal !== "geral" && canal !== "imoveis" && canal !== "lead-scoring" && subView !== "lead-scoring" && (() => {
+          {canal !== "geral" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && subView !== "lead-scoring" && (() => {
             const saldo = canal === "meta" ? saldoMeta : saldoGoogle;
             const plataforma = canal === "meta" ? "META" : "Google";
             const value = saldo?.saldo;
@@ -1284,8 +1294,11 @@ function formatPercentage(value: number) {
         />
       )}
 
+      {/* ── CRM tab ── */}
+      {canal === "crm" && id && <CrmTab clienteId={id} />}
+
       {/* ── Default panel (KPIs, chart, weekly table, financial) ── */}
-      {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && !isSpecialPanel && resumo && (
+      {canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && (canal === "geral" || subView === "dados") && !isSpecialPanel && resumo && (
         <DefaultPanel
           resumo={
             isMiguelImoveisPanel
@@ -1378,7 +1391,7 @@ function formatPercentage(value: number) {
       )}
 
       {/* ── Financial tracking (Plano x Real) ── */}
-      {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && financeiro && financeiro.meses && (
+      {canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && (canal === "geral" || subView === "dados") && financeiro && financeiro.meses && (
         <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
           <CardHeader>
             <div className="flex flex-wrap items-start justify-between gap-4">
@@ -1540,12 +1553,9 @@ function formatPercentage(value: number) {
       )}
 
       {/* ── Comportamento GA4 (todos os painéis quando configurado) ── */}
-      {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && analytics?.hasAnalytics && (
+      {canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && (canal === "geral" || subView === "dados") && analytics?.hasAnalytics && (
         <AnalyticsGA4Section data={analytics} />
       )}
-
-      {/* ── Funil CRM (geral only) ── */}
-      {id && canal === "geral" && <FunilCrmSection clienteId={id} />}
 
       {/* ── Pauta da semana (geral only, internal only) ── */}
       {id && canal === "geral" && !portalMode && <PautaDaSemana clienteId={id} />}
