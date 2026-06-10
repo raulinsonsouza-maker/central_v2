@@ -16,6 +16,8 @@ const KEYS = {
   alertSmtpUser: "alert_smtp_user",
   alertSmtpPass: "alert_smtp_pass",
   alertSmtpFrom: "alert_smtp_from",
+  alertBalanceThresholdDays: "alert_balance_threshold_days",
+  alertSpendGapDays: "alert_spend_gap_days",
 } as const;
 
 export interface IntegrationsConfig {
@@ -34,6 +36,8 @@ export interface IntegrationsConfig {
   alertSmtpUser: string | null;
   alertSmtpPass: string | null;
   alertSmtpFrom: string | null;
+  alertBalanceThresholdDays: string | null;
+  alertSpendGapDays: string | null;
 }
 
 export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
@@ -56,6 +60,8 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
           KEYS.alertSmtpUser,
           KEYS.alertSmtpPass,
           KEYS.alertSmtpFrom,
+          KEYS.alertBalanceThresholdDays,
+          KEYS.alertSpendGapDays,
         ],
       },
     },
@@ -81,6 +87,8 @@ export async function getIntegrationsConfig(): Promise<IntegrationsConfig> {
     alertSmtpUser: map.get(KEYS.alertSmtpUser) ?? null,
     alertSmtpPass: map.get(KEYS.alertSmtpPass) ?? null,
     alertSmtpFrom: map.get(KEYS.alertSmtpFrom) ?? null,
+    alertBalanceThresholdDays: map.get(KEYS.alertBalanceThresholdDays) ?? null,
+    alertSpendGapDays: map.get(KEYS.alertSpendGapDays) ?? null,
   };
 }
 
@@ -100,6 +108,8 @@ export async function updateIntegrationsConfig(data: {
   alertSmtpUser?: string;
   alertSmtpPass?: string;
   alertSmtpFrom?: string;
+  alertBalanceThresholdDays?: string;
+  alertSpendGapDays?: string;
 }) {
   const ops = [];
 
@@ -252,6 +262,26 @@ export async function updateIntegrationsConfig(data: {
         where: { key: KEYS.alertSmtpFrom },
         create: { key: KEYS.alertSmtpFrom, value: data.alertSmtpFrom.trim() },
         update: { value: data.alertSmtpFrom.trim() },
+      })
+    );
+  }
+
+  if (data.alertBalanceThresholdDays !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertBalanceThresholdDays },
+        create: { key: KEYS.alertBalanceThresholdDays, value: data.alertBalanceThresholdDays.trim() },
+        update: { value: data.alertBalanceThresholdDays.trim() },
+      })
+    );
+  }
+
+  if (data.alertSpendGapDays !== undefined) {
+    ops.push(
+      prisma.systemConfig.upsert({
+        where: { key: KEYS.alertSpendGapDays },
+        create: { key: KEYS.alertSpendGapDays, value: data.alertSpendGapDays.trim() },
+        update: { value: data.alertSpendGapDays.trim() },
       })
     );
   }

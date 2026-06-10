@@ -32,7 +32,7 @@ export interface AlertaSummary {
   erros: string[];
 }
 
-async function fetchSaldosBaixos(config: Awaited<ReturnType<typeof getIntegrationsConfig>>): Promise<{ alertas: SaldoAlerta[]; erros: string[] }> {
+async function fetchSaldosBaixos(config: Awaited<ReturnType<typeof getIntegrationsConfig>>, balanceThresholdDays: number): Promise<{ alertas: SaldoAlerta[]; erros: string[] }> {
   const contasMeta = await prisma.conta.findMany({
     where: { plataforma: "META", accountIdPlataforma: { not: null } },
     include: {
@@ -121,17 +121,20 @@ async function fetchSaldosBaixos(config: Awaited<ReturnType<typeof getIntegratio
     .map((c) => `Saldo [${c.nome}]: ${c.erro}`);
 
   const alertas = contas.filter(
-    (c) => c.diasRestantes !== null && c.diasRestantes < 7
+    (c) => c.diasRestantes !== null && c.diasRestantes < balanceThresholdDays
   );
 
   return { alertas, erros };
 }
 
-async function fetchAnomalias(): Promise<AnomaliaAlerta[]> {
+async function fetchAnomalias(spendGapDays: number): Promise<AnomaliaAlerta[]> {
   const now = new Date();
-  const day9 = new Date(now);
-  day9.setDate(day9.getDate() - 9);
-  day9.setHours(0, 0, 0, 0);
+
+  // Look back far enough to verify prior spend before the gap
+  const lookbackDays = spendGapDays + 7;
+  const lookbackStart = new Date(now);
+  lookbackStart.setDate(lookbackStart.getDate() - lookbackDays);
+  lookbackStart.setHours(0, 0, 0, 0);
 
   const clientes = await prisma.cliente.findMany({
     where: { ativo: true },
@@ -141,7 +144,7 @@ async function fetchAnomalias(): Promise<AnomaliaAlerta[]> {
 
   const fatos = await prisma.fatoMidiaDiario.findMany({
     where: {
-      data: { gte: day9, lte: now },
+      data: { gte: lookbackStart, lte: now },
       canal: { in: ["META", "GOOGLE"] },
       clienteId: { in: clientes.map((c) => c.id) },
     },
@@ -158,10 +161,6 @@ async function fetchAnomalias(): Promise<AnomaliaAlerta[]> {
     grouped.set(key, entry);
   }
 
-  const cutoff2 = new Date(now);
-  cutoff2.setDate(cutoff2.getDate() - 1);
-  cutoff2.setHours(0, 0, 0, 0);
-
   const anomalias: AnomaliaAlerta[] = [];
 
   for (const [key, days] of grouped.entries()) {
@@ -169,32 +168,28 @@ async function fetchAnomalias(): Promise<AnomaliaAlerta[]> {
     const cliente = clienteMap.get(clienteId);
     if (!cliente) continue;
 
-    const spendUlt2 = days
-      .filter((d) => d.data >= cutoff2)
-      .reduce((s, d) => s + d.spend, 0);
+    // Find the most recent day with spend
+    const withSpend = days
+      .filter((d) => d.spend > 0)
+      .sort((a, b) => b.data.getTime() - a.data.getTime());
+    if (withSpend.length === 0) continue;
 
-    const spendAnterior = days
-      .filter((d) => d.data < cutoff2 && d.data >= day9)
-      .reduce((s, d) => s + d.spend, 0);
+    const lastDate = withSpend[0].data;
+    const diasSemGasto = Math.floor(
+      (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
+    );
 
-    if (spendAnterior > 0 && spendUlt2 === 0) {
-      const withSpend = days
-        .filter((d) => d.spend > 0)
-        .sort((a, b) => b.data.getTime() - a.data.getTime());
-      if (withSpend.length === 0) continue;
-      const lastDate = withSpend[0].data;
-      const diasSemGasto = Math.floor(
-        (now.getTime() - lastDate.getTime()) / (1000 * 60 * 60 * 24)
-      );
-      anomalias.push({
-        clienteId,
-        nome: cliente.nome,
-        slug: cliente.slug,
-        canal,
-        ultimoGastoData: lastDate.toISOString().slice(0, 10),
-        diasSemGasto,
-      });
-    }
+    // Only flag if gap meets the configured threshold
+    if (diasSemGasto < spendGapDays) continue;
+
+    anomalias.push({
+      clienteId,
+      nome: cliente.nome,
+      slug: cliente.slug,
+      canal,
+      ultimoGastoData: lastDate.toISOString().slice(0, 10),
+      diasSemGasto,
+    });
   }
 
   anomalias.sort((a, b) => b.diasSemGasto - a.diasSemGasto);
@@ -208,7 +203,7 @@ function formatCurrency(value: number, moeda: string): string {
   }).format(value);
 }
 
-function buildEmailHtml(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAlerta[]): string {
+function buildEmailHtml(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAlerta[], balanceThresholdDays: number, spendGapDays: number): string {
   const date = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
 
   let html = `
@@ -241,7 +236,7 @@ function buildEmailHtml(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAlerta[]
   </div>
 `;
 
-  html += `<div class="section"><p class="section-title">Saldo Baixo Meta Ads (&lt;7 dias)</p>`;
+  html += `<div class="section"><p class="section-title">Saldo Baixo Meta Ads (&lt;${balanceThresholdDays} dias)</p>`;
   if (saldosBaixos.length === 0) {
     html += `<p class="no-alerts">Nenhuma conta com saldo crítico.</p>`;
   } else {
@@ -262,7 +257,7 @@ function buildEmailHtml(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAlerta[]
   }
   html += `</div><div class="divider"></div>`;
 
-  html += `<div class="section"><p class="section-title">Anomalias de Gasto</p>`;
+  html += `<div class="section"><p class="section-title">Anomalias de Gasto (&ge;${spendGapDays} dia(s) sem gasto)</p>`;
   if (anomalias.length === 0) {
     html += `<p class="no-alerts">Nenhuma anomalia detectada.</p>`;
   } else {
@@ -279,16 +274,16 @@ function buildEmailHtml(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAlerta[]
   }
   html += `</div>`;
 
-  html += `<div class="footer">Este alerta é enviado automaticamente pelo sistema Central de Clientes Inout.</div>`;
+  html += `<div class="footer">Este alerta é enviado automaticamente pelo sistema Central de Clientes Inout. Limiares configurados: saldo &lt;${balanceThresholdDays} dias · gap de gasto &ge;${spendGapDays} dia(s).</div>`;
   html += `</div></body></html>`;
   return html;
 }
 
-function buildWebhookPayload(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAlerta[]): object {
+function buildWebhookPayload(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAlerta[], balanceThresholdDays: number, spendGapDays: number): object {
   const date = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
   const lines: string[] = [`*Alerta Diário — Central de Clientes (${date})*`];
 
-  lines.push(`\n*Saldo Baixo Meta Ads (<7 dias)*`);
+  lines.push(`\n*Saldo Baixo Meta Ads (<${balanceThresholdDays} dias)*`);
   if (saldosBaixos.length === 0) {
     lines.push("Nenhuma conta com saldo crítico.");
   } else {
@@ -299,7 +294,7 @@ function buildWebhookPayload(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAle
     }
   }
 
-  lines.push(`\n*Anomalias de Gasto*`);
+  lines.push(`\n*Anomalias de Gasto (≥${spendGapDays} dia(s) sem gasto)*`);
   if (anomalias.length === 0) {
     lines.push("Nenhuma anomalia detectada.");
   } else {
@@ -308,13 +303,16 @@ function buildWebhookPayload(saldosBaixos: SaldoAlerta[], anomalias: AnomaliaAle
     }
   }
 
+  lines.push(`\n_Limiares: saldo <${balanceThresholdDays} dias · gap de gasto ≥${spendGapDays} dia(s)_`);
   return { text: lines.join("\n") };
 }
 
 async function sendEmail(
   config: Awaited<ReturnType<typeof getIntegrationsConfig>>,
   saldosBaixos: SaldoAlerta[],
-  anomalias: AnomaliaAlerta[]
+  anomalias: AnomaliaAlerta[],
+  balanceThresholdDays: number,
+  spendGapDays: number
 ): Promise<void> {
   const { alertNotificationEmail, alertSmtpHost, alertSmtpPort, alertSmtpUser, alertSmtpPass, alertSmtpFrom } = config;
 
@@ -328,7 +326,7 @@ async function sendEmail(
     auth: { user: alertSmtpUser, pass: alertSmtpPass },
   });
 
-  const html = buildEmailHtml(saldosBaixos, anomalias);
+  const html = buildEmailHtml(saldosBaixos, anomalias, balanceThresholdDays, spendGapDays);
   const date = new Date().toLocaleDateString("pt-BR", { timeZone: "America/Sao_Paulo" });
   const totalAlertas = saldosBaixos.length + anomalias.length;
 
@@ -343,9 +341,11 @@ async function sendEmail(
 async function sendWebhook(
   webhookUrl: string,
   saldosBaixos: SaldoAlerta[],
-  anomalias: AnomaliaAlerta[]
+  anomalias: AnomaliaAlerta[],
+  balanceThresholdDays: number,
+  spendGapDays: number
 ): Promise<void> {
-  const payload = buildWebhookPayload(saldosBaixos, anomalias);
+  const payload = buildWebhookPayload(saldosBaixos, anomalias, balanceThresholdDays, spendGapDays);
   const res = await fetch(webhookUrl, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -360,12 +360,19 @@ export async function runDailyAlerts(): Promise<AlertaSummary> {
   const config = await getIntegrationsConfig();
   const erros: string[] = [];
 
+  const balanceThresholdDays = config.alertBalanceThresholdDays
+    ? parseInt(config.alertBalanceThresholdDays, 10) || 7
+    : 7;
+  const spendGapDays = config.alertSpendGapDays
+    ? parseInt(config.alertSpendGapDays, 10) || 2
+    : 2;
+
   const [saldosResult, anomalias] = await Promise.all([
-    fetchSaldosBaixos(config).catch((e) => {
+    fetchSaldosBaixos(config, balanceThresholdDays).catch((e) => {
       erros.push(`Erro ao buscar saldos: ${e instanceof Error ? e.message : String(e)}`);
       return { alertas: [] as SaldoAlerta[], erros: [] as string[] };
     }),
-    fetchAnomalias().catch((e) => {
+    fetchAnomalias(spendGapDays).catch((e) => {
       erros.push(`Erro ao buscar anomalias: ${e instanceof Error ? e.message : String(e)}`);
       return [] as AnomaliaAlerta[];
     }),
@@ -382,7 +389,7 @@ export async function runDailyAlerts(): Promise<AlertaSummary> {
   if (totalAlertas > 0) {
     if (config.alertNotificationEmail) {
       try {
-        await sendEmail(config, saldosBaixos, anomalias);
+        await sendEmail(config, saldosBaixos, anomalias, balanceThresholdDays, spendGapDays);
         emailEnviado = true;
       } catch (e) {
         erros.push(`Erro ao enviar e-mail: ${e instanceof Error ? e.message : String(e)}`);
@@ -391,7 +398,7 @@ export async function runDailyAlerts(): Promise<AlertaSummary> {
 
     if (config.alertWebhookUrl) {
       try {
-        await sendWebhook(config.alertWebhookUrl, saldosBaixos, anomalias);
+        await sendWebhook(config.alertWebhookUrl, saldosBaixos, anomalias, balanceThresholdDays, spendGapDays);
         webhookEnviado = true;
       } catch (e) {
         erros.push(`Erro ao enviar webhook: ${e instanceof Error ? e.message : String(e)}`);

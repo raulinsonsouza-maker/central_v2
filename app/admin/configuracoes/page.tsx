@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle, Bell, CheckCircle2, FileSpreadsheet, KeyRound, RefreshCw, Shield, Upload } from "lucide-react";
 
@@ -33,6 +33,8 @@ async function fetchIntegrationsConfig(token?: string) {
     alertSmtpUser: string;
     hasAlertSmtpPass: boolean;
     alertSmtpFrom: string;
+    alertBalanceThresholdDays: string;
+    alertSpendGapDays: string;
   }>;
 }
 
@@ -52,6 +54,8 @@ async function updateIntegrationsConfigApi(
     alertSmtpUser?: string;
     alertSmtpPass?: string;
     alertSmtpFrom?: string;
+    alertBalanceThresholdDays?: string;
+    alertSpendGapDays?: string;
   },
   token?: string
 ) {
@@ -79,6 +83,8 @@ async function updateIntegrationsConfigApi(
     alertSmtpUser: string;
     hasAlertSmtpPass: boolean;
     alertSmtpFrom: string;
+    alertBalanceThresholdDays: string;
+    alertSpendGapDays: string;
   };
 }
 
@@ -94,6 +100,7 @@ type ImportResult = {
 };
 
 export default function AdminIntegrationsConfigPage() {
+  const queryClient = useQueryClient();
   const [adminToken, setAdminToken] = useState("");
   const [tokenInput, setTokenInput] = useState("");
   const [metaAccessToken, setMetaAccessToken] = useState("");
@@ -110,6 +117,8 @@ export default function AdminIntegrationsConfigPage() {
   const [alertSmtpUser, setAlertSmtpUser] = useState("");
   const [alertSmtpPass, setAlertSmtpPass] = useState("");
   const [alertSmtpFrom, setAlertSmtpFrom] = useState("");
+  const [alertBalanceThresholdDays, setAlertBalanceThresholdDays] = useState("");
+  const [alertSpendGapDays, setAlertSpendGapDays] = useState("");
   const [formError, setFormError] = useState("");
   const [formSuccess, setFormSuccess] = useState("");
   const [testAlertLoading, setTestAlertLoading] = useState(false);
@@ -149,6 +158,8 @@ export default function AdminIntegrationsConfigPage() {
       alertSmtpUser?: string;
       alertSmtpPass?: string;
       alertSmtpFrom?: string;
+      alertBalanceThresholdDays?: string;
+      alertSpendGapDays?: string;
     }) => updateIntegrationsConfigApi(body, adminToken || undefined),
     onSuccess: () => {
       setFormError("");
@@ -160,6 +171,9 @@ export default function AdminIntegrationsConfigPage() {
       setGoogleRefreshToken("");
       setGoogleLoginCustomerId("");
       setAlertSmtpPass("");
+      setAlertBalanceThresholdDays("");
+      setAlertSpendGapDays("");
+      queryClient.invalidateQueries({ queryKey: ["admin", "config", "integracoes"] });
     },
     onError: (e: Error) => {
       setFormError(e.message);
@@ -426,57 +440,6 @@ export default function AdminIntegrationsConfigPage() {
         </Card>
       </section>
 
-      <section className="flex justify-end">
-        <button
-          disabled={mutation.isPending || isLoading}
-          onClick={() => {
-            const body: {
-              metaAccessToken?: string;
-              metaAdAccountId?: string;
-              googleDeveloperToken?: string;
-              googleRefreshToken?: string;
-              googleClientId?: string;
-              googleClientSecret?: string;
-              googleLoginCustomerId?: string;
-              alertNotificationEmail?: string;
-              alertWebhookUrl?: string;
-              alertSmtpHost?: string;
-              alertSmtpPort?: string;
-              alertSmtpUser?: string;
-              alertSmtpPass?: string;
-              alertSmtpFrom?: string;
-            } = {};
-
-            if (metaAccessToken.trim()) body.metaAccessToken = metaAccessToken.trim();
-            if (metaAdAccountId.trim()) body.metaAdAccountId = metaAdAccountId.trim();
-            if (googleClientId.trim()) body.googleClientId = googleClientId.trim();
-            if (googleClientSecret.trim()) body.googleClientSecret = googleClientSecret.trim();
-            if (googleDeveloperToken.trim()) body.googleDeveloperToken = googleDeveloperToken.trim();
-            if (googleRefreshToken.trim()) body.googleRefreshToken = googleRefreshToken.trim();
-            if (googleLoginCustomerId.trim()) body.googleLoginCustomerId = googleLoginCustomerId.trim();
-            if (alertNotificationEmail.trim()) body.alertNotificationEmail = alertNotificationEmail.trim();
-            if (alertWebhookUrl.trim()) body.alertWebhookUrl = alertWebhookUrl.trim();
-            if (alertSmtpHost.trim()) body.alertSmtpHost = alertSmtpHost.trim();
-            if (alertSmtpPort.trim()) body.alertSmtpPort = alertSmtpPort.trim();
-            if (alertSmtpUser.trim()) body.alertSmtpUser = alertSmtpUser.trim();
-            if (alertSmtpPass.trim()) body.alertSmtpPass = alertSmtpPass.trim();
-            if (alertSmtpFrom.trim()) body.alertSmtpFrom = alertSmtpFrom.trim();
-
-            if (Object.keys(body).length === 0) {
-              setFormError("Preencha ao menos um campo para atualizar.");
-              setFormSuccess("");
-              return;
-            }
-
-            setFormError("");
-            mutation.mutate(body);
-          }}
-          className="rounded-xl bg-[var(--primary)] px-6 py-2.5 text-sm font-semibold text-[var(--primary-foreground)] transition hover:opacity-90 disabled:opacity-50"
-        >
-          {mutation.isPending ? "Salvando..." : "Salvar alterações"}
-        </button>
-      </section>
-
       {/* ── Alertas automáticos ── */}
       <section className="space-y-3">
         <h2 className="text-lg font-bold tracking-tight text-[var(--foreground)]">
@@ -611,6 +574,107 @@ export default function AdminIntegrationsConfigPage() {
             </div>
           </CardContent>
         </Card>
+      </section>
+
+      <Card className="rounded-2xl border-[var(--border)]">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Bell className="h-4 w-4 text-[var(--primary)]" />
+            Limiares de alerta
+          </CardTitle>
+          <p className="mt-1 text-xs text-[var(--muted-foreground)]">
+            Defina quando o sistema deve disparar cada tipo de alerta. Os padrões são 7 dias de saldo restante e 2 dias sem gasto.
+          </p>
+        </CardHeader>
+        <CardContent className="grid gap-4 sm:grid-cols-2">
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+              Saldo mínimo (dias restantes)
+            </label>
+            <input
+              type="number"
+              min="1"
+              value={alertBalanceThresholdDays}
+              onChange={(e) => setAlertBalanceThresholdDays(e.target.value)}
+              placeholder={data?.alertBalanceThresholdDays || "7"}
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+            />
+            <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+              Atual: <span className="text-[var(--primary)]">{data?.alertBalanceThresholdDays || "7"} dias</span>
+            </p>
+          </div>
+          <div>
+            <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
+              Gap de gasto (dias sem gasto)
+            </label>
+            <input
+              type="number"
+              min="1"
+              value={alertSpendGapDays}
+              onChange={(e) => setAlertSpendGapDays(e.target.value)}
+              placeholder={data?.alertSpendGapDays || "2"}
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
+            />
+            <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+              Atual: <span className="text-[var(--primary)]">{data?.alertSpendGapDays || "2"} dia(s)</span>
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      <section className="flex justify-end">
+        <button
+          disabled={mutation.isPending || isLoading}
+          onClick={() => {
+            const body: {
+              metaAccessToken?: string;
+              metaAdAccountId?: string;
+              googleDeveloperToken?: string;
+              googleRefreshToken?: string;
+              googleClientId?: string;
+              googleClientSecret?: string;
+              googleLoginCustomerId?: string;
+              alertNotificationEmail?: string;
+              alertWebhookUrl?: string;
+              alertSmtpHost?: string;
+              alertSmtpPort?: string;
+              alertSmtpUser?: string;
+              alertSmtpPass?: string;
+              alertSmtpFrom?: string;
+              alertBalanceThresholdDays?: string;
+              alertSpendGapDays?: string;
+            } = {};
+
+            if (metaAccessToken.trim()) body.metaAccessToken = metaAccessToken.trim();
+            if (metaAdAccountId.trim()) body.metaAdAccountId = metaAdAccountId.trim();
+            if (googleClientId.trim()) body.googleClientId = googleClientId.trim();
+            if (googleClientSecret.trim()) body.googleClientSecret = googleClientSecret.trim();
+            if (googleDeveloperToken.trim()) body.googleDeveloperToken = googleDeveloperToken.trim();
+            if (googleRefreshToken.trim()) body.googleRefreshToken = googleRefreshToken.trim();
+            if (googleLoginCustomerId.trim()) body.googleLoginCustomerId = googleLoginCustomerId.trim();
+            if (alertNotificationEmail.trim()) body.alertNotificationEmail = alertNotificationEmail.trim();
+            if (alertWebhookUrl.trim()) body.alertWebhookUrl = alertWebhookUrl.trim();
+            if (alertSmtpHost.trim()) body.alertSmtpHost = alertSmtpHost.trim();
+            if (alertSmtpPort.trim()) body.alertSmtpPort = alertSmtpPort.trim();
+            if (alertSmtpUser.trim()) body.alertSmtpUser = alertSmtpUser.trim();
+            if (alertSmtpPass.trim()) body.alertSmtpPass = alertSmtpPass.trim();
+            if (alertSmtpFrom.trim()) body.alertSmtpFrom = alertSmtpFrom.trim();
+            if (alertBalanceThresholdDays.trim()) body.alertBalanceThresholdDays = alertBalanceThresholdDays.trim();
+            if (alertSpendGapDays.trim()) body.alertSpendGapDays = alertSpendGapDays.trim();
+
+            if (Object.keys(body).length === 0) {
+              setFormError("Preencha ao menos um campo para atualizar.");
+              setFormSuccess("");
+              return;
+            }
+
+            setFormError("");
+            mutation.mutate(body);
+          }}
+          className="rounded-xl bg-[var(--primary)] px-6 py-2.5 text-sm font-semibold text-[var(--primary-foreground)] transition hover:opacity-90 disabled:opacity-50"
+        >
+          {mutation.isPending ? "Salvando..." : "Salvar alterações"}
+        </button>
       </section>
 
       <section className="flex flex-wrap items-center justify-between gap-3">

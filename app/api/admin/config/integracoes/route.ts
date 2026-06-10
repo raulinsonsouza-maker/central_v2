@@ -24,6 +24,8 @@ function buildResponse(config: Awaited<ReturnType<typeof getIntegrationsConfig>>
     alertSmtpUser: config.alertSmtpUser ?? "",
     hasAlertSmtpPass: !!config.alertSmtpPass,
     alertSmtpFrom: config.alertSmtpFrom ?? "",
+    alertBalanceThresholdDays: config.alertBalanceThresholdDays ?? "",
+    alertSpendGapDays: config.alertSpendGapDays ?? "",
   };
 }
 
@@ -61,12 +63,30 @@ export async function PATCH(request: NextRequest) {
     alertSmtpUser?: string;
     alertSmtpPass?: string;
     alertSmtpFrom?: string;
+    alertBalanceThresholdDays?: string;
+    alertSpendGapDays?: string;
   };
 
   try {
     body = await request.json();
   } catch {
     return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  if (body.alertBalanceThresholdDays !== undefined) {
+    const num = Number(body.alertBalanceThresholdDays);
+    if (!Number.isInteger(num) || num < 1) {
+      return NextResponse.json({ error: "alertBalanceThresholdDays deve ser um inteiro positivo." }, { status: 400 });
+    }
+    body.alertBalanceThresholdDays = String(num);
+  }
+
+  if (body.alertSpendGapDays !== undefined) {
+    const num = Number(body.alertSpendGapDays);
+    if (!Number.isInteger(num) || num < 1) {
+      return NextResponse.json({ error: "alertSpendGapDays deve ser um inteiro positivo." }, { status: 400 });
+    }
+    body.alertSpendGapDays = String(num);
   }
 
   try {
