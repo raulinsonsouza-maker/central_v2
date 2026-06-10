@@ -46,6 +46,7 @@ build = ["npm", "run", "build"]
 
 [userenv.shared]
 ADMIN_SECRET = "admin"
+APP_URL = "https://central-inout.replit.app"
 
 [postMerge]
 path = "scripts/post-merge.sh"
