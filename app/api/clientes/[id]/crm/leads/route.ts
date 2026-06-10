@@ -52,6 +52,8 @@ export async function GET(
       dataEntrada: l.dataEntrada,
       dataFechamento: l.dataFechamento ?? null,
       nome: l.nome ?? null,
+      email: l.email ?? null,
+      telefone: l.telefone ?? null,
       contato: l.nome ?? l.email ?? l.telefone ?? null,
     })),
     total: leads.length,

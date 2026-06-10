@@ -22,6 +22,9 @@ interface Lead {
   valor: number | null;
   dataEntrada: string;
   dataFechamento: string | null;
+  nome: string | null;
+  email: string | null;
+  telefone: string | null;
   contato: string | null;
 }
 
@@ -178,8 +181,23 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
                         {lead.etapa}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-[var(--muted-foreground)]">
-                      {lead.contato ?? <span className="text-[var(--border)]">—</span>}
+                    <td className="px-4 py-3">
+                      {lead.nome ? (
+                        <div className="flex flex-col gap-0.5">
+                          <span className="font-medium text-[var(--foreground)]">{lead.nome}</span>
+                          {(lead.email ?? lead.telefone) && (
+                            <span className="text-[11px] text-[var(--muted-foreground)]">
+                              {lead.email ?? lead.telefone}
+                            </span>
+                          )}
+                        </div>
+                      ) : lead.email ?? lead.telefone ? (
+                        <span className="text-[var(--muted-foreground)]">
+                          {lead.email ?? lead.telefone}
+                        </span>
+                      ) : (
+                        <span className="text-[var(--border)]">—</span>
+                      )}
                     </td>
                     <td className="px-4 py-3 tabular-nums text-[var(--muted-foreground)]">
                       {formatDateBR(lead.dataEntrada)}
