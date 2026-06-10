@@ -48,7 +48,12 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
   });
 
   const syncMutation = useMutation({
-    mutationFn: () => fetch(`/api/clientes/${clienteId}/sync`, { method: "POST" }).then((r) => r.json()),
+    mutationFn: async () => {
+      const r = await fetch(`/api/clientes/${clienteId}/sync`, { method: "POST" });
+      const json = await r.json();
+      if (!r.ok) throw new Error(json?.error ?? "Erro ao sincronizar");
+      return json;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["crm-funil", clienteId] });
       queryClient.invalidateQueries({ queryKey: ["crm-leads", clienteId] });
