@@ -8,6 +8,12 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum CrmTipo {
+  CVCRM
+  RDSTATION_CRM
+  KOMMO
+}
+
 model Cliente {
   id                         String                  @id @default(cuid())
   nome                       String
@@ -30,15 +36,50 @@ model Cliente {
   agregadosMensal            AgregadoMidiaMensal[]
   agregadosSemanal           AgregadoMidiaSemanal[]
   contas                     Conta[]
+  crmConfig                  CrmConfig?
   fatosAnalyticsDiario       FatoAnalyticsDiario[]
   fatosAnalyticsPorCanal     FatoAnalyticsPorCanal[]
   fatosMidia                 FatoMidiaDiario[]
   googleAdsCampanhas         GoogleAdsCampanha[]
   googleAdsCriativos         GoogleAdsCriativo[]
+  leadsCrm                   LeadCrm[]
   metas                      Meta[]
   metaAdsCriativos           MetaAdsCriativo[]
   metaLeadsIndividuais       MetaLeadIndividual[]
   pautasReuniao              PautaReuniao[]
+}
+
+model CrmConfig {
+  id           String    @id @default(cuid())
+  clienteId    String    @unique
+  tipo         CrmTipo
+  dominio      String?
+  credenciais  Json
+  ativo        Boolean   @default(true)
+  ultimoSyncAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  cliente      Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  leads        LeadCrm[]
+}
+
+model LeadCrm {
+  id             String    @id @default(cuid())
+  clienteId      String
+  crmConfigId    String
+  crmLeadId      String
+  etapa          String
+  dataEntrada    DateTime
+  dataFechamento DateTime?
+  valor          Decimal?  @db.Decimal(14, 2)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  cliente        Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  crmConfig      CrmConfig @relation(fields: [crmConfigId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteId, crmLeadId])
+  @@index([clienteId, dataEntrada])
+  @@index([clienteId, etapa])
 }
 
 model Conta {

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DefaultPanel } from "@/components/clientes/DefaultPanel";
 import { GoogleKeywordsPanel } from "@/components/clientes/GoogleKeywordsPanel";
 import { AnalyticsGA4Section } from "@/components/clientes/AnalyticsGA4Section";
+import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
 import { ImoveisPanel } from "@/components/clientes/ImoveisPanel";
 import { LeadScoringPanel } from "@/components/clientes/LeadScoringPanel";
 import { ImobLeadScoringPanel } from "@/components/clientes/ImobLeadScoringPanel";
@@ -1542,6 +1543,9 @@ function formatPercentage(value: number) {
       {canal !== "imoveis" && canal !== "lead-scoring" && (canal === "geral" || subView === "dados") && analytics?.hasAnalytics && (
         <AnalyticsGA4Section data={analytics} />
       )}
+
+      {/* ── Funil CRM (geral, when configured) ── */}
+      {id && canal === "geral" && <FunilCrmSection clienteId={id} />}
 
       {/* ── Pauta da semana (geral only, internal only) ── */}
       {id && canal === "geral" && !portalMode && <PautaDaSemana clienteId={id} />}

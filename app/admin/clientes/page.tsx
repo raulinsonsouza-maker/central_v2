@@ -281,6 +281,200 @@ function SegmentoCombobox({
   );
 }
 
+const CRM_TIPOS = [
+  { value: "", label: "Nenhum (sem integração CRM)" },
+  { value: "CVCRM", label: "CV CRM" },
+  { value: "RDSTATION_CRM", label: "RD Station CRM" },
+  { value: "KOMMO", label: "Kommo" },
+];
+
+function CrmConfigSection({
+  clienteId,
+  adminToken,
+}: {
+  clienteId: string;
+  adminToken: string;
+}) {
+  const [tipo, setTipo] = useState("");
+  const [dominio, setDominio] = useState("");
+  const [email, setEmail] = useState("");
+  const [token, setToken] = useState("");
+  const [ativo, setAtivo] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [testLoading, setTestLoading] = useState(false);
+  const [statusMsg, setStatusMsg] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [initialLoaded, setInitialLoaded] = useState(false);
+
+  useEffect(() => {
+    if (initialLoaded) return;
+    setInitialLoaded(true);
+    fetch(`/api/admin/clientes/${clienteId}/crm`, {
+      headers: { "x-admin-token": adminToken },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data) return;
+        setTipo(data.tipo ?? "");
+        setDominio(data.dominio ?? "");
+        setAtivo(data.ativo ?? true);
+        const creds = data.credenciais ?? {};
+        setEmail(creds.email ?? "");
+        setToken(creds.token ?? "");
+      })
+      .catch(() => {});
+  }, [clienteId, adminToken, initialLoaded]);
+
+  async function handleSave() {
+    setLoading(true);
+    setStatusMsg(null);
+    try {
+      const credenciais: Record<string, string> = {};
+      if (tipo === "CVCRM") {
+        credenciais.email = email.trim();
+        credenciais.token = token.trim();
+      } else {
+        credenciais.token = token.trim();
+      }
+      const res = await fetch(`/api/admin/clientes/${clienteId}/crm`, {
+        method: "PUT",
+        headers: { "x-admin-token": adminToken, "Content-Type": "application/json" },
+        body: JSON.stringify({ tipo: tipo || undefined, dominio: dominio.trim() || null, credenciais, ativo }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatusMsg({ ok: false, msg: data.error ?? "Erro ao salvar" });
+      } else {
+        setStatusMsg({ ok: true, msg: tipo ? "Integração CRM salva com sucesso." : "Integração CRM removida." });
+      }
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleTest() {
+    setTestLoading(true);
+    setStatusMsg(null);
+    try {
+      const res = await fetch(`/api/admin/clientes/${clienteId}/crm?action=test`, {
+        method: "POST",
+        headers: { "x-admin-token": adminToken },
+      });
+      const data = await res.json().catch(() => ({}));
+      setStatusMsg({ ok: !!data.ok, msg: data.ok ? "Conexão testada com sucesso!" : (data.error ?? "Falha na conexão") });
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setTestLoading(false);
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/10 p-4 space-y-4">
+      <div className="flex items-center gap-2">
+        <div className="h-1 w-1 rounded-full bg-[var(--primary)]" />
+        <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Integração CRM</p>
+      </div>
+
+      <FormField label="Sistema CRM">
+        <select value={tipo} onChange={(e) => { setTipo(e.target.value); setStatusMsg(null); }} className={inputClass}>
+          {CRM_TIPOS.map((t) => (
+            <option key={t.value} value={t.value}>{t.label}</option>
+          ))}
+        </select>
+      </FormField>
+
+      {tipo && (
+        <div className="space-y-3">
+          {(tipo === "CVCRM" || tipo === "KOMMO") && (
+            <FormField
+              label={tipo === "CVCRM" ? "Domínio CV CRM" : "Subdomínio Kommo"}
+              hint={tipo === "CVCRM" ? "Ex.: meuseguro (de meuseguro.cvcrm.com.br)" : "Ex.: minhaempresa (de minhaempresa.kommo.com)"}
+            >
+              <input
+                value={dominio}
+                onChange={(e) => setDominio(e.target.value)}
+                placeholder={tipo === "CVCRM" ? "meuseguro" : "minhaempresa"}
+                className={inputClass}
+              />
+            </FormField>
+          )}
+
+          {tipo === "CVCRM" && (
+            <FormField label="E-mail do usuário" hint="E-mail da conta CV CRM com acesso à API.">
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="usuario@empresa.com.br"
+                className={inputClass}
+              />
+            </FormField>
+          )}
+
+          <FormField
+            label="Token de API"
+            hint={
+              tipo === "CVCRM"
+                ? "Token disponível em Configurações → Integrações no CV CRM."
+                : tipo === "RDSTATION_CRM"
+                ? "Token de longa duração do RD Station CRM."
+                : "Access token de longa duração do Kommo (Integrações → API)."
+            }
+          >
+            <input
+              type="password"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
+              placeholder="••••••••••••••••"
+              className={inputClass}
+            />
+          </FormField>
+
+          <label className="flex cursor-pointer items-center gap-2.5">
+            <input
+              type="checkbox"
+              checked={ativo}
+              onChange={(e) => setAtivo(e.target.checked)}
+              className="h-4 w-4 rounded border-[var(--border)] accent-[var(--primary)]"
+            />
+            <span className="text-sm text-[var(--foreground)]">Sincronização ativa</span>
+          </label>
+        </div>
+      )}
+
+      {statusMsg && (
+        <div className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${statusMsg.ok ? "bg-[var(--success)]/10 text-[var(--success)]" : "bg-[var(--accent)]/10 text-[var(--accent)]"}`}>
+          {statusMsg.ok ? <CheckCircle2 className="h-3.5 w-3.5 shrink-0" /> : <AlertTriangle className="h-3.5 w-3.5 shrink-0" />}
+          {statusMsg.msg}
+        </div>
+      )}
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={handleSave}
+          disabled={loading}
+          className="rounded-xl bg-[var(--primary)] px-4 py-2 text-xs font-semibold text-[var(--primary-foreground)] transition hover:opacity-90 disabled:opacity-50"
+        >
+          {loading ? "Salvando…" : "Salvar CRM"}
+        </button>
+        {tipo && (
+          <button
+            type="button"
+            onClick={handleTest}
+            disabled={testLoading}
+            className="rounded-xl border border-[var(--border)] px-4 py-2 text-xs font-medium text-[var(--muted-foreground)] transition hover:border-[var(--primary)]/30 hover:text-[var(--primary)] disabled:opacity-50"
+          >
+            {testLoading ? "Testando…" : "Testar conexão"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ClienteForm({
   title,
   submitLabel,
@@ -292,6 +486,7 @@ function ClienteForm({
   success,
   onClose,
   onSubmit,
+  clienteId,
 }: {
   title: string;
   submitLabel: string;
@@ -303,6 +498,7 @@ function ClienteForm({
   success: string;
   onClose: () => void;
   onSubmit: (body: ClientePayload) => void;
+  clienteId?: string;
 }) {
   const [nome, setNome] = useState(initialValues.nome ?? "");
   const [logoUrl, setLogoUrl] = useState(initialValues.logoUrl ?? "");
@@ -462,6 +658,10 @@ function ClienteForm({
                 <option value="3">Squad 3</option>
               </select>
             </FormField>
+
+            {clienteId && (
+              <CrmConfigSection clienteId={clienteId} adminToken={adminToken} />
+            )}
 
             <div className="flex flex-wrap items-center gap-5 rounded-xl bg-[var(--muted)]/30 px-4 py-3">
               <label className="flex cursor-pointer items-center gap-2.5">
@@ -1064,6 +1264,7 @@ export default function AdminClientesPage() {
         <ClienteForm
           title={`Editar cliente · ${editing.nome}`}
           submitLabel="Salvar alterações"
+          clienteId={editing.id}
           initialValues={{
             nome: editing.nome,
             logoUrl: editing.logoUrl ?? undefined,
