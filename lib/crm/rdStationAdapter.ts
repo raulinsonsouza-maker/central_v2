@@ -92,33 +92,48 @@ export class RdStationCrmAdapter implements CrmAdapter {
   }
 
   /**
-   * Tenta buscar etapas do funil pela API v1.
-   * A API v1 pode aceitar Bearer token do OAuth — se não aceitar retorna mapa vazio
-   * e o adapter usa o deal_stage embutido (quando presente) ou mantém "Desconhecido".
+   * Carrega mapa de etapas { stage_id → {name, order} }.
+   * Ordem de tentativas:
+   *   1. API v2  GET /crm/v2/stages  (contrato oficial)
+   *   2. API v1  GET /crm/v1/deal_stages  (fallback — aceita Bearer em muitas contas)
+   *   3. Mapa vazio → adapter usa deal_stage embutido ou "Desconhecido" como último recurso
    */
   private async fetchStagesMap(): Promise<Map<string, { name: string; order: number }>> {
     if (this.stagesCache !== null) return this.stagesCache;
 
     const map = new Map<string, { name: string; order: number }>();
-    try {
-      const res = await fetch(`${BASE_URL_V1}/deal_stages?limit=50&page=1`, {
-        headers: this.headers(),
-      });
-      if (res.ok) {
-        const body = await res.json() as {
-          deal_stages?: RdStageV1[];
-          data?: RdStageV1[];
-        };
-        const stages: RdStageV1[] = body.deal_stages ?? body.data ?? [];
-        for (const s of stages) {
-          const id = s._id ?? s.id;
-          if (id && s.name) {
-            map.set(id, { name: s.name, order: s.order ?? 0 });
-          }
-        }
+
+    const tryPopulate = (stages: RdStageV1[]) => {
+      for (const s of stages) {
+        const id = s._id ?? s.id;
+        if (id && s.name) map.set(id, { name: s.name, order: s.order ?? 0 });
       }
-    } catch {
-      // v1 API inacessível — degrada graciosamente
+    };
+
+    // 1) v2 endpoint
+    try {
+      const res = await fetch(`${BASE_URL_V2}/stages`, { headers: this.headers() });
+      if (res.ok) {
+        const body = await res.json() as { data?: RdStageV1[]; stages?: RdStageV1[] };
+        tryPopulate(body.data ?? body.stages ?? []);
+      }
+    } catch { /* continua para fallback */ }
+
+    // 2) v1 endpoint (fallback quando v2 não existe ou retornou vazio)
+    if (map.size === 0) {
+      try {
+        const res = await fetch(`${BASE_URL_V1}/deal_stages?limit=50&page=1`, {
+          headers: this.headers(),
+        });
+        if (res.ok) {
+          const body = await res.json() as { deal_stages?: RdStageV1[]; data?: RdStageV1[] };
+          tryPopulate(body.deal_stages ?? body.data ?? []);
+        }
+      } catch { /* degrada graciosamente */ }
+    }
+
+    if (map.size === 0) {
+      console.warn("[RdStationCrmAdapter] Não foi possível carregar etapas — as negociações mostrarão 'Desconhecido' até o endpoint de stages estar acessível.");
     }
 
     this.stagesCache = map;
@@ -236,17 +251,18 @@ export class RdStationCrmAdapter implements CrmAdapter {
     const now = new Date();
     return deals.map((d): NormalizedLead => {
       // ── Stage ──────────────────────────────────────────────────────────────
-      // Priority: v1 embedded object → stagesMap from API → "Desconhecido"
+      // Priority: stage_id + stagesMap (v2 contract) → deal_stage embedded (legacy fallback)
       let etapa = "Desconhecido";
       let ordemEtapa: number | null = null;
 
-      if (d.deal_stage?.name) {
-        etapa = d.deal_stage.name;
-        ordemEtapa = d.deal_stage.order ?? null;
-      } else if (d.stage_id && stagesMap.has(d.stage_id)) {
+      if (d.stage_id && stagesMap.has(d.stage_id)) {
         const s = stagesMap.get(d.stage_id)!;
         etapa = s.name;
         ordemEtapa = s.order;
+      } else if (d.deal_stage?.name) {
+        // Legacy fallback: some accounts return deal_stage embedded for backward compat
+        etapa = d.deal_stage.name;
+        ordemEtapa = d.deal_stage.order ?? null;
       }
 
       // ── Contact ────────────────────────────────────────────────────────────
