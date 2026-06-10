@@ -506,6 +506,10 @@ function ClienteForm({
               <CrmConfigSection clienteId={clienteId} adminToken={adminToken} />
             )}
 
+            {clienteId && (
+              <RdMarketingConfigSection clienteId={clienteId} adminToken={adminToken} />
+            )}
+
             {error && (
               <div className="flex items-center gap-2 rounded-lg bg-[var(--accent)]/10 px-3 py-2 text-sm text-[var(--accent)]">
                 <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
@@ -937,6 +941,273 @@ function CrmConfigSection({
   );
 }
 
+// ─── RD Station Marketing Config ────────────────────────────────────────────
+
+function RdMarketingConfigSection({
+  clienteId,
+  adminToken,
+}: {
+  clienteId: string;
+  adminToken: string;
+}) {
+  const [mktClientId, setMktClientId] = useState("");
+  const [mktClientSecret, setMktClientSecret] = useState("");
+  const [mktConnected, setMktConnected] = useState(false);
+  const [ativo, setAtivo] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [testLoading, setTestLoading] = useState(false);
+  const [enrichLoading, setEnrichLoading] = useState(false);
+  const [statusMsg, setStatusMsg] = useState<{ ok: boolean; msg: string } | null>(null);
+  const [initialLoaded, setInitialLoaded] = useState(false);
+
+  const inputClass =
+    "w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm focus:border-[var(--primary)]/40 focus:outline-none";
+
+  useEffect(() => {
+    if (initialLoaded) return;
+    setInitialLoaded(true);
+    fetch(`/api/admin/clientes/${clienteId}/rd-marketing`, {
+      headers: { "x-admin-token": adminToken },
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!data) return;
+        setAtivo(data.ativo ?? true);
+        const creds = data.credenciais ?? {};
+        setMktClientId(creds.clientId ?? "");
+        setMktConnected(!!creds.connected);
+        if (creds.clientSecretSet) setMktClientSecret("••••••••");
+      })
+      .catch(() => {});
+  }, [clienteId, adminToken, initialLoaded]);
+
+  async function handleSave() {
+    setLoading(true);
+    setStatusMsg(null);
+    try {
+      const res = await fetch(`/api/admin/clientes/${clienteId}/rd-marketing`, {
+        method: "PUT",
+        headers: { "x-admin-token": adminToken, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          clientId: mktClientId.trim() || undefined,
+          clientSecret: mktClientSecret && !mktClientSecret.startsWith("•") ? mktClientSecret.trim() : undefined,
+          ativo,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatusMsg({ ok: false, msg: data.error ?? "Erro ao salvar" });
+      } else {
+        setStatusMsg({ ok: true, msg: "Credenciais salvas." });
+      }
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleTest() {
+    setTestLoading(true);
+    setStatusMsg(null);
+    try {
+      const res = await fetch(`/api/clientes/${clienteId}/crm/enrich`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      setStatusMsg({
+        ok: !!data.ok,
+        msg: data.ok
+          ? `Enriquecimento OK — ${data.enriched ?? 0} leads atualizados, ${data.skipped ?? 0} ignorados.`
+          : (data.error ?? "Falha no enriquecimento"),
+      });
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setTestLoading(false);
+    }
+  }
+
+  async function handleEnrich() {
+    setEnrichLoading(true);
+    setStatusMsg(null);
+    try {
+      const res = await fetch(`/api/clientes/${clienteId}/crm/enrich`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      setStatusMsg({
+        ok: !!data.ok,
+        msg: data.ok
+          ? `${data.enriched ?? 0} leads enriquecidos, ${data.skipped ?? 0} sem contato encontrado.`
+          : (data.error ?? "Falha no enriquecimento"),
+      });
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setEnrichLoading(false);
+    }
+  }
+
+  async function handleRemove() {
+    if (!confirm("Remover configuração RD Marketing?")) return;
+    setLoading(true);
+    try {
+      await fetch(`/api/admin/clientes/${clienteId}/rd-marketing`, {
+        method: "DELETE",
+        headers: { "x-admin-token": adminToken },
+      });
+      setMktClientId("");
+      setMktClientSecret("");
+      setMktConnected(false);
+      setStatusMsg({ ok: true, msg: "Configuração removida." });
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro ao remover" });
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/10 p-4 space-y-4">
+      <div className="flex items-center gap-2">
+        <div className="h-1 w-1 rounded-full bg-[var(--primary)]" />
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+          RD Station Marketing (Enriquecimento de Leads)
+        </p>
+      </div>
+
+      <div className="rounded-lg bg-[var(--muted)]/30 px-3 py-2 text-[11px] text-[var(--muted-foreground)] space-y-1">
+        <p>
+          Crie um app em <strong>app.rdstation.com.br → App Store → Meus Apps</strong> com a URL de callback:
+        </p>
+        <code className="block break-all rounded bg-[var(--muted)]/60 px-1.5 py-1 font-mono text-[10px] select-all">
+          {typeof window !== "undefined"
+            ? `${window.location.origin}/api/auth/rd-marketing/callback`
+            : "/api/auth/rd-marketing/callback"}
+        </code>
+        <p className="text-[10px]">
+          Usado para enriquecer leads com campos de qualificação (faturamento, segmento, cargo, investimento) vindos do Marketing.
+        </p>
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-[var(--muted-foreground)]">Client ID</label>
+        <input
+          type="text"
+          value={mktClientId}
+          onChange={(e) => setMktClientId(e.target.value)}
+          placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+          className={inputClass}
+        />
+      </div>
+
+      <div className="space-y-1">
+        <label className="text-xs font-medium text-[var(--muted-foreground)]">Client Secret</label>
+        <input
+          type="password"
+          value={mktClientSecret}
+          onChange={(e) => setMktClientSecret(e.target.value)}
+          placeholder={mktConnected ? "Deixe em branco para manter" : "••••••••••••••••"}
+          className={inputClass}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+          Autenticação OAuth
+        </p>
+        {mktConnected ? (
+          <div className="flex items-center gap-3 flex-wrap">
+            <span className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-semibold text-emerald-600">
+              <CheckCircle2 className="h-3 w-3" /> Conectado
+            </span>
+            <a
+              href={`/api/auth/rd-marketing/start?clienteId=${clienteId}`}
+              className="flex items-center gap-1 text-xs text-[var(--muted-foreground)] hover:text-[var(--primary)] transition-colors"
+            >
+              <RefreshCw className="h-3 w-3" /> Reconectar
+            </a>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            <p className="text-[11px] text-[var(--muted-foreground)]">
+              Salve as credenciais acima e depois clique para autorizar.
+            </p>
+            <a
+              href={`/api/auth/rd-marketing/start?clienteId=${clienteId}`}
+              className="inline-flex items-center gap-2 rounded-xl bg-[#1877F2] px-4 py-2 text-xs font-semibold text-white transition hover:opacity-90"
+            >
+              <ExternalLink className="h-3.5 w-3.5" />
+              Conectar via RD Station Marketing
+            </a>
+          </div>
+        )}
+      </div>
+
+      <label className="flex cursor-pointer items-center gap-2.5">
+        <input
+          type="checkbox"
+          checked={ativo}
+          onChange={(e) => setAtivo(e.target.checked)}
+          className="h-4 w-4 rounded border-[var(--border)] accent-[var(--primary)]"
+        />
+        <span className="text-sm text-[var(--foreground)]">Enriquecimento ativo</span>
+      </label>
+
+      {statusMsg && (
+        <div
+          className={`flex items-center gap-2 rounded-lg px-3 py-2 text-sm ${
+            statusMsg.ok
+              ? "bg-emerald-500/10 text-emerald-600"
+              : "bg-[var(--accent)]/10 text-[var(--accent)]"
+          }`}
+        >
+          {statusMsg.ok ? (
+            <CheckCircle2 className="h-3.5 w-3.5 shrink-0" />
+          ) : (
+            <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+          )}
+          {statusMsg.msg}
+        </div>
+      )}
+
+      <div className="flex flex-wrap gap-2">
+        <button
+          onClick={handleSave}
+          disabled={loading}
+          className="rounded-xl bg-[var(--primary)] px-4 py-2 text-xs font-semibold text-white transition hover:opacity-90 disabled:opacity-50"
+        >
+          {loading ? "Salvando..." : "Salvar Marketing"}
+        </button>
+        {mktConnected && (
+          <button
+            onClick={handleEnrich}
+            disabled={enrichLoading || testLoading}
+            className="rounded-xl border border-[var(--border)] px-4 py-2 text-xs font-semibold text-[var(--foreground)] transition hover:bg-[var(--muted)] disabled:opacity-50"
+          >
+            {enrichLoading ? "Enriquecendo..." : "Enriquecer leads agora"}
+          </button>
+        )}
+        {mktConnected && (
+          <button
+            onClick={handleTest}
+            disabled={testLoading || enrichLoading}
+            className="rounded-xl border border-[var(--border)] px-4 py-2 text-xs font-semibold text-[var(--foreground)] transition hover:bg-[var(--muted)] disabled:opacity-50"
+          >
+            {testLoading ? "Testando..." : "Testar conexão"}
+          </button>
+        )}
+        {(mktClientId || mktConnected) && (
+          <button
+            onClick={handleRemove}
+            disabled={loading}
+            className="ml-auto rounded-xl border border-[var(--border)] px-4 py-2 text-xs font-medium text-[var(--muted-foreground)] transition hover:bg-[var(--muted)]"
+          >
+            Remover
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminClientesPage() {
   const [adminToken, setAdminToken] = useState("");
   const [tokenInput, setTokenInput] = useState("");
@@ -975,16 +1246,28 @@ export default function AdminClientesPage() {
     const params = new URLSearchParams(window.location.search);
     const rdConnected = params.get("rdConnected");
     const rdError = params.get("rdError");
+    const rdMktConnected = params.get("rdMktConnected");
+    const rdMktError = params.get("rdMktError");
     const connectedClienteId = params.get("clienteId");
     if (rdConnected === "1") {
-      setRdNotification({ ok: true, msg: "RD Station conectado com sucesso!" });
+      setRdNotification({ ok: true, msg: "RD Station CRM conectado com sucesso!" });
       if (connectedClienteId && clientes) {
         const c = clientes.find((x) => x.id === connectedClienteId);
         if (c) setEditing(c);
       }
       window.history.replaceState({}, "", "/admin/clientes");
     } else if (rdError) {
-      setRdNotification({ ok: false, msg: `Erro ao conectar RD Station: ${decodeURIComponent(rdError)}` });
+      setRdNotification({ ok: false, msg: `Erro ao conectar RD Station CRM: ${decodeURIComponent(rdError)}` });
+      window.history.replaceState({}, "", "/admin/clientes");
+    } else if (rdMktConnected === "1") {
+      setRdNotification({ ok: true, msg: "RD Station Marketing conectado com sucesso!" });
+      if (connectedClienteId && clientes) {
+        const c = clientes.find((x) => x.id === connectedClienteId);
+        if (c) setEditing(c);
+      }
+      window.history.replaceState({}, "", "/admin/clientes");
+    } else if (rdMktError) {
+      setRdNotification({ ok: false, msg: `Erro ao conectar RD Station Marketing: ${decodeURIComponent(rdMktError)}` });
       window.history.replaceState({}, "", "/admin/clientes");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

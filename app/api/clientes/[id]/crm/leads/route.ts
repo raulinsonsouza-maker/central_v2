@@ -41,6 +41,7 @@ export async function GET(
       fonte: true,
       rating: true,
       status: true,
+      dadosMarketing: true,
     },
     orderBy: { dataEntrada: "desc" },
     take: 500,
@@ -61,6 +62,7 @@ export async function GET(
       fonte: l.fonte ?? null,
       rating: l.rating ?? null,
       status: l.status ?? null,
+      dadosMarketing: (l.dadosMarketing as Record<string, unknown> | null) ?? null,
     })),
     total: leads.length,
   });

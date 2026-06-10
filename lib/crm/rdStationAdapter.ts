@@ -328,6 +328,13 @@ export class RdStationCrmAdapter implements CrmAdapter {
       // ── Status: won | lost | ongoing | paused ──────────────────────────────
       const status = d.status ?? null;
 
+      // ── Primeiro contact UUID (para enriquecimento Marketing) ───────────────
+      const rdContactId =
+        d.contact_ids?.[0] ??
+        (d.contacts?.[0] as { id?: string } | undefined)?.id ??
+        (d.contact as { id?: string } | undefined)?.id ??
+        null;
+
       // ── Contato ────────────────────────────────────────────────────────────
       let nome: string | null = null;
       let email: string | null = null;
@@ -356,6 +363,7 @@ export class RdStationCrmAdapter implements CrmAdapter {
         fonte,
         rating,
         status,
+        rdContactId,
         dataEntrada: parseDate(d.created_at) ?? now,
         dataFechamento: parseDate(d.closed_at),
         valor: rawValor != null ? Number(rawValor) : null,

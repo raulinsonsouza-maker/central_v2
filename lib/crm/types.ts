@@ -9,6 +9,8 @@ export interface NormalizedLead {
   rating?: number | null;
   /** won | lost | ongoing | paused */
   status?: string | null;
+  /** UUID do contato no RD Station Marketing (para enriquecimento) */
+  rdContactId?: string | null;
   dataEntrada: Date;
   dataFechamento?: Date | null;
   valor?: number | null;

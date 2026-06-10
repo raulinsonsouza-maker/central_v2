@@ -40,6 +40,7 @@ model Cliente {
   metaLeadsIndividuais       MetaLeadIndividual[]
   crmConfig                  CrmConfig?
   leadsCrm                   LeadCrm[]
+  rdMarketingConfig          RdMarketingConfig?
   pautasReuniao              PautaReuniao[]
 }
 
@@ -391,12 +392,14 @@ model LeadCrm {
   telefone       String?
   email          String?
   metaLeadId     String?
+  rdContactId    String?
   fonte          String?
   rating         Int?
   status         String?
   dataEntrada    DateTime
   dataFechamento DateTime?
   valor          Decimal?  @db.Decimal(14, 2)
+  dadosMarketing Json?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   cliente        Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
@@ -406,4 +409,15 @@ model LeadCrm {
   @@index([clienteId, dataEntrada])
   @@index([clienteId, etapa])
   @@index([clienteId, metaLeadId])
+}
+
+model RdMarketingConfig {
+  id           String    @id @default(cuid())
+  clienteId    String    @unique
+  credenciais  Json      @default("{}")
+  ativo        Boolean   @default(true)
+  ultimoSyncAt DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  cliente      Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
 }

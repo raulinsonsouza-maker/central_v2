@@ -103,6 +103,11 @@ export type CrmConfig = $Result.DefaultSelection<Prisma.$CrmConfigPayload>
  * 
  */
 export type LeadCrm = $Result.DefaultSelection<Prisma.$LeadCrmPayload>
+/**
+ * Model RdMarketingConfig
+ * 
+ */
+export type RdMarketingConfig = $Result.DefaultSelection<Prisma.$RdMarketingConfigPayload>
 
 /**
  * Enums
@@ -419,6 +424,16 @@ export class PrismaClient<
     * ```
     */
   get leadCrm(): Prisma.LeadCrmDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.rdMarketingConfig`: Exposes CRUD operations for the **RdMarketingConfig** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more RdMarketingConfigs
+    * const rdMarketingConfigs = await prisma.rdMarketingConfig.findMany()
+    * ```
+    */
+  get rdMarketingConfig(): Prisma.RdMarketingConfigDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -877,7 +892,8 @@ export namespace Prisma {
     Segmento: 'Segmento',
     MetaLeadIndividual: 'MetaLeadIndividual',
     CrmConfig: 'CrmConfig',
-    LeadCrm: 'LeadCrm'
+    LeadCrm: 'LeadCrm',
+    RdMarketingConfig: 'RdMarketingConfig'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -896,7 +912,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "conta" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm"
+      modelProps: "cliente" | "conta" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm" | "rdMarketingConfig"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2232,6 +2248,80 @@ export namespace Prisma {
           }
         }
       }
+      RdMarketingConfig: {
+        payload: Prisma.$RdMarketingConfigPayload<ExtArgs>
+        fields: Prisma.RdMarketingConfigFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.RdMarketingConfigFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.RdMarketingConfigFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>
+          }
+          findFirst: {
+            args: Prisma.RdMarketingConfigFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.RdMarketingConfigFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>
+          }
+          findMany: {
+            args: Prisma.RdMarketingConfigFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>[]
+          }
+          create: {
+            args: Prisma.RdMarketingConfigCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>
+          }
+          createMany: {
+            args: Prisma.RdMarketingConfigCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.RdMarketingConfigCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>[]
+          }
+          delete: {
+            args: Prisma.RdMarketingConfigDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>
+          }
+          update: {
+            args: Prisma.RdMarketingConfigUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>
+          }
+          deleteMany: {
+            args: Prisma.RdMarketingConfigDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.RdMarketingConfigUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.RdMarketingConfigUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>[]
+          }
+          upsert: {
+            args: Prisma.RdMarketingConfigUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$RdMarketingConfigPayload>
+          }
+          aggregate: {
+            args: Prisma.RdMarketingConfigAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateRdMarketingConfig>
+          }
+          groupBy: {
+            args: Prisma.RdMarketingConfigGroupByArgs<ExtArgs>
+            result: $Utils.Optional<RdMarketingConfigGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.RdMarketingConfigCountArgs<ExtArgs>
+            result: $Utils.Optional<RdMarketingConfigCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2346,6 +2436,7 @@ export namespace Prisma {
     metaLeadIndividual?: MetaLeadIndividualOmit
     crmConfig?: CrmConfigOmit
     leadCrm?: LeadCrmOmit
+    rdMarketingConfig?: RdMarketingConfigOmit
   }
 
   /* Types for Logging */
@@ -2985,6 +3076,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: boolean | Cliente$metaLeadsIndividuaisArgs<ExtArgs>
     crmConfig?: boolean | Cliente$crmConfigArgs<ExtArgs>
     leadsCrm?: boolean | Cliente$leadsCrmArgs<ExtArgs>
+    rdMarketingConfig?: boolean | Cliente$rdMarketingConfigArgs<ExtArgs>
     pautasReuniao?: boolean | Cliente$pautasReuniaoArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cliente"]>
@@ -3067,6 +3159,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: boolean | Cliente$metaLeadsIndividuaisArgs<ExtArgs>
     crmConfig?: boolean | Cliente$crmConfigArgs<ExtArgs>
     leadsCrm?: boolean | Cliente$leadsCrmArgs<ExtArgs>
+    rdMarketingConfig?: boolean | Cliente$rdMarketingConfigArgs<ExtArgs>
     pautasReuniao?: boolean | Cliente$pautasReuniaoArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -3089,6 +3182,7 @@ export namespace Prisma {
       metaLeadsIndividuais: Prisma.$MetaLeadIndividualPayload<ExtArgs>[]
       crmConfig: Prisma.$CrmConfigPayload<ExtArgs> | null
       leadsCrm: Prisma.$LeadCrmPayload<ExtArgs>[]
+      rdMarketingConfig: Prisma.$RdMarketingConfigPayload<ExtArgs> | null
       pautasReuniao: Prisma.$PautaReuniaoPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -3517,6 +3611,7 @@ export namespace Prisma {
     metaLeadsIndividuais<T extends Cliente$metaLeadsIndividuaisArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$metaLeadsIndividuaisArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MetaLeadIndividualPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     crmConfig<T extends Cliente$crmConfigArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$crmConfigArgs<ExtArgs>>): Prisma__CrmConfigClient<$Result.GetResult<Prisma.$CrmConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     leadsCrm<T extends Cliente$leadsCrmArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$leadsCrmArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    rdMarketingConfig<T extends Cliente$rdMarketingConfigArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$rdMarketingConfigArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     pautasReuniao<T extends Cliente$pautasReuniaoArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$pautasReuniaoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PautaReuniaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -4257,6 +4352,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: LeadCrmScalarFieldEnum | LeadCrmScalarFieldEnum[]
+  }
+
+  /**
+   * Cliente.rdMarketingConfig
+   */
+  export type Cliente$rdMarketingConfigArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    where?: RdMarketingConfigWhereInput
   }
 
   /**
@@ -23767,6 +23881,7 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     metaLeadId: string | null
+    rdContactId: string | null
     fonte: string | null
     rating: number | null
     status: string | null
@@ -23788,6 +23903,7 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     metaLeadId: string | null
+    rdContactId: string | null
     fonte: string | null
     rating: number | null
     status: string | null
@@ -23809,12 +23925,14 @@ export namespace Prisma {
     telefone: number
     email: number
     metaLeadId: number
+    rdContactId: number
     fonte: number
     rating: number
     status: number
     dataEntrada: number
     dataFechamento: number
     valor: number
+    dadosMarketing: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -23844,6 +23962,7 @@ export namespace Prisma {
     telefone?: true
     email?: true
     metaLeadId?: true
+    rdContactId?: true
     fonte?: true
     rating?: true
     status?: true
@@ -23865,6 +23984,7 @@ export namespace Prisma {
     telefone?: true
     email?: true
     metaLeadId?: true
+    rdContactId?: true
     fonte?: true
     rating?: true
     status?: true
@@ -23886,12 +24006,14 @@ export namespace Prisma {
     telefone?: true
     email?: true
     metaLeadId?: true
+    rdContactId?: true
     fonte?: true
     rating?: true
     status?: true
     dataEntrada?: true
     dataFechamento?: true
     valor?: true
+    dadosMarketing?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -23994,12 +24116,14 @@ export namespace Prisma {
     telefone: string | null
     email: string | null
     metaLeadId: string | null
+    rdContactId: string | null
     fonte: string | null
     rating: number | null
     status: string | null
     dataEntrada: Date
     dataFechamento: Date | null
     valor: Decimal | null
+    dadosMarketing: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: LeadCrmCountAggregateOutputType | null
@@ -24034,12 +24158,14 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
+    rdContactId?: boolean
     fonte?: boolean
     rating?: boolean
     status?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
+    dadosMarketing?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -24057,12 +24183,14 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
+    rdContactId?: boolean
     fonte?: boolean
     rating?: boolean
     status?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
+    dadosMarketing?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -24080,12 +24208,14 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
+    rdContactId?: boolean
     fonte?: boolean
     rating?: boolean
     status?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
+    dadosMarketing?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -24103,17 +24233,19 @@ export namespace Prisma {
     telefone?: boolean
     email?: boolean
     metaLeadId?: boolean
+    rdContactId?: boolean
     fonte?: boolean
     rating?: boolean
     status?: boolean
     dataEntrada?: boolean
     dataFechamento?: boolean
     valor?: boolean
+    dadosMarketing?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "fonte" | "rating" | "status" | "dataEntrada" | "dataFechamento" | "valor" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
+  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "rdContactId" | "fonte" | "rating" | "status" | "dataEntrada" | "dataFechamento" | "valor" | "dadosMarketing" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
   export type LeadCrmInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
@@ -24144,12 +24276,14 @@ export namespace Prisma {
       telefone: string | null
       email: string | null
       metaLeadId: string | null
+      rdContactId: string | null
       fonte: string | null
       rating: number | null
       status: string | null
       dataEntrada: Date
       dataFechamento: Date | null
       valor: Prisma.Decimal | null
+      dadosMarketing: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["leadCrm"]>
@@ -24587,12 +24721,14 @@ export namespace Prisma {
     readonly telefone: FieldRef<"LeadCrm", 'String'>
     readonly email: FieldRef<"LeadCrm", 'String'>
     readonly metaLeadId: FieldRef<"LeadCrm", 'String'>
+    readonly rdContactId: FieldRef<"LeadCrm", 'String'>
     readonly fonte: FieldRef<"LeadCrm", 'String'>
     readonly rating: FieldRef<"LeadCrm", 'Int'>
     readonly status: FieldRef<"LeadCrm", 'String'>
     readonly dataEntrada: FieldRef<"LeadCrm", 'DateTime'>
     readonly dataFechamento: FieldRef<"LeadCrm", 'DateTime'>
     readonly valor: FieldRef<"LeadCrm", 'Decimal'>
+    readonly dadosMarketing: FieldRef<"LeadCrm", 'Json'>
     readonly createdAt: FieldRef<"LeadCrm", 'DateTime'>
     readonly updatedAt: FieldRef<"LeadCrm", 'DateTime'>
   }
@@ -25010,6 +25146,1086 @@ export namespace Prisma {
 
 
   /**
+   * Model RdMarketingConfig
+   */
+
+  export type AggregateRdMarketingConfig = {
+    _count: RdMarketingConfigCountAggregateOutputType | null
+    _min: RdMarketingConfigMinAggregateOutputType | null
+    _max: RdMarketingConfigMaxAggregateOutputType | null
+  }
+
+  export type RdMarketingConfigMinAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    ativo: boolean | null
+    ultimoSyncAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RdMarketingConfigMaxAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    ativo: boolean | null
+    ultimoSyncAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type RdMarketingConfigCountAggregateOutputType = {
+    id: number
+    clienteId: number
+    credenciais: number
+    ativo: number
+    ultimoSyncAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type RdMarketingConfigMinAggregateInputType = {
+    id?: true
+    clienteId?: true
+    ativo?: true
+    ultimoSyncAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RdMarketingConfigMaxAggregateInputType = {
+    id?: true
+    clienteId?: true
+    ativo?: true
+    ultimoSyncAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type RdMarketingConfigCountAggregateInputType = {
+    id?: true
+    clienteId?: true
+    credenciais?: true
+    ativo?: true
+    ultimoSyncAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type RdMarketingConfigAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RdMarketingConfig to aggregate.
+     */
+    where?: RdMarketingConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RdMarketingConfigs to fetch.
+     */
+    orderBy?: RdMarketingConfigOrderByWithRelationInput | RdMarketingConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: RdMarketingConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RdMarketingConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RdMarketingConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned RdMarketingConfigs
+    **/
+    _count?: true | RdMarketingConfigCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: RdMarketingConfigMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: RdMarketingConfigMaxAggregateInputType
+  }
+
+  export type GetRdMarketingConfigAggregateType<T extends RdMarketingConfigAggregateArgs> = {
+        [P in keyof T & keyof AggregateRdMarketingConfig]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateRdMarketingConfig[P]>
+      : GetScalarType<T[P], AggregateRdMarketingConfig[P]>
+  }
+
+
+
+
+  export type RdMarketingConfigGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: RdMarketingConfigWhereInput
+    orderBy?: RdMarketingConfigOrderByWithAggregationInput | RdMarketingConfigOrderByWithAggregationInput[]
+    by: RdMarketingConfigScalarFieldEnum[] | RdMarketingConfigScalarFieldEnum
+    having?: RdMarketingConfigScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: RdMarketingConfigCountAggregateInputType | true
+    _min?: RdMarketingConfigMinAggregateInputType
+    _max?: RdMarketingConfigMaxAggregateInputType
+  }
+
+  export type RdMarketingConfigGroupByOutputType = {
+    id: string
+    clienteId: string
+    credenciais: JsonValue
+    ativo: boolean
+    ultimoSyncAt: Date | null
+    createdAt: Date
+    updatedAt: Date
+    _count: RdMarketingConfigCountAggregateOutputType | null
+    _min: RdMarketingConfigMinAggregateOutputType | null
+    _max: RdMarketingConfigMaxAggregateOutputType | null
+  }
+
+  type GetRdMarketingConfigGroupByPayload<T extends RdMarketingConfigGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<RdMarketingConfigGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof RdMarketingConfigGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], RdMarketingConfigGroupByOutputType[P]>
+            : GetScalarType<T[P], RdMarketingConfigGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type RdMarketingConfigSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    credenciais?: boolean
+    ativo?: boolean
+    ultimoSyncAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rdMarketingConfig"]>
+
+  export type RdMarketingConfigSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    credenciais?: boolean
+    ativo?: boolean
+    ultimoSyncAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rdMarketingConfig"]>
+
+  export type RdMarketingConfigSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    credenciais?: boolean
+    ativo?: boolean
+    ultimoSyncAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["rdMarketingConfig"]>
+
+  export type RdMarketingConfigSelectScalar = {
+    id?: boolean
+    clienteId?: boolean
+    credenciais?: boolean
+    ativo?: boolean
+    ultimoSyncAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type RdMarketingConfigOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "credenciais" | "ativo" | "ultimoSyncAt" | "createdAt" | "updatedAt", ExtArgs["result"]["rdMarketingConfig"]>
+  export type RdMarketingConfigInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type RdMarketingConfigIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type RdMarketingConfigIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+
+  export type $RdMarketingConfigPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "RdMarketingConfig"
+    objects: {
+      cliente: Prisma.$ClientePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      clienteId: string
+      credenciais: Prisma.JsonValue
+      ativo: boolean
+      ultimoSyncAt: Date | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["rdMarketingConfig"]>
+    composites: {}
+  }
+
+  type RdMarketingConfigGetPayload<S extends boolean | null | undefined | RdMarketingConfigDefaultArgs> = $Result.GetResult<Prisma.$RdMarketingConfigPayload, S>
+
+  type RdMarketingConfigCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<RdMarketingConfigFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: RdMarketingConfigCountAggregateInputType | true
+    }
+
+  export interface RdMarketingConfigDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['RdMarketingConfig'], meta: { name: 'RdMarketingConfig' } }
+    /**
+     * Find zero or one RdMarketingConfig that matches the filter.
+     * @param {RdMarketingConfigFindUniqueArgs} args - Arguments to find a RdMarketingConfig
+     * @example
+     * // Get one RdMarketingConfig
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends RdMarketingConfigFindUniqueArgs>(args: SelectSubset<T, RdMarketingConfigFindUniqueArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one RdMarketingConfig that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {RdMarketingConfigFindUniqueOrThrowArgs} args - Arguments to find a RdMarketingConfig
+     * @example
+     * // Get one RdMarketingConfig
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends RdMarketingConfigFindUniqueOrThrowArgs>(args: SelectSubset<T, RdMarketingConfigFindUniqueOrThrowArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RdMarketingConfig that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RdMarketingConfigFindFirstArgs} args - Arguments to find a RdMarketingConfig
+     * @example
+     * // Get one RdMarketingConfig
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends RdMarketingConfigFindFirstArgs>(args?: SelectSubset<T, RdMarketingConfigFindFirstArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first RdMarketingConfig that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RdMarketingConfigFindFirstOrThrowArgs} args - Arguments to find a RdMarketingConfig
+     * @example
+     * // Get one RdMarketingConfig
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends RdMarketingConfigFindFirstOrThrowArgs>(args?: SelectSubset<T, RdMarketingConfigFindFirstOrThrowArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more RdMarketingConfigs that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RdMarketingConfigFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all RdMarketingConfigs
+     * const rdMarketingConfigs = await prisma.rdMarketingConfig.findMany()
+     * 
+     * // Get first 10 RdMarketingConfigs
+     * const rdMarketingConfigs = await prisma.rdMarketingConfig.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const rdMarketingConfigWithIdOnly = await prisma.rdMarketingConfig.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends RdMarketingConfigFindManyArgs>(args?: SelectSubset<T, RdMarketingConfigFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a RdMarketingConfig.
+     * @param {RdMarketingConfigCreateArgs} args - Arguments to create a RdMarketingConfig.
+     * @example
+     * // Create one RdMarketingConfig
+     * const RdMarketingConfig = await prisma.rdMarketingConfig.create({
+     *   data: {
+     *     // ... data to create a RdMarketingConfig
+     *   }
+     * })
+     * 
+     */
+    create<T extends RdMarketingConfigCreateArgs>(args: SelectSubset<T, RdMarketingConfigCreateArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many RdMarketingConfigs.
+     * @param {RdMarketingConfigCreateManyArgs} args - Arguments to create many RdMarketingConfigs.
+     * @example
+     * // Create many RdMarketingConfigs
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends RdMarketingConfigCreateManyArgs>(args?: SelectSubset<T, RdMarketingConfigCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many RdMarketingConfigs and returns the data saved in the database.
+     * @param {RdMarketingConfigCreateManyAndReturnArgs} args - Arguments to create many RdMarketingConfigs.
+     * @example
+     * // Create many RdMarketingConfigs
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many RdMarketingConfigs and only return the `id`
+     * const rdMarketingConfigWithIdOnly = await prisma.rdMarketingConfig.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends RdMarketingConfigCreateManyAndReturnArgs>(args?: SelectSubset<T, RdMarketingConfigCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a RdMarketingConfig.
+     * @param {RdMarketingConfigDeleteArgs} args - Arguments to delete one RdMarketingConfig.
+     * @example
+     * // Delete one RdMarketingConfig
+     * const RdMarketingConfig = await prisma.rdMarketingConfig.delete({
+     *   where: {
+     *     // ... filter to delete one RdMarketingConfig
+     *   }
+     * })
+     * 
+     */
+    delete<T extends RdMarketingConfigDeleteArgs>(args: SelectSubset<T, RdMarketingConfigDeleteArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one RdMarketingConfig.
+     * @param {RdMarketingConfigUpdateArgs} args - Arguments to update one RdMarketingConfig.
+     * @example
+     * // Update one RdMarketingConfig
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends RdMarketingConfigUpdateArgs>(args: SelectSubset<T, RdMarketingConfigUpdateArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more RdMarketingConfigs.
+     * @param {RdMarketingConfigDeleteManyArgs} args - Arguments to filter RdMarketingConfigs to delete.
+     * @example
+     * // Delete a few RdMarketingConfigs
+     * const { count } = await prisma.rdMarketingConfig.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends RdMarketingConfigDeleteManyArgs>(args?: SelectSubset<T, RdMarketingConfigDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RdMarketingConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RdMarketingConfigUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many RdMarketingConfigs
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends RdMarketingConfigUpdateManyArgs>(args: SelectSubset<T, RdMarketingConfigUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more RdMarketingConfigs and returns the data updated in the database.
+     * @param {RdMarketingConfigUpdateManyAndReturnArgs} args - Arguments to update many RdMarketingConfigs.
+     * @example
+     * // Update many RdMarketingConfigs
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more RdMarketingConfigs and only return the `id`
+     * const rdMarketingConfigWithIdOnly = await prisma.rdMarketingConfig.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends RdMarketingConfigUpdateManyAndReturnArgs>(args: SelectSubset<T, RdMarketingConfigUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one RdMarketingConfig.
+     * @param {RdMarketingConfigUpsertArgs} args - Arguments to update or create a RdMarketingConfig.
+     * @example
+     * // Update or create a RdMarketingConfig
+     * const rdMarketingConfig = await prisma.rdMarketingConfig.upsert({
+     *   create: {
+     *     // ... data to create a RdMarketingConfig
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the RdMarketingConfig we want to update
+     *   }
+     * })
+     */
+    upsert<T extends RdMarketingConfigUpsertArgs>(args: SelectSubset<T, RdMarketingConfigUpsertArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of RdMarketingConfigs.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RdMarketingConfigCountArgs} args - Arguments to filter RdMarketingConfigs to count.
+     * @example
+     * // Count the number of RdMarketingConfigs
+     * const count = await prisma.rdMarketingConfig.count({
+     *   where: {
+     *     // ... the filter for the RdMarketingConfigs we want to count
+     *   }
+     * })
+    **/
+    count<T extends RdMarketingConfigCountArgs>(
+      args?: Subset<T, RdMarketingConfigCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], RdMarketingConfigCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a RdMarketingConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RdMarketingConfigAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends RdMarketingConfigAggregateArgs>(args: Subset<T, RdMarketingConfigAggregateArgs>): Prisma.PrismaPromise<GetRdMarketingConfigAggregateType<T>>
+
+    /**
+     * Group by RdMarketingConfig.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {RdMarketingConfigGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends RdMarketingConfigGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: RdMarketingConfigGroupByArgs['orderBy'] }
+        : { orderBy?: RdMarketingConfigGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, RdMarketingConfigGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetRdMarketingConfigGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the RdMarketingConfig model
+   */
+  readonly fields: RdMarketingConfigFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for RdMarketingConfig.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__RdMarketingConfigClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the RdMarketingConfig model
+   */
+  interface RdMarketingConfigFieldRefs {
+    readonly id: FieldRef<"RdMarketingConfig", 'String'>
+    readonly clienteId: FieldRef<"RdMarketingConfig", 'String'>
+    readonly credenciais: FieldRef<"RdMarketingConfig", 'Json'>
+    readonly ativo: FieldRef<"RdMarketingConfig", 'Boolean'>
+    readonly ultimoSyncAt: FieldRef<"RdMarketingConfig", 'DateTime'>
+    readonly createdAt: FieldRef<"RdMarketingConfig", 'DateTime'>
+    readonly updatedAt: FieldRef<"RdMarketingConfig", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * RdMarketingConfig findUnique
+   */
+  export type RdMarketingConfigFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which RdMarketingConfig to fetch.
+     */
+    where: RdMarketingConfigWhereUniqueInput
+  }
+
+  /**
+   * RdMarketingConfig findUniqueOrThrow
+   */
+  export type RdMarketingConfigFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which RdMarketingConfig to fetch.
+     */
+    where: RdMarketingConfigWhereUniqueInput
+  }
+
+  /**
+   * RdMarketingConfig findFirst
+   */
+  export type RdMarketingConfigFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which RdMarketingConfig to fetch.
+     */
+    where?: RdMarketingConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RdMarketingConfigs to fetch.
+     */
+    orderBy?: RdMarketingConfigOrderByWithRelationInput | RdMarketingConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RdMarketingConfigs.
+     */
+    cursor?: RdMarketingConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RdMarketingConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RdMarketingConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RdMarketingConfigs.
+     */
+    distinct?: RdMarketingConfigScalarFieldEnum | RdMarketingConfigScalarFieldEnum[]
+  }
+
+  /**
+   * RdMarketingConfig findFirstOrThrow
+   */
+  export type RdMarketingConfigFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which RdMarketingConfig to fetch.
+     */
+    where?: RdMarketingConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RdMarketingConfigs to fetch.
+     */
+    orderBy?: RdMarketingConfigOrderByWithRelationInput | RdMarketingConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for RdMarketingConfigs.
+     */
+    cursor?: RdMarketingConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RdMarketingConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RdMarketingConfigs.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of RdMarketingConfigs.
+     */
+    distinct?: RdMarketingConfigScalarFieldEnum | RdMarketingConfigScalarFieldEnum[]
+  }
+
+  /**
+   * RdMarketingConfig findMany
+   */
+  export type RdMarketingConfigFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * Filter, which RdMarketingConfigs to fetch.
+     */
+    where?: RdMarketingConfigWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of RdMarketingConfigs to fetch.
+     */
+    orderBy?: RdMarketingConfigOrderByWithRelationInput | RdMarketingConfigOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing RdMarketingConfigs.
+     */
+    cursor?: RdMarketingConfigWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` RdMarketingConfigs from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` RdMarketingConfigs.
+     */
+    skip?: number
+    distinct?: RdMarketingConfigScalarFieldEnum | RdMarketingConfigScalarFieldEnum[]
+  }
+
+  /**
+   * RdMarketingConfig create
+   */
+  export type RdMarketingConfigCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to create a RdMarketingConfig.
+     */
+    data: XOR<RdMarketingConfigCreateInput, RdMarketingConfigUncheckedCreateInput>
+  }
+
+  /**
+   * RdMarketingConfig createMany
+   */
+  export type RdMarketingConfigCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many RdMarketingConfigs.
+     */
+    data: RdMarketingConfigCreateManyInput | RdMarketingConfigCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * RdMarketingConfig createManyAndReturn
+   */
+  export type RdMarketingConfigCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * The data used to create many RdMarketingConfigs.
+     */
+    data: RdMarketingConfigCreateManyInput | RdMarketingConfigCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RdMarketingConfig update
+   */
+  export type RdMarketingConfigUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * The data needed to update a RdMarketingConfig.
+     */
+    data: XOR<RdMarketingConfigUpdateInput, RdMarketingConfigUncheckedUpdateInput>
+    /**
+     * Choose, which RdMarketingConfig to update.
+     */
+    where: RdMarketingConfigWhereUniqueInput
+  }
+
+  /**
+   * RdMarketingConfig updateMany
+   */
+  export type RdMarketingConfigUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update RdMarketingConfigs.
+     */
+    data: XOR<RdMarketingConfigUpdateManyMutationInput, RdMarketingConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which RdMarketingConfigs to update
+     */
+    where?: RdMarketingConfigWhereInput
+    /**
+     * Limit how many RdMarketingConfigs to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * RdMarketingConfig updateManyAndReturn
+   */
+  export type RdMarketingConfigUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * The data used to update RdMarketingConfigs.
+     */
+    data: XOR<RdMarketingConfigUpdateManyMutationInput, RdMarketingConfigUncheckedUpdateManyInput>
+    /**
+     * Filter which RdMarketingConfigs to update
+     */
+    where?: RdMarketingConfigWhereInput
+    /**
+     * Limit how many RdMarketingConfigs to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * RdMarketingConfig upsert
+   */
+  export type RdMarketingConfigUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * The filter to search for the RdMarketingConfig to update in case it exists.
+     */
+    where: RdMarketingConfigWhereUniqueInput
+    /**
+     * In case the RdMarketingConfig found by the `where` argument doesn't exist, create a new RdMarketingConfig with this data.
+     */
+    create: XOR<RdMarketingConfigCreateInput, RdMarketingConfigUncheckedCreateInput>
+    /**
+     * In case the RdMarketingConfig was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<RdMarketingConfigUpdateInput, RdMarketingConfigUncheckedUpdateInput>
+  }
+
+  /**
+   * RdMarketingConfig delete
+   */
+  export type RdMarketingConfigDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+    /**
+     * Filter which RdMarketingConfig to delete.
+     */
+    where: RdMarketingConfigWhereUniqueInput
+  }
+
+  /**
+   * RdMarketingConfig deleteMany
+   */
+  export type RdMarketingConfigDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which RdMarketingConfigs to delete
+     */
+    where?: RdMarketingConfigWhereInput
+    /**
+     * Limit how many RdMarketingConfigs to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * RdMarketingConfig without action
+   */
+  export type RdMarketingConfigDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the RdMarketingConfig
+     */
+    select?: RdMarketingConfigSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the RdMarketingConfig
+     */
+    omit?: RdMarketingConfigOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: RdMarketingConfigInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -25374,17 +26590,32 @@ export namespace Prisma {
     telefone: 'telefone',
     email: 'email',
     metaLeadId: 'metaLeadId',
+    rdContactId: 'rdContactId',
     fonte: 'fonte',
     rating: 'rating',
     status: 'status',
     dataEntrada: 'dataEntrada',
     dataFechamento: 'dataFechamento',
     valor: 'valor',
+    dadosMarketing: 'dadosMarketing',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type LeadCrmScalarFieldEnum = (typeof LeadCrmScalarFieldEnum)[keyof typeof LeadCrmScalarFieldEnum]
+
+
+  export const RdMarketingConfigScalarFieldEnum: {
+    id: 'id',
+    clienteId: 'clienteId',
+    credenciais: 'credenciais',
+    ativo: 'ativo',
+    ultimoSyncAt: 'ultimoSyncAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type RdMarketingConfigScalarFieldEnum = (typeof RdMarketingConfigScalarFieldEnum)[keyof typeof RdMarketingConfigScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -25597,6 +26828,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualListRelationFilter
     crmConfig?: XOR<CrmConfigNullableScalarRelationFilter, CrmConfigWhereInput> | null
     leadsCrm?: LeadCrmListRelationFilter
+    rdMarketingConfig?: XOR<RdMarketingConfigNullableScalarRelationFilter, RdMarketingConfigWhereInput> | null
     pautasReuniao?: PautaReuniaoListRelationFilter
   }
 
@@ -25632,6 +26864,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualOrderByRelationAggregateInput
     crmConfig?: CrmConfigOrderByWithRelationInput
     leadsCrm?: LeadCrmOrderByRelationAggregateInput
+    rdMarketingConfig?: RdMarketingConfigOrderByWithRelationInput
     pautasReuniao?: PautaReuniaoOrderByRelationAggregateInput
   }
 
@@ -25670,6 +26903,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualListRelationFilter
     crmConfig?: XOR<CrmConfigNullableScalarRelationFilter, CrmConfigWhereInput> | null
     leadsCrm?: LeadCrmListRelationFilter
+    rdMarketingConfig?: XOR<RdMarketingConfigNullableScalarRelationFilter, RdMarketingConfigWhereInput> | null
     pautasReuniao?: PautaReuniaoListRelationFilter
   }, "id" | "slug" | "portalToken">
 
@@ -27371,12 +28605,14 @@ export namespace Prisma {
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    rdContactId?: StringNullableFilter<"LeadCrm"> | string | null
     fonte?: StringNullableFilter<"LeadCrm"> | string | null
     rating?: IntNullableFilter<"LeadCrm"> | number | null
     status?: StringNullableFilter<"LeadCrm"> | string | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: JsonNullableFilter<"LeadCrm">
     createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
     updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -27394,12 +28630,14 @@ export namespace Prisma {
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     metaLeadId?: SortOrderInput | SortOrder
+    rdContactId?: SortOrderInput | SortOrder
     fonte?: SortOrderInput | SortOrder
     rating?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
+    dadosMarketing?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
@@ -27421,12 +28659,14 @@ export namespace Prisma {
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    rdContactId?: StringNullableFilter<"LeadCrm"> | string | null
     fonte?: StringNullableFilter<"LeadCrm"> | string | null
     rating?: IntNullableFilter<"LeadCrm"> | number | null
     status?: StringNullableFilter<"LeadCrm"> | string | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: JsonNullableFilter<"LeadCrm">
     createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
     updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -27444,12 +28684,14 @@ export namespace Prisma {
     telefone?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     metaLeadId?: SortOrderInput | SortOrder
+    rdContactId?: SortOrderInput | SortOrder
     fonte?: SortOrderInput | SortOrder
     rating?: SortOrderInput | SortOrder
     status?: SortOrderInput | SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
+    dadosMarketing?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LeadCrmCountOrderByAggregateInput
@@ -27473,14 +28715,81 @@ export namespace Prisma {
     telefone?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     email?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
+    rdContactId?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     fonte?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     rating?: IntNullableWithAggregatesFilter<"LeadCrm"> | number | null
     status?: StringNullableWithAggregatesFilter<"LeadCrm"> | string | null
     dataEntrada?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableWithAggregatesFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableWithAggregatesFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: JsonNullableWithAggregatesFilter<"LeadCrm">
     createdAt?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
+  }
+
+  export type RdMarketingConfigWhereInput = {
+    AND?: RdMarketingConfigWhereInput | RdMarketingConfigWhereInput[]
+    OR?: RdMarketingConfigWhereInput[]
+    NOT?: RdMarketingConfigWhereInput | RdMarketingConfigWhereInput[]
+    id?: StringFilter<"RdMarketingConfig"> | string
+    clienteId?: StringFilter<"RdMarketingConfig"> | string
+    credenciais?: JsonFilter<"RdMarketingConfig">
+    ativo?: BoolFilter<"RdMarketingConfig"> | boolean
+    ultimoSyncAt?: DateTimeNullableFilter<"RdMarketingConfig"> | Date | string | null
+    createdAt?: DateTimeFilter<"RdMarketingConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"RdMarketingConfig"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+  }
+
+  export type RdMarketingConfigOrderByWithRelationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    credenciais?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cliente?: ClienteOrderByWithRelationInput
+  }
+
+  export type RdMarketingConfigWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    clienteId?: string
+    AND?: RdMarketingConfigWhereInput | RdMarketingConfigWhereInput[]
+    OR?: RdMarketingConfigWhereInput[]
+    NOT?: RdMarketingConfigWhereInput | RdMarketingConfigWhereInput[]
+    credenciais?: JsonFilter<"RdMarketingConfig">
+    ativo?: BoolFilter<"RdMarketingConfig"> | boolean
+    ultimoSyncAt?: DateTimeNullableFilter<"RdMarketingConfig"> | Date | string | null
+    createdAt?: DateTimeFilter<"RdMarketingConfig"> | Date | string
+    updatedAt?: DateTimeFilter<"RdMarketingConfig"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+  }, "id" | "clienteId">
+
+  export type RdMarketingConfigOrderByWithAggregationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    credenciais?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: RdMarketingConfigCountOrderByAggregateInput
+    _max?: RdMarketingConfigMaxOrderByAggregateInput
+    _min?: RdMarketingConfigMinOrderByAggregateInput
+  }
+
+  export type RdMarketingConfigScalarWhereWithAggregatesInput = {
+    AND?: RdMarketingConfigScalarWhereWithAggregatesInput | RdMarketingConfigScalarWhereWithAggregatesInput[]
+    OR?: RdMarketingConfigScalarWhereWithAggregatesInput[]
+    NOT?: RdMarketingConfigScalarWhereWithAggregatesInput | RdMarketingConfigScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"RdMarketingConfig"> | string
+    clienteId?: StringWithAggregatesFilter<"RdMarketingConfig"> | string
+    credenciais?: JsonWithAggregatesFilter<"RdMarketingConfig">
+    ativo?: BoolWithAggregatesFilter<"RdMarketingConfig"> | boolean
+    ultimoSyncAt?: DateTimeNullableWithAggregatesFilter<"RdMarketingConfig"> | Date | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"RdMarketingConfig"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"RdMarketingConfig"> | Date | string
   }
 
   export type ClienteCreateInput = {
@@ -27515,6 +28824,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -27550,6 +28860,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -27585,6 +28896,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -27620,6 +28932,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -29577,12 +30890,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutLeadsCrmInput
@@ -29600,12 +30915,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29619,12 +30936,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutLeadsCrmNestedInput
@@ -29642,12 +30961,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29663,12 +30984,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29682,12 +31005,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29703,12 +31028,83 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RdMarketingConfigCreateInput = {
+    id?: string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutRdMarketingConfigInput
+  }
+
+  export type RdMarketingConfigUncheckedCreateInput = {
+    id?: string
+    clienteId: string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RdMarketingConfigUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutRdMarketingConfigNestedInput
+  }
+
+  export type RdMarketingConfigUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RdMarketingConfigCreateManyInput = {
+    id?: string
+    clienteId: string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RdMarketingConfigUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RdMarketingConfigUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -29867,6 +31263,11 @@ export namespace Prisma {
     every?: LeadCrmWhereInput
     some?: LeadCrmWhereInput
     none?: LeadCrmWhereInput
+  }
+
+  export type RdMarketingConfigNullableScalarRelationFilter = {
+    is?: RdMarketingConfigWhereInput | null
+    isNot?: RdMarketingConfigWhereInput | null
   }
 
   export type PautaReuniaoListRelationFilter = {
@@ -31421,12 +32822,14 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
+    rdContactId?: SortOrder
     fonte?: SortOrder
     rating?: SortOrder
     status?: SortOrder
     dataEntrada?: SortOrder
     dataFechamento?: SortOrder
     valor?: SortOrder
+    dadosMarketing?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -31448,6 +32851,7 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
+    rdContactId?: SortOrder
     fonte?: SortOrder
     rating?: SortOrder
     status?: SortOrder
@@ -31469,6 +32873,7 @@ export namespace Prisma {
     telefone?: SortOrder
     email?: SortOrder
     metaLeadId?: SortOrder
+    rdContactId?: SortOrder
     fonte?: SortOrder
     rating?: SortOrder
     status?: SortOrder
@@ -31483,6 +32888,34 @@ export namespace Prisma {
     ordemEtapa?: SortOrder
     rating?: SortOrder
     valor?: SortOrder
+  }
+
+  export type RdMarketingConfigCountOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    credenciais?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RdMarketingConfigMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type RdMarketingConfigMinOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    ativo?: SortOrder
+    ultimoSyncAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
   }
 
   export type AgregadoMidiaMensalCreateNestedManyWithoutClienteInput = {
@@ -31573,6 +33006,12 @@ export namespace Prisma {
     connectOrCreate?: LeadCrmCreateOrConnectWithoutClienteInput | LeadCrmCreateOrConnectWithoutClienteInput[]
     createMany?: LeadCrmCreateManyClienteInputEnvelope
     connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+  }
+
+  export type RdMarketingConfigCreateNestedOneWithoutClienteInput = {
+    create?: XOR<RdMarketingConfigCreateWithoutClienteInput, RdMarketingConfigUncheckedCreateWithoutClienteInput>
+    connectOrCreate?: RdMarketingConfigCreateOrConnectWithoutClienteInput
+    connect?: RdMarketingConfigWhereUniqueInput
   }
 
   export type PautaReuniaoCreateNestedManyWithoutClienteInput = {
@@ -31670,6 +33109,12 @@ export namespace Prisma {
     connectOrCreate?: LeadCrmCreateOrConnectWithoutClienteInput | LeadCrmCreateOrConnectWithoutClienteInput[]
     createMany?: LeadCrmCreateManyClienteInputEnvelope
     connect?: LeadCrmWhereUniqueInput | LeadCrmWhereUniqueInput[]
+  }
+
+  export type RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput = {
+    create?: XOR<RdMarketingConfigCreateWithoutClienteInput, RdMarketingConfigUncheckedCreateWithoutClienteInput>
+    connectOrCreate?: RdMarketingConfigCreateOrConnectWithoutClienteInput
+    connect?: RdMarketingConfigWhereUniqueInput
   }
 
   export type PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput = {
@@ -31893,6 +33338,16 @@ export namespace Prisma {
     deleteMany?: LeadCrmScalarWhereInput | LeadCrmScalarWhereInput[]
   }
 
+  export type RdMarketingConfigUpdateOneWithoutClienteNestedInput = {
+    create?: XOR<RdMarketingConfigCreateWithoutClienteInput, RdMarketingConfigUncheckedCreateWithoutClienteInput>
+    connectOrCreate?: RdMarketingConfigCreateOrConnectWithoutClienteInput
+    upsert?: RdMarketingConfigUpsertWithoutClienteInput
+    disconnect?: RdMarketingConfigWhereInput | boolean
+    delete?: RdMarketingConfigWhereInput | boolean
+    connect?: RdMarketingConfigWhereUniqueInput
+    update?: XOR<XOR<RdMarketingConfigUpdateToOneWithWhereWithoutClienteInput, RdMarketingConfigUpdateWithoutClienteInput>, RdMarketingConfigUncheckedUpdateWithoutClienteInput>
+  }
+
   export type PautaReuniaoUpdateManyWithoutClienteNestedInput = {
     create?: XOR<PautaReuniaoCreateWithoutClienteInput, PautaReuniaoUncheckedCreateWithoutClienteInput> | PautaReuniaoCreateWithoutClienteInput[] | PautaReuniaoUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: PautaReuniaoCreateOrConnectWithoutClienteInput | PautaReuniaoCreateOrConnectWithoutClienteInput[]
@@ -32083,6 +33538,16 @@ export namespace Prisma {
     update?: LeadCrmUpdateWithWhereUniqueWithoutClienteInput | LeadCrmUpdateWithWhereUniqueWithoutClienteInput[]
     updateMany?: LeadCrmUpdateManyWithWhereWithoutClienteInput | LeadCrmUpdateManyWithWhereWithoutClienteInput[]
     deleteMany?: LeadCrmScalarWhereInput | LeadCrmScalarWhereInput[]
+  }
+
+  export type RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput = {
+    create?: XOR<RdMarketingConfigCreateWithoutClienteInput, RdMarketingConfigUncheckedCreateWithoutClienteInput>
+    connectOrCreate?: RdMarketingConfigCreateOrConnectWithoutClienteInput
+    upsert?: RdMarketingConfigUpsertWithoutClienteInput
+    disconnect?: RdMarketingConfigWhereInput | boolean
+    delete?: RdMarketingConfigWhereInput | boolean
+    connect?: RdMarketingConfigWhereUniqueInput
+    update?: XOR<XOR<RdMarketingConfigUpdateToOneWithWhereWithoutClienteInput, RdMarketingConfigUpdateWithoutClienteInput>, RdMarketingConfigUncheckedUpdateWithoutClienteInput>
   }
 
   export type PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput = {
@@ -32675,6 +34140,20 @@ export namespace Prisma {
     upsert?: CrmConfigUpsertWithoutLeadsInput
     connect?: CrmConfigWhereUniqueInput
     update?: XOR<XOR<CrmConfigUpdateToOneWithWhereWithoutLeadsInput, CrmConfigUpdateWithoutLeadsInput>, CrmConfigUncheckedUpdateWithoutLeadsInput>
+  }
+
+  export type ClienteCreateNestedOneWithoutRdMarketingConfigInput = {
+    create?: XOR<ClienteCreateWithoutRdMarketingConfigInput, ClienteUncheckedCreateWithoutRdMarketingConfigInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutRdMarketingConfigInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type ClienteUpdateOneRequiredWithoutRdMarketingConfigNestedInput = {
+    create?: XOR<ClienteCreateWithoutRdMarketingConfigInput, ClienteUncheckedCreateWithoutRdMarketingConfigInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutRdMarketingConfigInput
+    upsert?: ClienteUpsertWithoutRdMarketingConfigInput
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutRdMarketingConfigInput, ClienteUpdateWithoutRdMarketingConfigInput>, ClienteUncheckedUpdateWithoutRdMarketingConfigInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -33616,12 +35095,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     crmConfig: CrmConfigCreateNestedOneWithoutLeadsInput
@@ -33637,12 +35118,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33655,6 +35138,29 @@ export namespace Prisma {
   export type LeadCrmCreateManyClienteInputEnvelope = {
     data: LeadCrmCreateManyClienteInput | LeadCrmCreateManyClienteInput[]
     skipDuplicates?: boolean
+  }
+
+  export type RdMarketingConfigCreateWithoutClienteInput = {
+    id?: string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RdMarketingConfigUncheckedCreateWithoutClienteInput = {
+    id?: string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: boolean
+    ultimoSyncAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type RdMarketingConfigCreateOrConnectWithoutClienteInput = {
+    where: RdMarketingConfigWhereUniqueInput
+    create: XOR<RdMarketingConfigCreateWithoutClienteInput, RdMarketingConfigUncheckedCreateWithoutClienteInput>
   }
 
   export type PautaReuniaoCreateWithoutClienteInput = {
@@ -34188,14 +35694,45 @@ export namespace Prisma {
     telefone?: StringNullableFilter<"LeadCrm"> | string | null
     email?: StringNullableFilter<"LeadCrm"> | string | null
     metaLeadId?: StringNullableFilter<"LeadCrm"> | string | null
+    rdContactId?: StringNullableFilter<"LeadCrm"> | string | null
     fonte?: StringNullableFilter<"LeadCrm"> | string | null
     rating?: IntNullableFilter<"LeadCrm"> | number | null
     status?: StringNullableFilter<"LeadCrm"> | string | null
     dataEntrada?: DateTimeFilter<"LeadCrm"> | Date | string
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: JsonNullableFilter<"LeadCrm">
     createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
     updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
+  }
+
+  export type RdMarketingConfigUpsertWithoutClienteInput = {
+    update: XOR<RdMarketingConfigUpdateWithoutClienteInput, RdMarketingConfigUncheckedUpdateWithoutClienteInput>
+    create: XOR<RdMarketingConfigCreateWithoutClienteInput, RdMarketingConfigUncheckedCreateWithoutClienteInput>
+    where?: RdMarketingConfigWhereInput
+  }
+
+  export type RdMarketingConfigUpdateToOneWithWhereWithoutClienteInput = {
+    where?: RdMarketingConfigWhereInput
+    data: XOR<RdMarketingConfigUpdateWithoutClienteInput, RdMarketingConfigUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type RdMarketingConfigUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type RdMarketingConfigUncheckedUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    credenciais?: JsonNullValueInput | InputJsonValue
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type PautaReuniaoUpsertWithWhereUniqueWithoutClienteInput = {
@@ -34262,6 +35799,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -34296,6 +35834,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -34642,6 +36181,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -34676,6 +36216,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -34790,6 +36331,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -34824,6 +36366,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -34909,6 +36452,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -34943,6 +36487,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -35018,6 +36563,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -35052,6 +36598,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -35102,6 +36649,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -35136,6 +36684,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -35170,6 +36719,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -35204,6 +36754,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -35254,6 +36805,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -35288,6 +36840,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -35322,6 +36875,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -35356,6 +36910,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -35406,6 +36961,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -35440,6 +36996,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -35475,6 +37032,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutPautasReuniaoInput = {
@@ -35509,6 +37067,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutPautasReuniaoInput = {
@@ -35559,6 +37118,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutPautasReuniaoInput = {
@@ -35593,6 +37153,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
   }
 
   export type ClienteCreateWithoutGoogleAdsCriativosInput = {
@@ -35626,6 +37187,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -35660,6 +37222,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -35745,6 +37308,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -35779,6 +37343,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -35854,6 +37419,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -35888,6 +37454,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -35973,6 +37540,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -36007,6 +37575,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -36082,6 +37651,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -36116,6 +37686,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -36201,6 +37772,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -36235,6 +37807,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -36310,6 +37883,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -36344,6 +37918,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -36429,6 +38004,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -36463,6 +38039,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -36538,6 +38115,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -36572,6 +38150,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -36622,6 +38201,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -36656,6 +38236,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -36690,6 +38271,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -36724,6 +38306,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -36774,6 +38357,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -36808,6 +38392,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -36842,6 +38427,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -36876,6 +38462,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -36893,12 +38480,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutLeadsCrmInput
@@ -36914,12 +38503,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -36976,6 +38567,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -37010,6 +38602,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -37060,6 +38653,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
   }
 
@@ -37094,6 +38688,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
   }
 
@@ -37173,6 +38768,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
   }
 
@@ -37207,6 +38803,7 @@ export namespace Prisma {
     metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -37243,6 +38840,162 @@ export namespace Prisma {
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ClienteCreateWithoutRdMarketingConfigInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    squad?: number | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    ultimoSyncAt?: Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
+    contas?: ContaCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
+    metas?: MetaCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutRdMarketingConfigInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    squad?: number | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    ultimoSyncAt?: Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
+    contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutRdMarketingConfigInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutRdMarketingConfigInput, ClienteUncheckedCreateWithoutRdMarketingConfigInput>
+  }
+
+  export type ClienteUpsertWithoutRdMarketingConfigInput = {
+    update: XOR<ClienteUpdateWithoutRdMarketingConfigInput, ClienteUncheckedUpdateWithoutRdMarketingConfigInput>
+    create: XOR<ClienteCreateWithoutRdMarketingConfigInput, ClienteUncheckedCreateWithoutRdMarketingConfigInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutRdMarketingConfigInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutRdMarketingConfigInput, ClienteUncheckedUpdateWithoutRdMarketingConfigInput>
+  }
+
+  export type ClienteUpdateWithoutRdMarketingConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
+    contas?: ContaUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
+    metas?: MetaUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutRdMarketingConfigInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
+    contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type AgregadoMidiaMensalCreateManyClienteInput = {
@@ -37465,12 +39218,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38137,12 +39892,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crmConfig?: CrmConfigUpdateOneRequiredWithoutLeadsNestedInput
@@ -38158,12 +39915,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -38178,12 +39937,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -38729,12 +40490,14 @@ export namespace Prisma {
     telefone?: string | null
     email?: string | null
     metaLeadId?: string | null
+    rdContactId?: string | null
     fonte?: string | null
     rating?: number | null
     status?: string | null
     dataEntrada: Date | string
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -38748,12 +40511,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutLeadsCrmNestedInput
@@ -38769,12 +40534,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -38789,12 +40556,14 @@ export namespace Prisma {
     telefone?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     metaLeadId?: NullableStringFieldUpdateOperationsInput | string | null
+    rdContactId?: NullableStringFieldUpdateOperationsInput | string | null
     fonte?: NullableStringFieldUpdateOperationsInput | string | null
     rating?: NullableIntFieldUpdateOperationsInput | number | null
     status?: NullableStringFieldUpdateOperationsInput | string | null
     dataEntrada?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

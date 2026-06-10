@@ -29,6 +29,17 @@ interface Lead {
   fonte: string | null;
   rating: number | null;
   status: string | null;
+  dadosMarketing?: {
+    faturamento?: string | null;
+    segmento?: string | null;
+    investimento?: string | null;
+    interesse?: string | null;
+    cargo?: string | null;
+    origemMarketing?: string | null;
+    eventoConversao?: string | null;
+    empresa?: string | null;
+    lifecycleStage?: string | null;
+  } | null;
 }
 
 interface PorFonte {
@@ -530,10 +541,10 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
           </Card>
         ) : (
           <div className="overflow-x-auto rounded-2xl border border-[var(--border)]">
-            <table className="min-w-[820px] w-full text-sm">
+            <table className="min-w-[1040px] w-full text-sm">
               <thead>
                 <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-                  {["Status", "Etapa", "Contato", "Origem", "Rating", "Entrada", "Fechamento", "Valor"].map((h) => (
+                  {["Status", "Etapa", "Contato", "Origem", "Qualificação", "Rating", "Entrada", "Fechamento", "Valor"].map((h) => (
                     <th
                       key={h}
                       className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]"
@@ -544,7 +555,9 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
                 </tr>
               </thead>
               <tbody className="divide-y divide-[var(--border)]">
-                {leads.map((lead) => (
+                {leads.map((lead) => {
+                  const mkt = lead.dadosMarketing ?? null;
+                  return (
                   <tr
                     key={lead.id}
                     className="group bg-[var(--card)] transition-colors hover:bg-[var(--primary)]/[0.03]"
@@ -571,6 +584,9 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
                               {lead.email ?? lead.telefone}
                             </span>
                           )}
+                          {mkt?.empresa && (
+                            <span className="text-[10px] text-[var(--muted-foreground)] opacity-70">{mkt.empresa}</span>
+                          )}
                         </div>
                       ) : lead.email ?? lead.telefone ? (
                         <span className="text-[var(--muted-foreground)]">{lead.email ?? lead.telefone}</span>
@@ -588,6 +604,43 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
                         >
                           {lead.fonte}
                         </span>
+                      ) : (
+                        <span className="text-[var(--border)]">—</span>
+                      )}
+                    </td>
+
+                    {/* Qualificação (dadosMarketing) */}
+                    <td className="px-4 py-3 max-w-[200px]">
+                      {mkt ? (
+                        <div className="flex flex-col gap-0.5">
+                          {mkt.faturamento && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Fat.</span>
+                              <span className="truncate text-[var(--foreground)]" title={mkt.faturamento}>{mkt.faturamento}</span>
+                            </span>
+                          )}
+                          {mkt.segmento && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Seg.</span>
+                              <span className="truncate text-[var(--foreground)]" title={mkt.segmento}>{mkt.segmento}</span>
+                            </span>
+                          )}
+                          {mkt.investimento && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Inv.</span>
+                              <span className="truncate text-[var(--foreground)]" title={mkt.investimento}>{mkt.investimento}</span>
+                            </span>
+                          )}
+                          {mkt.cargo && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Cargo</span>
+                              <span className="truncate text-[var(--foreground)]" title={mkt.cargo}>{mkt.cargo}</span>
+                            </span>
+                          )}
+                          {!mkt.faturamento && !mkt.segmento && !mkt.investimento && !mkt.cargo && (
+                            <span className="text-[11px] text-[var(--muted-foreground)]">sem dados</span>
+                          )}
+                        </div>
                       ) : (
                         <span className="text-[var(--border)]">—</span>
                       )}
@@ -621,7 +674,8 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
                         : <span className="text-[var(--border)] font-normal">—</span>}
                     </td>
                   </tr>
-                ))}
+                  );
+                })}
               </tbody>
             </table>
             {leads.length === 500 && (
