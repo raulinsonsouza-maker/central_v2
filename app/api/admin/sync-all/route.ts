@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { syncMetaTodosClientes } from "@/lib/sync/metaApiSync";
-import { syncGoogleAdsTodosClientes } from "@/lib/sync/googleAdsApiSync";
-import { syncAnalyticsTodosClientes } from "@/lib/sync/analyticsApiSync";
+import { syncClienteCanais } from "@/lib/sync/syncClienteCanais";
+import { prisma } from "@/lib/db";
 
 function isAdminAuthorized(request: NextRequest): boolean {
   const token = request.headers.get("x-admin-token") ?? request.nextUrl.searchParams.get("token");
@@ -11,44 +10,50 @@ function isAdminAuthorized(request: NextRequest): boolean {
 }
 
 /**
- * Sincroniza Meta API, Google Ads API e GA4 para todos os clientes.
+ * Sincroniza Meta Ads, Google Ads, GA4, Meta Leads e CRM para todos os clientes ativos.
  * Protegido por token de admin. Usado pelo botão "Atualizar todos" no painel.
- * Aceita dateFrom/dateTo no body para forçar re-sync de um período específico.
  */
 export async function POST(request: NextRequest) {
   if (!isAdminAuthorized(request)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const body = await request.json().catch(() => ({}));
-  const dateFrom = body?.dateFrom as string | undefined;
-  const dateTo = body?.dateTo as string | undefined;
-
   try {
-    const [metaResults, googleAdsResults, analyticsResults] = await Promise.all([
-      syncMetaTodosClientes({ ...(dateFrom ? { dateFrom } : {}), ...(dateTo ? { dateTo } : {}) }),
-      syncGoogleAdsTodosClientes({ ...(dateFrom ? { dateFrom } : {}), ...(dateTo ? { dateTo } : {}) }),
-      syncAnalyticsTodosClientes({ ...(dateFrom ? { dateFrom } : {}), ...(dateTo ? { dateTo } : {}) }),
-    ]);
+    const clientes = await prisma.cliente.findMany({
+      where: { ativo: true },
+      select: { id: true, nome: true },
+      orderBy: { nome: "asc" },
+    });
 
-    const metaErrors = metaResults.filter((r) => r.error);
-    const googleErrors = googleAdsResults.filter((r) => r.error);
-    const analyticsErrors = analyticsResults.filter((r) => r.error);
+    const results: Array<{
+      clienteId: string;
+      nome: string;
+      ok: boolean;
+      error?: string;
+    }> = [];
 
-    console.log(`[sync-all] meta=${metaResults.length} ok / ${metaErrors.length} erros | google=${googleAdsResults.length} ok / ${googleErrors.length} erros | analytics=${analyticsResults.length} ok / ${analyticsErrors.length} erros`);
+    for (const { id: clienteId, nome } of clientes) {
+      const r = await syncClienteCanais(clienteId);
+      results.push({
+        clienteId,
+        nome,
+        ok: r.ok,
+        error: r.meta?.error ?? r.googleAds?.error ?? r.analytics?.error,
+      });
+    }
+
+    const okCount = results.filter((r) => r.ok).length;
+    const errosCount = results.filter((r) => !r.ok).length;
+
+    console.log(`[sync-all] total=${clientes.length} ok=${okCount} erros=${errosCount}`);
 
     return NextResponse.json({
       ok: true,
-      metaResults,
-      googleAdsResults,
-      analyticsResults,
+      results,
       summary: {
-        metaOk: metaResults.length - metaErrors.length,
-        metaErros: metaErrors.length,
-        googleOk: googleAdsResults.length - googleErrors.length,
-        googleErros: googleErrors.length,
-        analyticsOk: analyticsResults.length - analyticsErrors.length,
-        analyticsErros: analyticsErrors.length,
+        total: clientes.length,
+        ok: okCount,
+        erros: errosCount,
       },
     });
   } catch (e) {

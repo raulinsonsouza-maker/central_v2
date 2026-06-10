@@ -45,6 +45,7 @@ interface ClienteAdmin {
   leadScoringEnabled?: boolean;
   perfilPanel?: string | null;
   squad?: number | null;
+  ultimoSyncAt?: string | null;
   contas: ContaAdmin[];
 }
 
@@ -110,21 +111,6 @@ async function syncCliente(clienteId: string) {
   return data;
 }
 
-async function syncLeadsCliente(clienteId: string, token?: string) {
-  const res = await fetch("/api/admin/sync-leads", {
-    method: "POST",
-    headers: { ...getHeaders(token), "Content-Type": "application/json" },
-    body: JSON.stringify({ clienteId }),
-  });
-  const data = await res.json().catch(() => ({})) as { ok: boolean; error?: string; results?: Array<{ clienteId: string; leadsCreated: number; leadsFailed: number; formsProcessed: number; error?: string }> };
-  if (res.status === 401) throw new Error("Unauthorized");
-  if (!res.ok) {
-    const errMsg = data.results?.[0]?.error ?? data.error ?? res.statusText;
-    throw new Error(errMsg);
-  }
-  return data;
-}
-
 async function syncAll(token?: string) {
   const res = await fetch("/api/admin/sync-all", {
     method: "POST",
@@ -135,8 +121,8 @@ async function syncAll(token?: string) {
   if (!res.ok) throw new Error(data.error || res.statusText);
   return data as {
     ok: boolean;
-    metaResults?: { clienteId: string; daysProcessed: number; error?: string }[];
-    googleAdsResults?: { clienteId: string; daysProcessed: number; error?: string }[];
+    results?: { clienteId: string; nome: string; ok: boolean; error?: string }[];
+    summary?: { total: number; ok: number; erros: number };
   };
 }
 
@@ -169,6 +155,26 @@ const inputClass =
 
 function getConta(cliente: ClienteAdmin, plataforma: "GOOGLE_ADS" | "META" | "GOOGLE_ANALYTICS") {
   return cliente.contas.find((conta) => conta.plataforma === plataforma);
+}
+
+function formatSyncDate(iso: string | null | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return "";
+  const diff = Date.now() - d.getTime();
+  if (diff < 60 * 60 * 1000) {
+    const mins = Math.max(1, Math.floor(diff / 60000));
+    return `há ${mins}min`;
+  }
+  if (diff < 24 * 60 * 60 * 1000) {
+    const hrs = Math.floor(diff / (60 * 60 * 1000));
+    return `há ${hrs}h`;
+  }
+  return (
+    d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" }) +
+    " " +
+    d.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" })
+  );
 }
 
 function SegmentoCombobox({
@@ -1026,29 +1032,15 @@ export default function AdminClientesPage() {
     },
   });
 
-  const syncLeadsMutation = useMutation({
-    mutationFn: (clienteId: string) => syncLeadsCliente(clienteId, adminToken || undefined),
-    onSuccess: (data) => {
-      const r = data.results?.[0];
-      const failMsg = r?.leadsFailed ? ` (${r.leadsFailed} falhas)` : "";
-      setFormSuccess(`Leads sincronizados: ${r?.leadsCreated ?? 0} novos de ${r?.formsProcessed ?? 0} formulário(s).${failMsg}`);
-      setFormError("");
-    },
-    onError: (e: Error) => {
-      setFormError(e.message);
-      setFormSuccess("");
-    },
-  });
-
   const syncAllMutation = useMutation({
     mutationFn: () => syncAll(adminToken || undefined),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["admin", "clientes"] });
       queryClient.invalidateQueries({ queryKey: ["clientes"] });
-      const metaCount = data.metaResults?.length ?? 0;
-      const googleCount = data.googleAdsResults?.length ?? 0;
+      const total = data.summary?.total ?? data.results?.length ?? 0;
+      const erros = data.summary?.erros ?? 0;
       setFormError("");
-      setFormSuccess(`Atualização concluída. Google Ads: ${googleCount} cliente(s); Meta: ${metaCount} cliente(s).`);
+      setFormSuccess(`Atualização concluída. ${total} cliente(s) sincronizado(s)${erros > 0 ? ` · ${erros} com erro` : ""}.`);
     },
     onError: (e: Error) => {
       setFormError(e.message);
@@ -1306,6 +1298,11 @@ export default function AdminClientesPage() {
                         <p className="text-sm font-bold text-[var(--foreground)]">{cliente.nome}</p>
                         <p className="text-[11px] text-[var(--muted-foreground)]">
                           {cliente.slug} · {cliente.ativo ? "Ativo" : "Churn"}
+                          {cliente.ultimoSyncAt && (
+                            <span className="ml-2 text-[10px] text-[var(--muted-foreground)]/60">
+                              · sync {formatSyncDate(cliente.ultimoSyncAt)}
+                            </span>
+                          )}
                         </p>
                       </div>
 
@@ -1366,22 +1363,12 @@ export default function AdminClientesPage() {
                     <button
                       onClick={() => syncMutation.mutate(cliente.id)}
                       disabled={!cliente.ativo || (syncMutation.isPending && syncMutation.variables === cliente.id)}
+                      title="Atualiza anúncios (Meta + Google), GA4, leads do Meta Lead Gen e CRM"
                       className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition-all hover:border-[var(--primary)]/30 hover:bg-[var(--primary)]/5 hover:text-[var(--primary)] disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <RefreshCw className={`h-3.5 w-3.5 ${syncMutation.isPending && syncMutation.variables === cliente.id ? "animate-spin" : ""}`} />
-                      Sync
+                      Atualizar
                     </button>
-                    {metaConta && (
-                      <button
-                        onClick={() => syncLeadsMutation.mutate(cliente.id)}
-                        disabled={!cliente.ativo || (syncLeadsMutation.isPending && syncLeadsMutation.variables === cliente.id)}
-                        title="Sincronizar leads individuais do Meta Lead Gen"
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-transparent px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition-all hover:border-[var(--primary)]/30 hover:bg-[var(--primary)]/5 hover:text-[var(--primary)] disabled:cursor-not-allowed disabled:opacity-50"
-                      >
-                        <RefreshCw className={`h-3.5 w-3.5 ${syncLeadsMutation.isPending && syncLeadsMutation.variables === cliente.id ? "animate-spin" : ""}`} />
-                        Leads
-                      </button>
-                    )}
                     {confirmRegenId !== cliente.id && (
                       <button
                         onClick={() => {
