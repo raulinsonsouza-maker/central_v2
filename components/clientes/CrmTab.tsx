@@ -676,8 +676,12 @@ function CriativoSection({ data }: { data: AtribuicaoData }) {
       <div className="flex flex-wrap gap-2">
         <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--card)] px-3 py-1.5">
           <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: metaHex }} />
-          <span className="text-xs font-semibold text-[var(--foreground)]">{totalLeads} leads identificados</span>
-          <span className="text-xs text-[var(--muted-foreground)]">via Meta Lead Forms</span>
+          <span className="text-xs font-semibold text-[var(--foreground)]">{totalLeads} formulários Meta</span>
+          {data.leadsMeta > 0 && (
+            <span className="text-xs text-[var(--muted-foreground)]">
+              de {data.leadsMeta} totais ({Math.round((totalLeads / data.leadsMeta) * 100)}% sincronizados)
+            </span>
+          )}
         </div>
         {totalGanhos > 0 && (
           <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5">
@@ -761,8 +765,9 @@ function CriativoSection({ data }: { data: AtribuicaoData }) {
         </table>
       </div>
       <p className="text-[10px] text-[var(--muted-foreground)]">
-        Atribuição via cruzamento MetaLeadForms × CRM por e-mail e telefone.
-        Leads sem correspondência no CRM não aparecem aqui.
+        Leads contados pelo data de preenchimento do formulário Meta (MetaLeadForms), não pela data de entrada no CRM.
+        O total pode ser menor que o Meta Ads Manager quando o sync ainda não capturou os leads mais recentes — o saldo restante aparece no total do tab META.
+        Métricas CRM (Visitou, Em aberto, Ganhos) via cruzamento por e-mail e telefone com os registros do CRM.
       </p>
     </div>
   );
