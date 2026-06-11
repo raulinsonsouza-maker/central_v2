@@ -30,6 +30,11 @@ export interface CvCrmCredentials {
   token: string;
   /** Only import/show leads that have at least one of these tags. Empty/absent = no filter. */
   tagFilter?: string[];
+  /**
+   * Only import leads whose `conversao_original` (first conversion) matches one of these values.
+   * Case-insensitive exact match. Empty/absent = no filter.
+   */
+  conversaoOriginalFilter?: string[];
 }
 
 export interface RdStationCredentials {

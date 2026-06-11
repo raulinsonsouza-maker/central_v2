@@ -75,8 +75,8 @@ function parseValor(v?: number | string | null): number | null {
 /** Temperature keywords that indicate a textual possibilidade_venda */
 const TEMPERATURA_KEYWORDS = ["frio", "morno", "quente", "sem momento"];
 
-function isTextualTemperatura(v: string): boolean {
-  const lower = v.toLowerCase().trim();
+function isTextualTemperatura(v: unknown): boolean {
+  const lower = String(v).toLowerCase().trim();
   return TEMPERATURA_KEYWORDS.some((k) => lower.includes(k));
 }
 
@@ -145,12 +145,14 @@ export class CvCrmAdapter implements CrmAdapter {
   private email: string;
   private token: string;
   private tagFilter: string[];
+  private conversaoOriginalFilter: string[];
 
   constructor(domain: string, creds: CvCrmCredentials) {
     this.domain = domain.replace(/^https?:\/\//, "").replace(/\.cvcrm\.com\.br.*$/, "");
     this.email = creds.email;
     this.token = creds.token;
     this.tagFilter = creds.tagFilter?.filter(Boolean) ?? [];
+    this.conversaoOriginalFilter = creds.conversaoOriginalFilter?.filter(Boolean) ?? [];
   }
 
   private get baseUrl() {
@@ -315,6 +317,20 @@ export class CvCrmAdapter implements CrmAdapter {
       });
       console.log(
         `[CvCrmAdapter] tag filter applied: ${filtered.length}/${before} leads match [${this.tagFilter.join(", ")}]`,
+      );
+      return filtered;
+    }
+
+    // Apply conversaoOriginal filter: only keep leads whose first conversion matches
+    if (this.conversaoOriginalFilter.length > 0) {
+      const filterSet = new Set(this.conversaoOriginalFilter.map((v) => v.toLowerCase().trim()));
+      const before = normalized.length;
+      const filtered = normalized.filter((lead) => {
+        const conv = ((lead.dadosCv?.conversaoOriginal as string | undefined) ?? "").toLowerCase().trim();
+        return conv !== "" && filterSet.has(conv);
+      });
+      console.log(
+        `[CvCrmAdapter] conversaoOriginal filter applied: ${filtered.length}/${before} leads match [${this.conversaoOriginalFilter.join(", ")}]`,
       );
       return filtered;
     }

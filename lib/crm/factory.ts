@@ -94,7 +94,11 @@ export async function getCrmAdapter(config: CrmConfigRecord): Promise<CrmAdapter
       const email = creds.email as string | undefined;
       const token = creds.token as string | undefined;
       if (!email || !token) throw new Error("CV CRM requer email e token nas credenciais.");
-      return new CvCrmAdapter(config.dominio, { email, token });
+      const tagFilter = Array.isArray(creds.tagFilter) ? (creds.tagFilter as string[]) : undefined;
+      const conversaoOriginalFilter = Array.isArray(creds.conversaoOriginalFilter)
+        ? (creds.conversaoOriginalFilter as string[])
+        : undefined;
+      return new CvCrmAdapter(config.dominio, { email, token, tagFilter, conversaoOriginalFilter });
     }
 
     case "RDSTATION_CRM": {
