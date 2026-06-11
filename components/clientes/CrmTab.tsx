@@ -7,7 +7,7 @@ import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
 import {
   RefreshCw, Inbox, Search, X,
   ChevronLeft, ChevronRight,
-  Star, BarChart3, MapPin, Layers,
+  BarChart3, MapPin, Layers,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -236,25 +236,13 @@ const CANAL_CFG: Record<string, { label: string; color: string; hex: string }> =
   OUTRO:     { label: "Outro",     color: "text-[var(--muted-foreground)]", hex: "#6b7280" },
 };
 
-function RatingStars({ rating, size = "sm" }: { rating: number | null; size?: "sm" | "md" }) {
-  if (rating == null) return <span className="text-[var(--border)]">—</span>;
-  const cls = size === "md" ? "h-4 w-4" : "h-3 w-3";
-  return (
-    <div className="flex items-center gap-0.5">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <Star key={i} className={`${cls} ${i <= rating ? "fill-amber-400 text-amber-400" : "text-[var(--border)]"}`} />
-      ))}
-    </div>
-  );
-}
 
 function HorizontalBar({
-  label, value, total, score, color,
+  label, value, total, color,
 }: {
   label: string;
   value: number;
   total: number;
-  score?: number | null;
   color?: string;
 }) {
   const pct = total > 0 ? (value / total) * 100 : 0;
@@ -278,11 +266,6 @@ function HorizontalBar({
       <span className="w-10 shrink-0 text-right tabular-nums text-[10px] text-[var(--muted-foreground)]">
         {pct.toFixed(1)}%
       </span>
-      {score != null && (
-        <span className="shrink-0 rounded bg-[var(--muted)] px-1 text-[10px] tabular-nums text-[var(--muted-foreground)]">
-          s:{score}
-        </span>
-      )}
       <span className="w-8 shrink-0 text-right tabular-nums text-[11px] font-bold text-[var(--foreground)]">
         {value}
       </span>
@@ -356,7 +339,6 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
                 {lead.nome && (lead.email ?? lead.telefone) && (
                   <p className="text-sm text-[var(--muted-foreground)]">{lead.email ?? lead.telefone}</p>
                 )}
-                {lead.rating != null && <RatingStars rating={lead.rating} size="md" />}
               </div>
               <button
                 onClick={onClose}
@@ -907,7 +889,6 @@ function AtribuicaoSection({
                           label={e.estado}
                           value={e.leads}
                           total={leadsComEstado}
-                          score={e.ratingMedio}
                         />
                       ))}
                     </div>
@@ -952,7 +933,6 @@ function AtribuicaoSection({
                             label={c.conversao}
                             value={c.leads}
                             total={leadsComConversao}
-                            score={c.ratingMedio}
                           />
                         ))
                       )}
@@ -1229,7 +1209,7 @@ export function CrmTab({
               <table className="min-w-[1040px] w-full text-sm">
                 <thead>
                   <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-                    {["Status", "Etapa", "Contato", "Origem", "Qualificação", "Rating", "Entrada", "Fechamento", "Valor"].map((h) => (
+                    {["Status", "Etapa", "Contato", "Origem", "Qualificação", "Entrada", "Fechamento", "Valor"].map((h) => (
                       <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
                         {h}
                       </th>
@@ -1278,9 +1258,6 @@ export function CrmTab({
                         </td>
                         <td className="px-4 py-2.5 text-[11px] text-[var(--muted-foreground)]">
                           {cv?.possibilidadeVenda ?? "—"}
-                        </td>
-                        <td className="px-4 py-2.5">
-                          <RatingStars rating={lead.rating} />
                         </td>
                         <td className="px-4 py-2.5 tabular-nums text-[12px] text-[var(--muted-foreground)]">
                           {formatDateBR(lead.dataEntrada)}

@@ -160,7 +160,7 @@ export function FunilCrmSection({
             </p>
           </div>
           <div className="px-4 py-3 text-center">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Vendas</p>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Fechamentos</p>
             <p className="mt-1 text-lg font-extrabold tabular-nums text-emerald-400">
               {data.totalGanhos.toLocaleString("pt-BR")}
             </p>
