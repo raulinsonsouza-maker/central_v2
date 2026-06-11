@@ -616,6 +616,11 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
 
   if (metaCampanhas.length === 0 && googleCampanhas.length === 0) return null;
 
+  // Suppress when all rows share a single portal name — it duplicates "Canais de Origem" without adding info.
+  const allCampanhas = [...metaCampanhas, ...googleCampanhas];
+  const uniquePortals = new Set(allCampanhas.map((r) => r.campanha));
+  if (uniquePortals.size <= 1) return null;
+
   const CampanhaTable = ({
     rows,
     canal,
@@ -717,12 +722,11 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
 
 function QualidadeLeadsSection({ data }: { data: AtribuicaoData }) {
   const porTags = data.porTags ?? [];
-  if (porTags.length === 0) return null;
-
-  const totalComTags = data.totalComTags ?? 0;
   const alertaLeads = data.alertaLeads ?? 0;
   const alertaTags = porTags.filter((t) => t.isAlerta);
-  const origemTags = porTags.filter((t) => !t.isAlerta);
+
+  // Only render when there are alert tags — origin/tracking tags are noise.
+  if (alertaTags.length === 0) return null;
 
   return (
     <div className="space-y-4">
@@ -734,15 +738,8 @@ function QualidadeLeadsSection({ data }: { data: AtribuicaoData }) {
         </div>
       </div>
 
-      {/* KPI strip */}
-      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-3.5">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Leads com tags</p>
-          <p className="mt-1 text-2xl font-extrabold tabular-nums text-[var(--foreground)]">{totalComTags}</p>
-          <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">
-            {data.totalLeads > 0 ? `${((totalComTags / data.totalLeads) * 100).toFixed(0)}% do total` : "—"}
-          </p>
-        </div>
+      {/* KPI strip — only alert count */}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:w-1/2">
         <div className={`rounded-2xl border p-3.5 ${alertaLeads > 0 ? "border-orange-500/20 bg-orange-500/5" : "border-[var(--border)] bg-[var(--card)]"}`}>
           <p className={`text-[10px] font-semibold uppercase tracking-[0.12em] ${alertaLeads > 0 ? "text-orange-400/80" : "text-[var(--muted-foreground)]"}`}>
             Leads em alerta
@@ -754,58 +751,26 @@ function QualidadeLeadsSection({ data }: { data: AtribuicaoData }) {
             {alertaLeads > 0 ? "desistência, sem renda, sem contato" : "Sem alertas"}
           </p>
         </div>
-        <div className="col-span-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-3.5 sm:col-span-1">
-          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Origens identificadas</p>
-          <p className="mt-1 text-2xl font-extrabold tabular-nums text-[var(--foreground)]">{origemTags.length}</p>
-          <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">categorias de origem por tag</p>
-        </div>
       </div>
 
-      {/* Tag breakdown */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {/* Alert tags */}
-        {alertaTags.length > 0 && (
-          <div className="rounded-2xl border border-orange-500/15 bg-[var(--card)] p-4">
-            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.15em] text-orange-400">
-              Tags de alerta
-            </p>
-            <div className="space-y-2">
-              {alertaTags.map((t) => (
-                <div key={t.tag} className="flex items-center justify-between gap-2">
-                  <span className="flex items-center gap-1.5 text-[11px] text-orange-300/80">
-                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/60" />
-                    {t.tag}
-                  </span>
-                  <span className="shrink-0 rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-bold tabular-nums text-orange-400">
-                    {t.count}
-                  </span>
-                </div>
-              ))}
+      {/* Alert tag breakdown */}
+      <div className="rounded-2xl border border-orange-500/15 bg-[var(--card)] p-4 md:w-1/2">
+        <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.15em] text-orange-400">
+          Tags de alerta
+        </p>
+        <div className="space-y-2">
+          {alertaTags.map((t) => (
+            <div key={t.tag} className="flex items-center justify-between gap-2">
+              <span className="flex items-center gap-1.5 text-[11px] text-orange-300/80">
+                <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/60" />
+                {t.tag}
+              </span>
+              <span className="shrink-0 rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-bold tabular-nums text-orange-400">
+                {t.count}
+              </span>
             </div>
-          </div>
-        )}
-
-        {/* Origin tags */}
-        {origemTags.length > 0 && (
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--primary)]">
-              Tags de origem
-            </p>
-            <div className="space-y-2">
-              {origemTags.slice(0, 12).map((t) => (
-                <div key={t.tag} className="flex items-center justify-between gap-2">
-                  <span className="flex items-center gap-1.5 text-[11px] text-[var(--foreground)]">
-                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary)]/50" />
-                    {t.tag}
-                  </span>
-                  <span className="shrink-0 rounded-full border border-[var(--border)] bg-[var(--muted)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-[var(--foreground)]">
-                    {t.count}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -1109,58 +1074,50 @@ function AtribuicaoSection({
                 <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">Clique em um canal para filtrar as negociações</p>
               </div>
 
-              {/* Fonte de Conversão */}
-              <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-                <div className="mb-3 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-2">
-                    <Layers className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
-                    <p className="text-sm font-bold text-[var(--foreground)]">Fonte de Conversão</p>
+              {/* Fonte de Conversão — only shown when there are 2+ distinct sources */}
+              {(data.porConversao ?? []).length >= 2 && (
+                <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+                  <div className="mb-3 flex items-center justify-between gap-2">
+                    <div className="flex items-center gap-2">
+                      <Layers className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                      <p className="text-sm font-bold text-[var(--foreground)]">Fonte de Conversão</p>
+                    </div>
+                    {leadsComConversao > 0 && (
+                      <span className="shrink-0 text-[10px] text-[var(--muted-foreground)]">
+                        {leadsComConversao.toLocaleString("pt-BR")} de {totalLeads.toLocaleString("pt-BR")}
+                      </span>
+                    )}
                   </div>
-                  {leadsComConversao > 0 && (
-                    <span className="shrink-0 text-[10px] text-[var(--muted-foreground)]">
-                      {leadsComConversao.toLocaleString("pt-BR")} de {totalLeads.toLocaleString("pt-BR")}
-                    </span>
-                  )}
+                  <div className="relative mb-2">
+                    <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--muted-foreground)]" />
+                    <input
+                      value={convSearch}
+                      onChange={(e) => setConvSearch(e.target.value)}
+                      placeholder="Buscar fonte de conversão…"
+                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--muted)]/30 py-1.5 pl-8 pr-3 text-[11px] placeholder-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none"
+                    />
+                  </div>
+                  <div className="max-h-[240px] flex-1 space-y-0.5 overflow-y-auto">
+                    {porConversao.length === 0 ? (
+                      <p className="py-4 text-center text-xs text-[var(--muted-foreground)]">Nenhum resultado</p>
+                    ) : (
+                      porConversao.map((c) => {
+                        const isActive = activeFilter?.type === "conversao" && activeFilter.value === c.conversao;
+                        return (
+                          <HorizontalBar
+                            key={c.conversao}
+                            label={c.conversao}
+                            value={c.leads}
+                            total={leadsComConversao}
+                            isActive={isActive}
+                            onClick={() => onFilter(isActive ? null : { type: "conversao", value: c.conversao, label: `Conversão: ${c.conversao}` })}
+                          />
+                        );
+                      })
+                    )}
+                  </div>
                 </div>
-                {(data.porConversao ?? []).length > 0 ? (
-                  <>
-                    <div className="relative mb-2">
-                      <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--muted-foreground)]" />
-                      <input
-                        value={convSearch}
-                        onChange={(e) => setConvSearch(e.target.value)}
-                        placeholder="Buscar fonte de conversão…"
-                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--muted)]/30 py-1.5 pl-8 pr-3 text-[11px] placeholder-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none"
-                      />
-                    </div>
-                    <div className="max-h-[240px] flex-1 space-y-0.5 overflow-y-auto">
-                      {porConversao.length === 0 ? (
-                        <p className="py-4 text-center text-xs text-[var(--muted-foreground)]">Nenhum resultado</p>
-                      ) : (
-                        porConversao.map((c) => {
-                          const isActive = activeFilter?.type === "conversao" && activeFilter.value === c.conversao;
-                          return (
-                            <HorizontalBar
-                              key={c.conversao}
-                              label={c.conversao}
-                              value={c.leads}
-                              total={leadsComConversao}
-                              isActive={isActive}
-                              onClick={() => onFilter(isActive ? null : { type: "conversao", value: c.conversao, label: `Conversão: ${c.conversao}` })}
-                            />
-                          );
-                        })
-                      )}
-                    </div>
-                  </>
-                ) : (
-                  <div className="flex flex-1 items-center justify-center py-8">
-                    <p className="max-w-[180px] text-center text-xs text-[var(--muted-foreground)]">
-                      Dados de conversão não disponíveis para este CRM
-                    </p>
-                  </div>
-                )}
-              </div>
+              )}
             </div>
           )}
 
@@ -1238,10 +1195,8 @@ function AtribuicaoSection({
           {/* Campaign breakdown (by CRM entry portal) */}
           <CampanhaSection data={data} />
 
-          {/* Lead quality by tags */}
-          {(data.porTags?.length ?? 0) > 0 && (
-            <QualidadeLeadsSection data={data} />
-          )}
+          {/* Lead quality by tags — component renders only when alert tags exist */}
+          <QualidadeLeadsSection data={data} />
         </>
       )}
 
