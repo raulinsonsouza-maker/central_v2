@@ -1295,7 +1295,15 @@ function formatPercentage(value: number) {
       )}
 
       {/* ── CRM tab ── */}
-      {canal === "crm" && id && <CrmTab clienteId={id} />}
+      {canal === "crm" && id && (
+        <CrmTab
+          clienteId={id}
+          dateRange={{
+            from: dateFilter.dataInicio ?? new Date(new Date().getFullYear(), 0, 1).toISOString().slice(0, 10),
+            to: dateFilter.dataFim ?? new Date().toISOString().slice(0, 10),
+          }}
+        />
+      )}
 
       {/* ── Default panel (KPIs, chart, weekly table, financial) ── */}
       {canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && (canal === "geral" || subView === "dados") && !isSpecialPanel && resumo && (

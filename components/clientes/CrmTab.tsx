@@ -5,20 +5,12 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
 import {
-  RefreshCw, Inbox, Search, X, ChevronLeft, ChevronRight,
+  RefreshCw, Inbox, Search, X,
+  ChevronLeft, ChevronRight,
   Star, BarChart3, MapPin, Layers,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
-
-type Period = "month" | "3months" | "ytd" | "all";
-
-const PERIOD_LABELS: Record<Period, string> = {
-  month: "Este mês",
-  "3months": "3 meses",
-  ytd: "Ano atual",
-  all: "Tudo",
-};
 
 interface Lead {
   id: string;
@@ -85,11 +77,12 @@ interface LeadsApiResponse {
 
 interface PorFonte {
   fonte: string;
-  canal: "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO";
+  canal: string;
   leads: number;
   ganhos: number;
   perdidos: number;
   andamento: number;
+  visitou: number;
   valor: number;
   taxaGanho: number;
   taxaPerda: number;
@@ -100,6 +93,8 @@ interface PorFonte {
 interface PorCanal {
   canal: string;
   leads: number;
+  ganhos: number;
+  perdidos: number;
   ratingMedio: number | null;
   investCanal: number | null;
 }
@@ -114,6 +109,19 @@ interface PorConversao {
   conversao: string;
   leads: number;
   ratingMedio: number | null;
+}
+
+interface PorMidia {
+  midia: string;
+  canal: string;
+  leads: number;
+  ganhos: number;
+  perdidos: number;
+  andamento: number;
+  visitou: number;
+  valor: number;
+  taxaGanho: number;
+  investCanal: number | null;
 }
 
 interface AtribuicaoData {
@@ -137,6 +145,7 @@ interface AtribuicaoData {
   porCanal: PorCanal[];
   porEstado: PorEstado[];
   porConversao: PorConversao[];
+  porMidia: PorMidia[];
   leadsComEstado: number;
   leadsComConversao: number;
   ultimoSyncAt?: string | null;
@@ -155,9 +164,25 @@ function formatDateBR(iso: string | Date | null) {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit" });
 }
 
-function canalFromFonte(fonte: string | null): "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO" {
+function canalFromMidia(
+  fonte: string | null,
+  midiaOriginal?: string | null,
+): "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO" {
+  const norm = (s: string) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+  // Primary: midiaOriginal (real paid media channel)
+  if (midiaOriginal) {
+    const m = norm(midiaOriginal);
+    if (m.includes("facebook") || m.includes("meta") || m.includes("instagram") || m.includes("fb ads")) return "META";
+    if (m.includes("google") || m.includes("youtube") || m.includes("pmax") || m.includes("busca paga")) return "GOOGLE";
+    if (m.includes("indica") || m.includes("referral") || m.includes("amigo") || m.includes("parceiro")) return "INDICACAO";
+    if (m.includes("organic") || m.includes("organico") || m.includes("seo")) return "ORGANICO";
+    if (m.includes("outdoor") || m.includes("busdoor") || m.includes("ooh") || m.includes("email") || m.includes("whatsapp")) return "DIRETO";
+  }
+
+  // Fallback: fonte
   if (!fonte) return "OUTRO";
-  const f = fonte.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  const f = norm(fonte);
   if (f.includes("facebook") || f.includes("meta") || f.includes("instagram")) return "META";
   if (f.includes("google") || f.includes("busca paga") || f.includes("youtube") || f.includes("pmax")) return "GOOGLE";
   if (f.includes("organic") || f.includes("organico") || f.includes("seo")) return "ORGANICO";
@@ -279,20 +304,19 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
 
   const cv = lead?.dadosCv ?? null;
   const mkt = lead?.dadosMarketing ?? null;
-  const canal = canalFromFonte(lead?.fonte ?? null);
+  // Use midiaOriginal as primary signal for canal display
+  const canal = canalFromMidia(lead?.fonte ?? null, cv?.midiaOriginal ?? null);
   const canalCfg = CANAL_CFG[canal] ?? CANAL_CFG.OUTRO;
   const isOpen = lead !== null;
 
   return (
     <>
-      {/* Backdrop */}
       <div
         onClick={onClose}
         className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
           isOpen ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
-      {/* Panel */}
       <div
         className={`fixed right-0 top-0 z-50 h-full w-full max-w-[500px] overflow-y-auto border-l border-[var(--border)] bg-[var(--background)] shadow-2xl transition-transform duration-300 ${
           isOpen ? "translate-x-0" : "translate-x-full"
@@ -487,27 +511,124 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
   );
 }
 
+// ─── Campaign Section ─────────────────────────────────────────────────────────
+
+function CampanhaSection({ data }: { data: AtribuicaoData }) {
+  const porMidia = data.porMidia ?? [];
+  const metaCampanhas = porMidia.filter((m) => m.canal === "META").sort((a, b) => b.leads - a.leads);
+  const googleCampanhas = porMidia.filter((m) => m.canal === "GOOGLE").sort((a, b) => b.leads - a.leads);
+
+  if (metaCampanhas.length === 0 && googleCampanhas.length === 0) return null;
+
+  const CampanhaTable = ({
+    rows,
+    canal,
+    investCanal,
+  }: {
+    rows: PorMidia[];
+    canal: "META" | "GOOGLE";
+    investCanal: number;
+  }) => {
+    const cfg = CANAL_CFG[canal];
+    const totalLeads = rows.reduce((s, r) => s + r.leads, 0);
+    return (
+      <div className="space-y-3">
+        <div className="flex items-center gap-2">
+          <span className={`inline-block h-2 w-2 rounded-full`} style={{ backgroundColor: cfg.hex }} />
+          <p className={`text-sm font-bold ${cfg.color}`}>{cfg.label}</p>
+          <span className="text-xs text-[var(--muted-foreground)]">· {totalLeads} leads</span>
+          {investCanal > 0 && (
+            <span className="text-xs text-[var(--muted-foreground)]">
+              · {formatCurrencyBR(investCanal)} investidos
+            </span>
+          )}
+        </div>
+        <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
+          <table className="min-w-[600px] w-full text-sm">
+            <thead>
+              <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
+                {["Campanha / Mídia", "Leads", "Visitou", "Em aberto", "Ganhos", "Conv%"].map((h) => (
+                  <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, i) => (
+                <tr
+                  key={row.midia}
+                  className={`border-b border-[var(--border)]/50 transition-colors hover:bg-[var(--muted)]/20 ${
+                    i % 2 === 0 ? "" : "bg-[var(--muted)]/10"
+                  }`}
+                >
+                  <td className="px-4 py-2.5">
+                    <span className="max-w-[200px] block truncate font-medium text-[var(--foreground)]" title={row.midia}>
+                      {row.midia}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2.5 tabular-nums font-semibold text-[var(--foreground)]">{row.leads}</td>
+                  <td className="px-4 py-2.5 tabular-nums text-[var(--muted-foreground)]">
+                    {row.visitou > 0 ? row.visitou : <span className="opacity-40">—</span>}
+                  </td>
+                  <td className="px-4 py-2.5 tabular-nums text-blue-400">{row.andamento}</td>
+                  <td className="px-4 py-2.5 tabular-nums font-bold text-emerald-400">
+                    {row.ganhos > 0 ? row.ganhos : <span className="font-normal opacity-40">—</span>}
+                  </td>
+                  <td className="px-4 py-2.5">
+                    {row.leads > 0 ? (
+                      <span className={`tabular-nums font-semibold ${row.taxaGanho > 0 ? "text-emerald-400" : "text-[var(--muted-foreground)]"}`}>
+                        {row.taxaGanho}%
+                      </span>
+                    ) : (
+                      <span className="opacity-40">—</span>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-start gap-3">
+        <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Por Campanha</h2>
+        </div>
+      </div>
+      <div className="space-y-6">
+        {metaCampanhas.length > 0 && (
+          <CampanhaTable rows={metaCampanhas} canal="META" investCanal={data.investMeta ?? 0} />
+        )}
+        {googleCampanhas.length > 0 && (
+          <CampanhaTable rows={googleCampanhas} canal="GOOGLE" investCanal={data.investGoogle ?? 0} />
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Análise de Origem Section ────────────────────────────────────────────────
 
-function AtribuicaoSection({ clienteId }: { clienteId: string }) {
-  const [period, setPeriod] = React.useState<"ytd" | "3months" | "all">("ytd");
+function AtribuicaoSection({
+  clienteId,
+  dateRange,
+}: {
+  clienteId: string;
+  dateRange: { from: string; to: string };
+}) {
   const [convSearch, setConvSearch] = React.useState("");
 
-  const periodDates = React.useMemo(() => {
-    const now = new Date();
-    const to = now.toISOString().slice(0, 10);
-    if (period === "ytd") return { from: `${now.getFullYear()}-01-01`, to };
-    if (period === "3months") {
-      const d = new Date(); d.setMonth(d.getMonth() - 3);
-      return { from: d.toISOString().slice(0, 10), to };
-    }
-    return { from: "2000-01-01", to };
-  }, [period]);
-
   const { data, isLoading } = useQuery<AtribuicaoData>({
-    queryKey: ["crm-atribuicao", clienteId, period],
+    queryKey: ["crm-atribuicao", clienteId, dateRange.from, dateRange.to],
     queryFn: () =>
-      fetch(`/api/clientes/${clienteId}/crm/atribuicao?from=${periodDates.from}&to=${periodDates.to}`)
+      fetch(`/api/clientes/${clienteId}/crm/atribuicao?from=${dateRange.from}&to=${dateRange.to}`)
         .then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -527,31 +648,11 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
   return (
     <div className="space-y-5">
       {/* Header */}
-      <div className="flex items-start justify-between gap-3">
-        <div className="flex items-start gap-3">
-          <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Análise de Origem</h2>
-          </div>
-        </div>
-        <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-0.5">
-          {(["ytd", "3months", "all"] as const).map((p) => {
-            const label = p === "ytd" ? "Este ano" : p === "3months" ? "3 meses" : "Tudo";
-            return (
-              <button
-                key={p}
-                onClick={() => setPeriod(p)}
-                className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all ${
-                  period === p
-                    ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm"
-                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-                }`}
-              >
-                {label}
-              </button>
-            );
-          })}
+      <div className="flex items-start gap-3">
+        <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Análise de Origem</h2>
         </div>
       </div>
 
@@ -626,9 +727,6 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
                     ))
                   )}
                 </div>
-                <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">
-                  {(totalLeads - (porCanal.filter(c => c.canal !== "OUTRO").reduce((s, c) => s + c.leads, 0))).toLocaleString("pt-BR")} leads sem origem classificada
-                </p>
               </div>
 
               {/* Distribuição por Estado */}
@@ -754,6 +852,9 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
               </div>
             </div>
           )}
+
+          {/* Campaign breakdown (porMidia) */}
+          <CampanhaSection data={data} />
         </>
       )}
     </div>
@@ -762,8 +863,13 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
 
 // ─── CrmTab ───────────────────────────────────────────────────────────────────
 
-export function CrmTab({ clienteId }: { clienteId: string }) {
-  const [period, setPeriod] = React.useState<Period>("all");
+export function CrmTab({
+  clienteId,
+  dateRange,
+}: {
+  clienteId: string;
+  dateRange: { from: string; to: string };
+}) {
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 15;
   const [searchInput, setSearchInput] = React.useState("");
@@ -777,16 +883,16 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
     return () => clearTimeout(t);
   }, [searchInput]);
 
-  // Reset to page 1 on period or search change
+  // Reset to page 1 on dateRange or search change
   React.useEffect(() => {
     setPage(1);
-  }, [period, debouncedSearch]);
+  }, [dateRange.from, dateRange.to, debouncedSearch]);
 
   const { data: leadsData, isLoading: leadsLoading } = useQuery<LeadsApiResponse>({
-    queryKey: ["crm-leads", clienteId, period, page, PAGE_SIZE, debouncedSearch],
+    queryKey: ["crm-leads", clienteId, dateRange.from, dateRange.to, page, PAGE_SIZE, debouncedSearch],
     queryFn: () =>
       fetch(
-        `/api/clientes/${clienteId}/crm/leads?period=${period}&page=${page}&pageSize=${PAGE_SIZE}&search=${encodeURIComponent(debouncedSearch)}`
+        `/api/clientes/${clienteId}/crm/leads?from=${dateRange.from}&to=${dateRange.to}&page=${page}&pageSize=${PAGE_SIZE}&search=${encodeURIComponent(debouncedSearch)}`
       ).then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -812,7 +918,6 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
   const totalPages = Math.ceil(total / PAGE_SIZE);
   const isEmptyNoSearch = !leadsLoading && total === 0 && !debouncedSearch;
 
-  // Simple pagination range calculator
   function pageNumbers(current: number, total: number): (number | "…")[] {
     if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
     if (current <= 4) return [1, 2, 3, 4, 5, "…", total];
@@ -851,33 +956,15 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
       <FunilCrmSection clienteId={clienteId} />
 
       {/* Análise de Origem */}
-      <AtribuicaoSection clienteId={clienteId} />
+      <AtribuicaoSection clienteId={clienteId} dateRange={dateRange} />
 
       {/* Negociações */}
       <div className="space-y-3">
-        {/* Section header + period selector */}
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="flex items-start gap-3">
-            <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-              <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações</h2>
-            </div>
-          </div>
-          <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-0.5">
-            {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
-              <button
-                key={p}
-                onClick={() => setPeriod(p)}
-                className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition-all ${
-                  period === p
-                    ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm"
-                    : "text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
-                }`}
-              >
-                {PERIOD_LABELS[p]}
-              </button>
-            ))}
+        <div className="flex items-start gap-3">
+          <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
+            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações</h2>
           </div>
         </div>
 
@@ -926,9 +1013,7 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
               <div>
                 <p className="text-sm font-medium text-[var(--foreground)]">Nenhuma negociação encontrada</p>
                 <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-                  {period !== "all"
-                    ? "Tente ampliar o período ou clique em Sincronizar."
-                    : "Clique em Sincronizar para importar as negociações do CRM."}
+                  Clique em Sincronizar para importar as negociações do CRM.
                 </p>
               </div>
               <button
@@ -959,147 +1044,60 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[var(--border)]">
-                  {leads.map((lead) => {
-                    const mkt = lead.dadosMarketing ?? null;
+                <tbody>
+                  {leads.map((lead, i) => {
                     const cv = lead.dadosCv ?? null;
+                    const canal = canalFromMidia(lead.fonte, cv?.midiaOriginal);
+                    const canalCfg = CANAL_CFG[canal] ?? CANAL_CFG.OUTRO;
+                    const displayOrigem = cv?.midiaOriginal ?? lead.fonte ?? "—";
                     return (
                       <tr
                         key={lead.id}
                         onClick={() => setSelectedLead(lead)}
-                        className="group cursor-pointer bg-[var(--card)] transition-colors hover:bg-[var(--primary)]/[0.03]"
+                        className={`cursor-pointer border-b border-[var(--border)]/50 transition-colors hover:bg-[var(--primary)]/5 ${
+                          i % 2 === 0 ? "" : "bg-[var(--muted)]/10"
+                        }`}
                       >
-                        <td className="px-4 py-3 whitespace-nowrap">
+                        <td className="px-4 py-2.5">
                           <StatusBadge status={lead.status} />
                         </td>
-                        <td className="px-4 py-3">
-                          <span className="inline-block rounded-full bg-[var(--primary)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
+                        <td className="px-4 py-2.5">
+                          <span className="max-w-[160px] block truncate rounded-full bg-[var(--primary)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
                             {lead.etapa}
                           </span>
                         </td>
-                        <td className="px-4 py-3">
-                          {lead.nome ? (
-                            <div className="flex flex-col gap-0.5">
-                              <span className="font-medium text-[var(--foreground)]">{lead.nome}</span>
-                              {(lead.email ?? lead.telefone) && (
-                                <span className="text-[11px] text-[var(--muted-foreground)]">{lead.email ?? lead.telefone}</span>
-                              )}
-                              {mkt?.empresa && (
-                                <span className="text-[10px] text-[var(--muted-foreground)] opacity-70">{mkt.empresa}</span>
-                              )}
-                            </div>
-                          ) : lead.email ?? lead.telefone ? (
-                            <span className="text-[var(--muted-foreground)]">{lead.email ?? lead.telefone}</span>
-                          ) : (
-                            <span className="text-[var(--border)]">—</span>
-                          )}
-                        </td>
-                        <td className="px-4 py-3 max-w-[180px]">
-                          <div className="flex flex-col gap-0.5">
-                            {lead.fonte ? (
-                              <span className="block truncate rounded-md bg-[var(--muted)] px-2 py-0.5 text-[11px] font-medium text-[var(--foreground)]" title={lead.fonte}>
-                                {lead.fonte}
-                              </span>
-                            ) : null}
-                            {cv?.midiaOriginal && (
-                              <span className="block truncate rounded-md bg-[var(--primary)]/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--primary)]" title={cv.midiaOriginal}>
-                                {cv.midiaOriginal}
-                              </span>
+                        <td className="px-4 py-2.5">
+                          <div className="max-w-[160px]">
+                            <p className="truncate font-medium text-[var(--foreground)]">
+                              {lead.nome ?? lead.email ?? lead.telefone ?? "—"}
+                            </p>
+                            {lead.nome && lead.email && (
+                              <p className="truncate text-[11px] text-[var(--muted-foreground)]">{lead.email}</p>
                             )}
-                            {cv?.conversaoOriginal && (
-                              <span className="block truncate text-[10px] text-[var(--muted-foreground)]" title={cv.conversaoOriginal}>
-                                {cv.conversaoOriginal}
-                              </span>
-                            )}
-                            {!lead.fonte && !cv?.midiaOriginal && <span className="text-[var(--border)]">—</span>}
                           </div>
                         </td>
-                        <td className="px-4 py-3 max-w-[200px]">
-                          {cv ? (
-                            <div className="flex flex-col gap-0.5">
-                              {cv.empreendimento && (
-                                <span className="flex items-center gap-1 text-[11px]">
-                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Emp.</span>
-                                  <span className="truncate text-[var(--foreground)]" title={cv.empreendimento}>{cv.empreendimento}</span>
-                                </span>
-                              )}
-                              {cv.possibilidadeVenda && (
-                                <span className="flex items-center gap-1 text-[11px]">
-                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Possib.</span>
-                                  <span className="truncate text-[var(--foreground)]" title={cv.possibilidadeVenda}>{cv.possibilidadeVenda}</span>
-                                </span>
-                              )}
-                              {cv.profissao && (
-                                <span className="flex items-center gap-1 text-[11px]">
-                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Prof.</span>
-                                  <span className="truncate text-[var(--foreground)]" title={cv.profissao}>{cv.profissao}</span>
-                                </span>
-                              )}
-                              {cv.corretor && (
-                                <span className="flex items-center gap-1 text-[11px]">
-                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Corretor</span>
-                                  <span className="truncate text-[var(--foreground)]" title={cv.corretor}>{cv.corretor}</span>
-                                </span>
-                              )}
-                              {cv.motivoCancelamento && (
-                                <span className="flex items-center gap-1 text-[11px]">
-                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-red-400">Perda</span>
-                                  <span className="truncate text-red-400" title={cv.descricaoCancelamento ?? cv.motivoCancelamento}>
-                                    {cv.descricaoCancelamento ?? cv.motivoCancelamento}
-                                  </span>
-                                </span>
-                              )}
-                              {!cv.empreendimento && !cv.possibilidadeVenda && !cv.profissao && !cv.corretor && !cv.motivoCancelamento && (
-                                <span className="text-[11px] text-[var(--muted-foreground)]">sem dados</span>
-                              )}
-                            </div>
-                          ) : mkt ? (
-                            <div className="flex flex-col gap-0.5">
-                              {mkt.faturamento && (
-                                <span className="flex items-center gap-1 text-[11px]">
-                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Fat.</span>
-                                  <span className="truncate text-[var(--foreground)]" title={mkt.faturamento}>{mkt.faturamento}</span>
-                                </span>
-                              )}
-                              {mkt.segmento && (
-                                <span className="flex items-center gap-1 text-[11px]">
-                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Seg.</span>
-                                  <span className="truncate text-[var(--foreground)]" title={mkt.segmento}>{mkt.segmento}</span>
-                                </span>
-                              )}
-                              {mkt.cargo && (
-                                <span className="flex items-center gap-1 text-[11px]">
-                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Cargo</span>
-                                  <span className="truncate text-[var(--foreground)]" title={mkt.cargo}>{mkt.cargo}</span>
-                                </span>
-                              )}
-                              {!mkt.faturamento && !mkt.segmento && !mkt.cargo && (
-                                <span className="text-[11px] text-[var(--muted-foreground)]">sem dados</span>
-                              )}
-                            </div>
-                          ) : (
-                            <span className="text-[var(--border)]">—</span>
-                          )}
+                        <td className="px-4 py-2.5">
+                          <div className="max-w-[150px]">
+                            <p className={`truncate text-[11px] font-semibold ${canalCfg.color}`}>{canalCfg.label}</p>
+                            <p className="truncate text-[11px] text-[var(--muted-foreground)]" title={displayOrigem}>
+                              {displayOrigem}
+                            </p>
+                          </div>
                         </td>
-                        <td className="px-4 py-3">
+                        <td className="px-4 py-2.5 text-[11px] text-[var(--muted-foreground)]">
+                          {cv?.possibilidadeVenda ?? "—"}
+                        </td>
+                        <td className="px-4 py-2.5">
                           <RatingStars rating={lead.rating} />
                         </td>
-                        <td className="px-4 py-3 tabular-nums text-[var(--muted-foreground)]">
+                        <td className="px-4 py-2.5 tabular-nums text-[12px] text-[var(--muted-foreground)]">
                           {formatDateBR(lead.dataEntrada)}
                         </td>
-                        <td className="px-4 py-3 tabular-nums">
-                          {lead.dataFechamento ? (
-                            <span className={`font-medium ${lead.status === "won" ? "text-emerald-500" : lead.status === "lost" ? "text-red-400" : "text-[var(--muted-foreground)]"}`}>
-                              {formatDateBR(lead.dataFechamento)}
-                            </span>
-                          ) : (
-                            <span className="text-[var(--border)]">—</span>
-                          )}
+                        <td className="px-4 py-2.5 tabular-nums text-[12px] text-[var(--muted-foreground)]">
+                          {formatDateBR(lead.dataFechamento)}
                         </td>
-                        <td className="px-4 py-3 tabular-nums font-semibold text-[var(--foreground)]">
-                          {lead.valor != null
-                            ? formatCurrencyBR(lead.valor)
-                            : <span className="font-normal text-[var(--border)]">—</span>}
+                        <td className="px-4 py-2.5 tabular-nums font-semibold text-emerald-400">
+                          {lead.valor != null ? formatCurrencyBR(lead.valor) : "—"}
                         </td>
                       </tr>
                     );
@@ -1110,42 +1108,36 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="flex items-center justify-between gap-3 px-1 pt-1">
+              <div className="flex items-center justify-center gap-1 pt-1">
                 <button
                   onClick={() => setPage((p) => Math.max(1, p - 1))}
                   disabled={page === 1}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-1.5 text-xs font-semibold text-[var(--muted-foreground)] transition-all hover:text-[var(--foreground)] disabled:opacity-40"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)] disabled:opacity-30"
                 >
                   <ChevronLeft className="h-3.5 w-3.5" />
-                  Anterior
                 </button>
-
-                <div className="flex items-center gap-1">
-                  {pageNumbers(page, totalPages).map((p, i) =>
-                    p === "…" ? (
-                      <span key={`e${i}`} className="px-1 text-[11px] text-[var(--muted-foreground)]">…</span>
-                    ) : (
-                      <button
-                        key={p}
-                        onClick={() => setPage(p)}
-                        className={`h-7 w-7 rounded-md text-[11px] font-semibold transition-all ${
-                          p === page
-                            ? "bg-[var(--primary)] text-[var(--primary-foreground)]"
-                            : "text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
-                        }`}
-                      >
-                        {p}
-                      </button>
-                    )
-                  )}
-                </div>
-
+                {pageNumbers(page, totalPages).map((n, idx) =>
+                  n === "…" ? (
+                    <span key={`e-${idx}`} className="flex h-7 w-7 items-center justify-center text-xs text-[var(--muted-foreground)]">…</span>
+                  ) : (
+                    <button
+                      key={n}
+                      onClick={() => setPage(n)}
+                      className={`flex h-7 w-7 items-center justify-center rounded-lg text-[11px] font-semibold transition-all ${
+                        page === n
+                          ? "bg-[var(--primary)] text-[var(--primary-foreground)] shadow-sm"
+                          : "border border-[var(--border)] text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  )
+                )}
                 <button
                   onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                   disabled={page === totalPages}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-1.5 text-xs font-semibold text-[var(--muted-foreground)] transition-all hover:text-[var(--foreground)] disabled:opacity-40"
+                  className="flex h-7 w-7 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)] disabled:opacity-30"
                 >
-                  Próxima
                   <ChevronRight className="h-3.5 w-3.5" />
                 </button>
               </div>
@@ -1154,7 +1146,7 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
         )}
       </div>
 
-      {/* Lead Detail Drawer */}
+      {/* Lead Drawer */}
       <LeadDetailDrawer lead={selectedLead} onClose={() => setSelectedLead(null)} />
     </div>
   );

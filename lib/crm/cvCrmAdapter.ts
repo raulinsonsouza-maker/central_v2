@@ -64,9 +64,37 @@ function parseValor(v?: number | string | null): number | null {
 }
 
 function inferStatus(l: CvLead): string {
+  // Priority 1: explicit cancellation signals → lost
   if (l.motivo_cancelamento || l.descricao_motivo_cancelamento) return "lost";
-  if (l.reserva) return "won";
   if (l.data_cancelamento) return "lost";
+
+  // Priority 2: explicit reservation/contract number → won
+  if (l.reserva) return "won";
+
+  // Priority 3: derive from stage name (situacao)
+  // Covers cases where the API does not fill reserva/motivo_cancelamento
+  const s = (l.situacao ?? "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  if (
+    s.includes("venda realizada") ||
+    s.includes("contrato") ||
+    s.includes("assinado") ||
+    s.includes("com reserva") ||
+    s.includes("reservado")
+  ) return "won";
+
+  if (
+    s.includes("perdido") ||
+    s.includes("cancelado") ||
+    s.includes("descartado") ||
+    s.includes("desistiu") ||
+    s.includes("sem interesse") ||
+    s.includes("nao tem interesse")
+  ) return "lost";
+
   return "ongoing";
 }
 

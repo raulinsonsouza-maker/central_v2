@@ -2,39 +2,34 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma";
 
-function canalFromFonte(
+type Canal = "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO";
+
+function norm(s: string) {
+  return s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+function canalFromMidia(
+  midiaOriginal: string | null,
   fonte: string | null,
-): "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO" {
+): Canal {
+  // Primary: midiaOriginal has the real paid media channel name
+  if (midiaOriginal) {
+    const m = norm(midiaOriginal);
+    if (m.includes("facebook") || m.includes("meta") || m.includes("instagram") || m.includes("fb ads") || m.includes("meta ads")) return "META";
+    if (m.includes("google") || m.includes("youtube") || m.includes("pmax") || m.includes("busca paga") || m.includes("performance max")) return "GOOGLE";
+    if (m.includes("indica") || m.includes("referral") || m.includes("referencia") || m.includes("amigo") || m.includes("parceiro")) return "INDICACAO";
+    if (m.includes("organic") || m.includes("organico") || m.includes("seo")) return "ORGANICO";
+    if (m.includes("outdoor") || m.includes("busdoor") || m.includes("ooh") || m.includes("email") || m.includes("whatsapp")) return "DIRETO";
+  }
+
+  // Fallback: fonte (CV CRM portal name)
   if (!fonte) return "OUTRO";
-  const f = fonte
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-  if (
-    f.includes("facebook") || f.includes("meta") || f.includes("instagram") ||
-    f.includes("fb ads") || f.includes("meta ads") || f.includes("ig ads")
-  ) return "META";
-
-  if (
-    f.includes("google") || f.includes("busca paga") || f.includes("youtube") ||
-    f.includes("display") || f.includes("pmax") || f.includes("performance max")
-  ) return "GOOGLE";
-
-  if (
-    f.includes("organic") || f.includes("organico") || f.includes("organica") ||
-    f.includes("seo") || f.includes("busca organica") || f.includes("social organico")
-  ) return "ORGANICO";
-
-  if (
-    f.includes("indica") || f.includes("referral") || f.includes("referencia") ||
-    f.includes("parceiro") || f.includes("boca a boca")
-  ) return "INDICACAO";
-
-  if (
-    f.includes("direto") || f.includes("direct") || f.includes("whatsapp") ||
-    f.includes("site") || f.includes("landing") || f.includes("formulario") || f.includes("email")
-  ) return "DIRETO";
+  const f = norm(fonte);
+  if (f.includes("facebook") || f.includes("meta") || f.includes("instagram") || f.includes("fb ads")) return "META";
+  if (f.includes("google") || f.includes("busca paga") || f.includes("youtube") || f.includes("pmax") || f.includes("performance max")) return "GOOGLE";
+  if (f.includes("organic") || f.includes("organico") || f.includes("seo")) return "ORGANICO";
+  if (f.includes("indica") || f.includes("referral") || f.includes("referencia") || f.includes("parceiro")) return "INDICACAO";
+  if (f.includes("direto") || f.includes("direct") || f.includes("whatsapp") || f.includes("site") || f.includes("email")) return "DIRETO";
 
   return "OUTRO";
 }
@@ -74,7 +69,7 @@ export async function GET(
 
   const leads = await prisma.leadCrm.findMany({
     where: { clienteId: id, dataEntrada: { gte: dateFrom, lte: dateTo } },
-    select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true, dadosCv: true },
+    select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true, dadosCv: true, etapa: true },
   });
 
   const fatoRows = await prisma.fatoMidiaDiario.findMany({
@@ -89,40 +84,61 @@ export async function GET(
 
   type Bucket = {
     leads: number; ganhos: number; perdidos: number; andamento: number;
-    valor: number; ratingSum: number; ratingCount: number;
+    valor: number; ratingSum: number; ratingCount: number; visitou: number;
   };
+
+  const emptyBucket = (): Bucket => ({
+    leads: 0, ganhos: 0, perdidos: 0, andamento: 0, valor: 0, ratingSum: 0, ratingCount: 0, visitou: 0,
+  });
 
   const fonteMap = new Map<string, Bucket>();
   const canalMap = new Map<string, Bucket>();
   const estadoMap = new Map<string, Bucket>();
   const conversaoMap = new Map<string, Bucket>();
+  const midiaMap = new Map<string, { canal: Canal } & Bucket>();
 
   let leadsComEstado = 0;
   let leadsComConversao = 0;
 
   for (const lead of leads) {
     const cv = parseDadosCv(lead.dadosCv);
+    const midiaOriginal = cv?.midiaOriginal?.trim() ?? null;
+    const canal = canalFromMidia(midiaOriginal, lead.fonte);
+
     const isWon = lead.status === "won";
     const isLost = lead.status === "lost";
     const valor = lead.valor ? Number(lead.valor) : 0;
     const rating = lead.rating ?? null;
+    const etapaLower = norm(lead.etapa ?? "");
+    const visitou = etapaLower.includes("visit");
 
     const addTo = (map: Map<string, Bucket>, key: string) => {
       let b = map.get(key);
-      if (!b) { b = { leads: 0, ganhos: 0, perdidos: 0, andamento: 0, valor: 0, ratingSum: 0, ratingCount: 0 }; map.set(key, b); }
+      if (!b) { b = emptyBucket(); map.set(key, b); }
       b.leads++;
+      if (visitou) b.visitou++;
       if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
       if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
     };
 
     addTo(fonteMap, lead.fonte ?? "(sem fonte)");
-    addTo(canalMap, canalFromFonte(lead.fonte));
+    addTo(canalMap, canal);
 
     const estado = cv?.estado?.trim() || null;
     if (estado) { leadsComEstado++; addTo(estadoMap, estado); }
 
-    const conversao = cv?.conversaoOriginal?.trim() || cv?.midiaOriginal?.trim() || null;
+    const conversao = cv?.conversaoOriginal?.trim() || midiaOriginal || null;
     if (conversao) { leadsComConversao++; addTo(conversaoMap, conversao); }
+
+    // porMidia: group by midiaOriginal for paid-campaign breakdown
+    if (midiaOriginal) {
+      let b = midiaMap.get(midiaOriginal);
+      if (!b) { b = { canal, ...emptyBucket() }; midiaMap.set(midiaOriginal, b); }
+      b.leads++;
+      if (visitou) b.visitou++;
+      if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
+      if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
+    }
   }
 
   const toRow = (key: string, b: Bucket) => ({
@@ -131,6 +147,7 @@ export async function GET(
     ganhos: b.ganhos,
     perdidos: b.perdidos,
     andamento: b.andamento,
+    visitou: b.visitou,
     valor: b.valor,
     taxaGanho: b.leads > 0 ? Math.round((b.ganhos / b.leads) * 100) : 0,
     taxaPerda: b.leads > 0 ? Math.round((b.perdidos / b.leads) * 100) : 0,
@@ -139,7 +156,7 @@ export async function GET(
 
   const porFonte = [...fonteMap.entries()]
     .map(([fonte, b]) => {
-      const canal = canalFromFonte(fonte === "(sem fonte)" ? null : fonte);
+      const canal = canalFromMidia(null, fonte === "(sem fonte)" ? null : fonte);
       return {
         fonte, canal,
         ...toRow(fonte, b),
@@ -148,13 +165,13 @@ export async function GET(
     })
     .sort((a, b) => b.leads - a.leads);
 
-  const CANAL_ORDER = ["META", "GOOGLE", "ORGANICO", "INDICACAO", "DIRETO", "OUTRO"];
+  const CANAL_ORDER: Canal[] = ["META", "GOOGLE", "ORGANICO", "INDICACAO", "DIRETO", "OUTRO"];
   const porCanal = [...canalMap.entries()]
     .map(([canal, b]) => ({
       canal, ...toRow(canal, b),
       investCanal: canal === "META" ? investMeta : canal === "GOOGLE" ? investGoogle : null,
     }))
-    .sort((a, b) => CANAL_ORDER.indexOf(a.canal) - CANAL_ORDER.indexOf(b.canal));
+    .sort((a, b) => CANAL_ORDER.indexOf(a.canal as Canal) - CANAL_ORDER.indexOf(b.canal as Canal));
 
   const porEstado = [...estadoMap.entries()]
     .map(([estado, b]) => ({ estado, ...toRow(estado, b) }))
@@ -166,13 +183,21 @@ export async function GET(
     .sort((a, b) => b.leads - a.leads)
     .slice(0, 50);
 
+  const porMidia = [...midiaMap.entries()]
+    .map(([midia, b]) => ({
+      midia, canal: b.canal,
+      ...toRow(midia, b),
+      investCanal: b.canal === "META" ? investMeta : b.canal === "GOOGLE" ? investGoogle : null,
+    }))
+    .sort((a, b) => b.leads - a.leads);
+
   const totalLeads = leads.length;
   const totalGanhos = leads.filter((l) => l.status === "won").length;
   const totalPerdidos = leads.filter((l) => l.status === "lost").length;
   const totalAndamento = totalLeads - totalGanhos - totalPerdidos;
   const totalValor = leads.filter((l) => l.status === "won").reduce((s, l) => s + (l.valor ? Number(l.valor) : 0), 0);
-  const metaCrmLeads = porFonte.filter((f) => f.canal === "META").reduce((s, f) => s + f.leads, 0);
-  const googleCrmLeads = porFonte.filter((f) => f.canal === "GOOGLE").reduce((s, f) => s + f.leads, 0);
+  const metaCrmLeads = porCanal.find((c) => c.canal === "META")?.leads ?? 0;
+  const googleCrmLeads = porCanal.find((c) => c.canal === "GOOGLE")?.leads ?? 0;
 
   return NextResponse.json({
     configured: true,
@@ -183,7 +208,7 @@ export async function GET(
     cplGoogleCampanha: leadsGoogle > 0 ? investGoogle / leadsGoogle : null,
     cplMetaCrm: metaCrmLeads > 0 ? investMeta / metaCrmLeads : null,
     cplGoogleCrm: googleCrmLeads > 0 ? investGoogle / googleCrmLeads : null,
-    porFonte, porCanal, porEstado, porConversao,
+    porFonte, porCanal, porEstado, porConversao, porMidia,
     leadsComEstado, leadsComConversao,
     ultimoSyncAt: config.ultimoSyncAt,
   });

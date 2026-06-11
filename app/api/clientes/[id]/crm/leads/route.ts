@@ -1,36 +1,52 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
-type Period = "month" | "3months" | "ytd" | "all";
-
-function getDateFrom(period: Period): Date | undefined {
-  const now = new Date();
-  if (period === "month") return new Date(now.getFullYear(), now.getMonth(), 1);
-  if (period === "3months") {
-    const d = new Date();
-    d.setMonth(d.getMonth() - 3);
-    return d;
-  }
-  if (period === "ytd") return new Date(now.getFullYear(), 0, 1);
-  return undefined;
-}
-
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
   const url = request.nextUrl;
-  const period = (url.searchParams.get("period") ?? "all") as Period;
+
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
   const pageSize = Math.min(100, Math.max(1, parseInt(url.searchParams.get("pageSize") ?? "15", 10)));
   const search = url.searchParams.get("search")?.trim() ?? "";
 
-  const dateFrom = getDateFrom(period);
+  // Support both ?from=YYYY-MM-DD&to=YYYY-MM-DD and legacy ?period= param
+  const fromParam = url.searchParams.get("from");
+  const toParam = url.searchParams.get("to");
+
+  let dateFrom: Date | undefined;
+  let dateTo: Date | undefined;
+
+  if (fromParam) {
+    dateFrom = new Date(fromParam);
+  } else {
+    // Legacy period support
+    const period = url.searchParams.get("period") ?? "all";
+    const now = new Date();
+    if (period === "month") dateFrom = new Date(now.getFullYear(), now.getMonth(), 1);
+    else if (period === "3months") {
+      const d = new Date(); d.setMonth(d.getMonth() - 3); dateFrom = d;
+    } else if (period === "ytd") dateFrom = new Date(now.getFullYear(), 0, 1);
+  }
+
+  if (toParam) {
+    dateTo = new Date(toParam);
+    // Include the full end day
+    dateTo.setHours(23, 59, 59, 999);
+  }
 
   const where = {
     clienteId: id,
-    ...(dateFrom ? { dataEntrada: { gte: dateFrom } } : {}),
+    ...(dateFrom || dateTo
+      ? {
+          dataEntrada: {
+            ...(dateFrom ? { gte: dateFrom } : {}),
+            ...(dateTo ? { lte: dateTo } : {}),
+          },
+        }
+      : {}),
     ...(search
       ? {
           OR: [
@@ -79,12 +95,11 @@ export async function GET(
       nome: l.nome ?? null,
       email: l.email ?? null,
       telefone: l.telefone ?? null,
-      contato: l.nome ?? l.email ?? l.telefone ?? null,
       fonte: l.fonte ?? null,
       rating: l.rating ?? null,
       status: l.status ?? null,
-      dadosMarketing: (l.dadosMarketing as Record<string, unknown> | null) ?? null,
-      dadosCv: (l.dadosCv as Record<string, unknown> | null) ?? null,
+      dadosMarketing: l.dadosMarketing ?? null,
+      dadosCv: l.dadosCv ?? null,
     })),
     total,
     page,
