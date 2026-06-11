@@ -169,35 +169,67 @@ export async function GET(
       if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
     }
 
-    // metaLeadsConfirmados: leads matched to actual Meta lead forms
-    if (mkt?.metaCampaignName) {
-      metaLeadsConfirmados++;
-      const campKey = mkt.metaCampaignName.trim();
-      let b = campanhaConfirmadaMap.get(campKey);
-      if (!b) { b = emptyBucket(); campanhaConfirmadaMap.set(campKey, b); }
-      b.leads++;
-      if (visitou) b.visitou++;
-      if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
-      if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
-    }
+  }
 
-    // porCriativo: group by Meta ad name (from MetaLeadIndividual cross-reference)
-    if (mkt?.metaAdName) {
-      const key = mkt.metaAdName;
-      let b = criativoMap.get(key);
-      if (!b) {
-        b = {
-          adId: mkt.metaAdId ?? null,
-          adsetName: mkt.metaAdsetName ?? null,
-          campaignName: mkt.metaCampaignName ?? null,
-          ...emptyBucket(),
-        };
-        criativoMap.set(key, b);
+  // ── porCriativo + porCampanhaConfirmada ─────────────────────────────────────
+  // Use MetaLeadIndividual.createdTime as the date dimension so lead counts
+  // align with what Meta Ads Manager reports for the same period.
+  // CRM conversion metrics (ganhos, visitou, etc.) are joined via metaLeadId.
+  const metaLeadForms = await prisma.metaLeadIndividual.findMany({
+    where: { clienteId: id, createdTime: { gte: dateFrom, lte: dateTo } },
+    select: { metaLeadId: true, adName: true, adId: true, adsetName: true, campaignName: true },
+  });
+
+  metaLeadsConfirmados = metaLeadForms.length;
+
+  if (metaLeadForms.length > 0) {
+    const metaLeadIds = metaLeadForms.map((ml) => ml.metaLeadId);
+    const crmMatched = await prisma.leadCrm.findMany({
+      where: { clienteId: id, metaLeadId: { in: metaLeadIds } },
+      select: { metaLeadId: true, status: true, valor: true, etapa: true, rating: true },
+    });
+    const crmByMeta = new Map(crmMatched.map((l) => [l.metaLeadId!, l]));
+
+    for (const ml of metaLeadForms) {
+      const adName = ml.adName?.trim() ?? "(sem nome)";
+
+      // criativoMap
+      let cb = criativoMap.get(adName);
+      if (!cb) {
+        cb = { adId: ml.adId ?? null, adsetName: ml.adsetName ?? null, campaignName: ml.campaignName ?? null, ...emptyBucket() };
+        criativoMap.set(adName, cb);
       }
-      b.leads++;
-      if (visitou) b.visitou++;
-      if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
-      if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
+      cb.leads++;
+
+      // campanhaConfirmadaMap
+      if (ml.campaignName) {
+        const campKey = ml.campaignName.trim();
+        let ccb = campanhaConfirmadaMap.get(campKey);
+        if (!ccb) { ccb = emptyBucket(); campanhaConfirmadaMap.set(campKey, ccb); }
+        ccb.leads++;
+      }
+
+      // CRM conversion join (applies to both)
+      const crm = crmByMeta.get(ml.metaLeadId);
+      if (crm) {
+        const isWon = crm.status === "won";
+        const isLost = crm.status === "lost";
+        const etapaLower = norm(crm.etapa ?? "");
+        const visitouCrm = etapaLower.includes("visit");
+        const valorCrm = crm.valor ? Number(crm.valor) : 0;
+        const r = crm.rating ?? null;
+
+        if (visitouCrm) cb.visitou++;
+        if (isWon) { cb.ganhos++; cb.valor += valorCrm; } else if (isLost) cb.perdidos++; else cb.andamento++;
+        if (r != null) { cb.ratingSum += r; cb.ratingCount++; }
+
+        if (ml.campaignName) {
+          const ccb = campanhaConfirmadaMap.get(ml.campaignName.trim())!;
+          if (visitouCrm) ccb.visitou++;
+          if (isWon) { ccb.ganhos++; ccb.valor += valorCrm; } else if (isLost) ccb.perdidos++; else ccb.andamento++;
+          if (r != null) { ccb.ratingSum += r; ccb.ratingCount++; }
+        }
+      }
     }
   }
 
