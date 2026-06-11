@@ -56,7 +56,7 @@ interface Lead {
     empreendimentoPrimeiro?: string | null;
     empreendimentoUltimo?: string | null;
     score?: number | null;
-    possibilidadeVenda?: string | null;
+    possibilidadeVenda?: string | number | null;
     profissao?: string | null;
     rendaFamiliar?: string | null;
     feedback?: string | null;
@@ -71,7 +71,7 @@ interface Lead {
     regiao?: string | null;
     cidade?: string | null;
     estado?: string | null;
-    tags?: string[] | null;
+    tags?: string[] | string | null;
     reserva?: string | null;
   } | null;
 }
@@ -104,6 +104,7 @@ interface PorCanal {
   ganhos: number;
   perdidos: number;
   ratingMedio: number | null;
+  pvMedio: number | null;
   investCanal: number | null;
 }
 
@@ -157,6 +158,12 @@ interface PorCampanhaConfirmada {
   taxaGanho: number;
 }
 
+interface TagRow {
+  tag: string;
+  count: number;
+  isAlerta: boolean;
+}
+
 interface AtribuicaoData {
   configured: boolean;
   totalLeads: number;
@@ -187,6 +194,9 @@ interface AtribuicaoData {
   porCampanhaConfirmada: PorCampanhaConfirmada[];
   leadsComEstado: number;
   leadsComConversao: number;
+  porTags: TagRow[];
+  totalComTags: number;
+  alertaLeads: number;
   ultimoSyncAt?: string | null;
 }
 
@@ -266,6 +276,14 @@ const CANAL_CFG: Record<string, { label: string; color: string; hex: string }> =
   OUTRO:     { label: "Outro",     color: "text-[var(--muted-foreground)]", hex: "#6b7280" },
 };
 
+const PV_LABELS: Record<string, { label: string; color: string }> = {
+  "1": { label: "Muito baixa", color: "text-red-400/80" },
+  "2": { label: "Baixa",       color: "text-orange-400/80" },
+  "3": { label: "Média",       color: "text-yellow-400/80" },
+  "4": { label: "Alta",        color: "text-lime-400" },
+  "5": { label: "Muito alta",  color: "text-emerald-400" },
+};
+
 
 function HorizontalBar({
   label, value, total, color, onClick, isActive,
@@ -341,7 +359,12 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
   }, [lead, onClose]);
 
   const cv = lead?.dadosCv ?? null;
-  const cvTags: string[] = Array.isArray(cv?.tags) ? (cv.tags as string[]) : [];
+  const rawTagsField = cv?.tags;
+  const cvTags: string[] = Array.isArray(rawTagsField)
+    ? (rawTagsField as string[])
+    : typeof rawTagsField === "string" && rawTagsField.trim()
+      ? rawTagsField.split(",").map((s) => s.trim()).filter(Boolean)
+      : [];
   const mkt = lead?.dadosMarketing ?? null;
   // Use midiaOriginal as primary signal for canal display
   const canal = canalFromMidia(lead?.fonte ?? null, cv?.midiaOriginal ?? null);
@@ -475,7 +498,17 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
                 <DSection title="Perfil do Lead">
                   {cv.profissao && <DField label="Profissão" value={cv.profissao} />}
                   {cv.rendaFamiliar && <DField label="Renda familiar" value={cv.rendaFamiliar} />}
-                  {cv.possibilidadeVenda && <DField label="Possib. de venda" value={cv.possibilidadeVenda} />}
+                  {cv.possibilidadeVenda != null && (
+                    <DField label="Possib. de venda" value={
+                      (() => {
+                        const key = String(cv.possibilidadeVenda);
+                        const cfg = PV_LABELS[key];
+                        return cfg
+                          ? <span className={cfg.color}>{key} — {cfg.label}</span>
+                          : String(cv.possibilidadeVenda);
+                      })()
+                    } />
+                  )}
                   {cv.reserva && <DField label="Reserva" value={cv.reserva} />}
                   {cv.feedback && (
                     <div className="col-span-2">
@@ -637,7 +670,7 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
         <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Por Campanha</h2>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Por Portal de Entrada</h2>
         </div>
       </div>
       <div className="space-y-6">
@@ -646,6 +679,107 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
         )}
         {googleCampanhas.length > 0 && (
           <CampanhaTable rows={googleCampanhas} canal="GOOGLE" investCanal={data.investGoogle ?? 0} />
+        )}
+      </div>
+      <p className="text-[10px] text-[var(--muted-foreground)]">
+        "Portal de Entrada" = como o lead chegou ao CRM (ex: <span className="font-medium">RdStation</span> = integração via RD Station; <span className="font-medium">Painel Corretor</span> = cadastro pelo app do corretor). Não é o nome da campanha — nomes de campanha aparecem em "Por Criativo".
+      </p>
+    </div>
+  );
+}
+
+// ─── Qualidade dos Leads Section ──────────────────────────────────────────────
+
+function QualidadeLeadsSection({ data }: { data: AtribuicaoData }) {
+  const porTags = data.porTags ?? [];
+  if (porTags.length === 0) return null;
+
+  const totalComTags = data.totalComTags ?? 0;
+  const alertaLeads = data.alertaLeads ?? 0;
+  const alertaTags = porTags.filter((t) => t.isAlerta);
+  const origemTags = porTags.filter((t) => !t.isAlerta);
+
+  return (
+    <div className="space-y-4">
+      <div className="flex items-start gap-3">
+        <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Qualidade dos Leads</h2>
+        </div>
+      </div>
+
+      {/* KPI strip */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+        <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-3.5">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Leads com tags</p>
+          <p className="mt-1 text-2xl font-extrabold tabular-nums text-[var(--foreground)]">{totalComTags}</p>
+          <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">
+            {data.totalLeads > 0 ? `${((totalComTags / data.totalLeads) * 100).toFixed(0)}% do total` : "—"}
+          </p>
+        </div>
+        <div className={`rounded-2xl border p-3.5 ${alertaLeads > 0 ? "border-orange-500/20 bg-orange-500/5" : "border-[var(--border)] bg-[var(--card)]"}`}>
+          <p className={`text-[10px] font-semibold uppercase tracking-[0.12em] ${alertaLeads > 0 ? "text-orange-400/80" : "text-[var(--muted-foreground)]"}`}>
+            Leads em alerta
+          </p>
+          <p className={`mt-1 text-2xl font-extrabold tabular-nums ${alertaLeads > 0 ? "text-orange-400" : "text-[var(--foreground)]"}`}>
+            {alertaLeads}
+          </p>
+          <p className={`mt-0.5 text-[10px] ${alertaLeads > 0 ? "text-orange-400/60" : "text-[var(--muted-foreground)]"}`}>
+            {alertaLeads > 0 ? "desistência, sem renda, sem contato" : "Sem alertas"}
+          </p>
+        </div>
+        <div className="col-span-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-3.5 sm:col-span-1">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Origens identificadas</p>
+          <p className="mt-1 text-2xl font-extrabold tabular-nums text-[var(--foreground)]">{origemTags.length}</p>
+          <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">categorias de origem por tag</p>
+        </div>
+      </div>
+
+      {/* Tag breakdown */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+        {/* Alert tags */}
+        {alertaTags.length > 0 && (
+          <div className="rounded-2xl border border-orange-500/15 bg-[var(--card)] p-4">
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.15em] text-orange-400">
+              Tags de alerta
+            </p>
+            <div className="space-y-2">
+              {alertaTags.map((t) => (
+                <div key={t.tag} className="flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-1.5 text-[11px] text-orange-300/80">
+                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/60" />
+                    {t.tag}
+                  </span>
+                  <span className="shrink-0 rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-bold tabular-nums text-orange-400">
+                    {t.count}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Origin tags */}
+        {origemTags.length > 0 && (
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.15em] text-[var(--primary)]">
+              Tags de origem
+            </p>
+            <div className="space-y-2">
+              {origemTags.slice(0, 12).map((t) => (
+                <div key={t.tag} className="flex items-center justify-between gap-2">
+                  <span className="flex items-center gap-1.5 text-[11px] text-[var(--foreground)]">
+                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--primary)]/50" />
+                    {t.tag}
+                  </span>
+                  <span className="shrink-0 rounded-full border border-[var(--border)] bg-[var(--muted)] px-2 py-0.5 text-[10px] font-bold tabular-nums text-[var(--foreground)]">
+                    {t.count}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
       </div>
     </div>
@@ -880,8 +1014,8 @@ function AtribuicaoSection({
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-[var(--border)]">
-                          {["Canal", "Leads", "Vendas", "Conv%"].map((h) => (
-                            <th key={h} className={`pb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)] ${h === "Canal" ? "text-left" : "text-right"}`}>
+                          {["Canal", "Leads", "Vendas", "Conv%", "Qualif."].map((h) => (
+                            <th key={h} className={`pb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)] ${h === "Canal" ? "text-left" : "text-right"}`} title={h === "Qualif." ? "Média de Possibilidade de Venda (1–5) atribuída pelo corretor" : undefined}>
                               {h}
                             </th>
                           ))}
@@ -922,6 +1056,15 @@ function AtribuicaoSection({
                                   <span className="font-semibold text-emerald-400">{taxaGanho.toFixed(1)}%</span>
                                 ) : (
                                   <span className="text-[var(--muted-foreground)]">—</span>
+                                )}
+                              </td>
+                              <td className="py-2 text-right tabular-nums text-[12px]">
+                                {c.pvMedio != null ? (
+                                  <span className={PV_LABELS[String(Math.round(c.pvMedio))]?.color ?? "text-[var(--muted-foreground)]"}>
+                                    {c.pvMedio.toFixed(1)}
+                                  </span>
+                                ) : (
+                                  <span className="text-[var(--muted-foreground)] opacity-40">—</span>
                                 )}
                               </td>
                             </tr>
@@ -1060,8 +1203,13 @@ function AtribuicaoSection({
             </div>
           )}
 
-          {/* Campaign breakdown (porMidia) */}
+          {/* Campaign breakdown (by CRM entry portal) */}
           <CampanhaSection data={data} />
+
+          {/* Lead quality by tags */}
+          {(data.porTags?.length ?? 0) > 0 && (
+            <QualidadeLeadsSection data={data} />
+          )}
         </>
       )}
 
@@ -1334,8 +1482,15 @@ export function CrmTab({
                             )}
                           </div>
                         </td>
-                        <td className="px-4 py-2.5 text-[11px] text-[var(--muted-foreground)]">
-                          {cv?.possibilidadeVenda ?? "—"}
+                        <td className="px-4 py-2.5 text-[11px]">
+                          {cv?.possibilidadeVenda != null
+                            ? (() => {
+                                const key = String(cv.possibilidadeVenda);
+                                const cfg = PV_LABELS[key];
+                                return <span className={cfg?.color ?? "text-[var(--muted-foreground)]"} title="Possibilidade de venda (avaliação do corretor, 1–5)">{cfg?.label ?? key}</span>;
+                              })()
+                            : <span className="text-[var(--muted-foreground)]">—</span>
+                          }
                         </td>
                         <td className="px-4 py-2.5 tabular-nums text-[12px] text-[var(--muted-foreground)]">
                           {formatDateBR(lead.dataEntrada)}

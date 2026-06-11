@@ -12,7 +12,6 @@ function canalFromMidia(
   midiaOriginal: string | null,
   fonte: string | null,
 ): Canal {
-  // Primary: midiaOriginal has the real paid media channel name
   if (midiaOriginal) {
     const m = norm(midiaOriginal);
     if (m.includes("facebook") || m.includes("meta") || m.includes("instagram") || m.includes("fb ads") || m.includes("meta ads") || /\bfb\b/.test(m)) return "META";
@@ -21,8 +20,6 @@ function canalFromMidia(
     if (m.includes("organic") || m.includes("organico") || m.includes("seo")) return "ORGANICO";
     if (m.includes("email") || m.includes("whatsapp")) return "DIRETO";
   }
-
-  // Fallback: fonte (CV CRM portal name)
   if (!fonte) return "OUTRO";
   const f = norm(fonte);
   if (f.includes("facebook") || f.includes("meta") || f.includes("instagram") || f.includes("fb ads") || /\bfb\b/.test(f)) return "META";
@@ -30,15 +27,41 @@ function canalFromMidia(
   if (f.includes("organic") || f.includes("organico") || f.includes("seo")) return "ORGANICO";
   if (f.includes("indica") || f.includes("referral") || f.includes("referencia") || f.includes("parceiro")) return "INDICACAO";
   if (f.includes("direto") || f.includes("direct") || f.includes("whatsapp") || f.includes("site") || f.includes("email")) return "DIRETO";
-
   return "OUTRO";
+}
+
+// Alert tags: leads that should probably not be in the active funnel
+const ALERTA_KEYWORDS = [
+  "nao quer", "sem interesse", "renda insuficiente", "contato inexistente",
+  "desistencia", "invalido", "duplicado", "descartado", "nao quer imovel",
+  "busca outra", "nao retorna",
+];
+
+function isAlertaTag(tagNormalized: string): boolean {
+  return ALERTA_KEYWORDS.some((k) => tagNormalized.includes(k));
 }
 
 type DadosCvJson = {
   estado?: string | null;
   conversaoOriginal?: string | null;
   midiaOriginal?: string | null;
+  tags?: unknown; // string, comma-separated string, or string[]
+  possibilidadeVenda?: string | number | null; // CV stores as number 1–5
 } | null;
+
+function parseTags(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw.map(String).filter(Boolean);
+  if (typeof raw === "string" && raw.trim()) {
+    return raw.split(",").map((s) => s.trim()).filter(Boolean);
+  }
+  return [];
+}
+
+function parsePv(raw: string | number | null | undefined): number | null {
+  if (raw == null) return null;
+  const n = typeof raw === "number" ? raw : parseInt(String(raw), 10);
+  return (!isNaN(n) && n >= 1 && n <= 5) ? n : null;
+}
 
 type DadosMarketingJson = {
   metaAdId?: string | null;
@@ -108,10 +131,12 @@ export async function GET(
   type Bucket = {
     leads: number; ganhos: number; perdidos: number; andamento: number;
     valor: number; ratingSum: number; ratingCount: number; visitou: number;
+    pvSum: number; pvCount: number;
   };
 
   const emptyBucket = (): Bucket => ({
-    leads: 0, ganhos: 0, perdidos: 0, andamento: 0, valor: 0, ratingSum: 0, ratingCount: 0, visitou: 0,
+    leads: 0, ganhos: 0, perdidos: 0, andamento: 0, valor: 0,
+    ratingSum: 0, ratingCount: 0, visitou: 0, pvSum: 0, pvCount: 0,
   });
 
   const fonteMap = new Map<string, Bucket>();
@@ -122,13 +147,17 @@ export async function GET(
   const criativoMap = new Map<string, { adId: string | null; adsetName: string | null; campaignName: string | null } & Bucket>();
   const campanhaConfirmadaMap = new Map<string, Bucket>();
 
+  // Tag tracking
+  const tagMap = new Map<string, number>();
+  let leadsComTags = 0;
+  let alertaLeads = 0;
+
   let leadsComEstado = 0;
   let leadsComConversao = 0;
   let metaLeadsConfirmados = 0;
 
   for (const lead of leads) {
     const cv = parseDadosCv(lead.dadosCv);
-    const mkt = parseDadosMarketing(lead.dadosMarketing);
     const midiaOriginal = cv?.midiaOriginal?.trim() ?? null;
     const canal = canalFromMidia(midiaOriginal, lead.fonte);
 
@@ -139,6 +168,24 @@ export async function GET(
     const etapaLower = norm(lead.etapa ?? "");
     const visitou = etapaLower.includes("visit");
 
+    // possibilidadeVenda 1-5 (manual broker assessment)
+    const pv = parsePv(cv?.possibilidadeVenda);
+
+    // Tags — handle string, comma-separated, or array storage formats
+    const rawTags = parseTags(cv?.tags);
+    if (rawTags.length > 0) {
+      leadsComTags++;
+      let hasAlerta = false;
+      for (const t of rawTags) {
+        const key = norm(t.trim());
+        if (key) {
+          tagMap.set(key, (tagMap.get(key) ?? 0) + 1);
+          if (isAlertaTag(key)) hasAlerta = true;
+        }
+      }
+      if (hasAlerta) alertaLeads++;
+    }
+
     const addTo = (map: Map<string, Bucket>, key: string) => {
       let b = map.get(key);
       if (!b) { b = emptyBucket(); map.set(key, b); }
@@ -146,6 +193,7 @@ export async function GET(
       if (visitou) b.visitou++;
       if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
       if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
+      if (pv != null) { b.pvSum += pv; b.pvCount++; }
     };
 
     addTo(fonteMap, lead.fonte ?? "(sem fonte)");
@@ -157,7 +205,6 @@ export async function GET(
     const conversao = cv?.conversaoOriginal?.trim() || midiaOriginal || null;
     if (conversao) { leadsComConversao++; addTo(conversaoMap, conversao); }
 
-    // porCampanha: group by canal + conversaoOriginal (compound key prevents canal bleed)
     const conversaoKey = cv?.conversaoOriginal?.trim() ?? null;
     if (conversaoKey && (canal === "META" || canal === "GOOGLE")) {
       const cKey = `${canal}:::${conversaoKey}`;
@@ -167,14 +214,11 @@ export async function GET(
       if (visitou) b.visitou++;
       if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
       if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
+      if (pv != null) { b.pvSum += pv; b.pvCount++; }
     }
-
   }
 
   // ── porCriativo + porCampanhaConfirmada ─────────────────────────────────────
-  // Use MetaLeadIndividual.createdTime as the date dimension so lead counts
-  // align with what Meta Ads Manager reports for the same period.
-  // CRM conversion metrics (ganhos, visitou, etc.) are joined via metaLeadId.
   const metaLeadForms = await prisma.metaLeadIndividual.findMany({
     where: { clienteId: id, createdTime: { gte: dateFrom, lte: dateTo } },
     select: { metaLeadId: true, adName: true, adId: true, adsetName: true, campaignName: true },
@@ -193,7 +237,6 @@ export async function GET(
     for (const ml of metaLeadForms) {
       const adName = ml.adName?.trim() ?? "(sem nome)";
 
-      // criativoMap
       let cb = criativoMap.get(adName);
       if (!cb) {
         cb = { adId: ml.adId ?? null, adsetName: ml.adsetName ?? null, campaignName: ml.campaignName ?? null, ...emptyBucket() };
@@ -201,7 +244,6 @@ export async function GET(
       }
       cb.leads++;
 
-      // campanhaConfirmadaMap
       if (ml.campaignName) {
         const campKey = ml.campaignName.trim();
         let ccb = campanhaConfirmadaMap.get(campKey);
@@ -209,7 +251,6 @@ export async function GET(
         ccb.leads++;
       }
 
-      // CRM conversion join (applies to both)
       const crm = crmByMeta.get(ml.metaLeadId);
       if (crm) {
         const isWon = crm.status === "won";
@@ -244,6 +285,7 @@ export async function GET(
     taxaGanho: b.leads > 0 ? Math.round((b.ganhos / b.leads) * 100) : 0,
     taxaPerda: b.leads > 0 ? Math.round((b.perdidos / b.leads) * 100) : 0,
     ratingMedio: b.ratingCount > 0 ? Math.round((b.ratingSum / b.ratingCount) * 10) / 10 : null,
+    pvMedio: b.pvCount > 0 ? Math.round((b.pvSum / b.pvCount) * 10) / 10 : null,
   });
 
   const porFonte = [...fonteMap.entries()]
@@ -313,6 +355,12 @@ export async function GET(
     }))
     .sort((a, b) => b.leads - a.leads);
 
+  // Tag breakdown — individual tags sorted by count
+  const porTags = [...tagMap.entries()]
+    .map(([tag, count]) => ({ tag, count, isAlerta: isAlertaTag(tag) }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 30);
+
   return NextResponse.json({
     configured: true,
     periodo: { from: dateFrom, to: dateTo },
@@ -329,6 +377,7 @@ export async function GET(
     porFonte, porCanal, porEstado, porConversao, porCampanha, porCriativo,
     porCampanhaConfirmada,
     leadsComEstado, leadsComConversao,
+    porTags, totalComTags: leadsComTags, alertaLeads,
     ultimoSyncAt: config.ultimoSyncAt,
   });
 }
