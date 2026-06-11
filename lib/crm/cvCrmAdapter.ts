@@ -63,6 +63,31 @@ function parseValor(v?: number | string | null): number | null {
   return isNaN(n) ? null : n;
 }
 
+/** Extract UTM params from campos_adicionais (custom fields from landing page) */
+function extractUtmsFromCampos(
+  campos: Array<{ idcampo: string; idcampo_valores: string }> | null | undefined
+): Record<string, string> | null {
+  if (!campos?.length) return null;
+  const UTM_KEYS: Record<string, string> = {
+    utm_source: "utmSource",
+    utm_medium: "utmMedium",
+    utm_campaign: "utmCampaign",
+    utm_content: "utmContent",
+    utm_term: "utmTerm",
+    fbclid: "fbclid",
+    gclid: "gclid",
+  };
+  const result: Record<string, string> = {};
+  for (const campo of campos) {
+    const key = (campo.idcampo ?? "").toLowerCase().trim();
+    const mapped = UTM_KEYS[key];
+    if (mapped && campo.idcampo_valores) {
+      result[mapped] = campo.idcampo_valores;
+    }
+  }
+  return Object.keys(result).length > 0 ? result : null;
+}
+
 function inferStatus(l: CvLead): string {
   // Priority 1: explicit cancellation signals → lost
   if (l.motivo_cancelamento || l.descricao_motivo_cancelamento) return "lost";
@@ -200,7 +225,12 @@ export class CvCrmAdapter implements CrmAdapter {
 
       // Extras
       if (l.tags?.length) dadosCv.tags = l.tags;
-      if (l.campos_adicionais?.length) dadosCv.camposAdicionais = l.campos_adicionais;
+      if (l.campos_adicionais?.length) {
+        dadosCv.camposAdicionais = l.campos_adicionais;
+        // Parse UTM parameters from campos_adicionais when present
+        const utms = extractUtmsFromCampos(l.campos_adicionais);
+        if (utms) Object.assign(dadosCv, utms);
+      }
       if (l.reserva) dadosCv.reserva = l.reserva;
 
       return {

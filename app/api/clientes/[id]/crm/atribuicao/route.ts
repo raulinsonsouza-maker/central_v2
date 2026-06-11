@@ -40,9 +40,30 @@ type DadosCvJson = {
   midiaOriginal?: string | null;
 } | null;
 
+type DadosMarketingJson = {
+  metaAdId?: string | null;
+  metaAdName?: string | null;
+  metaAdsetId?: string | null;
+  metaAdsetName?: string | null;
+  metaCampaignId?: string | null;
+  metaCampaignName?: string | null;
+  metaFormId?: string | null;
+  metaFormName?: string | null;
+  utmSource?: string | null;
+  utmMedium?: string | null;
+  utmCampaign?: string | null;
+  utmContent?: string | null;
+  utmTerm?: string | null;
+} | null;
+
 function parseDadosCv(raw: Prisma.JsonValue): DadosCvJson {
   if (raw == null || typeof raw !== "object" || Array.isArray(raw)) return null;
   return raw as DadosCvJson;
+}
+
+function parseDadosMarketing(raw: Prisma.JsonValue): DadosMarketingJson {
+  if (raw == null || typeof raw !== "object" || Array.isArray(raw)) return null;
+  return raw as DadosMarketingJson;
 }
 
 export async function GET(
@@ -71,7 +92,7 @@ export async function GET(
 
   const leads = await prisma.leadCrm.findMany({
     where: { clienteId: id, dataEntrada: { gte: dateFrom, lte: dateTo } },
-    select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true, dadosCv: true, etapa: true },
+    select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true, dadosCv: true, etapa: true, dadosMarketing: true },
   });
 
   const fatoRows = await prisma.fatoMidiaDiario.findMany({
@@ -98,12 +119,14 @@ export async function GET(
   const estadoMap = new Map<string, Bucket>();
   const conversaoMap = new Map<string, Bucket>();
   const campanhaMap = new Map<string, { canal: Canal } & Bucket>();
+  const criativoMap = new Map<string, { adId: string | null; adsetName: string | null; campaignName: string | null } & Bucket>();
 
   let leadsComEstado = 0;
   let leadsComConversao = 0;
 
   for (const lead of leads) {
     const cv = parseDadosCv(lead.dadosCv);
+    const mkt = parseDadosMarketing(lead.dadosMarketing);
     const midiaOriginal = cv?.midiaOriginal?.trim() ?? null;
     const canal = canalFromMidia(midiaOriginal, lead.fonte);
 
@@ -132,12 +155,30 @@ export async function GET(
     const conversao = cv?.conversaoOriginal?.trim() || midiaOriginal || null;
     if (conversao) { leadsComConversao++; addTo(conversaoMap, conversao); }
 
-    // porCampanha: group by conversaoOriginal (campaign/landing page) for paid-channel breakdown
-    // Only track META and GOOGLE campaigns; others are handled in porCanal
+    // porCampanha: group by conversaoOriginal for paid-channel breakdown
     const conversaoKey = cv?.conversaoOriginal?.trim() ?? null;
     if (conversaoKey && (canal === "META" || canal === "GOOGLE")) {
       let b = campanhaMap.get(conversaoKey);
       if (!b) { b = { canal, ...emptyBucket() }; campanhaMap.set(conversaoKey, b); }
+      b.leads++;
+      if (visitou) b.visitou++;
+      if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
+      if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
+    }
+
+    // porCriativo: group by Meta ad name (from MetaLeadIndividual cross-reference)
+    if (mkt?.metaAdName) {
+      const key = mkt.metaAdName;
+      let b = criativoMap.get(key);
+      if (!b) {
+        b = {
+          adId: mkt.metaAdId ?? null,
+          adsetName: mkt.metaAdsetName ?? null,
+          campaignName: mkt.metaCampaignName ?? null,
+          ...emptyBucket(),
+        };
+        criativoMap.set(key, b);
+      }
       b.leads++;
       if (visitou) b.visitou++;
       if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
@@ -195,6 +236,16 @@ export async function GET(
     }))
     .sort((a, b) => b.leads - a.leads);
 
+  const porCriativo = [...criativoMap.entries()]
+    .map(([adName, b]) => ({
+      adName,
+      adId: b.adId,
+      adsetName: b.adsetName,
+      campaignName: b.campaignName,
+      ...toRow(adName, b),
+    }))
+    .sort((a, b) => b.leads - a.leads);
+
   const totalLeads = leads.length;
   const totalGanhos = leads.filter((l) => l.status === "won").length;
   const totalPerdidos = leads.filter((l) => l.status === "lost").length;
@@ -216,7 +267,7 @@ export async function GET(
     cplGoogleCrm: googleCrmLeads > 0 ? investGoogle / googleCrmLeads : null,
     cacMetaCrm: metaGanhos > 0 && investMeta > 0 ? investMeta / metaGanhos : null,
     cacGoogleCrm: googleGanhos > 0 && investGoogle > 0 ? investGoogle / googleGanhos : null,
-    porFonte, porCanal, porEstado, porConversao, porCampanha,
+    porFonte, porCanal, porEstado, porConversao, porCampanha, porCriativo,
     leadsComEstado, leadsComConversao,
     ultimoSyncAt: config.ultimoSyncAt,
   });

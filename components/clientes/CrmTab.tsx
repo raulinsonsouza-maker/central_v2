@@ -124,6 +124,20 @@ interface PorCampanha {
   investCanal: number | null;
 }
 
+interface PorCriativo {
+  adName: string;
+  adId: string | null;
+  adsetName: string | null;
+  campaignName: string | null;
+  leads: number;
+  ganhos: number;
+  perdidos: number;
+  andamento: number;
+  visitou: number;
+  valor: number;
+  taxaGanho: number;
+}
+
 interface AtribuicaoData {
   configured: boolean;
   totalLeads: number;
@@ -148,6 +162,7 @@ interface AtribuicaoData {
   porEstado: PorEstado[];
   porConversao: PorConversao[];
   porCampanha: PorCampanha[];
+  porCriativo: PorCriativo[];
   leadsComEstado: number;
   leadsComConversao: number;
   ultimoSyncAt?: string | null;
@@ -616,6 +631,122 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
   );
 }
 
+// ─── Criativo Section (Meta Lead ID matching) ─────────────────────────────────
+
+function CriativoSection({ data }: { data: AtribuicaoData }) {
+  const rows = (data.porCriativo ?? []).sort((a, b) => b.leads - a.leads);
+  if (rows.length === 0) return null;
+
+  const totalLeads = rows.reduce((s, r) => s + r.leads, 0);
+  const totalGanhos = rows.reduce((s, r) => s + r.ganhos, 0);
+  const metaHex = "#3b82f6";
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-start gap-3">
+        <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM × Meta</p>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Por Criativo</h2>
+        </div>
+      </div>
+
+      {/* Summary chips */}
+      <div className="flex flex-wrap gap-2">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--card)] px-3 py-1.5">
+          <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: metaHex }} />
+          <span className="text-xs font-semibold text-[var(--foreground)]">{totalLeads} leads identificados</span>
+          <span className="text-xs text-[var(--muted-foreground)]">via Meta Lead Forms</span>
+        </div>
+        {totalGanhos > 0 && (
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5">
+            <span className="text-xs font-semibold text-emerald-400">{totalGanhos} vendas atribuídas</span>
+            <span className="text-xs text-emerald-400/60">· {((totalGanhos / totalLeads) * 100).toFixed(1)}% conv.</span>
+          </div>
+        )}
+      </div>
+
+      <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
+        <table className="min-w-[640px] w-full text-sm">
+          <thead>
+            <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
+              {["Criativo (Anúncio)", "Conjunto", "Leads", "Visitou", "Em aberto", "Ganhos", "Conv%", "Valor"].map((h) => (
+                <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((row, i) => (
+              <tr
+                key={row.adName}
+                className={`border-b border-[var(--border)]/50 transition-colors hover:bg-[var(--muted)]/20 ${
+                  i % 2 === 0 ? "" : "bg-[var(--muted)]/10"
+                }`}
+              >
+                <td className="px-4 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: metaHex }} />
+                    <span className="max-w-[180px] block truncate font-medium text-[var(--foreground)]" title={row.adName}>
+                      {row.adName}
+                    </span>
+                  </div>
+                </td>
+                <td className="px-4 py-2.5">
+                  {row.adsetName ? (
+                    <span className="max-w-[140px] block truncate text-xs text-[var(--muted-foreground)]" title={row.adsetName}>
+                      {row.adsetName}
+                    </span>
+                  ) : (
+                    <span className="opacity-30 text-xs">—</span>
+                  )}
+                </td>
+                <td className="px-4 py-2.5">
+                  <div className="flex items-center gap-2">
+                    <span className="tabular-nums font-semibold text-[var(--foreground)]">{row.leads}</span>
+                    {totalLeads > 0 && (
+                      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-[var(--muted)]/40">
+                        <div
+                          className="h-full rounded-full"
+                          style={{ width: `${(row.leads / totalLeads) * 100}%`, backgroundColor: metaHex, opacity: 0.7 }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </td>
+                <td className="px-4 py-2.5 tabular-nums text-[var(--muted-foreground)]">
+                  {row.visitou > 0 ? row.visitou : <span className="opacity-40">—</span>}
+                </td>
+                <td className="px-4 py-2.5 tabular-nums text-blue-400">{row.andamento}</td>
+                <td className="px-4 py-2.5 tabular-nums font-bold text-emerald-400">
+                  {row.ganhos > 0 ? row.ganhos : <span className="font-normal opacity-40">—</span>}
+                </td>
+                <td className="px-4 py-2.5">
+                  {row.leads > 0 ? (
+                    <span className={`tabular-nums font-semibold ${row.taxaGanho > 0 ? "text-emerald-400" : "text-[var(--muted-foreground)]"}`}>
+                      {row.taxaGanho}%
+                    </span>
+                  ) : (
+                    <span className="opacity-40">—</span>
+                  )}
+                </td>
+                <td className="px-4 py-2.5 tabular-nums text-emerald-400/80">
+                  {row.valor > 0 ? formatCurrencyBR(row.valor) : <span className="opacity-40">—</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-[10px] text-[var(--muted-foreground)]">
+        Atribuição via cruzamento MetaLeadForms × CRM por e-mail e telefone.
+        Leads sem correspondência no CRM não aparecem aqui.
+      </p>
+    </div>
+  );
+}
+
 // ─── Análise de Origem Section ────────────────────────────────────────────────
 
 function AtribuicaoSection({
@@ -912,6 +1043,11 @@ function AtribuicaoSection({
           {/* Campaign breakdown (porMidia) */}
           <CampanhaSection data={data} />
         </>
+      )}
+
+      {/* Creative attribution via Meta Lead ID matching */}
+      {!isLoading && data?.configured && (data.porCriativo?.length ?? 0) > 0 && (
+        <CriativoSection data={data} />
       )}
     </div>
   );

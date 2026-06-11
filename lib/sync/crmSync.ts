@@ -1,6 +1,7 @@
 import { Prisma } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/db";
 import { getCrmAdapter } from "@/lib/crm/factory";
+import { matchMetaCrmLeads } from "@/lib/crm/metaCrmMatcher";
 
 export interface CrmSyncResult {
   ok: boolean;
@@ -69,6 +70,15 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
       where: { id: config.id },
       data: { ultimoSyncAt: new Date() },
     });
+
+    // Cross-reference with Meta Lead forms to populate creative attribution
+    try {
+      const matchResult = await matchMetaCrmLeads(clienteId);
+      console.log(`[crmSync] metaCrmMatch clienteId=${clienteId} matched=${matchResult.matched} alreadyMatched=${matchResult.alreadyMatched} notFound=${matchResult.notFound}`);
+    } catch (e) {
+      // Non-fatal — log and continue
+      console.warn(`[crmSync] metaCrmMatch failed for ${clienteId}:`, e instanceof Error ? e.message : e);
+    }
 
     return { ok: true, leadsProcessed: leads.length, leadsUpserted: upserted };
   } catch (e) {
