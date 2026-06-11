@@ -1,5 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import type { Prisma } from "@/lib/generated/prisma";
+
+function buildCanalFonteOR(canal: string): Prisma.LeadCrmWhereInput[] {
+  const patterns: Record<string, string[]> = {
+    META:      ["facebook", "meta", "instagram"],
+    GOOGLE:    ["google", "youtube", "pmax", "busca paga", "performance max"],
+    ORGANICO:  ["orgânico", "organico", "organic", "seo"],
+    INDICACAO: ["indicação", "indicacao", "referral", "indica"],
+    DIRETO:    ["direto", "direct", "whatsapp", "site"],
+  };
+  const ps = patterns[canal] ?? [];
+  return ps.map((p) => ({ fonte: { contains: p, mode: "insensitive" as const } }));
+}
 
 export async function GET(
   request: NextRequest,
@@ -11,6 +24,28 @@ export async function GET(
   const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
   const pageSize = Math.min(100, Math.max(1, parseInt(url.searchParams.get("pageSize") ?? "15", 10)));
   const search = url.searchParams.get("search")?.trim() ?? "";
+
+  const filterType  = url.searchParams.get("filterType");
+  const filterValue = url.searchParams.get("filterValue");
+
+  let filterCondition: Prisma.LeadCrmWhereInput = {};
+  if (filterType && filterValue) {
+    if (filterType === "canal") {
+      if (filterValue === "META_CONFIRMED") {
+        filterCondition = { metaLeadId: { not: null } };
+      } else if (filterValue === "META_CRM") {
+        const or = buildCanalFonteOR("META");
+        filterCondition = or.length > 0 ? { metaLeadId: null, OR: or } : { metaLeadId: null };
+      } else {
+        const or = buildCanalFonteOR(filterValue);
+        if (or.length > 0) filterCondition = { OR: or };
+      }
+    } else if (filterType === "estado") {
+      filterCondition = { dadosCv: { path: ["estado"], equals: filterValue } };
+    } else if (filterType === "conversao") {
+      filterCondition = { dadosCv: { path: ["conversaoOriginal"], equals: filterValue } };
+    }
+  }
 
   // Support both ?from=YYYY-MM-DD&to=YYYY-MM-DD and legacy ?period= param
   const fromParam = url.searchParams.get("from");
@@ -37,7 +72,7 @@ export async function GET(
     dateTo.setHours(23, 59, 59, 999);
   }
 
-  const where = {
+  const where: Prisma.LeadCrmWhereInput = {
     clienteId: id,
     ...(dateFrom || dateTo
       ? {
@@ -56,6 +91,7 @@ export async function GET(
           ],
         }
       : {}),
+    ...filterCondition,
   };
 
   const [leads, total] = await Promise.all([

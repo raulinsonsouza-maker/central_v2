@@ -190,6 +190,14 @@ interface AtribuicaoData {
   ultimoSyncAt?: string | null;
 }
 
+// ─── Filter type ──────────────────────────────────────────────────────────────
+
+type LeadFilter = {
+  type: "canal" | "estado" | "conversao";
+  value: string;
+  label: string;
+} | null;
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatCurrencyBR(value: number) {
@@ -260,17 +268,25 @@ const CANAL_CFG: Record<string, { label: string; color: string; hex: string }> =
 
 
 function HorizontalBar({
-  label, value, total, color,
+  label, value, total, color, onClick, isActive,
 }: {
   label: string;
   value: number;
   total: number;
   color?: string;
+  onClick?: () => void;
+  isActive?: boolean;
 }) {
   const pct = total > 0 ? (value / total) * 100 : 0;
   return (
-    <div className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5">
-      <span className="w-28 shrink-0 truncate text-[11px] font-medium text-[var(--foreground)]" title={label}>
+    <div
+      onClick={onClick}
+      role={onClick ? "button" : undefined}
+      className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 transition-colors ${
+        onClick ? "cursor-pointer hover:bg-[var(--primary)]/8" : ""
+      } ${isActive ? "bg-[var(--primary)]/10 ring-1 ring-inset ring-[var(--primary)]/20" : ""}`}
+    >
+      <span className={`w-28 shrink-0 truncate text-[11px] font-medium ${isActive ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`} title={label}>
         {label}
       </span>
       <div className="flex min-w-0 flex-1 items-center">
@@ -280,7 +296,7 @@ function HorizontalBar({
             style={{
               width: `${Math.max(pct, 0.5)}%`,
               backgroundColor: color ?? "var(--primary)",
-              opacity: 0.7,
+              opacity: isActive ? 1 : 0.7,
             }}
           />
         </div>
@@ -288,7 +304,7 @@ function HorizontalBar({
       <span className="w-10 shrink-0 text-right tabular-nums text-[10px] text-[var(--muted-foreground)]">
         {pct.toFixed(1)}%
       </span>
-      <span className="w-8 shrink-0 text-right tabular-nums text-[11px] font-bold text-[var(--foreground)]">
+      <span className={`w-8 shrink-0 text-right tabular-nums text-[11px] font-bold ${isActive ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
         {value}
       </span>
     </div>
@@ -757,9 +773,13 @@ function CriativoSection({ data }: { data: AtribuicaoData }) {
 function AtribuicaoSection({
   clienteId,
   dateRange,
+  activeFilter,
+  onFilter,
 }: {
   clienteId: string;
   dateRange: { from: string; to: string };
+  activeFilter: LeadFilter;
+  onFilter: (f: LeadFilter) => void;
 }) {
   const [convSearch, setConvSearch] = React.useState("");
 
@@ -844,6 +864,9 @@ function AtribuicaoSection({
                 <div className="mb-3 flex items-center gap-2">
                   <BarChart3 className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
                   <p className="text-sm font-bold text-[var(--foreground)]">Canais de Origem</p>
+                  {activeFilter?.type === "canal" && (
+                    <span className="ml-auto text-[10px] text-[var(--primary)] opacity-70">· clique novamente para limpar</span>
+                  )}
                 </div>
                 {porCanal.length === 0 ? (
                   <p className="py-6 text-center text-xs text-[var(--muted-foreground)]">Sem dados</p>
@@ -863,32 +886,96 @@ function AtribuicaoSection({
                         {porCanal.map((c) => {
                           const cfg = CANAL_CFG[c.canal] ?? CANAL_CFG.OUTRO;
                           const taxaGanho = c.leads > 0 ? ((c.ganhos / c.leads) * 100) : 0;
+                          const isActive = activeFilter?.type === "canal" && activeFilter.value === c.canal;
+                          const handleClick = () => {
+                            if (isActive) onFilter(null);
+                            else onFilter({ type: "canal", value: c.canal, label: `Canal: ${cfg.label}` });
+                          };
+                          // Meta sub-data
+                          const metaConfirmados = c.canal === "META" ? (data.metaLeadsConfirmados ?? 0) : 0;
+                          const metaCrm = c.canal === "META" ? ((data.metaCrmLeads ?? 0) - metaConfirmados) : 0;
                           return (
-                            <tr key={c.canal} className="border-b border-[var(--border)]/40 last:border-0">
-                              <td className="py-2 pr-3">
-                                <div className="flex items-center gap-1.5">
-                                  <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: cfg.hex }} />
-                                  <span className={`text-[12px] font-semibold ${cfg.color}`}>{cfg.label}</span>
-                                </div>
-                              </td>
-                              <td className="py-2 text-right tabular-nums text-[12px] text-[var(--foreground)]">{c.leads.toLocaleString("pt-BR")}</td>
-                              <td className="py-2 text-right tabular-nums text-[12px] font-bold text-emerald-400">
-                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal text-[var(--muted-foreground)]">—</span>}
-                              </td>
-                              <td className="py-2 text-right tabular-nums text-[12px]">
-                                {taxaGanho > 0 ? (
-                                  <span className="font-semibold text-emerald-400">{taxaGanho.toFixed(1)}%</span>
-                                ) : (
-                                  <span className="text-[var(--muted-foreground)]">—</span>
-                                )}
-                              </td>
-                            </tr>
+                            <React.Fragment key={c.canal}>
+                              <tr
+                                onClick={handleClick}
+                                className={`cursor-pointer border-b border-[var(--border)]/40 transition-colors hover:bg-[var(--primary)]/5 ${
+                                  isActive ? "bg-[var(--primary)]/8" : ""
+                                } ${c.canal === "META" && metaConfirmados > 0 ? "" : "last:border-0"}`}
+                              >
+                                <td className="py-2 pr-3">
+                                  <div className="flex items-center gap-1.5">
+                                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: cfg.hex }} />
+                                    <span className={`text-[12px] font-semibold ${isActive ? "text-[var(--primary)]" : cfg.color}`}>{cfg.label}</span>
+                                    {isActive && <span className="text-[9px] text-[var(--primary)]/60">✓ filtrado</span>}
+                                  </div>
+                                </td>
+                                <td className={`py-2 text-right tabular-nums text-[12px] ${isActive ? "font-bold text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
+                                  {c.leads.toLocaleString("pt-BR")}
+                                </td>
+                                <td className="py-2 text-right tabular-nums text-[12px] font-bold text-emerald-400">
+                                  {c.ganhos > 0 ? c.ganhos : <span className="font-normal text-[var(--muted-foreground)]">—</span>}
+                                </td>
+                                <td className="py-2 text-right tabular-nums text-[12px]">
+                                  {taxaGanho > 0 ? (
+                                    <span className="font-semibold text-emerald-400">{taxaGanho.toFixed(1)}%</span>
+                                  ) : (
+                                    <span className="text-[var(--muted-foreground)]">—</span>
+                                  )}
+                                </td>
+                              </tr>
+                              {/* Meta sub-rows: confirmed vs CRM-only */}
+                              {c.canal === "META" && metaConfirmados > 0 && (
+                                <>
+                                  <tr
+                                    onClick={() => {
+                                      const isSubActive = activeFilter?.type === "canal" && activeFilter.value === "META_CONFIRMED";
+                                      onFilter(isSubActive ? null : { type: "canal", value: "META_CONFIRMED", label: "Meta — Confirmados" });
+                                    }}
+                                    className={`cursor-pointer border-b border-[var(--border)]/20 transition-colors hover:bg-emerald-500/5 ${
+                                      activeFilter?.type === "canal" && activeFilter.value === "META_CONFIRMED" ? "bg-emerald-500/8" : ""
+                                    }`}
+                                  >
+                                    <td className="py-1.5 pl-5 pr-3">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="text-[10px] text-emerald-400/60">└</span>
+                                        <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-emerald-400" />
+                                        <span className="text-[11px] font-medium text-emerald-400">✓ Campanha</span>
+                                      </div>
+                                    </td>
+                                    <td className="py-1.5 text-right tabular-nums text-[11px] font-semibold text-emerald-400">{metaConfirmados}</td>
+                                    <td colSpan={2} className="py-1.5 text-right text-[10px] text-emerald-400/50">confirmados</td>
+                                  </tr>
+                                  {metaCrm > 0 && (
+                                    <tr
+                                      onClick={() => {
+                                        const isSubActive = activeFilter?.type === "canal" && activeFilter.value === "META_CRM";
+                                        onFilter(isSubActive ? null : { type: "canal", value: "META_CRM", label: "Meta — Só CRM" });
+                                      }}
+                                      className={`cursor-pointer border-b border-[var(--border)]/40 last:border-0 transition-colors hover:bg-amber-500/5 ${
+                                        activeFilter?.type === "canal" && activeFilter.value === "META_CRM" ? "bg-amber-500/8" : ""
+                                      }`}
+                                    >
+                                      <td className="py-1.5 pl-5 pr-3">
+                                        <div className="flex items-center gap-1.5">
+                                          <span className="text-[10px] text-amber-400/60">└</span>
+                                          <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-amber-400/60" />
+                                          <span className="text-[11px] font-medium text-amber-400/80">CRM</span>
+                                        </div>
+                                      </td>
+                                      <td className="py-1.5 text-right tabular-nums text-[11px] font-semibold text-amber-400/80">{metaCrm}</td>
+                                      <td colSpan={2} className="py-1.5 text-right text-[10px] text-amber-400/40">sem confirmação</td>
+                                    </tr>
+                                  )}
+                                </>
+                              )}
+                            </React.Fragment>
                           );
                         })}
                       </tbody>
                     </table>
                   </div>
                 )}
+                <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">Clique em um canal para filtrar as negociações</p>
               </div>
 
               {/* Distribuição por Estado */}
@@ -906,17 +993,22 @@ function AtribuicaoSection({
                 ) : (
                   <>
                     <div className="flex-1 space-y-0.5">
-                      {porEstado.slice(0, 10).map((e) => (
-                        <HorizontalBar
-                          key={e.estado}
-                          label={e.estado}
-                          value={e.leads}
-                          total={leadsComEstado}
-                        />
-                      ))}
+                      {porEstado.slice(0, 10).map((e) => {
+                        const isActive = activeFilter?.type === "estado" && activeFilter.value === e.estado;
+                        return (
+                          <HorizontalBar
+                            key={e.estado}
+                            label={e.estado}
+                            value={e.leads}
+                            total={leadsComEstado}
+                            isActive={isActive}
+                            onClick={() => onFilter(isActive ? null : { type: "estado", value: e.estado, label: `Estado: ${e.estado}` })}
+                          />
+                        );
+                      })}
                     </div>
                     <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">
-                      {(totalLeads - leadsComEstado).toLocaleString("pt-BR")} leads sem estado identificado
+                      {(totalLeads - leadsComEstado).toLocaleString("pt-BR")} leads sem estado · clique para filtrar
                     </p>
                   </>
                 )}
@@ -950,14 +1042,19 @@ function AtribuicaoSection({
                       {porConversao.length === 0 ? (
                         <p className="py-4 text-center text-xs text-[var(--muted-foreground)]">Nenhum resultado</p>
                       ) : (
-                        porConversao.map((c) => (
-                          <HorizontalBar
-                            key={c.conversao}
-                            label={c.conversao}
-                            value={c.leads}
-                            total={leadsComConversao}
-                          />
-                        ))
+                        porConversao.map((c) => {
+                          const isActive = activeFilter?.type === "conversao" && activeFilter.value === c.conversao;
+                          return (
+                            <HorizontalBar
+                              key={c.conversao}
+                              label={c.conversao}
+                              value={c.leads}
+                              total={leadsComConversao}
+                              isActive={isActive}
+                              onClick={() => onFilter(isActive ? null : { type: "conversao", value: c.conversao, label: `Conversão: ${c.conversao}` })}
+                            />
+                          );
+                        })
                       )}
                     </div>
                   </>
@@ -1200,6 +1297,7 @@ export function CrmTab({
   const [searchInput, setSearchInput] = React.useState("");
   const [debouncedSearch, setDebouncedSearch] = React.useState("");
   const [selectedLead, setSelectedLead] = React.useState<Lead | null>(null);
+  const [leadFilter, setLeadFilter] = React.useState<LeadFilter>(null);
   const queryClient = useQueryClient();
 
   // Debounce search 300ms
@@ -1208,16 +1306,20 @@ export function CrmTab({
     return () => clearTimeout(t);
   }, [searchInput]);
 
-  // Reset to page 1 on dateRange or search change
+  // Reset to page 1 on dateRange, search, or filter change
   React.useEffect(() => {
     setPage(1);
-  }, [dateRange.from, dateRange.to, debouncedSearch]);
+  }, [dateRange.from, dateRange.to, debouncedSearch, leadFilter?.type, leadFilter?.value]);
+
+  const filterQs = leadFilter
+    ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
+    : "";
 
   const { data: leadsData, isLoading: leadsLoading } = useQuery<LeadsApiResponse>({
-    queryKey: ["crm-leads", clienteId, dateRange.from, dateRange.to, page, PAGE_SIZE, debouncedSearch],
+    queryKey: ["crm-leads", clienteId, dateRange.from, dateRange.to, page, PAGE_SIZE, debouncedSearch, leadFilter?.type, leadFilter?.value],
     queryFn: () =>
       fetch(
-        `/api/clientes/${clienteId}/crm/leads?from=${dateRange.from}&to=${dateRange.to}&page=${page}&pageSize=${PAGE_SIZE}&search=${encodeURIComponent(debouncedSearch)}`
+        `/api/clientes/${clienteId}/crm/leads?from=${dateRange.from}&to=${dateRange.to}&page=${page}&pageSize=${PAGE_SIZE}&search=${encodeURIComponent(debouncedSearch)}${filterQs}`
       ).then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -1281,7 +1383,12 @@ export function CrmTab({
       <FunilCrmSection clienteId={clienteId} dateRange={dateRange} />
 
       {/* Análise de Origem */}
-      <AtribuicaoSection clienteId={clienteId} dateRange={dateRange} />
+      <AtribuicaoSection
+        clienteId={clienteId}
+        dateRange={dateRange}
+        activeFilter={leadFilter}
+        onFilter={setLeadFilter}
+      />
 
       {/* Negociações */}
       <div className="space-y-3">
@@ -1292,6 +1399,26 @@ export function CrmTab({
             <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações</h2>
           </div>
         </div>
+
+        {/* Active filter chip */}
+        {leadFilter && (
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-[11px] text-[var(--muted-foreground)]">Filtro ativo:</span>
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--primary)]/30 bg-[var(--primary)]/10 py-1 pl-3 pr-2 text-[11px] font-semibold text-[var(--primary)]">
+              {leadFilter.label}
+              <button
+                onClick={() => setLeadFilter(null)}
+                className="flex h-4 w-4 items-center justify-center rounded-full hover:bg-[var(--primary)]/20 transition-colors"
+                title="Limpar filtro"
+              >
+                <X className="h-2.5 w-2.5" />
+              </button>
+            </span>
+            <span className="text-[10px] text-[var(--muted-foreground)] opacity-60">
+              {total.toLocaleString("pt-BR")} resultado{total !== 1 ? "s" : ""}
+            </span>
+          </div>
+        )}
 
         {/* Search */}
         <div className="relative">
