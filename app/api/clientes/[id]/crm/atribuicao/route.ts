@@ -120,9 +120,11 @@ export async function GET(
   const conversaoMap = new Map<string, Bucket>();
   const campanhaMap = new Map<string, { canal: Canal } & Bucket>();
   const criativoMap = new Map<string, { adId: string | null; adsetName: string | null; campaignName: string | null } & Bucket>();
+  const campanhaConfirmadaMap = new Map<string, Bucket>();
 
   let leadsComEstado = 0;
   let leadsComConversao = 0;
+  let metaLeadsConfirmados = 0;
 
   for (const lead of leads) {
     const cv = parseDadosCv(lead.dadosCv);
@@ -160,6 +162,18 @@ export async function GET(
     if (conversaoKey && (canal === "META" || canal === "GOOGLE")) {
       let b = campanhaMap.get(conversaoKey);
       if (!b) { b = { canal, ...emptyBucket() }; campanhaMap.set(conversaoKey, b); }
+      b.leads++;
+      if (visitou) b.visitou++;
+      if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
+      if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
+    }
+
+    // metaLeadsConfirmados: leads matched to actual Meta lead forms
+    if (mkt?.metaCampaignName) {
+      metaLeadsConfirmados++;
+      const campKey = mkt.metaCampaignName.trim();
+      let b = campanhaConfirmadaMap.get(campKey);
+      if (!b) { b = emptyBucket(); campanhaConfirmadaMap.set(campKey, b); }
       b.leads++;
       if (visitou) b.visitou++;
       if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
@@ -256,18 +270,28 @@ export async function GET(
   const metaGanhos = porCanal.find((c) => c.canal === "META")?.ganhos ?? 0;
   const googleGanhos = porCanal.find((c) => c.canal === "GOOGLE")?.ganhos ?? 0;
 
+  const porCampanhaConfirmada = [...campanhaConfirmadaMap.entries()]
+    .map(([campaignName, b]) => ({
+      campaignName,
+      ...toRow(campaignName, b),
+    }))
+    .sort((a, b) => b.leads - a.leads);
+
   return NextResponse.json({
     configured: true,
     periodo: { from: dateFrom, to: dateTo },
     totalLeads, totalGanhos, totalPerdidos, totalAndamento, totalValor,
     investMeta, investGoogle, leadsMeta, leadsGoogle, metaCrmLeads, googleCrmLeads,
+    metaLeadsConfirmados,
     cplMetaCampanha: leadsMeta > 0 ? investMeta / leadsMeta : null,
     cplGoogleCampanha: leadsGoogle > 0 ? investGoogle / leadsGoogle : null,
     cplMetaCrm: metaCrmLeads > 0 ? investMeta / metaCrmLeads : null,
     cplGoogleCrm: googleCrmLeads > 0 ? investGoogle / googleCrmLeads : null,
+    cplMetaConfirmado: metaLeadsConfirmados > 0 ? investMeta / metaLeadsConfirmados : null,
     cacMetaCrm: metaGanhos > 0 && investMeta > 0 ? investMeta / metaGanhos : null,
     cacGoogleCrm: googleGanhos > 0 && investGoogle > 0 ? investGoogle / googleGanhos : null,
     porFonte, porCanal, porEstado, porConversao, porCampanha, porCriativo,
+    porCampanhaConfirmada,
     leadsComEstado, leadsComConversao,
     ultimoSyncAt: config.ultimoSyncAt,
   });

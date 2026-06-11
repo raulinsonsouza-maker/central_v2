@@ -36,6 +36,14 @@ interface Lead {
     eventoConversao?: string | null;
     empresa?: string | null;
     lifecycleStage?: string | null;
+    metaAdId?: string | null;
+    metaAdName?: string | null;
+    metaAdsetId?: string | null;
+    metaAdsetName?: string | null;
+    metaCampaignId?: string | null;
+    metaCampaignName?: string | null;
+    metaFormId?: string | null;
+    metaFormName?: string | null;
   } | null;
   dadosCv?: {
     origem?: string | null;
@@ -138,6 +146,17 @@ interface PorCriativo {
   taxaGanho: number;
 }
 
+interface PorCampanhaConfirmada {
+  campaignName: string;
+  leads: number;
+  ganhos: number;
+  perdidos: number;
+  andamento: number;
+  visitou: number;
+  valor: number;
+  taxaGanho: number;
+}
+
 interface AtribuicaoData {
   configured: boolean;
   totalLeads: number;
@@ -151,10 +170,12 @@ interface AtribuicaoData {
   leadsGoogle: number;
   metaCrmLeads: number;
   googleCrmLeads: number;
+  metaLeadsConfirmados: number;
   cplMetaCampanha: number | null;
   cplGoogleCampanha: number | null;
   cplMetaCrm: number | null;
   cplGoogleCrm: number | null;
+  cplMetaConfirmado: number | null;
   cacMetaCrm: number | null;
   cacGoogleCrm: number | null;
   porFonte: PorFonte[];
@@ -163,6 +184,7 @@ interface AtribuicaoData {
   porConversao: PorConversao[];
   porCampanha: PorCampanha[];
   porCriativo: PorCriativo[];
+  porCampanhaConfirmada: PorCampanhaConfirmada[];
   leadsComEstado: number;
   leadsComConversao: number;
   ultimoSyncAt?: string | null;
@@ -1021,6 +1043,136 @@ function AtribuicaoSection({
             </div>
           )}
 
+          {/* Leads Confirmados por Campanha */}
+          {(data.metaLeadsConfirmados ?? 0) > 0 && (
+            <div className="space-y-3">
+              {/* Title */}
+              <div className="flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="inline-block h-2 w-2 rounded-full bg-emerald-400" />
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-emerald-400">
+                    Leads Confirmados por Campanha
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 text-[11px] text-[var(--muted-foreground)]">
+                  <span className="font-semibold text-emerald-400">{data.metaLeadsConfirmados}</span>
+                  <span>confirmados</span>
+                  {data.metaCrmLeads > 0 && (
+                    <>
+                      <span className="opacity-40">·</span>
+                      <span className="text-amber-400/80">{data.metaCrmLeads - data.metaLeadsConfirmados} só CRM</span>
+                      <span className="opacity-40">·</span>
+                      <span>{data.metaCrmLeads} total Meta CRM</span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Explainer */}
+              <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 px-4 py-3">
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+                  <div>
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-emerald-400/60">
+                      Confirmados (formulário Meta)
+                    </p>
+                    <p className="mt-0.5 text-2xl font-extrabold tabular-nums text-emerald-400">
+                      {data.metaLeadsConfirmados}
+                    </p>
+                    <p className="text-[10px] text-emerald-400/60">
+                      cruzamento e-mail / telefone com Meta Lead Ads
+                    </p>
+                  </div>
+                  {data.metaCrmLeads > 0 && (
+                    <div>
+                      <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-amber-400/60">
+                        Atribuídos no CRM (sem confirmação)
+                      </p>
+                      <p className="mt-0.5 text-2xl font-extrabold tabular-nums text-amber-400/80">
+                        {data.metaCrmLeads - data.metaLeadsConfirmados}
+                      </p>
+                      <p className="text-[10px] text-amber-400/50">
+                        mídia original = Facebook Ads, sem match de formulário
+                      </p>
+                    </div>
+                  )}
+                  {data.cplMetaConfirmado != null && (
+                    <div>
+                      <p className="text-[9px] font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]">
+                        CPL (leads confirmados)
+                      </p>
+                      <p className="mt-0.5 text-2xl font-extrabold tabular-nums text-[var(--foreground)]">
+                        {formatCurrencyBR(data.cplMetaConfirmado)}
+                      </p>
+                      <p className="text-[10px] text-[var(--muted-foreground)]">
+                        {formatCurrencyBR(data.investMeta)} investidos
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Table by confirmed campaign */}
+              {(data.porCampanhaConfirmada?.length ?? 0) > 0 && (
+                <div className="overflow-x-auto rounded-2xl border border-[var(--border)]">
+                  <table className="min-w-[640px] w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-[var(--border)] bg-emerald-500/5">
+                        <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-400/70">
+                          Campanha Meta (confirmada)
+                        </th>
+                        {["Leads", "Em aberto", "Vendas", "Conv%", "Valor"].map((h) => (
+                          <th key={h} className="px-4 py-2.5 text-right text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {data.porCampanhaConfirmada.map((row, i) => (
+                        <tr
+                          key={row.campaignName}
+                          className={`border-b border-[var(--border)]/50 last:border-0 ${i % 2 === 0 ? "" : "bg-[var(--muted)]/10"}`}
+                        >
+                          <td className="px-4 py-2.5">
+                            <div className="flex items-center gap-2">
+                              <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-400" />
+                              <span className="max-w-[260px] truncate text-[12px] font-medium text-[var(--foreground)]" title={row.campaignName}>
+                                {row.campaignName}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2.5 text-right tabular-nums text-[12px] font-semibold text-emerald-400">
+                            {row.leads}
+                          </td>
+                          <td className="px-4 py-2.5 text-right tabular-nums text-[12px] text-blue-400">
+                            {row.andamento > 0 ? row.andamento : <span className="opacity-40">—</span>}
+                          </td>
+                          <td className="px-4 py-2.5 text-right tabular-nums text-[12px] font-bold text-emerald-400">
+                            {row.ganhos > 0 ? row.ganhos : <span className="font-normal opacity-40">—</span>}
+                          </td>
+                          <td className="px-4 py-2.5 text-right tabular-nums text-[12px]">
+                            {row.taxaGanho > 0 ? (
+                              <span className="font-semibold text-emerald-400">{row.taxaGanho}%</span>
+                            ) : (
+                              <span className="opacity-40">—</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-2.5 text-right tabular-nums text-[12px] text-emerald-400/80">
+                            {row.valor > 0 ? formatCurrencyBR(row.valor) : <span className="opacity-40">—</span>}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              <p className="text-[10px] text-[var(--muted-foreground)]">
+                Leads confirmados = cruzamento por e-mail e telefone com Meta Lead Ads. Leads &quot;só CRM&quot; foram
+                atribuídos ao Meta no CV CRM por mídia de origem, sem correspondência no formulário.
+              </p>
+            </div>
+          )}
+
           {/* Campaign breakdown (porMidia) */}
           <CampanhaSection data={data} />
         </>
@@ -1220,9 +1372,11 @@ export function CrmTab({
                 <tbody>
                   {leads.map((lead, i) => {
                     const cv = lead.dadosCv ?? null;
+                    const mkt = lead.dadosMarketing ?? null;
                     const canal = canalFromMidia(lead.fonte, cv?.midiaOriginal);
                     const canalCfg = CANAL_CFG[canal] ?? CANAL_CFG.OUTRO;
                     const displayOrigem = cv?.midiaOriginal ?? lead.fonte ?? "—";
+                    const confirmedCampaign = mkt?.metaCampaignName ?? null;
                     return (
                       <tr
                         key={lead.id}
@@ -1250,11 +1404,27 @@ export function CrmTab({
                           </div>
                         </td>
                         <td className="px-4 py-2.5">
-                          <div className="max-w-[150px]">
-                            <p className={`truncate text-[11px] font-semibold ${canalCfg.color}`}>{canalCfg.label}</p>
+                          <div className="max-w-[170px]">
+                            <div className="flex items-center gap-1">
+                              <p className={`truncate text-[11px] font-semibold ${canalCfg.color}`}>{canalCfg.label}</p>
+                              {confirmedCampaign ? (
+                                <span className="shrink-0 rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-400">
+                                  ✓ confirmado
+                                </span>
+                              ) : canal === "META" || canal === "GOOGLE" ? (
+                                <span className="shrink-0 rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-400/80">
+                                  CRM
+                                </span>
+                              ) : null}
+                            </div>
                             <p className="truncate text-[11px] text-[var(--muted-foreground)]" title={displayOrigem}>
                               {displayOrigem}
                             </p>
+                            {confirmedCampaign && (
+                              <p className="truncate text-[10px] text-emerald-400/70" title={confirmedCampaign}>
+                                {confirmedCampaign}
+                              </p>
+                            )}
                           </div>
                         </td>
                         <td className="px-4 py-2.5 text-[11px] text-[var(--muted-foreground)]">
