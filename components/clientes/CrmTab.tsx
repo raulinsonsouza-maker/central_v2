@@ -856,9 +856,9 @@ function AtribuicaoSection({
             </div>
           </div>
 
-          {/* 3-column visual grid */}
+          {/* 2-column visual grid */}
           {totalLeads > 0 && (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* Canais de Origem */}
               <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
                 <div className="mb-3 flex items-center gap-2">
@@ -976,42 +976,6 @@ function AtribuicaoSection({
                   </div>
                 )}
                 <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">Clique em um canal para filtrar as negociações</p>
-              </div>
-
-              {/* Distribuição por Estado */}
-              <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-                <div className="mb-3 flex items-center gap-2">
-                  <MapPin className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
-                  <p className="text-sm font-bold text-[var(--foreground)]">Distribuição por Estado</p>
-                </div>
-                {porEstado.length === 0 ? (
-                  <div className="flex flex-1 items-center justify-center py-8">
-                    <p className="max-w-[180px] text-center text-xs text-[var(--muted-foreground)]">
-                      Dados de estado não disponíveis para este CRM
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    <div className="flex-1 space-y-0.5">
-                      {porEstado.slice(0, 10).map((e) => {
-                        const isActive = activeFilter?.type === "estado" && activeFilter.value === e.estado;
-                        return (
-                          <HorizontalBar
-                            key={e.estado}
-                            label={e.estado}
-                            value={e.leads}
-                            total={leadsComEstado}
-                            isActive={isActive}
-                            onClick={() => onFilter(isActive ? null : { type: "estado", value: e.estado, label: `Estado: ${e.estado}` })}
-                          />
-                        );
-                      })}
-                    </div>
-                    <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">
-                      {(totalLeads - leadsComEstado).toLocaleString("pt-BR")} leads sem estado · clique para filtrar
-                    </p>
-                  </>
-                )}
               </div>
 
               {/* Fonte de Conversão */}
@@ -1140,8 +1104,8 @@ function AtribuicaoSection({
             </div>
           )}
 
-          {/* Leads Confirmados por Campanha */}
-          {(data.metaLeadsConfirmados ?? 0) > 0 && (
+          {/* [Leads Confirmados por Campanha removed] */}
+          {false && (data.metaLeadsConfirmados ?? 0) > 0 && (
             <div className="space-y-3">
               {/* Title */}
               <div className="flex items-center justify-between gap-3">
@@ -1355,22 +1319,12 @@ export function CrmTab({
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-start justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações & Funil</h2>
-          </div>
+      <div className="flex items-start gap-3">
+        <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações & Funil</h2>
         </div>
-        <button
-          onClick={() => syncMutation.mutate()}
-          disabled={syncMutation.isPending}
-          className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-xs font-semibold text-[var(--muted-foreground)] transition-all hover:border-[var(--primary)]/30 hover:text-[var(--primary)] disabled:opacity-50"
-        >
-          <RefreshCw className={`h-3.5 w-3.5 ${syncMutation.isPending ? "animate-spin" : ""}`} />
-          {syncMutation.isPending ? "Sincronizando…" : syncMutation.isSuccess ? "Atualizado ✓" : "Sincronizar"}
-        </button>
       </div>
 
       {syncMutation.isError && (
