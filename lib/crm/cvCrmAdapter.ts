@@ -39,8 +39,8 @@ interface CvLead {
   ponto_venda?: string | null;
   // Temperatura de engajamento (textual: "Lead Frio", "Lead Morno", "Lead Quente", "Sem momento")
   momento_lead?: string | null;
-  // Extras
-  tags?: string[] | null;
+  // Extras — API may return a string (comma-separated) or an array
+  tags?: string | string[] | null;
   campos_adicionais?: Array<{ idcampo: string; idcampo_valores: string }> | null;
   reserva?: string | number | null;
   feedback?: string | null;
@@ -270,8 +270,13 @@ export class CvCrmAdapter implements CrmAdapter {
       if (l.cidade) dadosCv.cidade = l.cidade;
       if (l.estado) dadosCv.estado = l.estado;
 
-      // Extras
-      if (l.tags?.length) dadosCv.tags = l.tags;
+      // Extras — normalize tags to string[] regardless of API format
+      if (l.tags) {
+        const tagsArr = Array.isArray(l.tags)
+          ? (l.tags as string[])
+          : String(l.tags).split(/[,;|]/).map((t) => t.trim()).filter(Boolean);
+        if (tagsArr.length > 0) dadosCv.tags = tagsArr;
+      }
       if (l.campos_adicionais?.length) {
         dadosCv.camposAdicionais = l.campos_adicionais;
         // Parse UTM parameters from campos_adicionais when present
