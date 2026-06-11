@@ -303,6 +303,7 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
   }, [lead, onClose]);
 
   const cv = lead?.dadosCv ?? null;
+  const cvTags: string[] = Array.isArray(cv?.tags) ? (cv.tags as string[]) : [];
   const mkt = lead?.dadosMarketing ?? null;
   // Use midiaOriginal as primary signal for canal display
   const canal = canalFromMidia(lead?.fonte ?? null, cv?.midiaOriginal ?? null);
@@ -448,13 +449,13 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
             )}
 
             {/* Tags */}
-            {cv?.tags && cv.tags.length > 0 && (
+            {cvTags.length > 0 && (
               <>
                 <div className="h-px bg-[var(--border)]" />
                 <div className="space-y-2">
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary)]">Tags</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {cv.tags.map((tag) => (
+                    {cvTags.map((tag) => (
                       <span
                         key={tag}
                         className="rounded-full border border-[var(--border)] bg-[var(--muted)] px-2.5 py-0.5 text-[11px] text-[var(--foreground)]"
