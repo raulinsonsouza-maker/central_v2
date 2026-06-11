@@ -2,18 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma";
 import { getTagFilter, buildTagFilterWhere } from "@/lib/crm/tagFilter";
-
-function buildCanalFonteOR(canal: string): Prisma.LeadCrmWhereInput[] {
-  const patterns: Record<string, string[]> = {
-    META:      ["facebook", "meta", "instagram"],
-    GOOGLE:    ["google", "youtube", "pmax", "busca paga", "performance max"],
-    ORGANICO:  ["orgânico", "organico", "organic", "seo"],
-    INDICACAO: ["indicação", "indicacao", "referral", "indica"],
-    DIRETO:    ["direto", "direct", "whatsapp", "site"],
-  };
-  const ps = patterns[canal] ?? [];
-  return ps.map((p) => ({ fonte: { contains: p, mode: "insensitive" as const } }));
-}
+import { buildLeadFilterWhere } from "@/lib/crm/canalFilter";
 
 export async function GET(
   request: NextRequest,
@@ -28,25 +17,7 @@ export async function GET(
 
   const filterType  = url.searchParams.get("filterType");
   const filterValue = url.searchParams.get("filterValue");
-
-  let filterCondition: Prisma.LeadCrmWhereInput = {};
-  if (filterType && filterValue) {
-    if (filterType === "canal") {
-      if (filterValue === "META_CONFIRMED") {
-        filterCondition = { metaLeadId: { not: null } };
-      } else if (filterValue === "META_CRM") {
-        const or = buildCanalFonteOR("META");
-        filterCondition = or.length > 0 ? { metaLeadId: null, OR: or } : { metaLeadId: null };
-      } else {
-        const or = buildCanalFonteOR(filterValue);
-        if (or.length > 0) filterCondition = { OR: or };
-      }
-    } else if (filterType === "estado") {
-      filterCondition = { dadosCv: { path: ["estado"], equals: filterValue } };
-    } else if (filterType === "conversao") {
-      filterCondition = { dadosCv: { path: ["conversaoOriginal"], equals: filterValue } };
-    }
-  }
+  const filterCondition = buildLeadFilterWhere(filterType, filterValue);
 
   // Support both ?from=YYYY-MM-DD&to=YYYY-MM-DD and legacy ?period= param
   const fromParam = url.searchParams.get("from");

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getTagFilter, buildTagFilterWhere } from "@/lib/crm/tagFilter";
+import { buildLeadFilterWhere } from "@/lib/crm/canalFilter";
 
 export async function GET(
   request: NextRequest,
@@ -11,6 +12,9 @@ export async function GET(
 
   const fromParam = url.searchParams.get("from");
   const toParam = url.searchParams.get("to");
+  const filterType  = url.searchParams.get("filterType");
+  const filterValue = url.searchParams.get("filterValue");
+
   const now = new Date();
   const defaultFrom = new Date(now.getFullYear(), 0, 1);
   const dateFrom = fromParam ? new Date(fromParam) : defaultFrom;
@@ -29,12 +33,18 @@ export async function GET(
 
   const tagFilter = await getTagFilter(id);
   const tagFilterWhere = buildTagFilterWhere(tagFilter);
+  const leadFilterWhere = buildLeadFilterWhere(filterType, filterValue);
+
+  const andClauses = [
+    ...(tagFilter.length > 0 ? [tagFilterWhere] : []),
+    ...(filterType && filterValue ? [leadFilterWhere] : []),
+  ];
 
   const leads = await prisma.leadCrm.findMany({
     where: {
       clienteId: id,
       dataEntrada: { gte: dateFrom, lte: dateTo },
-      ...(tagFilter.length > 0 ? { AND: [tagFilterWhere] } : {}),
+      ...(andClauses.length > 0 ? { AND: andClauses } : {}),
     },
     select: {
       etapa: true,

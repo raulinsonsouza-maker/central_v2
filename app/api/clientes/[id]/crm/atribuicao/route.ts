@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma";
 import { getTagFilter, buildTagFilterWhere } from "@/lib/crm/tagFilter";
+import { buildLeadFilterWhere } from "@/lib/crm/canalFilter";
 
 type Canal = "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO";
 
@@ -101,6 +102,9 @@ export async function GET(
   const defaultFrom = new Date(now.getFullYear(), 0, 1);
   const fromParam = url.searchParams.get("from");
   const toParam = url.searchParams.get("to");
+  const filterType  = url.searchParams.get("filterType");
+  const filterValue = url.searchParams.get("filterValue");
+
   const dateFrom = fromParam ? new Date(fromParam) : defaultFrom;
   const dateTo = toParam
     ? (() => { const d = new Date(toParam); d.setHours(23, 59, 59, 999); return d; })()
@@ -116,12 +120,18 @@ export async function GET(
 
   const tagFilter = await getTagFilter(id);
   const tagFilterWhere = buildTagFilterWhere(tagFilter);
+  const leadFilterWhere = buildLeadFilterWhere(filterType, filterValue);
+
+  const andClauses = [
+    ...(tagFilter.length > 0 ? [tagFilterWhere] : []),
+    ...(filterType && filterValue ? [leadFilterWhere] : []),
+  ];
 
   const leads = await prisma.leadCrm.findMany({
     where: {
       clienteId: id,
       dataEntrada: { gte: dateFrom, lte: dateTo },
-      ...(tagFilter.length > 0 ? { AND: [tagFilterWhere] } : {}),
+      ...(andClauses.length > 0 ? { AND: andClauses } : {}),
     },
     select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true, dadosCv: true, etapa: true, dadosMarketing: true },
   });

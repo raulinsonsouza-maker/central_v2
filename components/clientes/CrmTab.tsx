@@ -947,10 +947,14 @@ function AtribuicaoSection({
 }) {
   const [convSearch, setConvSearch] = React.useState("");
 
+  const filterQs = activeFilter
+    ? `&filterType=${encodeURIComponent(activeFilter.type)}&filterValue=${encodeURIComponent(activeFilter.value)}`
+    : "";
+
   const { data, isLoading } = useQuery<AtribuicaoData>({
-    queryKey: ["crm-atribuicao", clienteId, dateRange.from, dateRange.to],
+    queryKey: ["crm-atribuicao", clienteId, dateRange.from, dateRange.to, activeFilter?.type, activeFilter?.value],
     queryFn: () =>
-      fetch(`/api/clientes/${clienteId}/crm/atribuicao?from=${dateRange.from}&to=${dateRange.to}`)
+      fetch(`/api/clientes/${clienteId}/crm/atribuicao?from=${dateRange.from}&to=${dateRange.to}${filterQs}`)
         .then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -1336,7 +1340,7 @@ export function CrmTab({
       )}
 
       {/* Funil */}
-      <FunilCrmSection clienteId={clienteId} dateRange={dateRange} />
+      <FunilCrmSection clienteId={clienteId} dateRange={dateRange} leadFilter={leadFilter} />
 
       {/* Análise de Origem */}
       <AtribuicaoSection

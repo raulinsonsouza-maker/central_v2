@@ -70,18 +70,26 @@ function formatRelativeTime(iso: string) {
   return `há ${Math.floor(h / 24)}d`;
 }
 
+type LeadFilter = { type: string; value: string; label: string } | null;
+
 export function FunilCrmSection({
   clienteId,
   dateRange,
+  leadFilter,
 }: {
   clienteId: string;
   dateRange: { from: string; to: string };
+  leadFilter?: LeadFilter;
 }) {
+  const filterQs = leadFilter
+    ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
+    : "";
+
   const { data, isLoading } = useQuery<FunilData>({
-    queryKey: ["crm-funil", clienteId, dateRange.from, dateRange.to],
+    queryKey: ["crm-funil", clienteId, dateRange.from, dateRange.to, leadFilter?.type, leadFilter?.value],
     queryFn: () =>
       fetch(
-        `/api/clientes/${clienteId}/crm/funil?from=${dateRange.from}&to=${dateRange.to}`
+        `/api/clientes/${clienteId}/crm/funil?from=${dateRange.from}&to=${dateRange.to}${filterQs}`
       ).then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
