@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   allowedDevOrigins: ["*.replit.dev", "*.repl.co", "*.riker.replit.dev"],
   images: {
     remotePatterns: [

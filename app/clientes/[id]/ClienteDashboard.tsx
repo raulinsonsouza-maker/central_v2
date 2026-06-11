@@ -1947,7 +1947,7 @@ function MetaCriativosGrid({
         return b.impressions - a.impressions;
       })
       .filter((item) => !isVisitasPanel || item.spend > 0);
-  }, [ads, conversasMode, isVisitasPanel]);
+  }, [ads, conversasMode, isVisitasPanel, isComprasPanel]);
 
   const [modalAdId, setModalAdId] = React.useState<string | null>(null);
   const [modalFallback, setModalFallback] = React.useState(false);
