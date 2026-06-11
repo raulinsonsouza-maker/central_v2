@@ -20,33 +20,53 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const period = (request.nextUrl.searchParams.get("period") ?? "all") as Period;
+  const url = request.nextUrl;
+  const period = (url.searchParams.get("period") ?? "all") as Period;
+  const page = Math.max(1, parseInt(url.searchParams.get("page") ?? "1", 10));
+  const pageSize = Math.min(100, Math.max(1, parseInt(url.searchParams.get("pageSize") ?? "15", 10)));
+  const search = url.searchParams.get("search")?.trim() ?? "";
+
   const dateFrom = getDateFrom(period);
 
-  const leads = await prisma.leadCrm.findMany({
-    where: {
-      clienteId: id,
-      ...(dateFrom ? { dataEntrada: { gte: dateFrom } } : {}),
-    },
-    select: {
-      id: true,
-      crmLeadId: true,
-      etapa: true,
-      valor: true,
-      dataEntrada: true,
-      dataFechamento: true,
-      nome: true,
-      email: true,
-      telefone: true,
-      fonte: true,
-      rating: true,
-      status: true,
-      dadosMarketing: true,
-      dadosCv: true,
-    },
-    orderBy: { dataEntrada: "desc" },
-    take: 500,
-  });
+  const where = {
+    clienteId: id,
+    ...(dateFrom ? { dataEntrada: { gte: dateFrom } } : {}),
+    ...(search
+      ? {
+          OR: [
+            { nome: { contains: search, mode: "insensitive" as const } },
+            { email: { contains: search, mode: "insensitive" as const } },
+            { telefone: { contains: search, mode: "insensitive" as const } },
+          ],
+        }
+      : {}),
+  };
+
+  const [leads, total] = await Promise.all([
+    prisma.leadCrm.findMany({
+      where,
+      select: {
+        id: true,
+        crmLeadId: true,
+        etapa: true,
+        valor: true,
+        dataEntrada: true,
+        dataFechamento: true,
+        nome: true,
+        email: true,
+        telefone: true,
+        fonte: true,
+        rating: true,
+        status: true,
+        dadosMarketing: true,
+        dadosCv: true,
+      },
+      orderBy: { dataEntrada: "desc" },
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    }),
+    prisma.leadCrm.count({ where }),
+  ]);
 
   return NextResponse.json({
     leads: leads.map((l) => ({
@@ -66,6 +86,8 @@ export async function GET(
       dadosMarketing: (l.dadosMarketing as Record<string, unknown> | null) ?? null,
       dadosCv: (l.dadosCv as Record<string, unknown> | null) ?? null,
     })),
-    total: leads.length,
+    total,
+    page,
+    pageSize,
   });
 }

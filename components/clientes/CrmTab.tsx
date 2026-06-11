@@ -4,7 +4,12 @@ import React from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
-import { RefreshCw, Inbox, TrendingUp, Star } from "lucide-react";
+import {
+  RefreshCw, Inbox, Search, X, ChevronLeft, ChevronRight,
+  Star, BarChart3, MapPin, Layers,
+} from "lucide-react";
+
+// ─── Types ────────────────────────────────────────────────────────────────────
 
 type Period = "month" | "3months" | "ytd" | "all";
 
@@ -42,21 +47,40 @@ interface Lead {
   } | null;
   dadosCv?: {
     origem?: string | null;
+    origemUltimo?: string | null;
     midiaOriginal?: string | null;
     midiaUltimo?: string | null;
     conversaoOriginal?: string | null;
+    conversaoUltimo?: string | null;
     empreendimento?: string | null;
+    empreendimentoPrimeiro?: string | null;
     empreendimentoUltimo?: string | null;
     score?: number | null;
     possibilidadeVenda?: string | null;
     profissao?: string | null;
     rendaFamiliar?: string | null;
+    feedback?: string | null;
     motivoCancelamento?: string | null;
     descricaoCancelamento?: string | null;
+    submotivoCancelamento?: string | null;
     corretor?: string | null;
+    corretorUltimo?: string | null;
+    gestor?: string | null;
+    imobiliaria?: string | null;
     pontoVenda?: string | null;
+    regiao?: string | null;
+    cidade?: string | null;
+    estado?: string | null;
     tags?: string[] | null;
+    reserva?: string | null;
   } | null;
+}
+
+interface LeadsApiResponse {
+  leads: Lead[];
+  total: number;
+  page: number;
+  pageSize: number;
 }
 
 interface PorFonte {
@@ -71,6 +95,25 @@ interface PorFonte {
   taxaPerda: number;
   ratingMedio: number | null;
   investCanal: number | null;
+}
+
+interface PorCanal {
+  canal: string;
+  leads: number;
+  ratingMedio: number | null;
+  investCanal: number | null;
+}
+
+interface PorEstado {
+  estado: string;
+  leads: number;
+  ratingMedio: number | null;
+}
+
+interface PorConversao {
+  conversao: string;
+  leads: number;
+  ratingMedio: number | null;
 }
 
 interface AtribuicaoData {
@@ -91,27 +134,45 @@ interface AtribuicaoData {
   cplMetaCrm: number | null;
   cplGoogleCrm: number | null;
   porFonte: PorFonte[];
+  porCanal: PorCanal[];
+  porEstado: PorEstado[];
+  porConversao: PorConversao[];
+  leadsComEstado: number;
+  leadsComConversao: number;
+  ultimoSyncAt?: string | null;
 }
 
-// ─── Helpers ────────────────────────────────────────────────────────────────
+// ─── Helpers ─────────────────────────────────────────────────────────────────
 
 function formatCurrencyBR(value: number) {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-function formatDateBR(iso: string) {
-  const d = new Date(iso);
+function formatDateBR(iso: string | Date | null) {
+  if (!iso) return "—";
+  const d = new Date(iso as string);
   if (isNaN(d.getTime())) return "—";
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit", year: "2-digit" });
 }
 
-// ─── Status badge ────────────────────────────────────────────────────────────
+function canalFromFonte(fonte: string | null): "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO" {
+  if (!fonte) return "OUTRO";
+  const f = fonte.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (f.includes("facebook") || f.includes("meta") || f.includes("instagram")) return "META";
+  if (f.includes("google") || f.includes("busca paga") || f.includes("youtube") || f.includes("pmax")) return "GOOGLE";
+  if (f.includes("organic") || f.includes("organico") || f.includes("seo")) return "ORGANICO";
+  if (f.includes("indica") || f.includes("referral") || f.includes("referencia")) return "INDICACAO";
+  if (f.includes("direto") || f.includes("direct") || f.includes("whatsapp") || f.includes("site") || f.includes("email")) return "DIRETO";
+  return "OUTRO";
+}
+
+// ─── Sub-components ───────────────────────────────────────────────────────────
 
 const STATUS_CFG: Record<string, { label: string; cls: string }> = {
-  won:     { label: "Ganho",       cls: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
-  lost:    { label: "Perdido",     cls: "bg-red-500/10 text-red-400 border border-red-500/20" },
-  ongoing: { label: "Em andamento",cls: "bg-blue-500/10 text-blue-400 border border-blue-500/20" },
-  paused:  { label: "Pausado",     cls: "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20" },
+  won:     { label: "Ganho",        cls: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
+  lost:    { label: "Perdido",      cls: "bg-red-500/10 text-red-400 border border-red-500/20" },
+  ongoing: { label: "Em andamento", cls: "bg-blue-500/10 text-blue-400 border border-blue-500/20" },
+  paused:  { label: "Pausado",      cls: "bg-yellow-500/10 text-yellow-500 border border-yellow-500/20" },
 };
 
 function StatusBadge({ status }: { status: string | null }) {
@@ -124,92 +185,320 @@ function StatusBadge({ status }: { status: string | null }) {
   );
 }
 
-// ─── Canal badge ─────────────────────────────────────────────────────────────
-
-const CANAL_CFG: Record<string, { label: string; bg: string }> = {
-  META:      { label: "Meta",      bg: "bg-blue-500/10 text-blue-400" },
-  GOOGLE:    { label: "Google",    bg: "bg-red-500/10 text-red-400" },
-  ORGANICO:  { label: "Orgânico",  bg: "bg-emerald-500/10 text-emerald-400" },
-  INDICACAO: { label: "Indicação", bg: "bg-purple-500/10 text-purple-400" },
-  DIRETO:    { label: "Direto",    bg: "bg-amber-500/10 text-amber-500" },
-  OUTRO:     { label: "Outro",     bg: "bg-[var(--muted)] text-[var(--muted-foreground)]" },
+const CANAL_CFG: Record<string, { label: string; color: string; hex: string }> = {
+  META:      { label: "Meta",      color: "text-blue-400",                  hex: "#3b82f6" },
+  GOOGLE:    { label: "Google",    color: "text-red-400",                   hex: "#ef4444" },
+  ORGANICO:  { label: "Orgânico",  color: "text-emerald-400",               hex: "#10b981" },
+  INDICACAO: { label: "Indicação", color: "text-purple-400",                hex: "#a855f7" },
+  DIRETO:    { label: "Direto",    color: "text-amber-500",                 hex: "#f59e0b" },
+  OUTRO:     { label: "Outro",     color: "text-[var(--muted-foreground)]", hex: "#6b7280" },
 };
 
-function CanalBadge({ canal }: { canal: string }) {
-  const cfg = CANAL_CFG[canal] ?? CANAL_CFG.OUTRO;
-  return (
-    <span className={`inline-block rounded-full px-2 py-0.5 text-[10px] font-semibold ${cfg.bg}`}>
-      {cfg.label}
-    </span>
-  );
-}
-
-// ─── Rating stars ────────────────────────────────────────────────────────────
-
-function RatingStars({ rating }: { rating: number | null }) {
+function RatingStars({ rating, size = "sm" }: { rating: number | null; size?: "sm" | "md" }) {
   if (rating == null) return <span className="text-[var(--border)]">—</span>;
+  const cls = size === "md" ? "h-4 w-4" : "h-3 w-3";
   return (
     <div className="flex items-center gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
-        <Star
-          key={i}
-          className={`h-3 w-3 ${i <= rating ? "fill-amber-400 text-amber-400" : "text-[var(--border)]"}`}
-        />
+        <Star key={i} className={`${cls} ${i <= rating ? "fill-amber-400 text-amber-400" : "text-[var(--border)]"}`} />
       ))}
     </div>
   );
 }
 
-// ─── Mini bar ────────────────────────────────────────────────────────────────
-
-function MiniBar({ won, lost, ongoing }: { won: number; lost: number; ongoing: number }) {
-  const total = won + lost + ongoing;
-  if (total === 0) return <span className="text-[var(--border)] text-[11px]">—</span>;
-  const pWon = (won / total) * 100;
-  const pLost = (lost / total) * 100;
-  const pOngoing = (ongoing / total) * 100;
+function HorizontalBar({
+  label, value, total, score, color,
+}: {
+  label: string;
+  value: number;
+  total: number;
+  score?: number | null;
+  color?: string;
+}) {
+  const pct = total > 0 ? (value / total) * 100 : 0;
   return (
-    <div className="flex h-2 w-24 overflow-hidden rounded-full bg-[var(--muted)]">
-      <div className="h-full bg-emerald-500 transition-all" style={{ width: `${pWon}%` }} />
-      <div className="h-full bg-red-500 transition-all" style={{ width: `${pLost}%` }} />
-      <div className="h-full bg-blue-400/50 transition-all" style={{ width: `${pOngoing}%` }} />
-    </div>
-  );
-}
-
-// ─── Bloco KPI ───────────────────────────────────────────────────────────────
-
-function KpiCard({
-  label, value, sub, accent,
-}: { label: string; value: string; sub?: string; accent?: string }) {
-  return (
-    <div className={`group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 transition-all hover:border-${accent ?? "[var(--primary)]"}/20`}>
-      <div className={`pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-${accent ?? "[var(--primary)]"} opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.05]`} />
-      <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
+    <div className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5">
+      <span className="w-28 shrink-0 truncate text-[11px] font-medium text-[var(--foreground)]" title={label}>
         {label}
-      </p>
-      <p className={`mt-1 text-xl font-extrabold tabular-nums ${accent ? `text-${accent}` : "text-[var(--foreground)]"}`}>
+      </span>
+      <div className="flex min-w-0 flex-1 items-center">
+        <div className="h-1.5 w-full overflow-hidden rounded-full bg-[var(--muted)]">
+          <div
+            className="h-full rounded-full transition-all duration-500"
+            style={{
+              width: `${Math.max(pct, 0.5)}%`,
+              backgroundColor: color ?? "var(--primary)",
+              opacity: 0.7,
+            }}
+          />
+        </div>
+      </div>
+      <span className="w-10 shrink-0 text-right tabular-nums text-[10px] text-[var(--muted-foreground)]">
+        {pct.toFixed(1)}%
+      </span>
+      {score != null && (
+        <span className="shrink-0 rounded bg-[var(--muted)] px-1 text-[10px] tabular-nums text-[var(--muted-foreground)]">
+          s:{score}
+        </span>
+      )}
+      <span className="w-8 shrink-0 text-right tabular-nums text-[11px] font-bold text-[var(--foreground)]">
         {value}
-      </p>
-      {sub && <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">{sub}</p>}
+      </span>
     </div>
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// Seção de Atribuição por Canal
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── Lead Detail Drawer ───────────────────────────────────────────────────────
+
+function DField({ label, value }: { label: string; value: React.ReactNode }) {
+  if (value == null || value === "") return null;
+  return (
+    <div className="flex flex-col gap-0.5">
+      <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">{label}</span>
+      <span className="text-sm text-[var(--foreground)]">{value}</span>
+    </div>
+  );
+}
+
+function DSection({ title, children }: { title: string; children: React.ReactNode }) {
+  return (
+    <div className="space-y-3">
+      <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary)]">{title}</p>
+      <div className="grid grid-cols-2 gap-x-5 gap-y-3">{children}</div>
+    </div>
+  );
+}
+
+function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () => void }) {
+  React.useEffect(() => {
+    if (!lead) return;
+    const h = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", h);
+    return () => window.removeEventListener("keydown", h);
+  }, [lead, onClose]);
+
+  const cv = lead?.dadosCv ?? null;
+  const mkt = lead?.dadosMarketing ?? null;
+  const canal = canalFromFonte(lead?.fonte ?? null);
+  const canalCfg = CANAL_CFG[canal] ?? CANAL_CFG.OUTRO;
+  const isOpen = lead !== null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        onClick={onClose}
+        className={`fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+          isOpen ? "opacity-100" : "pointer-events-none opacity-0"
+        }`}
+      />
+      {/* Panel */}
+      <div
+        className={`fixed right-0 top-0 z-50 h-full w-full max-w-[500px] overflow-y-auto border-l border-[var(--border)] bg-[var(--background)] shadow-2xl transition-transform duration-300 ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
+      >
+        {lead && (
+          <div className="flex flex-col gap-6 p-6 pb-12">
+            {/* Header */}
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0 space-y-2">
+                <div className="flex flex-wrap items-center gap-2">
+                  <StatusBadge status={lead.status} />
+                  <span className="rounded-full bg-[var(--primary)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
+                    {lead.etapa}
+                  </span>
+                </div>
+                <h2 className="text-xl font-extrabold leading-tight text-[var(--foreground)]">
+                  {lead.nome ?? lead.email ?? lead.telefone ?? "Sem identificação"}
+                </h2>
+                {lead.nome && (lead.email ?? lead.telefone) && (
+                  <p className="text-sm text-[var(--muted-foreground)]">{lead.email ?? lead.telefone}</p>
+                )}
+                {lead.rating != null && <RatingStars rating={lead.rating} size="md" />}
+              </div>
+              <button
+                onClick={onClose}
+                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-[var(--border)] text-[var(--muted-foreground)] transition-colors hover:text-[var(--foreground)]"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="h-px bg-[var(--border)]" />
+
+            {/* Contato */}
+            <DSection title="Contato">
+              {lead.email && <DField label="E-mail" value={lead.email} />}
+              {lead.telefone && <DField label="Telefone" value={lead.telefone} />}
+              <DField label="Data de entrada" value={formatDateBR(lead.dataEntrada)} />
+              {lead.dataFechamento && <DField label="Fechamento" value={formatDateBR(lead.dataFechamento)} />}
+              {lead.valor != null && (
+                <DField label="Valor" value={
+                  <span className="font-bold text-emerald-400">{formatCurrencyBR(lead.valor)}</span>
+                } />
+              )}
+              {cv?.score != null && (
+                <DField label="Score CV" value={
+                  <span className="font-bold text-[var(--primary)]">{cv.score}</span>
+                } />
+              )}
+            </DSection>
+
+            <div className="h-px bg-[var(--border)]" />
+
+            {/* Origem */}
+            <DSection title="Origem & Mídia">
+              {lead.fonte && <DField label="Fonte" value={lead.fonte} />}
+              <DField label="Canal" value={
+                <span className={`font-semibold ${canalCfg.color}`}>{canalCfg.label}</span>
+              } />
+              {cv?.midiaOriginal && <DField label="Mídia original" value={cv.midiaOriginal} />}
+              {cv?.midiaUltimo && cv.midiaUltimo !== cv.midiaOriginal && (
+                <DField label="Mídia último toque" value={cv.midiaUltimo} />
+              )}
+              {cv?.conversaoOriginal && (
+                <div className="col-span-2">
+                  <DField label="Conversão original" value={cv.conversaoOriginal} />
+                </div>
+              )}
+              {cv?.conversaoUltimo && cv.conversaoUltimo !== cv.conversaoOriginal && (
+                <div className="col-span-2">
+                  <DField label="Conversão último" value={cv.conversaoUltimo} />
+                </div>
+              )}
+              {cv?.pontoVenda && <DField label="Ponto de venda" value={cv.pontoVenda} />}
+              {cv?.estado && (
+                <DField label="Localização" value={
+                  [cv.cidade, cv.estado].filter(Boolean).join(" / ")
+                } />
+              )}
+              {!cv?.estado && cv?.regiao && <DField label="Região" value={cv.regiao} />}
+            </DSection>
+
+            {/* Empreendimento */}
+            {(cv?.empreendimento || cv?.corretor || cv?.gestor || cv?.imobiliaria) && (
+              <>
+                <div className="h-px bg-[var(--border)]" />
+                <DSection title="Empreendimento">
+                  {cv.empreendimento && (
+                    <div className="col-span-2">
+                      <DField label="Empreendimento" value={cv.empreendimento} />
+                    </div>
+                  )}
+                  {cv.empreendimentoPrimeiro && cv.empreendimentoPrimeiro !== cv.empreendimento && (
+                    <DField label="1º interesse" value={cv.empreendimentoPrimeiro} />
+                  )}
+                  {cv.empreendimentoUltimo && cv.empreendimentoUltimo !== cv.empreendimento && (
+                    <DField label="Último interesse" value={cv.empreendimentoUltimo} />
+                  )}
+                  {cv.corretor && <DField label="Corretor" value={cv.corretor} />}
+                  {cv.corretorUltimo && cv.corretorUltimo !== cv.corretor && (
+                    <DField label="Último corretor" value={cv.corretorUltimo} />
+                  )}
+                  {cv.gestor && <DField label="Gestor" value={cv.gestor} />}
+                  {cv.imobiliaria && (
+                    <div className="col-span-2">
+                      <DField label="Imobiliária" value={cv.imobiliaria} />
+                    </div>
+                  )}
+                </DSection>
+              </>
+            )}
+
+            {/* Perfil */}
+            {(cv?.profissao || cv?.rendaFamiliar || cv?.possibilidadeVenda || cv?.feedback || cv?.reserva) && (
+              <>
+                <div className="h-px bg-[var(--border)]" />
+                <DSection title="Perfil do Lead">
+                  {cv.profissao && <DField label="Profissão" value={cv.profissao} />}
+                  {cv.rendaFamiliar && <DField label="Renda familiar" value={cv.rendaFamiliar} />}
+                  {cv.possibilidadeVenda && <DField label="Possib. de venda" value={cv.possibilidadeVenda} />}
+                  {cv.reserva && <DField label="Reserva" value={cv.reserva} />}
+                  {cv.feedback && (
+                    <div className="col-span-2">
+                      <DField label="Feedback" value={cv.feedback} />
+                    </div>
+                  )}
+                </DSection>
+              </>
+            )}
+
+            {/* Tags */}
+            {cv?.tags && cv.tags.length > 0 && (
+              <>
+                <div className="h-px bg-[var(--border)]" />
+                <div className="space-y-2">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary)]">Tags</p>
+                  <div className="flex flex-wrap gap-1.5">
+                    {cv.tags.map((tag) => (
+                      <span
+                        key={tag}
+                        className="rounded-full border border-[var(--border)] bg-[var(--muted)] px-2.5 py-0.5 text-[11px] text-[var(--foreground)]"
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Motivo de perda */}
+            {lead.status === "lost" && cv?.motivoCancelamento && (
+              <>
+                <div className="h-px bg-[var(--border)]" />
+                <div className="space-y-3 rounded-xl border border-red-500/20 bg-red-500/5 p-4">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">Motivo de Perda</p>
+                  <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                    <DField label="Motivo" value={<span className="text-red-400">{cv.motivoCancelamento}</span>} />
+                    {cv.submotivoCancelamento && (
+                      <DField label="Submotivo" value={<span className="text-red-400">{cv.submotivoCancelamento}</span>} />
+                    )}
+                    {cv.descricaoCancelamento && (
+                      <div className="col-span-2">
+                        <DField label="Descrição" value={<span className="text-red-400">{cv.descricaoCancelamento}</span>} />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </>
+            )}
+
+            {/* Marketing (non-CV) */}
+            {mkt && !cv && (mkt.faturamento || mkt.segmento || mkt.cargo || mkt.empresa) && (
+              <>
+                <div className="h-px bg-[var(--border)]" />
+                <DSection title="Dados de Marketing">
+                  {mkt.empresa && <DField label="Empresa" value={mkt.empresa} />}
+                  {mkt.faturamento && <DField label="Faturamento" value={mkt.faturamento} />}
+                  {mkt.segmento && <DField label="Segmento" value={mkt.segmento} />}
+                  {mkt.cargo && <DField label="Cargo" value={mkt.cargo} />}
+                  {mkt.origemMarketing && <DField label="Origem marketing" value={mkt.origemMarketing} />}
+                  {mkt.eventoConversao && <DField label="Evento de conversão" value={mkt.eventoConversao} />}
+                  {mkt.lifecycleStage && <DField label="Lifecycle stage" value={mkt.lifecycleStage} />}
+                </DSection>
+              </>
+            )}
+          </div>
+        )}
+      </div>
+    </>
+  );
+}
+
+// ─── Análise de Origem Section ────────────────────────────────────────────────
 
 function AtribuicaoSection({ clienteId }: { clienteId: string }) {
   const [period, setPeriod] = React.useState<"ytd" | "3months" | "all">("ytd");
+  const [convSearch, setConvSearch] = React.useState("");
 
   const periodDates = React.useMemo(() => {
     const now = new Date();
     const to = now.toISOString().slice(0, 10);
     if (period === "ytd") return { from: `${now.getFullYear()}-01-01`, to };
     if (period === "3months") {
-      const d = new Date();
-      d.setMonth(d.getMonth() - 3);
+      const d = new Date(); d.setMonth(d.getMonth() - 3);
       return { from: d.toISOString().slice(0, 10), to };
     }
     return { from: "2000-01-01", to };
@@ -226,19 +515,24 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
 
   if (!data?.configured) return null;
 
-  const fontes = data.porFonte ?? [];
+  const totalLeads = data.totalLeads ?? 0;
+  const porCanal = data.porCanal ?? [];
+  const porEstado = data.porEstado ?? [];
+  const porConversao = (data.porConversao ?? []).filter((c) =>
+    !convSearch || c.conversao.toLowerCase().includes(convSearch.toLowerCase())
+  );
+  const leadsComEstado = data.leadsComEstado ?? 0;
+  const leadsComConversao = data.leadsComConversao ?? 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
           <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">
-              Atribuição por Canal
-            </h2>
+            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Análise de Origem</h2>
           </div>
         </div>
         <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-0.5">
@@ -262,36 +556,171 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
       </div>
 
       {isLoading ? (
-        <div className="flex h-24 items-center justify-center">
+        <div className="flex h-32 items-center justify-center">
           <RefreshCw className="h-4 w-4 animate-spin text-[var(--muted-foreground)]" />
         </div>
       ) : (
         <>
-          {/* KPIs globais */}
-          {data.totalLeads > 0 && (
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <div className="col-span-2 sm:col-span-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-                  <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Total leads CRM</p>
-                  <p className="mt-1 text-xl font-extrabold tabular-nums text-[var(--foreground)]">{data.totalLeads}</p>
-                  <div className="mt-2 flex items-center gap-2 text-[11px]">
-                    <span className="font-semibold text-emerald-400">{data.totalGanhos} ganhos</span>
-                    <span className="text-[var(--border)]">·</span>
-                    <span className="text-red-400">{data.totalPerdidos} perdidos</span>
-                    <span className="text-[var(--border)]">·</span>
-                    <span className="text-[var(--muted-foreground)]">{data.totalAndamento} em aberto</span>
-                  </div>
-                </div>
+          {/* KPI Cards */}
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {/* Total */}
+            <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[var(--primary)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.05]" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Total leads CRM</p>
+              <p className="mt-1 text-2xl font-extrabold tabular-nums text-[var(--foreground)]">{totalLeads.toLocaleString("pt-BR")}</p>
+              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                {((data.totalGanhos / Math.max(totalLeads, 1)) * 100).toFixed(1)}% conv. geral
+              </p>
+            </div>
+            {/* Ganhos */}
+            <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-emerald-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Ganhos</p>
+              <p className="mt-1 text-2xl font-extrabold tabular-nums text-emerald-400">{data.totalGanhos}</p>
+              {data.totalValor > 0 && (
+                <p className="mt-1 text-[11px] text-emerald-400/70">{formatCurrencyBR(data.totalValor)}</p>
+              )}
+            </div>
+            {/* Perdidos */}
+            <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-red-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Perdidos</p>
+              <p className="mt-1 text-2xl font-extrabold tabular-nums text-red-400">{data.totalPerdidos}</p>
+              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                {((data.totalPerdidos / Math.max(totalLeads, 1)) * 100).toFixed(1)}% do total
+              </p>
+            </div>
+            {/* Em aberto */}
+            <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+              <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-blue-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Em aberto</p>
+              <p className="mt-1 text-2xl font-extrabold tabular-nums text-blue-400">{data.totalAndamento}</p>
+              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                {((data.totalAndamento / Math.max(totalLeads, 1)) * 100).toFixed(1)}% do total
+              </p>
+            </div>
+          </div>
 
-                {data.totalValor > 0 && (
-                  <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-                    <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Valor ganho</p>
-                    <p className="mt-1 text-xl font-extrabold tabular-nums text-emerald-400">{formatCurrencyBR(data.totalValor)}</p>
-                    <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">somente status Ganho</p>
+          {/* 3-column visual grid */}
+          {totalLeads > 0 && (
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+              {/* Canais de Origem */}
+              <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <BarChart3 className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                  <p className="text-sm font-bold text-[var(--foreground)]">Canais de Origem</p>
+                </div>
+                <div className="flex-1 space-y-0.5">
+                  {porCanal.length === 0 ? (
+                    <p className="py-6 text-center text-xs text-[var(--muted-foreground)]">Sem dados</p>
+                  ) : (
+                    porCanal.map((c) => (
+                      <HorizontalBar
+                        key={c.canal}
+                        label={CANAL_CFG[c.canal]?.label ?? c.canal}
+                        value={c.leads}
+                        total={totalLeads}
+                        score={c.ratingMedio}
+                        color={CANAL_CFG[c.canal]?.hex}
+                      />
+                    ))
+                  )}
+                </div>
+                <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">
+                  {(totalLeads - (porCanal.filter(c => c.canal !== "OUTRO").reduce((s, c) => s + c.leads, 0))).toLocaleString("pt-BR")} leads sem origem classificada
+                </p>
+              </div>
+
+              {/* Distribuição por Estado */}
+              <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+                <div className="mb-3 flex items-center gap-2">
+                  <MapPin className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                  <p className="text-sm font-bold text-[var(--foreground)]">Distribuição por Estado</p>
+                </div>
+                {porEstado.length === 0 ? (
+                  <div className="flex flex-1 items-center justify-center py-8">
+                    <p className="max-w-[180px] text-center text-xs text-[var(--muted-foreground)]">
+                      Dados de estado não disponíveis para este CRM
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    <div className="flex-1 space-y-0.5">
+                      {porEstado.slice(0, 10).map((e) => (
+                        <HorizontalBar
+                          key={e.estado}
+                          label={e.estado}
+                          value={e.leads}
+                          total={leadsComEstado}
+                          score={e.ratingMedio}
+                        />
+                      ))}
+                    </div>
+                    <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">
+                      {(totalLeads - leadsComEstado).toLocaleString("pt-BR")} leads sem estado identificado
+                    </p>
+                  </>
+                )}
+              </div>
+
+              {/* Fonte de Conversão */}
+              <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <Layers className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                    <p className="text-sm font-bold text-[var(--foreground)]">Fonte de Conversão</p>
+                  </div>
+                  {leadsComConversao > 0 && (
+                    <span className="shrink-0 text-[10px] text-[var(--muted-foreground)]">
+                      {leadsComConversao.toLocaleString("pt-BR")} de {totalLeads.toLocaleString("pt-BR")}
+                    </span>
+                  )}
+                </div>
+                {(data.porConversao ?? []).length > 0 ? (
+                  <>
+                    <div className="relative mb-2">
+                      <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--muted-foreground)]" />
+                      <input
+                        value={convSearch}
+                        onChange={(e) => setConvSearch(e.target.value)}
+                        placeholder="Buscar fonte de conversão…"
+                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--muted)]/30 py-1.5 pl-8 pr-3 text-[11px] placeholder-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none"
+                      />
+                    </div>
+                    <div className="max-h-[240px] flex-1 space-y-0.5 overflow-y-auto">
+                      {porConversao.length === 0 ? (
+                        <p className="py-4 text-center text-xs text-[var(--muted-foreground)]">Nenhum resultado</p>
+                      ) : (
+                        porConversao.map((c) => (
+                          <HorizontalBar
+                            key={c.conversao}
+                            label={c.conversao}
+                            value={c.leads}
+                            total={leadsComConversao}
+                            score={c.ratingMedio}
+                          />
+                        ))
+                      )}
+                    </div>
+                  </>
+                ) : (
+                  <div className="flex flex-1 items-center justify-center py-8">
+                    <p className="max-w-[180px] text-center text-xs text-[var(--muted-foreground)]">
+                      Dados de conversão não disponíveis para este CRM
+                    </p>
                   </div>
                 )}
+              </div>
+            </div>
+          )}
 
-                {/* CPL real Meta */}
+          {/* CPL cards */}
+          {(data.cplMetaCrm != null || data.cplGoogleCrm != null) && (
+            <div className="space-y-3">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                CPL Real por Canal
+              </p>
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {data.cplMetaCrm != null && (
                   <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
                     <div className="flex items-center gap-1.5">
@@ -301,11 +730,12 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
                     <p className="mt-1 text-xl font-extrabold tabular-nums text-blue-400">{formatCurrencyBR(data.cplMetaCrm)}</p>
                     <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">
                       {formatCurrencyBR(data.investMeta)} ÷ {data.metaCrmLeads} leads CRM
+                      {data.cplMetaCampanha != null && (
+                        <span className="ml-1 opacity-60">· campanha: {formatCurrencyBR(data.cplMetaCampanha)}</span>
+                      )}
                     </p>
                   </div>
                 )}
-
-                {/* CPL real Google */}
                 {data.cplGoogleCrm != null && (
                   <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
                     <div className="flex items-center gap-1.5">
@@ -315,121 +745,14 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
                     <p className="mt-1 text-xl font-extrabold tabular-nums text-red-400">{formatCurrencyBR(data.cplGoogleCrm)}</p>
                     <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">
                       {formatCurrencyBR(data.investGoogle)} ÷ {data.googleCrmLeads} leads CRM
+                      {data.cplGoogleCampanha != null && (
+                        <span className="ml-1 opacity-60">· campanha: {formatCurrencyBR(data.cplGoogleCampanha)}</span>
+                      )}
                     </p>
                   </div>
                 )}
               </div>
             </div>
-          )}
-
-          {/* Legenda da barra de status */}
-          {fontes.length > 0 && (
-            <div className="flex items-center gap-4 text-[11px] text-[var(--muted-foreground)]">
-              <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm bg-emerald-500" />Ganho</span>
-              <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm bg-red-500" />Perdido</span>
-              <span className="flex items-center gap-1.5"><span className="inline-block h-2 w-2 rounded-sm bg-blue-400/50" />Em andamento</span>
-            </div>
-          )}
-
-          {/* Tabela por fonte */}
-          {fontes.length > 0 ? (
-            <div className="overflow-x-auto rounded-2xl border border-[var(--border)]">
-              <table className="min-w-[780px] w-full text-sm">
-                <thead>
-                  <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-                    {["Fonte / Origem", "Canal", "Leads", "Status", "% Ganho", "% Perdido", "Valor ganho", "Invest. canal"].map((h) => (
-                      <th
-                        key={h}
-                        className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]"
-                      >
-                        {h}
-                      </th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-[var(--border)]">
-                  {fontes.map((row) => (
-                    <tr
-                      key={row.fonte}
-                      className="group bg-[var(--card)] transition-colors hover:bg-[var(--primary)]/[0.03]"
-                    >
-                      {/* Fonte */}
-                      <td className="px-4 py-3 max-w-[200px]">
-                        <span className="block truncate font-medium text-[var(--foreground)]" title={row.fonte}>
-                          {row.fonte}
-                        </span>
-                      </td>
-
-                      {/* Canal */}
-                      <td className="px-4 py-3 whitespace-nowrap">
-                        <CanalBadge canal={row.canal} />
-                      </td>
-
-                      {/* Leads */}
-                      <td className="px-4 py-3 tabular-nums font-semibold text-[var(--foreground)]">
-                        {row.leads}
-                      </td>
-
-                      {/* Barra de status */}
-                      <td className="px-4 py-3">
-                        <div className="flex items-center gap-2">
-                          <MiniBar won={row.ganhos} lost={row.perdidos} ongoing={row.andamento} />
-                          <span className="text-[10px] tabular-nums text-[var(--muted-foreground)] whitespace-nowrap">
-                            {row.ganhos}/{row.perdidos}/{row.andamento}
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* % Ganho */}
-                      <td className="px-4 py-3 tabular-nums font-semibold text-emerald-400">
-                        {row.ganhos > 0 ? `${row.taxaGanho}%` : <span className="text-[var(--border)] font-normal">—</span>}
-                      </td>
-
-                      {/* % Perdido */}
-                      <td className="px-4 py-3 tabular-nums font-semibold text-red-400">
-                        {row.perdidos > 0 ? `${row.taxaPerda}%` : <span className="text-[var(--border)] font-normal">—</span>}
-                      </td>
-
-                      {/* Valor ganho */}
-                      <td className="px-4 py-3 tabular-nums font-semibold text-[var(--foreground)]">
-                        {row.valor > 0
-                          ? formatCurrencyBR(row.valor)
-                          : <span className="text-[var(--border)] font-normal">—</span>}
-                      </td>
-
-                      {/* Investimento do canal (Meta ou Google) */}
-                      <td className="px-4 py-3 tabular-nums text-[var(--muted-foreground)]">
-                        {row.investCanal != null && row.investCanal > 0
-                          ? (
-                            <span className="text-xs">
-                              {formatCurrencyBR(row.investCanal)}
-                              <span className="ml-1 text-[10px] opacity-50">(canal)</span>
-                            </span>
-                          )
-                          : <span className="text-[var(--border)]">—</span>}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center rounded-2xl border border-[var(--border)] py-10 text-sm text-[var(--muted-foreground)]">
-              <TrendingUp className="mr-2 h-4 w-4" />
-              Nenhum dado de origem disponível — sincronize o CRM para carregar.
-            </div>
-          )}
-
-          {/* Nota metodológica */}
-          {(data.cplMetaCrm != null || data.cplGoogleCrm != null) && (
-            <p className="text-[11px] text-[var(--muted-foreground)] leading-relaxed">
-              * <strong>CPL Real</strong> = investimento total do canal ÷ leads CRM com essa origem.
-              Diferente do CPL de campanha ({data.cplMetaCampanha != null && `Meta: ${formatCurrencyBR(data.cplMetaCampanha)}`}
-              {data.cplMetaCampanha != null && data.cplGoogleCampanha != null && " · "}
-              {data.cplGoogleCampanha != null && `Google: ${formatCurrencyBR(data.cplGoogleCampanha)}`}),
-              que conta todos os leads registrados na plataforma de anúncios.
-              &nbsp;A coluna <strong>Invest. canal</strong> mostra o gasto total do canal — não apenas da fonte específica.
-            </p>
           )}
         </>
       )}
@@ -437,20 +760,37 @@ function AtribuicaoSection({ clienteId }: { clienteId: string }) {
   );
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-// CrmTab principal
-// ─────────────────────────────────────────────────────────────────────────────
+// ─── CrmTab ───────────────────────────────────────────────────────────────────
 
 export function CrmTab({ clienteId }: { clienteId: string }) {
   const [period, setPeriod] = React.useState<Period>("all");
+  const [page, setPage] = React.useState(1);
+  const PAGE_SIZE = 15;
+  const [searchInput, setSearchInput] = React.useState("");
+  const [debouncedSearch, setDebouncedSearch] = React.useState("");
+  const [selectedLead, setSelectedLead] = React.useState<Lead | null>(null);
   const queryClient = useQueryClient();
 
-  const { data: leadsData, isLoading: leadsLoading } = useQuery<{ leads: Lead[]; total: number }>({
-    queryKey: ["crm-leads", clienteId, period],
+  // Debounce search 300ms
+  React.useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchInput), 300);
+    return () => clearTimeout(t);
+  }, [searchInput]);
+
+  // Reset to page 1 on period or search change
+  React.useEffect(() => {
+    setPage(1);
+  }, [period, debouncedSearch]);
+
+  const { data: leadsData, isLoading: leadsLoading } = useQuery<LeadsApiResponse>({
+    queryKey: ["crm-leads", clienteId, period, page, PAGE_SIZE, debouncedSearch],
     queryFn: () =>
-      fetch(`/api/clientes/${clienteId}/crm/leads?period=${period}`).then((r) => r.json()),
+      fetch(
+        `/api/clientes/${clienteId}/crm/leads?period=${period}&page=${page}&pageSize=${PAGE_SIZE}&search=${encodeURIComponent(debouncedSearch)}`
+      ).then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
+    placeholderData: (prev) => prev,
   });
 
   const syncMutation = useMutation({
@@ -468,7 +808,17 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
   });
 
   const leads = leadsData?.leads ?? [];
-  const isEmpty = !leadsLoading && leads.length === 0;
+  const total = leadsData?.total ?? 0;
+  const totalPages = Math.ceil(total / PAGE_SIZE);
+  const isEmptyNoSearch = !leadsLoading && total === 0 && !debouncedSearch;
+
+  // Simple pagination range calculator
+  function pageNumbers(current: number, total: number): (number | "…")[] {
+    if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+    if (current <= 4) return [1, 2, 3, 4, 5, "…", total];
+    if (current >= total - 3) return [1, "…", total - 4, total - 3, total - 2, total - 1, total];
+    return [1, "…", current - 1, current, current + 1, "…", total];
+  }
 
   return (
     <div className="space-y-8">
@@ -478,9 +828,7 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
           <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">
-              Negociações & Funil
-            </h2>
+            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações & Funil</h2>
           </div>
         </div>
         <button
@@ -502,13 +850,20 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
       {/* Funil */}
       <FunilCrmSection clienteId={clienteId} />
 
-      {/* Atribuição */}
+      {/* Análise de Origem */}
       <AtribuicaoSection clienteId={clienteId} />
 
       {/* Negociações */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <p className="text-sm font-semibold text-[var(--foreground)]">Negociações</p>
+        {/* Section header + period selector */}
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div className="flex items-start gap-3">
+            <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
+              <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações</h2>
+            </div>
+          </div>
           <div className="flex items-center gap-1 rounded-lg border border-[var(--border)] bg-[var(--card)] p-0.5">
             {(Object.keys(PERIOD_LABELS) as Period[]).map((p) => (
               <button
@@ -526,13 +881,43 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
           </div>
         </div>
 
+        {/* Search */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-foreground)]" />
+          <input
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Buscar por nome, e-mail ou telefone…"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--card)] py-2.5 pl-10 pr-10 text-sm placeholder-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none transition-colors"
+          />
+          {searchInput && (
+            <button
+              onClick={() => setSearchInput("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--muted-foreground)] hover:text-[var(--foreground)]"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          )}
+        </div>
+
+        {/* Count line */}
+        {!leadsLoading && total > 0 && (
+          <p className="text-[11px] text-[var(--muted-foreground)]">
+            <span className="font-semibold text-[var(--foreground)]">{total.toLocaleString("pt-BR")}</span> negociações
+            {debouncedSearch && <span className="italic"> · buscando "{debouncedSearch}"</span>}
+            {totalPages > 1 && ` · página ${page} de ${totalPages}`}
+            {!leadsLoading && <span className="ml-1 opacity-60">· clique para ver detalhes</span>}
+          </p>
+        )}
+
+        {/* Table */}
         {leadsLoading ? (
           <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
             <CardContent className="flex h-24 items-center justify-center">
               <RefreshCw className="h-4 w-4 animate-spin text-[var(--muted-foreground)]" />
             </CardContent>
           </Card>
-        ) : isEmpty ? (
+        ) : isEmptyNoSearch ? (
           <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
             <CardContent className="flex flex-col items-center justify-center gap-3 py-14 text-center">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--muted)]">
@@ -556,217 +941,221 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
               </button>
             </CardContent>
           </Card>
-        ) : (
-          <div className="overflow-x-auto rounded-2xl border border-[var(--border)]">
-            <table className="min-w-[1040px] w-full text-sm">
-              <thead>
-                <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-                  {["Status", "Etapa", "Contato", "Origem", "Qualificação", "Rating", "Entrada", "Fechamento", "Valor"].map((h) => (
-                    <th
-                      key={h}
-                      className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]"
-                    >
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[var(--border)]">
-                {leads.map((lead) => {
-                  const mkt = lead.dadosMarketing ?? null;
-                  const cv = lead.dadosCv ?? null;
-                  return (
-                  <tr
-                    key={lead.id}
-                    className="group bg-[var(--card)] transition-colors hover:bg-[var(--primary)]/[0.03]"
-                  >
-                    {/* Status */}
-                    <td className="px-4 py-3 whitespace-nowrap">
-                      <StatusBadge status={lead.status} />
-                    </td>
-
-                    {/* Etapa */}
-                    <td className="px-4 py-3">
-                      <span className="inline-block rounded-full bg-[var(--primary)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
-                        {lead.etapa}
-                      </span>
-                    </td>
-
-                    {/* Contato */}
-                    <td className="px-4 py-3">
-                      {lead.nome ? (
-                        <div className="flex flex-col gap-0.5">
-                          <span className="font-medium text-[var(--foreground)]">{lead.nome}</span>
-                          {(lead.email ?? lead.telefone) && (
-                            <span className="text-[11px] text-[var(--muted-foreground)]">
-                              {lead.email ?? lead.telefone}
-                            </span>
-                          )}
-                          {mkt?.empresa && (
-                            <span className="text-[10px] text-[var(--muted-foreground)] opacity-70">{mkt.empresa}</span>
-                          )}
-                        </div>
-                      ) : lead.email ?? lead.telefone ? (
-                        <span className="text-[var(--muted-foreground)]">{lead.email ?? lead.telefone}</span>
-                      ) : (
-                        <span className="text-[var(--border)]">—</span>
-                      )}
-                    </td>
-
-                    {/* Origem (fonte + mídia CV) */}
-                    <td className="px-4 py-3 max-w-[180px]">
-                      <div className="flex flex-col gap-0.5">
-                        {lead.fonte ? (
-                          <span
-                            className="block truncate rounded-md bg-[var(--muted)] px-2 py-0.5 text-[11px] font-medium text-[var(--foreground)]"
-                            title={lead.fonte}
-                          >
-                            {lead.fonte}
-                          </span>
-                        ) : null}
-                        {cv?.midiaOriginal && (
-                          <span
-                            className="block truncate rounded-md bg-[var(--primary)]/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--primary)]"
-                            title={cv.midiaOriginal}
-                          >
-                            {cv.midiaOriginal}
-                          </span>
-                        )}
-                        {cv?.conversaoOriginal && (
-                          <span
-                            className="block truncate text-[10px] text-[var(--muted-foreground)]"
-                            title={cv.conversaoOriginal}
-                          >
-                            {cv.conversaoOriginal}
-                          </span>
-                        )}
-                        {!lead.fonte && !cv?.midiaOriginal && (
-                          <span className="text-[var(--border)]">—</span>
-                        )}
-                      </div>
-                    </td>
-
-                    {/* Qualificação (dadosCv ou dadosMarketing) */}
-                    <td className="px-4 py-3 max-w-[200px]">
-                      {cv ? (
-                        <div className="flex flex-col gap-0.5">
-                          {cv.empreendimento && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Emp.</span>
-                              <span className="truncate text-[var(--foreground)]" title={cv.empreendimento}>{cv.empreendimento}</span>
-                            </span>
-                          )}
-                          {cv.possibilidadeVenda && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Possib.</span>
-                              <span className="truncate text-[var(--foreground)]" title={cv.possibilidadeVenda}>{cv.possibilidadeVenda}</span>
-                            </span>
-                          )}
-                          {cv.profissao && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Prof.</span>
-                              <span className="truncate text-[var(--foreground)]" title={cv.profissao}>{cv.profissao}</span>
-                            </span>
-                          )}
-                          {cv.rendaFamiliar && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Renda</span>
-                              <span className="truncate text-[var(--foreground)]" title={cv.rendaFamiliar}>{cv.rendaFamiliar}</span>
-                            </span>
-                          )}
-                          {cv.corretor && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Corretor</span>
-                              <span className="truncate text-[var(--foreground)]" title={cv.corretor}>{cv.corretor}</span>
-                            </span>
-                          )}
-                          {cv.motivoCancelamento && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-red-400">Perda</span>
-                              <span className="truncate text-red-400" title={cv.descricaoCancelamento ?? cv.motivoCancelamento}>
-                                {cv.descricaoCancelamento ?? cv.motivoCancelamento}
-                              </span>
-                            </span>
-                          )}
-                          {!cv.empreendimento && !cv.possibilidadeVenda && !cv.profissao && !cv.rendaFamiliar && !cv.corretor && !cv.motivoCancelamento && (
-                            <span className="text-[11px] text-[var(--muted-foreground)]">sem dados</span>
-                          )}
-                        </div>
-                      ) : mkt ? (
-                        <div className="flex flex-col gap-0.5">
-                          {mkt.faturamento && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Fat.</span>
-                              <span className="truncate text-[var(--foreground)]" title={mkt.faturamento}>{mkt.faturamento}</span>
-                            </span>
-                          )}
-                          {mkt.segmento && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Seg.</span>
-                              <span className="truncate text-[var(--foreground)]" title={mkt.segmento}>{mkt.segmento}</span>
-                            </span>
-                          )}
-                          {mkt.investimento && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Inv.</span>
-                              <span className="truncate text-[var(--foreground)]" title={mkt.investimento}>{mkt.investimento}</span>
-                            </span>
-                          )}
-                          {mkt.cargo && (
-                            <span className="flex items-center gap-1 text-[11px]">
-                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Cargo</span>
-                              <span className="truncate text-[var(--foreground)]" title={mkt.cargo}>{mkt.cargo}</span>
-                            </span>
-                          )}
-                          {!mkt.faturamento && !mkt.segmento && !mkt.investimento && !mkt.cargo && (
-                            <span className="text-[11px] text-[var(--muted-foreground)]">sem dados</span>
-                          )}
-                        </div>
-                      ) : (
-                        <span className="text-[var(--border)]">—</span>
-                      )}
-                    </td>
-
-                    {/* Rating */}
-                    <td className="px-4 py-3">
-                      <RatingStars rating={lead.rating} />
-                    </td>
-
-                    {/* Entrada */}
-                    <td className="px-4 py-3 tabular-nums text-[var(--muted-foreground)]">
-                      {formatDateBR(lead.dataEntrada)}
-                    </td>
-
-                    {/* Fechamento */}
-                    <td className="px-4 py-3 tabular-nums">
-                      {lead.dataFechamento ? (
-                        <span className={`font-medium ${lead.status === "won" ? "text-emerald-500" : lead.status === "lost" ? "text-red-400" : "text-[var(--muted-foreground)]"}`}>
-                          {formatDateBR(lead.dataFechamento)}
-                        </span>
-                      ) : (
-                        <span className="text-[var(--border)]">—</span>
-                      )}
-                    </td>
-
-                    {/* Valor */}
-                    <td className="px-4 py-3 tabular-nums font-semibold text-[var(--foreground)]">
-                      {lead.valor != null
-                        ? formatCurrencyBR(lead.valor)
-                        : <span className="text-[var(--border)] font-normal">—</span>}
-                    </td>
-                  </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-            {leads.length === 500 && (
-              <p className="border-t border-[var(--border)] px-4 py-2 text-center text-[11px] text-[var(--muted-foreground)]">
-                Mostrando os 500 registros mais recentes
-              </p>
-            )}
+        ) : total === 0 ? (
+          <div className="flex flex-col items-center justify-center gap-2 rounded-2xl border border-[var(--border)] bg-[var(--card)] py-10">
+            <Search className="h-6 w-6 text-[var(--muted-foreground)]" />
+            <p className="text-sm text-[var(--muted-foreground)]">Nenhum resultado para &quot;{debouncedSearch}&quot;</p>
           </div>
+        ) : (
+          <>
+            <div className="overflow-x-auto rounded-2xl border border-[var(--border)]">
+              <table className="min-w-[1040px] w-full text-sm">
+                <thead>
+                  <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
+                    {["Status", "Etapa", "Contato", "Origem", "Qualificação", "Rating", "Entrada", "Fechamento", "Valor"].map((h) => (
+                      <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[var(--border)]">
+                  {leads.map((lead) => {
+                    const mkt = lead.dadosMarketing ?? null;
+                    const cv = lead.dadosCv ?? null;
+                    return (
+                      <tr
+                        key={lead.id}
+                        onClick={() => setSelectedLead(lead)}
+                        className="group cursor-pointer bg-[var(--card)] transition-colors hover:bg-[var(--primary)]/[0.03]"
+                      >
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <StatusBadge status={lead.status} />
+                        </td>
+                        <td className="px-4 py-3">
+                          <span className="inline-block rounded-full bg-[var(--primary)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
+                            {lead.etapa}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3">
+                          {lead.nome ? (
+                            <div className="flex flex-col gap-0.5">
+                              <span className="font-medium text-[var(--foreground)]">{lead.nome}</span>
+                              {(lead.email ?? lead.telefone) && (
+                                <span className="text-[11px] text-[var(--muted-foreground)]">{lead.email ?? lead.telefone}</span>
+                              )}
+                              {mkt?.empresa && (
+                                <span className="text-[10px] text-[var(--muted-foreground)] opacity-70">{mkt.empresa}</span>
+                              )}
+                            </div>
+                          ) : lead.email ?? lead.telefone ? (
+                            <span className="text-[var(--muted-foreground)]">{lead.email ?? lead.telefone}</span>
+                          ) : (
+                            <span className="text-[var(--border)]">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 max-w-[180px]">
+                          <div className="flex flex-col gap-0.5">
+                            {lead.fonte ? (
+                              <span className="block truncate rounded-md bg-[var(--muted)] px-2 py-0.5 text-[11px] font-medium text-[var(--foreground)]" title={lead.fonte}>
+                                {lead.fonte}
+                              </span>
+                            ) : null}
+                            {cv?.midiaOriginal && (
+                              <span className="block truncate rounded-md bg-[var(--primary)]/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--primary)]" title={cv.midiaOriginal}>
+                                {cv.midiaOriginal}
+                              </span>
+                            )}
+                            {cv?.conversaoOriginal && (
+                              <span className="block truncate text-[10px] text-[var(--muted-foreground)]" title={cv.conversaoOriginal}>
+                                {cv.conversaoOriginal}
+                              </span>
+                            )}
+                            {!lead.fonte && !cv?.midiaOriginal && <span className="text-[var(--border)]">—</span>}
+                          </div>
+                        </td>
+                        <td className="px-4 py-3 max-w-[200px]">
+                          {cv ? (
+                            <div className="flex flex-col gap-0.5">
+                              {cv.empreendimento && (
+                                <span className="flex items-center gap-1 text-[11px]">
+                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Emp.</span>
+                                  <span className="truncate text-[var(--foreground)]" title={cv.empreendimento}>{cv.empreendimento}</span>
+                                </span>
+                              )}
+                              {cv.possibilidadeVenda && (
+                                <span className="flex items-center gap-1 text-[11px]">
+                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Possib.</span>
+                                  <span className="truncate text-[var(--foreground)]" title={cv.possibilidadeVenda}>{cv.possibilidadeVenda}</span>
+                                </span>
+                              )}
+                              {cv.profissao && (
+                                <span className="flex items-center gap-1 text-[11px]">
+                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Prof.</span>
+                                  <span className="truncate text-[var(--foreground)]" title={cv.profissao}>{cv.profissao}</span>
+                                </span>
+                              )}
+                              {cv.corretor && (
+                                <span className="flex items-center gap-1 text-[11px]">
+                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Corretor</span>
+                                  <span className="truncate text-[var(--foreground)]" title={cv.corretor}>{cv.corretor}</span>
+                                </span>
+                              )}
+                              {cv.motivoCancelamento && (
+                                <span className="flex items-center gap-1 text-[11px]">
+                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-red-400">Perda</span>
+                                  <span className="truncate text-red-400" title={cv.descricaoCancelamento ?? cv.motivoCancelamento}>
+                                    {cv.descricaoCancelamento ?? cv.motivoCancelamento}
+                                  </span>
+                                </span>
+                              )}
+                              {!cv.empreendimento && !cv.possibilidadeVenda && !cv.profissao && !cv.corretor && !cv.motivoCancelamento && (
+                                <span className="text-[11px] text-[var(--muted-foreground)]">sem dados</span>
+                              )}
+                            </div>
+                          ) : mkt ? (
+                            <div className="flex flex-col gap-0.5">
+                              {mkt.faturamento && (
+                                <span className="flex items-center gap-1 text-[11px]">
+                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Fat.</span>
+                                  <span className="truncate text-[var(--foreground)]" title={mkt.faturamento}>{mkt.faturamento}</span>
+                                </span>
+                              )}
+                              {mkt.segmento && (
+                                <span className="flex items-center gap-1 text-[11px]">
+                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Seg.</span>
+                                  <span className="truncate text-[var(--foreground)]" title={mkt.segmento}>{mkt.segmento}</span>
+                                </span>
+                              )}
+                              {mkt.cargo && (
+                                <span className="flex items-center gap-1 text-[11px]">
+                                  <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Cargo</span>
+                                  <span className="truncate text-[var(--foreground)]" title={mkt.cargo}>{mkt.cargo}</span>
+                                </span>
+                              )}
+                              {!mkt.faturamento && !mkt.segmento && !mkt.cargo && (
+                                <span className="text-[11px] text-[var(--muted-foreground)]">sem dados</span>
+                              )}
+                            </div>
+                          ) : (
+                            <span className="text-[var(--border)]">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3">
+                          <RatingStars rating={lead.rating} />
+                        </td>
+                        <td className="px-4 py-3 tabular-nums text-[var(--muted-foreground)]">
+                          {formatDateBR(lead.dataEntrada)}
+                        </td>
+                        <td className="px-4 py-3 tabular-nums">
+                          {lead.dataFechamento ? (
+                            <span className={`font-medium ${lead.status === "won" ? "text-emerald-500" : lead.status === "lost" ? "text-red-400" : "text-[var(--muted-foreground)]"}`}>
+                              {formatDateBR(lead.dataFechamento)}
+                            </span>
+                          ) : (
+                            <span className="text-[var(--border)]">—</span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3 tabular-nums font-semibold text-[var(--foreground)]">
+                          {lead.valor != null
+                            ? formatCurrencyBR(lead.valor)
+                            : <span className="font-normal text-[var(--border)]">—</span>}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between gap-3 px-1 pt-1">
+                <button
+                  onClick={() => setPage((p) => Math.max(1, p - 1))}
+                  disabled={page === 1}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-1.5 text-xs font-semibold text-[var(--muted-foreground)] transition-all hover:text-[var(--foreground)] disabled:opacity-40"
+                >
+                  <ChevronLeft className="h-3.5 w-3.5" />
+                  Anterior
+                </button>
+
+                <div className="flex items-center gap-1">
+                  {pageNumbers(page, totalPages).map((p, i) =>
+                    p === "…" ? (
+                      <span key={`e${i}`} className="px-1 text-[11px] text-[var(--muted-foreground)]">…</span>
+                    ) : (
+                      <button
+                        key={p}
+                        onClick={() => setPage(p)}
+                        className={`h-7 w-7 rounded-md text-[11px] font-semibold transition-all ${
+                          p === page
+                            ? "bg-[var(--primary)] text-[var(--primary-foreground)]"
+                            : "text-[var(--muted-foreground)] hover:bg-[var(--muted)] hover:text-[var(--foreground)]"
+                        }`}
+                      >
+                        {p}
+                      </button>
+                    )
+                  )}
+                </div>
+
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                  disabled={page === totalPages}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-1.5 text-xs font-semibold text-[var(--muted-foreground)] transition-all hover:text-[var(--foreground)] disabled:opacity-40"
+                >
+                  Próxima
+                  <ChevronRight className="h-3.5 w-3.5" />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
+
+      {/* Lead Detail Drawer */}
+      <LeadDetailDrawer lead={selectedLead} onClose={() => setSelectedLead(null)} />
     </div>
   );
 }
