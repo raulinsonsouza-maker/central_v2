@@ -28,6 +28,7 @@ export async function GET(
   if (creds.email) safeCredenciais.email = creds.email;
   if (creds.token) safeCredenciais.token = creds.token;
   safeCredenciais.connected = !!(creds.accessToken);
+  if (Array.isArray(creds.tagFilter)) safeCredenciais.tagFilter = creds.tagFilter;
 
   return NextResponse.json({
     id: config.id,
@@ -52,7 +53,7 @@ export async function PUT(
   let body: {
     tipo?: string;
     dominio?: string | null;
-    credenciais?: Record<string, string>;
+    credenciais?: Record<string, unknown>;
     ativo?: boolean;
   };
   try {

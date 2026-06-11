@@ -588,6 +588,7 @@ function CrmConfigSection({
   const [dominio, setDominio] = useState("");
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
+  const [tagFilterText, setTagFilterText] = useState("");
   const [rdClientId, setRdClientId] = useState("");
   const [rdClientSecret, setRdClientSecret] = useState("");
   const [rdConnected, setRdConnected] = useState(false);
@@ -612,6 +613,9 @@ function CrmConfigSection({
         const creds = data.credenciais ?? {};
         setEmail(creds.email ?? "");
         setToken(creds.token ?? "");
+        if (Array.isArray(creds.tagFilter) && creds.tagFilter.length > 0) {
+          setTagFilterText((creds.tagFilter as string[]).join(", "));
+        }
         if (data.tipo === "RDSTATION_CRM") {
           setRdClientId(creds.clientId ?? "");
           setRdConnected(!!creds.connected);
@@ -625,10 +629,12 @@ function CrmConfigSection({
     setLoading(true);
     setStatusMsg(null);
     try {
-      const credenciais: Record<string, string> = {};
+      const credenciais: Record<string, unknown> = {};
       if (tipo === "CVCRM") {
         credenciais.email = email.trim();
         credenciais.token = token.trim();
+        const tags = tagFilterText.split(/[\n,]/).map((t) => t.trim()).filter(Boolean);
+        credenciais.tagFilter = tags;
       } else if (tipo === "RDSTATION_CRM") {
         if (rdClientId.trim()) credenciais.clientId = rdClientId.trim();
         if (rdClientSecret && !rdClientSecret.startsWith("•"))
@@ -666,7 +672,7 @@ function CrmConfigSection({
     setTestLoading(true);
     setStatusMsg(null);
     try {
-      const credenciais: Record<string, string> = {};
+      const credenciais: Record<string, unknown> = {};
       if (tipo === "CVCRM") {
         credenciais.email = email.trim();
         credenciais.token = token.trim();
@@ -773,6 +779,27 @@ function CrmConfigSection({
               placeholder="••••••••••••••••"
               className={inputClass}
             />
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-[var(--muted-foreground)]">
+              Filtro por tags{" "}
+              <span className="font-normal text-[var(--muted-foreground)]/70">(apenas leads com essas tags — separe por vírgula)</span>
+            </label>
+            <textarea
+              value={tagFilterText}
+              onChange={(e) => setTagFilterText(e.target.value)}
+              placeholder="Ex.: form_meta_arboreto_inout, lp_arboreto_inout"
+              rows={2}
+              className={`${inputClass} resize-none`}
+            />
+            {tagFilterText.trim() && (
+              <p className="text-[10px] text-[var(--muted-foreground)]/70">
+                Tags ativas:{" "}
+                {tagFilterText.split(/[\n,]/).map((t) => t.trim()).filter(Boolean).map((t) => (
+                  <code key={t} className="mr-1 rounded bg-[var(--muted)]/60 px-1 py-0.5 font-mono">{t}</code>
+                ))}
+              </p>
+            )}
           </div>
         </>
       )}

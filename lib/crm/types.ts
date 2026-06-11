@@ -28,6 +28,8 @@ export interface CrmAdapter {
 export interface CvCrmCredentials {
   email: string;
   token: string;
+  /** Only import/show leads that have at least one of these tags. Empty/absent = no filter. */
+  tagFilter?: string[];
 }
 
 export interface RdStationCredentials {

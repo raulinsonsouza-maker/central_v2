@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { getTagFilter, buildTagFilterWhere } from "@/lib/crm/tagFilter";
 
 export async function GET(
   request: NextRequest,
@@ -26,8 +27,15 @@ export async function GET(
     return NextResponse.json({ configured: false });
   }
 
+  const tagFilter = await getTagFilter(id);
+  const tagFilterWhere = buildTagFilterWhere(tagFilter);
+
   const leads = await prisma.leadCrm.findMany({
-    where: { clienteId: id, dataEntrada: { gte: dateFrom, lte: dateTo } },
+    where: {
+      clienteId: id,
+      dataEntrada: { gte: dateFrom, lte: dateTo },
+      ...(tagFilter.length > 0 ? { AND: [tagFilterWhere] } : {}),
+    },
     select: {
       etapa: true,
       ordemEtapa: true,

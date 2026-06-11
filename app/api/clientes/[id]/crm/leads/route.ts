@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma";
+import { getTagFilter, buildTagFilterWhere } from "@/lib/crm/tagFilter";
 
 function buildCanalFonteOR(canal: string): Prisma.LeadCrmWhereInput[] {
   const patterns: Record<string, string[]> = {
@@ -72,6 +73,9 @@ export async function GET(
     dateTo.setHours(23, 59, 59, 999);
   }
 
+  const tagFilter = await getTagFilter(id);
+  const tagFilterWhere = buildTagFilterWhere(tagFilter);
+
   const where: Prisma.LeadCrmWhereInput = {
     clienteId: id,
     ...(dateFrom || dateTo
@@ -92,6 +96,9 @@ export async function GET(
         }
       : {}),
     ...filterCondition,
+    ...(tagFilter.length > 0
+      ? { AND: [tagFilterWhere] }
+      : {}),
   };
 
   const [leads, total] = await Promise.all([

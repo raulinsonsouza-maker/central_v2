@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma";
+import { getTagFilter, buildTagFilterWhere } from "@/lib/crm/tagFilter";
 
 type Canal = "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO";
 
@@ -113,8 +114,15 @@ export async function GET(
     return NextResponse.json({ configured: false });
   }
 
+  const tagFilter = await getTagFilter(id);
+  const tagFilterWhere = buildTagFilterWhere(tagFilter);
+
   const leads = await prisma.leadCrm.findMany({
-    where: { clienteId: id, dataEntrada: { gte: dateFrom, lte: dateTo } },
+    where: {
+      clienteId: id,
+      dataEntrada: { gte: dateFrom, lte: dateTo },
+      ...(tagFilter.length > 0 ? { AND: [tagFilterWhere] } : {}),
+    },
     select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true, dadosCv: true, etapa: true, dadosMarketing: true },
   });
 

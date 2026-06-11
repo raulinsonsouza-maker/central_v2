@@ -144,11 +144,13 @@ export class CvCrmAdapter implements CrmAdapter {
   private domain: string;
   private email: string;
   private token: string;
+  private tagFilter: string[];
 
   constructor(domain: string, creds: CvCrmCredentials) {
     this.domain = domain.replace(/^https?:\/\//, "").replace(/\.cvcrm\.com\.br.*$/, "");
     this.email = creds.email;
     this.token = creds.token;
+    this.tagFilter = creds.tagFilter?.filter(Boolean) ?? [];
   }
 
   private get baseUrl() {
@@ -215,7 +217,7 @@ export class CvCrmAdapter implements CrmAdapter {
       });
     }
 
-    return leads.map((l): NormalizedLead => {
+    const normalized: NormalizedLead[] = leads.map((l): NormalizedLead => {
       const dadosCv: Record<string, unknown> = {};
 
       // Origem e mídia
@@ -297,6 +299,22 @@ export class CvCrmAdapter implements CrmAdapter {
         dadosCv: Object.keys(dadosCv).length > 0 ? dadosCv : null,
       };
     });
+
+    // Apply tag filter: only keep leads that have at least one matching tag
+    if (this.tagFilter.length > 0) {
+      const filterSet = new Set(this.tagFilter.map((t) => t.toLowerCase().trim()));
+      const before = normalized.length;
+      const filtered = normalized.filter((lead) => {
+        const tags = (lead.dadosCv?.tags as string[] | undefined) ?? [];
+        return tags.some((t) => filterSet.has(t.toLowerCase().trim()));
+      });
+      console.log(
+        `[CvCrmAdapter] tag filter applied: ${filtered.length}/${before} leads match [${this.tagFilter.join(", ")}]`,
+      );
+      return filtered;
+    }
+
+    return normalized;
   }
 
   async testConnection(): Promise<{ ok: boolean; error?: string }> {
