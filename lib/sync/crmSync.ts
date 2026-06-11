@@ -46,6 +46,7 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
           rating: lead.rating ?? null,
           status: lead.status ?? null,
           rdContactId: lead.rdContactId ?? null,
+          momentoLead: lead.momentoLead ?? null,
           dadosCv: (lead.dadosCv as Prisma.InputJsonValue) ?? Prisma.JsonNull,
         },
         update: {
@@ -60,6 +61,7 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
           rating: lead.rating ?? null,
           status: lead.status ?? null,
           rdContactId: lead.rdContactId ?? null,
+          momentoLead: lead.momentoLead ?? null,
           dadosCv: (lead.dadosCv as Prisma.InputJsonValue) ?? Prisma.JsonNull,
         },
       });

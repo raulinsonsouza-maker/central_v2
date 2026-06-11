@@ -14,6 +14,8 @@ export interface NormalizedLead {
   dataEntrada: Date;
   dataFechamento?: Date | null;
   valor?: number | null;
+  /** Temperatura de engajamento do lead: "Lead Frio", "Lead Morno", "Lead Quente", etc. */
+  momentoLead?: string | null;
   /** Campos adicionais do CV CRM (origem, mídia, empreendimento, score, etc.) */
   dadosCv?: Record<string, unknown> | null;
 }

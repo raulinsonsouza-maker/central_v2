@@ -37,6 +37,8 @@ interface CvLead {
   gestor?: string | null;
   imobiliaria?: string | null;
   ponto_venda?: string | null;
+  // Temperatura de engajamento (textual: "Lead Frio", "Lead Morno", "Lead Quente", "Sem momento")
+  momento_lead?: string | null;
   // Extras
   tags?: string[] | null;
   campos_adicionais?: Array<{ idcampo: string; idcampo_valores: string }> | null;
@@ -202,6 +204,7 @@ export class CvCrmAdapter implements CrmAdapter {
       // Qualificação
       if (l.score !== null && l.score !== undefined) dadosCv.score = l.score;
       if (l.possibilidade_venda) dadosCv.possibilidadeVenda = l.possibilidade_venda;
+      if (l.momento_lead) dadosCv.momentoLead = l.momento_lead;
       if (l.profissao) dadosCv.profissao = l.profissao;
       if (l.renda_familiar) dadosCv.rendaFamiliar = l.renda_familiar;
       if (l.feedback) dadosCv.feedback = l.feedback;
@@ -247,6 +250,7 @@ export class CvCrmAdapter implements CrmAdapter {
         valor: parseValor(l.valor),
         rating: l.score ?? null,
         status: inferStatus(l),
+        momentoLead: l.momento_lead?.trim() || null,
         dadosCv: Object.keys(dadosCv).length > 0 ? dadosCv : null,
       };
     });

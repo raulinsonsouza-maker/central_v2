@@ -26,6 +26,7 @@ interface Lead {
   fonte: string | null;
   rating: number | null;
   status: string | null;
+  momentoLead: string | null;
   dadosMarketing?: {
     faturamento?: string | null;
     segmento?: string | null;
@@ -284,6 +285,22 @@ const PV_LABELS: Record<string, { label: string; color: string }> = {
   "5": { label: "Muito alta",  color: "text-emerald-400" },
 };
 
+const MOMENTO_LABELS: Record<string, { label: string; chip: string }> = {
+  "lead frio":    { label: "Lead Frio",   chip: "bg-sky-500/10 text-sky-400 border border-sky-500/20" },
+  "frio":         { label: "Lead Frio",   chip: "bg-sky-500/10 text-sky-400 border border-sky-500/20" },
+  "lead morno":   { label: "Lead Morno",  chip: "bg-amber-500/10 text-amber-400 border border-amber-500/20" },
+  "morno":        { label: "Lead Morno",  chip: "bg-amber-500/10 text-amber-400 border border-amber-500/20" },
+  "lead quente":  { label: "Lead Quente", chip: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
+  "quente":       { label: "Lead Quente", chip: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
+  "sem momento":  { label: "Sem Momento", chip: "bg-[var(--muted)] text-[var(--muted-foreground)] border border-[var(--border)]" },
+};
+
+function getMomentoLabel(raw: string | null | undefined): { label: string; chip: string } | null {
+  if (!raw) return null;
+  const key = raw.toLowerCase().trim();
+  return MOMENTO_LABELS[key] ?? { label: raw, chip: "bg-[var(--muted)] text-[var(--muted-foreground)] border border-[var(--border)]" };
+}
+
 
 function HorizontalBar({
   label, value, total, color, onClick, isActive,
@@ -428,6 +445,14 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
                   <span className="font-bold text-[var(--primary)]">{cv.score}</span>
                 } />
               )}
+              {lead.momentoLead && (() => {
+                const m = getMomentoLabel(lead.momentoLead);
+                return m ? (
+                  <DField label="Temperatura" value={
+                    <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${m.chip}`}>{m.label}</span>
+                  } />
+                ) : null;
+              })()}
             </DSection>
 
             <div className="h-px bg-[var(--border)]" />
@@ -974,6 +999,9 @@ function AtribuicaoSection({
                   <span>· ticket médio {formatCurrencyBR(data.totalValor / data.totalGanhos)}</span>
                 )}
               </div>
+              {data.totalGanhos > 0 && data.totalValor === 0 && (
+                <p className="mt-2 text-[10px] text-emerald-400/40">Valor não disponível via API do CRM</p>
+              )}
             </div>
             {/* Leads */}
             <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
@@ -1483,14 +1511,22 @@ export function CrmTab({
                           </div>
                         </td>
                         <td className="px-4 py-2.5 text-[11px]">
-                          {cv?.possibilidadeVenda != null
-                            ? (() => {
-                                const key = String(cv.possibilidadeVenda);
-                                const cfg = PV_LABELS[key];
-                                return <span className={cfg?.color ?? "text-[var(--muted-foreground)]"} title="Possibilidade de venda (avaliação do corretor, 1–5)">{cfg?.label ?? key}</span>;
-                              })()
-                            : <span className="text-[var(--muted-foreground)]">—</span>
-                          }
+                          <div className="flex flex-col gap-0.5">
+                            {lead.momentoLead && (() => {
+                              const m = getMomentoLabel(lead.momentoLead);
+                              return m ? (
+                                <span className={`inline-block w-fit rounded-full px-2 py-0.5 text-[10px] font-semibold ${m.chip}`}>{m.label}</span>
+                              ) : null;
+                            })()}
+                            {cv?.possibilidadeVenda != null
+                              ? (() => {
+                                  const key = String(cv.possibilidadeVenda);
+                                  const cfg = PV_LABELS[key];
+                                  return <span className={cfg?.color ?? "text-[var(--muted-foreground)]"} title="Possibilidade de venda (avaliação do corretor, 1–5)">{cfg?.label ?? key}</span>;
+                                })()
+                              : (!lead.momentoLead && <span className="text-[var(--muted-foreground)]">—</span>)
+                            }
+                          </div>
                         </td>
                         <td className="px-4 py-2.5 tabular-nums text-[12px] text-[var(--muted-foreground)]">
                           {formatDateBR(lead.dataEntrada)}
