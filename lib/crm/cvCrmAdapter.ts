@@ -61,8 +61,23 @@ function parseDate(v?: string | null): Date | null {
 
 function parseValor(v?: number | string | null): number | null {
   if (v === null || v === undefined || v === "") return null;
-  const n = typeof v === "string" ? parseFloat(v) : v;
+  if (typeof v === "number") return isNaN(v) ? null : v;
+  // Normalize BRL currency strings: "R$ 350.000,00" or "350.000,00" → 350000.00
+  const cleaned = v
+    .replace(/R\$\s*/g, "")   // strip currency symbol
+    .replace(/\s/g, "")        // strip whitespace
+    .replace(/\./g, "")        // remove thousand separators (BRL uses "." for thousands)
+    .replace(/,/g, ".");       // replace decimal comma with dot
+  const n = parseFloat(cleaned);
   return isNaN(n) ? null : n;
+}
+
+/** Temperature keywords that indicate a textual possibilidade_venda */
+const TEMPERATURA_KEYWORDS = ["frio", "morno", "quente", "sem momento"];
+
+function isTextualTemperatura(v: string): boolean {
+  const lower = v.toLowerCase().trim();
+  return TEMPERATURA_KEYWORDS.some((k) => lower.includes(k));
 }
 
 /** Extract UTM params from campos_adicionais (custom fields from landing page) */
@@ -185,6 +200,21 @@ export class CvCrmAdapter implements CrmAdapter {
     }
 
     const now = new Date();
+
+    // Sampled field-presence diagnostic (first lead only) — helps detect API plan changes
+    if (leads.length > 0) {
+      const sample = leads[0];
+      console.log(`[CvCrmAdapter] field presence check (leadId=${sample.idlead}):`, {
+        has_valor: sample.valor != null,
+        valor_raw: sample.valor,
+        has_possibilidade_venda: sample.possibilidade_venda != null,
+        possibilidade_venda_raw: sample.possibilidade_venda,
+        has_momento_lead: sample.momento_lead != null,
+        momento_lead_raw: sample.momento_lead,
+        has_score: sample.score != null,
+      });
+    }
+
     return leads.map((l): NormalizedLead => {
       const dadosCv: Record<string, unknown> = {};
 
@@ -203,8 +233,20 @@ export class CvCrmAdapter implements CrmAdapter {
 
       // Qualificação
       if (l.score !== null && l.score !== undefined) dadosCv.score = l.score;
-      if (l.possibilidade_venda) dadosCv.possibilidadeVenda = l.possibilidade_venda;
+
+      // possibilidade_venda can be EITHER:
+      //   • numeric 1–5 (manual broker score) → stored as possibilidadeVenda
+      //   • textual "Lead Frio/Morno/Quente/Sem momento" → stored as momentoLead
+      if (l.possibilidade_venda) {
+        if (isTextualTemperatura(l.possibilidade_venda)) {
+          dadosCv.momentoLead = l.possibilidade_venda;
+        } else {
+          dadosCv.possibilidadeVenda = l.possibilidade_venda;
+        }
+      }
+      // momento_lead is a dedicated temperature field on some CV CRM plans
       if (l.momento_lead) dadosCv.momentoLead = l.momento_lead;
+
       if (l.profissao) dadosCv.profissao = l.profissao;
       if (l.renda_familiar) dadosCv.rendaFamiliar = l.renda_familiar;
       if (l.feedback) dadosCv.feedback = l.feedback;
@@ -250,7 +292,8 @@ export class CvCrmAdapter implements CrmAdapter {
         valor: parseValor(l.valor),
         rating: l.score ?? null,
         status: inferStatus(l),
-        momentoLead: l.momento_lead?.trim() || null,
+        // momentoLead: prefer dedicated moment_lead field, then textual possibilidade_venda
+        momentoLead: (dadosCv.momentoLead as string | null | undefined)?.trim() || null,
         dadosCv: Object.keys(dadosCv).length > 0 ? dadosCv : null,
       };
     });
