@@ -242,17 +242,28 @@ export async function GET(
     select: { metaLeadId: true, adName: true, adId: true, adsetName: true, campaignName: true },
   });
 
-  metaLeadsConfirmados = metaLeadForms.length;
-
   if (metaLeadForms.length > 0) {
     const metaLeadIds = metaLeadForms.map((ml) => ml.metaLeadId);
+    // Apply tag filter (and leadFilter) so porCriativo only counts leads that
+    // passed the configured filters — not all raw Meta form submissions.
     const crmMatched = await prisma.leadCrm.findMany({
-      where: { clienteId: id, metaLeadId: { in: metaLeadIds } },
+      where: {
+        clienteId: id,
+        metaLeadId: { in: metaLeadIds },
+        ...(andClauses.length > 0 ? { AND: andClauses } : {}),
+      },
       select: { metaLeadId: true, status: true, valor: true, etapa: true, rating: true },
     });
     const crmByMeta = new Map(crmMatched.map((l) => [l.metaLeadId!, l]));
 
+    // metaLeadsConfirmados = how many forms matched a tag-filtered CRM lead
+    metaLeadsConfirmados = crmByMeta.size;
+
     for (const ml of metaLeadForms) {
+      const crm = crmByMeta.get(ml.metaLeadId);
+      // Only count this form if it corresponds to a tag-filtered CRM lead
+      if (!crm) continue;
+
       const adName = ml.adName?.trim() ?? "(sem nome)";
 
       let cb = criativoMap.get(adName);
@@ -269,8 +280,7 @@ export async function GET(
         ccb.leads++;
       }
 
-      const crm = crmByMeta.get(ml.metaLeadId);
-      if (crm) {
+      {
         const isWon = crm.status === "won";
         const isLost = crm.status === "lost";
         const etapaLower = norm(crm.etapa ?? "");
