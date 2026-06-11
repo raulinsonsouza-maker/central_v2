@@ -5,7 +5,7 @@ import { prisma } from "@/lib/db";
  * Normaliza a fonte do RD Station CRM para um canal de mídia canônico.
  * A lista de termos cobre os nomes mais comuns que os usuários configuram.
  */
-export function canalFromFonte(
+function canalFromFonte(
   fonte: string | null,
 ): "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO" {
   if (!fonte) return "OUTRO";
