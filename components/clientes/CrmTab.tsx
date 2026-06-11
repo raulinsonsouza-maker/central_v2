@@ -111,8 +111,8 @@ interface PorConversao {
   ratingMedio: number | null;
 }
 
-interface PorMidia {
-  midia: string;
+interface PorCampanha {
+  campanha: string;
   canal: string;
   leads: number;
   ganhos: number;
@@ -145,7 +145,7 @@ interface AtribuicaoData {
   porCanal: PorCanal[];
   porEstado: PorEstado[];
   porConversao: PorConversao[];
-  porMidia: PorMidia[];
+  porCampanha: PorCampanha[];
   leadsComEstado: number;
   leadsComConversao: number;
   ultimoSyncAt?: string | null;
@@ -173,17 +173,17 @@ function canalFromMidia(
   // Primary: midiaOriginal (real paid media channel)
   if (midiaOriginal) {
     const m = norm(midiaOriginal);
-    if (m.includes("facebook") || m.includes("meta") || m.includes("instagram") || m.includes("fb ads")) return "META";
+    if (m.includes("facebook") || m.includes("meta") || m.includes("instagram") || m.includes("fb ads") || /\bfb\b/.test(m)) return "META";
     if (m.includes("google") || m.includes("youtube") || m.includes("pmax") || m.includes("busca paga")) return "GOOGLE";
     if (m.includes("indica") || m.includes("referral") || m.includes("amigo") || m.includes("parceiro")) return "INDICACAO";
     if (m.includes("organic") || m.includes("organico") || m.includes("seo")) return "ORGANICO";
-    if (m.includes("outdoor") || m.includes("busdoor") || m.includes("ooh") || m.includes("email") || m.includes("whatsapp")) return "DIRETO";
+    if (m.includes("email") || m.includes("whatsapp")) return "DIRETO";
   }
 
   // Fallback: fonte
   if (!fonte) return "OUTRO";
   const f = norm(fonte);
-  if (f.includes("facebook") || f.includes("meta") || f.includes("instagram")) return "META";
+  if (f.includes("facebook") || f.includes("meta") || f.includes("instagram") || /\bfb\b/.test(f)) return "META";
   if (f.includes("google") || f.includes("busca paga") || f.includes("youtube") || f.includes("pmax")) return "GOOGLE";
   if (f.includes("organic") || f.includes("organico") || f.includes("seo")) return "ORGANICO";
   if (f.includes("indica") || f.includes("referral") || f.includes("referencia")) return "INDICACAO";
@@ -514,9 +514,9 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
 // ─── Campaign Section ─────────────────────────────────────────────────────────
 
 function CampanhaSection({ data }: { data: AtribuicaoData }) {
-  const porMidia = data.porMidia ?? [];
-  const metaCampanhas = porMidia.filter((m) => m.canal === "META").sort((a, b) => b.leads - a.leads);
-  const googleCampanhas = porMidia.filter((m) => m.canal === "GOOGLE").sort((a, b) => b.leads - a.leads);
+  const porCampanha = data.porCampanha ?? [];
+  const metaCampanhas = porCampanha.filter((m) => m.canal === "META").sort((a, b) => b.leads - a.leads);
+  const googleCampanhas = porCampanha.filter((m) => m.canal === "GOOGLE").sort((a, b) => b.leads - a.leads);
 
   if (metaCampanhas.length === 0 && googleCampanhas.length === 0) return null;
 
@@ -525,7 +525,7 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
     canal,
     investCanal,
   }: {
-    rows: PorMidia[];
+    rows: PorCampanha[];
     canal: "META" | "GOOGLE";
     investCanal: number;
   }) => {
@@ -557,14 +557,14 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
             <tbody>
               {rows.map((row, i) => (
                 <tr
-                  key={row.midia}
+                  key={row.campanha}
                   className={`border-b border-[var(--border)]/50 transition-colors hover:bg-[var(--muted)]/20 ${
                     i % 2 === 0 ? "" : "bg-[var(--muted)]/10"
                   }`}
                 >
                   <td className="px-4 py-2.5">
-                    <span className="max-w-[200px] block truncate font-medium text-[var(--foreground)]" title={row.midia}>
-                      {row.midia}
+                    <span className="max-w-[200px] block truncate font-medium text-[var(--foreground)]" title={row.campanha}>
+                      {row.campanha}
                     </span>
                   </td>
                   <td className="px-4 py-2.5 tabular-nums font-semibold text-[var(--foreground)]">{row.leads}</td>

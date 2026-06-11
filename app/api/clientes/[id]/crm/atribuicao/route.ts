@@ -15,17 +15,17 @@ function canalFromMidia(
   // Primary: midiaOriginal has the real paid media channel name
   if (midiaOriginal) {
     const m = norm(midiaOriginal);
-    if (m.includes("facebook") || m.includes("meta") || m.includes("instagram") || m.includes("fb ads") || m.includes("meta ads")) return "META";
+    if (m.includes("facebook") || m.includes("meta") || m.includes("instagram") || m.includes("fb ads") || m.includes("meta ads") || /\bfb\b/.test(m)) return "META";
     if (m.includes("google") || m.includes("youtube") || m.includes("pmax") || m.includes("busca paga") || m.includes("performance max")) return "GOOGLE";
     if (m.includes("indica") || m.includes("referral") || m.includes("referencia") || m.includes("amigo") || m.includes("parceiro")) return "INDICACAO";
     if (m.includes("organic") || m.includes("organico") || m.includes("seo")) return "ORGANICO";
-    if (m.includes("outdoor") || m.includes("busdoor") || m.includes("ooh") || m.includes("email") || m.includes("whatsapp")) return "DIRETO";
+    if (m.includes("email") || m.includes("whatsapp")) return "DIRETO";
   }
 
   // Fallback: fonte (CV CRM portal name)
   if (!fonte) return "OUTRO";
   const f = norm(fonte);
-  if (f.includes("facebook") || f.includes("meta") || f.includes("instagram") || f.includes("fb ads")) return "META";
+  if (f.includes("facebook") || f.includes("meta") || f.includes("instagram") || f.includes("fb ads") || /\bfb\b/.test(f)) return "META";
   if (f.includes("google") || f.includes("busca paga") || f.includes("youtube") || f.includes("pmax") || f.includes("performance max")) return "GOOGLE";
   if (f.includes("organic") || f.includes("organico") || f.includes("seo")) return "ORGANICO";
   if (f.includes("indica") || f.includes("referral") || f.includes("referencia") || f.includes("parceiro")) return "INDICACAO";
@@ -57,7 +57,9 @@ export async function GET(
   const fromParam = url.searchParams.get("from");
   const toParam = url.searchParams.get("to");
   const dateFrom = fromParam ? new Date(fromParam) : defaultFrom;
-  const dateTo = toParam ? new Date(toParam) : now;
+  const dateTo = toParam
+    ? (() => { const d = new Date(toParam); d.setHours(23, 59, 59, 999); return d; })()
+    : now;
 
   const config = await prisma.crmConfig.findUnique({
     where: { clienteId: id },
@@ -95,7 +97,7 @@ export async function GET(
   const canalMap = new Map<string, Bucket>();
   const estadoMap = new Map<string, Bucket>();
   const conversaoMap = new Map<string, Bucket>();
-  const midiaMap = new Map<string, { canal: Canal } & Bucket>();
+  const campanhaMap = new Map<string, { canal: Canal } & Bucket>();
 
   let leadsComEstado = 0;
   let leadsComConversao = 0;
@@ -130,10 +132,12 @@ export async function GET(
     const conversao = cv?.conversaoOriginal?.trim() || midiaOriginal || null;
     if (conversao) { leadsComConversao++; addTo(conversaoMap, conversao); }
 
-    // porMidia: group by midiaOriginal for paid-campaign breakdown
-    if (midiaOriginal) {
-      let b = midiaMap.get(midiaOriginal);
-      if (!b) { b = { canal, ...emptyBucket() }; midiaMap.set(midiaOriginal, b); }
+    // porCampanha: group by conversaoOriginal (campaign/landing page) for paid-channel breakdown
+    // Only track META and GOOGLE campaigns; others are handled in porCanal
+    const conversaoKey = cv?.conversaoOriginal?.trim() ?? null;
+    if (conversaoKey && (canal === "META" || canal === "GOOGLE")) {
+      let b = campanhaMap.get(conversaoKey);
+      if (!b) { b = { canal, ...emptyBucket() }; campanhaMap.set(conversaoKey, b); }
       b.leads++;
       if (visitou) b.visitou++;
       if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
@@ -183,10 +187,10 @@ export async function GET(
     .sort((a, b) => b.leads - a.leads)
     .slice(0, 50);
 
-  const porMidia = [...midiaMap.entries()]
-    .map(([midia, b]) => ({
-      midia, canal: b.canal,
-      ...toRow(midia, b),
+  const porCampanha = [...campanhaMap.entries()]
+    .map(([campanha, b]) => ({
+      campanha, canal: b.canal,
+      ...toRow(campanha, b),
       investCanal: b.canal === "META" ? investMeta : b.canal === "GOOGLE" ? investGoogle : null,
     }))
     .sort((a, b) => b.leads - a.leads);
@@ -208,7 +212,7 @@ export async function GET(
     cplGoogleCampanha: leadsGoogle > 0 ? investGoogle / leadsGoogle : null,
     cplMetaCrm: metaCrmLeads > 0 ? investMeta / metaCrmLeads : null,
     cplGoogleCrm: googleCrmLeads > 0 ? investGoogle / googleCrmLeads : null,
-    porFonte, porCanal, porEstado, porConversao, porMidia,
+    porFonte, porCanal, porEstado, porConversao, porCampanha,
     leadsComEstado, leadsComConversao,
     ultimoSyncAt: config.ultimoSyncAt,
   });
