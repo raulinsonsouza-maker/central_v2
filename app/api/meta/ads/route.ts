@@ -62,6 +62,9 @@ function buildPersistedAdsResponse(
       impressions: number;
       clicks: number;
       cpc: number;
+      leads: number;
+      purchases: number;
+      messagingConversationsStarted: number;
     }
   >();
 
@@ -71,11 +74,17 @@ function buildPersistedAdsResponse(
     const clicks = row.clicks ?? 0;
     const impressions = row.impressions ?? 0;
     const cpc = Number(row.cpc ?? 0);
+    const leads = row.leads ?? 0;
+    const purchases = row.purchases ?? 0;
+    const conversas = row.messagingConversationsStarted ?? 0;
 
     if (existing) {
       existing.spend += spend;
       existing.impressions += impressions;
       existing.clicks += clicks;
+      existing.leads += leads;
+      existing.purchases += purchases;
+      existing.messagingConversationsStarted += conversas;
       if (!existing.creative.video_source_url && row.videoSourceUrl) {
         existing.creative.video_source_url = row.videoSourceUrl;
       }
@@ -119,38 +128,55 @@ function buildPersistedAdsResponse(
       impressions,
       clicks,
       cpc,
+      leads,
+      purchases,
+      messagingConversationsStarted: conversas,
     });
   }
 
-  return Array.from(byAd.values()).map((item) => ({
-    id: item.id,
-    name: item.name,
-    effective_status: item.effective_status,
-    adset: {
-      campaign: {
-        objective: item.objective,
-      },
-    },
-    adcreatives: {
-      data: [item.creative],
-    },
-    insights: {
-      data: [
-        {
-          spend: item.spend.toFixed(2),
-          impressions: String(item.impressions),
-          clicks: String(item.clicks),
-          ctr: item.impressions > 0 ? ((item.clicks / item.impressions) * 100).toFixed(2) : "0.00",
-          cpc:
-            item.clicks > 0
-              ? (item.spend / item.clicks).toFixed(2)
-              : item.cpc
-                ? item.cpc.toFixed(2)
-                : "0.00",
+  return Array.from(byAd.values()).map((item) => {
+    const actions: Array<{ action_type: string; value: string }> = [];
+    if (item.leads > 0) {
+      actions.push({ action_type: "lead", value: String(item.leads) });
+      actions.push({ action_type: "onsite_conversion.lead_grouped", value: String(item.leads) });
+    }
+    if (item.purchases > 0) {
+      actions.push({ action_type: "offsite_conversion.fb_pixel_purchase", value: String(item.purchases) });
+    }
+    if (item.messagingConversationsStarted > 0) {
+      actions.push({ action_type: "onsite_conversion.messaging_conversation_started_7d", value: String(item.messagingConversationsStarted) });
+    }
+    return {
+      id: item.id,
+      name: item.name,
+      effective_status: item.effective_status,
+      adset: {
+        campaign: {
+          objective: item.objective,
         },
-      ],
-    },
-  }));
+      },
+      adcreatives: {
+        data: [item.creative],
+      },
+      insights: {
+        data: [
+          {
+            spend: item.spend.toFixed(2),
+            impressions: String(item.impressions),
+            clicks: String(item.clicks),
+            ctr: item.impressions > 0 ? ((item.clicks / item.impressions) * 100).toFixed(2) : "0.00",
+            cpc:
+              item.clicks > 0
+                ? (item.spend / item.clicks).toFixed(2)
+                : item.cpc
+                  ? item.cpc.toFixed(2)
+                  : "0.00",
+            ...(actions.length > 0 ? { actions } : {}),
+          },
+        ],
+      },
+    };
+  });
 }
 
 export async function GET(request: NextRequest) {

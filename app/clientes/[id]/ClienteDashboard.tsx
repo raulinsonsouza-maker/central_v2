@@ -1864,18 +1864,29 @@ function MetaCriativosGrid({
     return ads
       .map((ad) => {
         const creative = ad.adcreatives?.data?.[0];
-        const insight = ad.insights?.data?.[0];
-        const spend = insight?.spend ? parseFloat(insight.spend) : 0;
-        const impressions = insight?.impressions ? parseInt(insight.impressions, 10) : 0;
-        const linkClicks = insight?.inline_link_clicks ? parseInt(insight.inline_link_clicks, 10) : 0;
-        const allClicks = insight?.clicks ? parseInt(insight.clicks, 10) : 0;
+        const insightRows = ad.insights?.data ?? [];
+
+        // Aggregate metrics across ALL daily rows (API returns time_increment=1)
+        const spend = insightRows.reduce((s, r) => s + (r.spend ? parseFloat(r.spend) : 0), 0);
+        const impressions = insightRows.reduce((s, r) => s + (r.impressions ? parseInt(r.impressions, 10) : 0), 0);
+        const linkClicks = insightRows.reduce((s, r) => s + (r.inline_link_clicks ? parseInt(r.inline_link_clicks, 10) : 0), 0);
+        const allClicks = insightRows.reduce((s, r) => s + (r.clicks ? parseInt(r.clicks, 10) : 0), 0);
         const clicks = linkClicks || allClicks;
-        const ctr = insight?.ctr ? parseFloat(insight.ctr) : impressions > 0 ? (clicks / impressions) * 100 : 0;
-        const cpcFromApi = insight?.cpc ? parseFloat(insight.cpc) : 0;
+
+        // Merge actions by type (sum across all daily rows)
+        const actionsMap = new Map<string, number>();
+        for (const row of insightRows) {
+          for (const action of row.actions ?? []) {
+            actionsMap.set(action.action_type, (actionsMap.get(action.action_type) ?? 0) + (parseInt(action.value, 10) || 0));
+          }
+        }
+        const actions = Array.from(actionsMap.entries()).map(([action_type, value]) => ({ action_type, value: String(value) }));
+
+        const ctr = impressions > 0 ? (clicks / impressions) * 100 : 0;
+        const cpcFromApi = insightRows[0]?.cpc ? parseFloat(insightRows[0].cpc) : 0;
         const cpc = clicks > 0 ? spend / clicks : cpcFromApi;
         const cpm = impressions > 0 ? (spend / impressions) * 1000 : 0;
         const mediaType = creative?.video_source_url || creative?.video_embed_html || creative?.video_id ? "video" : "image";
-        const actions = insight?.actions ?? [];
         const getAction = (type: string) =>
           parseInt(actions.find((a) => a.action_type === type)?.value ?? "0", 10) || 0;
         const leadCount = getAction("lead");
@@ -1895,10 +1906,10 @@ function MetaCriativosGrid({
           getAction("onsite_conversion.post_save");
         const leads = isComprasPanel ? comprasCount : isVisitasPanel ? visitasCount : conversasMode ? conversasCount : conventionalLeads;
         const video3sViews = getAction("video_view");
-        const video100Views = parseInt(
-          insight?.video_p100_watched_actions?.[0]?.value ?? "0", 10
-        ) || 0;
-        const frequency = insight?.frequency ? parseFloat(insight.frequency) : 0;
+        // Sum video 100% completions across all daily rows
+        const video100Views = insightRows.reduce((s, r) => s + (parseInt(r.video_p100_watched_actions?.[0]?.value ?? "0", 10) || 0), 0);
+        // Use last row's frequency (it's an average, not a sum)
+        const frequency = insightRows.at(-1)?.frequency ? parseFloat(insightRows.at(-1)!.frequency!) : 0;
         const cr = isVisitasPanel
           ? (impressions > 0 ? (leads / impressions) * 1000 : 0)
           : clicks > 0 ? (leads / clicks) * 100 : 0;
