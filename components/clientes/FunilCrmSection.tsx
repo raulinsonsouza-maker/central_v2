@@ -120,12 +120,8 @@ export function FunilCrmSection({
 
   const maxCount = Math.max(...macroGroups.map((g) => g.count), 1);
 
-  // Use ganhos from "Vendas" macro-group as the canonical Vendas count,
-  // falling back to totalGanhos if no Vendas-stage leads exist.
-  const vendasGanhos = macroMap.get("Vendas")?.ganhos ?? data.totalGanhos;
-
   const taxaFechamento = totalLeads > 0
-    ? ((vendasGanhos / totalLeads) * 100).toFixed(1)
+    ? ((data.totalGanhos / totalLeads) * 100).toFixed(1)
     : "0.0";
 
   return (
@@ -164,9 +160,9 @@ export function FunilCrmSection({
             </p>
           </div>
           <div className="px-4 py-3 text-center">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Vendas</p>
+            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Fechamentos</p>
             <p className="mt-1 text-lg font-extrabold tabular-nums text-emerald-400">
-              {vendasGanhos.toLocaleString("pt-BR")}
+              {data.totalGanhos.toLocaleString("pt-BR")}
             </p>
           </div>
           <div className="hidden px-4 py-3 text-center sm:block">

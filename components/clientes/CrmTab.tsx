@@ -891,84 +891,35 @@ function AtribuicaoSection({
                             if (isActive) onFilter(null);
                             else onFilter({ type: "canal", value: c.canal, label: `Canal: ${cfg.label}` });
                           };
-                          // Meta sub-data
-                          const metaConfirmados = c.canal === "META" ? (data.metaLeadsConfirmados ?? 0) : 0;
-                          const metaCrm = c.canal === "META" ? ((data.metaCrmLeads ?? 0) - metaConfirmados) : 0;
                           return (
-                            <React.Fragment key={c.canal}>
-                              <tr
-                                onClick={handleClick}
-                                className={`cursor-pointer border-b border-[var(--border)]/40 transition-colors hover:bg-[var(--primary)]/5 ${
-                                  isActive ? "bg-[var(--primary)]/8" : ""
-                                } ${c.canal === "META" && metaConfirmados > 0 ? "" : "last:border-0"}`}
-                              >
-                                <td className="py-2 pr-3">
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: cfg.hex }} />
-                                    <span className={`text-[12px] font-semibold ${isActive ? "text-[var(--primary)]" : cfg.color}`}>{cfg.label}</span>
-                                    {isActive && <span className="text-[9px] text-[var(--primary)]/60">✓ filtrado</span>}
-                                  </div>
-                                </td>
-                                <td className={`py-2 text-right tabular-nums text-[12px] ${isActive ? "font-bold text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
-                                  {c.leads.toLocaleString("pt-BR")}
-                                </td>
-                                <td className="py-2 text-right tabular-nums text-[12px] font-bold text-emerald-400">
-                                  {c.ganhos > 0 ? c.ganhos : <span className="font-normal text-[var(--muted-foreground)]">—</span>}
-                                </td>
-                                <td className="py-2 text-right tabular-nums text-[12px]">
-                                  {taxaGanho > 0 ? (
-                                    <span className="font-semibold text-emerald-400">{taxaGanho.toFixed(1)}%</span>
-                                  ) : (
-                                    <span className="text-[var(--muted-foreground)]">—</span>
-                                  )}
-                                </td>
-                              </tr>
-                              {/* Meta sub-rows: confirmed vs CRM-only */}
-                              {c.canal === "META" && metaConfirmados > 0 && (
-                                <>
-                                  <tr
-                                    onClick={() => {
-                                      const isSubActive = activeFilter?.type === "canal" && activeFilter.value === "META_CONFIRMED";
-                                      onFilter(isSubActive ? null : { type: "canal", value: "META_CONFIRMED", label: "Meta — Confirmados" });
-                                    }}
-                                    className={`cursor-pointer border-b border-[var(--border)]/20 transition-colors hover:bg-emerald-500/5 ${
-                                      activeFilter?.type === "canal" && activeFilter.value === "META_CONFIRMED" ? "bg-emerald-500/8" : ""
-                                    }`}
-                                  >
-                                    <td className="py-1.5 pl-5 pr-3">
-                                      <div className="flex items-center gap-1.5">
-                                        <span className="text-[10px] text-emerald-400/60">└</span>
-                                        <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-emerald-400" />
-                                        <span className="text-[11px] font-medium text-emerald-400">✓ Campanha</span>
-                                      </div>
-                                    </td>
-                                    <td className="py-1.5 text-right tabular-nums text-[11px] font-semibold text-emerald-400">{metaConfirmados}</td>
-                                    <td colSpan={2} className="py-1.5 text-right text-[10px] text-emerald-400/50">confirmados</td>
-                                  </tr>
-                                  {metaCrm > 0 && (
-                                    <tr
-                                      onClick={() => {
-                                        const isSubActive = activeFilter?.type === "canal" && activeFilter.value === "META_CRM";
-                                        onFilter(isSubActive ? null : { type: "canal", value: "META_CRM", label: "Meta — Só CRM" });
-                                      }}
-                                      className={`cursor-pointer border-b border-[var(--border)]/40 last:border-0 transition-colors hover:bg-amber-500/5 ${
-                                        activeFilter?.type === "canal" && activeFilter.value === "META_CRM" ? "bg-amber-500/8" : ""
-                                      }`}
-                                    >
-                                      <td className="py-1.5 pl-5 pr-3">
-                                        <div className="flex items-center gap-1.5">
-                                          <span className="text-[10px] text-amber-400/60">└</span>
-                                          <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-amber-400/60" />
-                                          <span className="text-[11px] font-medium text-amber-400/80">CRM</span>
-                                        </div>
-                                      </td>
-                                      <td className="py-1.5 text-right tabular-nums text-[11px] font-semibold text-amber-400/80">{metaCrm}</td>
-                                      <td colSpan={2} className="py-1.5 text-right text-[10px] text-amber-400/40">sem confirmação</td>
-                                    </tr>
-                                  )}
-                                </>
-                              )}
-                            </React.Fragment>
+                            <tr
+                              key={c.canal}
+                              onClick={handleClick}
+                              className={`cursor-pointer border-b border-[var(--border)]/40 last:border-0 transition-colors hover:bg-[var(--primary)]/5 ${
+                                isActive ? "bg-[var(--primary)]/8" : ""
+                              }`}
+                            >
+                              <td className="py-2 pr-3">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: cfg.hex }} />
+                                  <span className={`text-[12px] font-semibold ${isActive ? "text-[var(--primary)]" : cfg.color}`}>{cfg.label}</span>
+                                  {isActive && <span className="text-[9px] text-[var(--primary)]/60">✓ filtrado</span>}
+                                </div>
+                              </td>
+                              <td className={`py-2 text-right tabular-nums text-[12px] ${isActive ? "font-bold text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
+                                {c.leads.toLocaleString("pt-BR")}
+                              </td>
+                              <td className="py-2 text-right tabular-nums text-[12px] font-bold text-emerald-400">
+                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal text-[var(--muted-foreground)]">—</span>}
+                              </td>
+                              <td className="py-2 text-right tabular-nums text-[12px]">
+                                {taxaGanho > 0 ? (
+                                  <span className="font-semibold text-emerald-400">{taxaGanho.toFixed(1)}%</span>
+                                ) : (
+                                  <span className="text-[var(--muted-foreground)]">—</span>
+                                )}
+                              </td>
+                            </tr>
                           );
                         })}
                       </tbody>
