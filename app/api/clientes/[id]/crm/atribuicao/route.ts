@@ -202,6 +202,8 @@ export async function GET(
   const totalValor = leads.filter((l) => l.status === "won").reduce((s, l) => s + (l.valor ? Number(l.valor) : 0), 0);
   const metaCrmLeads = porCanal.find((c) => c.canal === "META")?.leads ?? 0;
   const googleCrmLeads = porCanal.find((c) => c.canal === "GOOGLE")?.leads ?? 0;
+  const metaGanhos = porCanal.find((c) => c.canal === "META")?.ganhos ?? 0;
+  const googleGanhos = porCanal.find((c) => c.canal === "GOOGLE")?.ganhos ?? 0;
 
   return NextResponse.json({
     configured: true,
@@ -212,6 +214,8 @@ export async function GET(
     cplGoogleCampanha: leadsGoogle > 0 ? investGoogle / leadsGoogle : null,
     cplMetaCrm: metaCrmLeads > 0 ? investMeta / metaCrmLeads : null,
     cplGoogleCrm: googleCrmLeads > 0 ? investGoogle / googleCrmLeads : null,
+    cacMetaCrm: metaGanhos > 0 && investMeta > 0 ? investMeta / metaGanhos : null,
+    cacGoogleCrm: googleGanhos > 0 && investGoogle > 0 ? investGoogle / googleGanhos : null,
     porFonte, porCanal, porEstado, porConversao, porCampanha,
     leadsComEstado, leadsComConversao,
     ultimoSyncAt: config.ultimoSyncAt,

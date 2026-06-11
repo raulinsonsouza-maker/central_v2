@@ -141,6 +141,8 @@ interface AtribuicaoData {
   cplGoogleCampanha: number | null;
   cplMetaCrm: number | null;
   cplGoogleCrm: number | null;
+  cacMetaCrm: number | null;
+  cacGoogleCrm: number | null;
   porFonte: PorFonte[];
   porCanal: PorCanal[];
   porEstado: PorEstado[];
@@ -662,33 +664,29 @@ function AtribuicaoSection({
         </div>
       ) : (
         <>
-          {/* KPI Cards */}
+          {/* KPI Cards — Valor Vendido em destaque */}
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {/* Total */}
+            {/* Valor Vendido — destaque principal */}
+            <div className="group relative col-span-2 overflow-hidden rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:col-span-2">
+              <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-emerald-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.08]" />
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-400/70">Valor Vendido</p>
+              <p className="mt-1 text-3xl font-extrabold tabular-nums text-emerald-400">
+                {data.totalValor > 0 ? formatCurrencyBR(data.totalValor) : "—"}
+              </p>
+              <div className="mt-1 flex items-center gap-3 text-[11px] text-emerald-400/60">
+                <span>{data.totalGanhos} unidade{data.totalGanhos !== 1 ? "s" : ""} vendida{data.totalGanhos !== 1 ? "s" : ""}</span>
+                {data.totalGanhos > 0 && data.totalValor > 0 && (
+                  <span>· ticket médio {formatCurrencyBR(data.totalValor / data.totalGanhos)}</span>
+                )}
+              </div>
+            </div>
+            {/* Leads */}
             <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
               <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[var(--primary)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.05]" />
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Total leads CRM</p>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Leads CRM</p>
               <p className="mt-1 text-2xl font-extrabold tabular-nums text-[var(--foreground)]">{totalLeads.toLocaleString("pt-BR")}</p>
               <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
                 {((data.totalGanhos / Math.max(totalLeads, 1)) * 100).toFixed(1)}% conv. geral
-              </p>
-            </div>
-            {/* Ganhos */}
-            <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-              <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-emerald-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Ganhos</p>
-              <p className="mt-1 text-2xl font-extrabold tabular-nums text-emerald-400">{data.totalGanhos}</p>
-              {data.totalValor > 0 && (
-                <p className="mt-1 text-[11px] text-emerald-400/70">{formatCurrencyBR(data.totalValor)}</p>
-              )}
-            </div>
-            {/* Perdidos */}
-            <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-              <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-red-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Perdidos</p>
-              <p className="mt-1 text-2xl font-extrabold tabular-nums text-red-400">{data.totalPerdidos}</p>
-              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
-                {((data.totalPerdidos / Math.max(totalLeads, 1)) * 100).toFixed(1)}% do total
               </p>
             </div>
             {/* Em aberto */}
@@ -697,7 +695,7 @@ function AtribuicaoSection({
               <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Em aberto</p>
               <p className="mt-1 text-2xl font-extrabold tabular-nums text-blue-400">{data.totalAndamento}</p>
               <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
-                {((data.totalAndamento / Math.max(totalLeads, 1)) * 100).toFixed(1)}% do total
+                {data.totalPerdidos} perdidos · {((data.totalPerdidos / Math.max(totalLeads, 1)) * 100).toFixed(0)}%
               </p>
             </div>
           </div>
@@ -711,22 +709,50 @@ function AtribuicaoSection({
                   <BarChart3 className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
                   <p className="text-sm font-bold text-[var(--foreground)]">Canais de Origem</p>
                 </div>
-                <div className="flex-1 space-y-0.5">
-                  {porCanal.length === 0 ? (
-                    <p className="py-6 text-center text-xs text-[var(--muted-foreground)]">Sem dados</p>
-                  ) : (
-                    porCanal.map((c) => (
-                      <HorizontalBar
-                        key={c.canal}
-                        label={CANAL_CFG[c.canal]?.label ?? c.canal}
-                        value={c.leads}
-                        total={totalLeads}
-                        score={c.ratingMedio}
-                        color={CANAL_CFG[c.canal]?.hex}
-                      />
-                    ))
-                  )}
-                </div>
+                {porCanal.length === 0 ? (
+                  <p className="py-6 text-center text-xs text-[var(--muted-foreground)]">Sem dados</p>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b border-[var(--border)]">
+                          {["Canal", "Leads", "Vendas", "Conv%"].map((h) => (
+                            <th key={h} className={`pb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)] ${h === "Canal" ? "text-left" : "text-right"}`}>
+                              {h}
+                            </th>
+                          ))}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {porCanal.map((c) => {
+                          const cfg = CANAL_CFG[c.canal] ?? CANAL_CFG.OUTRO;
+                          const taxaGanho = c.leads > 0 ? ((c.ganhos / c.leads) * 100) : 0;
+                          return (
+                            <tr key={c.canal} className="border-b border-[var(--border)]/40 last:border-0">
+                              <td className="py-2 pr-3">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: cfg.hex }} />
+                                  <span className={`text-[12px] font-semibold ${cfg.color}`}>{cfg.label}</span>
+                                </div>
+                              </td>
+                              <td className="py-2 text-right tabular-nums text-[12px] text-[var(--foreground)]">{c.leads.toLocaleString("pt-BR")}</td>
+                              <td className="py-2 text-right tabular-nums text-[12px] font-bold text-emerald-400">
+                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal text-[var(--muted-foreground)]">—</span>}
+                              </td>
+                              <td className="py-2 text-right tabular-nums text-[12px]">
+                                {taxaGanho > 0 ? (
+                                  <span className="font-semibold text-emerald-400">{taxaGanho.toFixed(1)}%</span>
+                                ) : (
+                                  <span className="text-[var(--muted-foreground)]">—</span>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
               </div>
 
               {/* Distribuição por Estado */}
@@ -823,13 +849,28 @@ function AtribuicaoSection({
                   <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
                     <div className="flex items-center gap-1.5">
                       <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-400" />
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">CPL Real Meta</p>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Meta — Custo por Lead / Venda</p>
                     </div>
-                    <p className="mt-1 text-xl font-extrabold tabular-nums text-blue-400">{formatCurrencyBR(data.cplMetaCrm)}</p>
-                    <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">
-                      {formatCurrencyBR(data.investMeta)} ÷ {data.metaCrmLeads} leads CRM
+                    <div className="mt-2 grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CPL Real</p>
+                        <p className="mt-0.5 text-lg font-extrabold tabular-nums text-blue-400">{formatCurrencyBR(data.cplMetaCrm)}</p>
+                        <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">{data.metaCrmLeads} leads CRM</p>
+                      </div>
+                      {data.cacMetaCrm != null && (
+                        <div>
+                          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CAC Real</p>
+                          <p className="mt-0.5 text-lg font-extrabold tabular-nums text-blue-300">{formatCurrencyBR(data.cacMetaCrm)}</p>
+                          <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">
+                            {(data.porCanal ?? []).find(c => c.canal === "META")?.ganhos ?? 0} vendas
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <p className="mt-2 text-[10px] text-[var(--muted-foreground)]">
+                      {formatCurrencyBR(data.investMeta)} investidos
                       {data.cplMetaCampanha != null && (
-                        <span className="ml-1 opacity-60">· campanha: {formatCurrencyBR(data.cplMetaCampanha)}</span>
+                        <span className="ml-1 opacity-60">· plataforma: {formatCurrencyBR(data.cplMetaCampanha)}</span>
                       )}
                     </p>
                   </div>
@@ -838,13 +879,28 @@ function AtribuicaoSection({
                   <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
                     <div className="flex items-center gap-1.5">
                       <span className="inline-block h-1.5 w-1.5 rounded-full bg-red-400" />
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">CPL Real Google</p>
+                      <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Google — Custo por Lead / Venda</p>
                     </div>
-                    <p className="mt-1 text-xl font-extrabold tabular-nums text-red-400">{formatCurrencyBR(data.cplGoogleCrm)}</p>
-                    <p className="mt-0.5 text-[11px] text-[var(--muted-foreground)]">
-                      {formatCurrencyBR(data.investGoogle)} ÷ {data.googleCrmLeads} leads CRM
+                    <div className="mt-2 grid grid-cols-2 gap-3">
+                      <div>
+                        <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CPL Real</p>
+                        <p className="mt-0.5 text-lg font-extrabold tabular-nums text-red-400">{formatCurrencyBR(data.cplGoogleCrm)}</p>
+                        <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">{data.googleCrmLeads} leads CRM</p>
+                      </div>
+                      {data.cacGoogleCrm != null && (
+                        <div>
+                          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CAC Real</p>
+                          <p className="mt-0.5 text-lg font-extrabold tabular-nums text-red-300">{formatCurrencyBR(data.cacGoogleCrm)}</p>
+                          <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">
+                            {(data.porCanal ?? []).find(c => c.canal === "GOOGLE")?.ganhos ?? 0} vendas
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <p className="mt-2 text-[10px] text-[var(--muted-foreground)]">
+                      {formatCurrencyBR(data.investGoogle)} investidos
                       {data.cplGoogleCampanha != null && (
-                        <span className="ml-1 opacity-60">· campanha: {formatCurrencyBR(data.cplGoogleCampanha)}</span>
+                        <span className="ml-1 opacity-60">· plataforma: {formatCurrencyBR(data.cplGoogleCampanha)}</span>
                       )}
                     </p>
                   </div>
@@ -953,7 +1009,7 @@ export function CrmTab({
       )}
 
       {/* Funil */}
-      <FunilCrmSection clienteId={clienteId} />
+      <FunilCrmSection clienteId={clienteId} dateRange={dateRange} />
 
       {/* Análise de Origem */}
       <AtribuicaoSection clienteId={clienteId} dateRange={dateRange} />
