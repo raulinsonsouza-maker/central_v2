@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { findClienteById } from "@/lib/repositories/clientesRepository";
 import { outcomeCountForFato } from "@/lib/metrics/fatoMidiaOutcome";
-import { isFlorien, isDor, isGranarolo, isKombucha, isBeBlueSchool, isAcademyAmericana, isClinicaESpa } from "@/lib/clientProfiles";
+import { isFlorien, isDor, isGranarolo, isKombucha, isBeBlueSchool, isAcademyAmericana, isClinicaESpa, isImobClient } from "@/lib/clientProfiles";
 
 export async function GET(
   request: NextRequest,
@@ -69,7 +69,7 @@ export async function GET(
   const isKombuchaCliente = isKombucha(cliente);
   const isBeBlueCliente = isBeBlueSchool(cliente);
   const isAcademyCliente = isAcademyAmericana(cliente);
-  const isConversasCliente = isClinicaESpa(cliente);
+  const isConversasCliente = isClinicaESpa(cliente) && !isImobClient(cliente);
 
   let totalInvestimento = 0;
   let totalLeads = 0;

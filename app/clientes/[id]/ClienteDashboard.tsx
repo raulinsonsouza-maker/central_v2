@@ -600,7 +600,7 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   const isMiguelImoveisPanel = isMiguelImoveis(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
   const isMiguelGooglePanel = isMiguelImoveis(cliente) && canal === "google";
   const isMiguelPanel = isDrFernandoGuena(cliente) && canal !== "google";
-  const isClinicaESpaPanel = isClinicaESpa(cliente) && canal !== "google";
+  const isClinicaESpaPanel = isClinicaESpa(cliente) && !isImobClient(cliente) && canal !== "google";
   const isComprasPanel = (isDor(cliente) || isGranarolo(cliente) || isVitoBalducci(cliente)) && canal !== "google";
   const isVisitasPanel = isFlorien(cliente) && canal !== "google";
   const isAcademyPanel = isAcademyAmericana(cliente) && canal !== "google";
@@ -1243,7 +1243,7 @@ function formatPercentage(value: number) {
             <MetaCriativosGrid
               ads={metaAdsData.data}
               formatCurrency={formatCurrency}
-              conversasMode={isMiguelImoveis(cliente) || isDrFernandoGuena(cliente) || isClinicaESpa(cliente)}
+              conversasMode={isMiguelImoveis(cliente) || isDrFernandoGuena(cliente) || (isClinicaESpa(cliente) && !isImobClient(cliente))}
               isComprasPanel={isComprasPanel}
               isVisitasPanel={isVisitasPanel}
               convLabels={convLabels}
