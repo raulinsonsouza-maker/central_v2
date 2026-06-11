@@ -42,6 +42,7 @@ export async function GET(
       rating: true,
       status: true,
       dadosMarketing: true,
+      dadosCv: true,
     },
     orderBy: { dataEntrada: "desc" },
     take: 500,
@@ -63,6 +64,7 @@ export async function GET(
       rating: l.rating ?? null,
       status: l.status ?? null,
       dadosMarketing: (l.dadosMarketing as Record<string, unknown> | null) ?? null,
+      dadosCv: (l.dadosCv as Record<string, unknown> | null) ?? null,
     })),
     total: leads.length,
   });

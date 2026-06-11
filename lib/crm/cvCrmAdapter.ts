@@ -6,9 +6,45 @@ interface CvLead {
   idsituacao?: number | null;
   data_cad?: string | null;
   data_cancelamento?: string | null;
+  data_ultima_interacao?: string | null;
   nome?: string | null;
   email?: string | null;
   telefone?: string | null;
+  // Origem / mídia
+  origem_nome?: string | null;
+  origem_ultimo_nome?: string | null;
+  midia_original?: string | null;
+  midia_ultimo?: string | null;
+  conversao_original?: string | null;
+  conversao_ultimo?: string | null;
+  // Empreendimento
+  empreendimento?: string | null;
+  empreendimento_primeiro?: string | null;
+  empreendimento_ultimo?: string | null;
+  // Valor e qualificação
+  valor?: number | string | null;
+  score?: number | null;
+  possibilidade_venda?: string | null;
+  profissao?: string | null;
+  renda_familiar?: string | null;
+  // Cancelamento / perda
+  motivo_cancelamento?: string | null;
+  descricao_motivo_cancelamento?: string | null;
+  submotivo_cancelamento?: string | null;
+  // Atribuição comercial
+  corretor?: string | null;
+  corretor_ultimo?: string | null;
+  gestor?: string | null;
+  imobiliaria?: string | null;
+  ponto_venda?: string | null;
+  // Extras
+  tags?: string[] | null;
+  campos_adicionais?: Array<{ idcampo: string; idcampo_valores: string }> | null;
+  reserva?: string | number | null;
+  feedback?: string | null;
+  regiao?: string | null;
+  cidade?: string | null;
+  estado?: string | null;
 }
 
 interface CvDwResponse {
@@ -19,6 +55,19 @@ function parseDate(v?: string | null): Date | null {
   if (!v) return null;
   const d = new Date(v);
   return isNaN(d.getTime()) ? null : d;
+}
+
+function parseValor(v?: number | string | null): number | null {
+  if (v === null || v === undefined || v === "") return null;
+  const n = typeof v === "string" ? parseFloat(v) : v;
+  return isNaN(n) ? null : n;
+}
+
+function inferStatus(l: CvLead): string {
+  if (l.motivo_cancelamento || l.descricao_motivo_cancelamento) return "lost";
+  if (l.reserva) return "won";
+  if (l.data_cancelamento) return "lost";
+  return "ongoing";
 }
 
 export class CvCrmAdapter implements CrmAdapter {
@@ -33,7 +82,6 @@ export class CvCrmAdapter implements CrmAdapter {
   }
 
   private get baseUrl() {
-    // CVDW é a API analítica de leitura — /comercial/leads é só escrita (POST)
     return `https://${this.domain}.cvcrm.com.br/api/v1/cvdw`;
   }
 
@@ -48,7 +96,7 @@ export class CvCrmAdapter implements CrmAdapter {
   async fetchLeads(opts?: { since?: Date }): Promise<NormalizedLead[]> {
     const leads: CvLead[] = [];
     let pagina = 1;
-    const registrosPorPagina = 500; // máximo permitido pelo CVDW
+    const registrosPorPagina = 500;
 
     while (true) {
       const params = new URLSearchParams({
@@ -57,7 +105,6 @@ export class CvCrmAdapter implements CrmAdapter {
       });
 
       if (opts?.since) {
-        // Filtro incremental correto: a_partir_data_referencia
         params.set("a_partir_data_referencia", opts.since.toISOString().slice(0, 10));
       }
 
@@ -65,7 +112,6 @@ export class CvCrmAdapter implements CrmAdapter {
         headers: this.headers(),
       });
 
-      // 204 = sem dados para o filtro/página — fim da paginação
       if (res.status === 204) break;
 
       if (!res.ok) {
@@ -84,17 +130,68 @@ export class CvCrmAdapter implements CrmAdapter {
     }
 
     const now = new Date();
-    return leads.map((l): NormalizedLead => ({
-      crmLeadId: String(l.idlead),
-      etapa: l.situacao ?? "Desconhecido",
-      // idsituacao é o ID numérico da etapa — funciona como proxy de ordenação
-      ordemEtapa: l.idsituacao ?? null,
-      nome: l.nome ?? null,
-      email: l.email ?? null,
-      telefone: l.telefone ?? null,
-      dataEntrada: parseDate(l.data_cad) ?? now,
-      dataFechamento: parseDate(l.data_cancelamento),
-    }));
+    return leads.map((l): NormalizedLead => {
+      const dadosCv: Record<string, unknown> = {};
+
+      // Origem e mídia
+      if (l.origem_nome) dadosCv.origem = l.origem_nome;
+      if (l.origem_ultimo_nome) dadosCv.origemUltimo = l.origem_ultimo_nome;
+      if (l.midia_original) dadosCv.midiaOriginal = l.midia_original;
+      if (l.midia_ultimo) dadosCv.midiaUltimo = l.midia_ultimo;
+      if (l.conversao_original) dadosCv.conversaoOriginal = l.conversao_original;
+      if (l.conversao_ultimo) dadosCv.conversaoUltimo = l.conversao_ultimo;
+
+      // Empreendimento de interesse
+      if (l.empreendimento) dadosCv.empreendimento = l.empreendimento;
+      if (l.empreendimento_primeiro) dadosCv.empreendimentoPrimeiro = l.empreendimento_primeiro;
+      if (l.empreendimento_ultimo) dadosCv.empreendimentoUltimo = l.empreendimento_ultimo;
+
+      // Qualificação
+      if (l.score !== null && l.score !== undefined) dadosCv.score = l.score;
+      if (l.possibilidade_venda) dadosCv.possibilidadeVenda = l.possibilidade_venda;
+      if (l.profissao) dadosCv.profissao = l.profissao;
+      if (l.renda_familiar) dadosCv.rendaFamiliar = l.renda_familiar;
+      if (l.feedback) dadosCv.feedback = l.feedback;
+
+      // Cancelamento / perda
+      if (l.motivo_cancelamento) dadosCv.motivoCancelamento = l.motivo_cancelamento;
+      if (l.descricao_motivo_cancelamento) dadosCv.descricaoCancelamento = l.descricao_motivo_cancelamento;
+      if (l.submotivo_cancelamento) dadosCv.submotivoCancelamento = l.submotivo_cancelamento;
+
+      // Atribuição comercial
+      if (l.corretor) dadosCv.corretor = l.corretor;
+      if (l.corretor_ultimo) dadosCv.corretorUltimo = l.corretor_ultimo;
+      if (l.gestor) dadosCv.gestor = l.gestor;
+      if (l.imobiliaria) dadosCv.imobiliaria = l.imobiliaria;
+      if (l.ponto_venda) dadosCv.pontoVenda = l.ponto_venda;
+
+      // Localização
+      if (l.regiao) dadosCv.regiao = l.regiao;
+      if (l.cidade) dadosCv.cidade = l.cidade;
+      if (l.estado) dadosCv.estado = l.estado;
+
+      // Extras
+      if (l.tags?.length) dadosCv.tags = l.tags;
+      if (l.campos_adicionais?.length) dadosCv.camposAdicionais = l.campos_adicionais;
+      if (l.reserva) dadosCv.reserva = l.reserva;
+
+      return {
+        crmLeadId: String(l.idlead),
+        etapa: l.situacao ?? "Desconhecido",
+        ordemEtapa: l.idsituacao ?? null,
+        nome: l.nome ?? null,
+        email: l.email ?? null,
+        telefone: l.telefone ?? null,
+        dataEntrada: parseDate(l.data_cad) ?? now,
+        dataFechamento: parseDate(l.data_cancelamento),
+        // Campos diretos mapeados para campos de 1ª classe
+        fonte: l.origem_nome ?? null,
+        valor: parseValor(l.valor),
+        rating: l.score ?? null,
+        status: inferStatus(l),
+        dadosCv: Object.keys(dadosCv).length > 0 ? dadosCv : null,
+      };
+    });
   }
 
   async testConnection(): Promise<{ ok: boolean; error?: string }> {
@@ -102,7 +199,6 @@ export class CvCrmAdapter implements CrmAdapter {
       const res = await fetch(`${this.baseUrl}/leads?pagina=1&registros_por_pagina=1`, {
         headers: this.headers(),
       });
-      // 204 = autenticado mas sem dados — conexão válida
       if (res.status === 204 || res.ok) return { ok: true };
       const text = await res.text().catch(() => "");
       return { ok: false, error: `Status ${res.status}: ${text.slice(0, 100)}` };

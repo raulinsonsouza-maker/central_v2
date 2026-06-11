@@ -23933,6 +23933,7 @@ export namespace Prisma {
     dataFechamento: number
     valor: number
     dadosMarketing: number
+    dadosCv: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -24014,6 +24015,7 @@ export namespace Prisma {
     dataFechamento?: true
     valor?: true
     dadosMarketing?: true
+    dadosCv?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -24124,6 +24126,7 @@ export namespace Prisma {
     dataFechamento: Date | null
     valor: Decimal | null
     dadosMarketing: JsonValue | null
+    dadosCv: JsonValue | null
     createdAt: Date
     updatedAt: Date
     _count: LeadCrmCountAggregateOutputType | null
@@ -24166,6 +24169,7 @@ export namespace Prisma {
     dataFechamento?: boolean
     valor?: boolean
     dadosMarketing?: boolean
+    dadosCv?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -24191,6 +24195,7 @@ export namespace Prisma {
     dataFechamento?: boolean
     valor?: boolean
     dadosMarketing?: boolean
+    dadosCv?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -24216,6 +24221,7 @@ export namespace Prisma {
     dataFechamento?: boolean
     valor?: boolean
     dadosMarketing?: boolean
+    dadosCv?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
@@ -24241,11 +24247,12 @@ export namespace Prisma {
     dataFechamento?: boolean
     valor?: boolean
     dadosMarketing?: boolean
+    dadosCv?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "rdContactId" | "fonte" | "rating" | "status" | "dataEntrada" | "dataFechamento" | "valor" | "dadosMarketing" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
+  export type LeadCrmOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "crmConfigId" | "crmLeadId" | "etapa" | "ordemEtapa" | "nome" | "telefone" | "email" | "metaLeadId" | "rdContactId" | "fonte" | "rating" | "status" | "dataEntrada" | "dataFechamento" | "valor" | "dadosMarketing" | "dadosCv" | "createdAt" | "updatedAt", ExtArgs["result"]["leadCrm"]>
   export type LeadCrmInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
     crmConfig?: boolean | CrmConfigDefaultArgs<ExtArgs>
@@ -24284,6 +24291,7 @@ export namespace Prisma {
       dataFechamento: Date | null
       valor: Prisma.Decimal | null
       dadosMarketing: Prisma.JsonValue | null
+      dadosCv: Prisma.JsonValue | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["leadCrm"]>
@@ -24729,6 +24737,7 @@ export namespace Prisma {
     readonly dataFechamento: FieldRef<"LeadCrm", 'DateTime'>
     readonly valor: FieldRef<"LeadCrm", 'Decimal'>
     readonly dadosMarketing: FieldRef<"LeadCrm", 'Json'>
+    readonly dadosCv: FieldRef<"LeadCrm", 'Json'>
     readonly createdAt: FieldRef<"LeadCrm", 'DateTime'>
     readonly updatedAt: FieldRef<"LeadCrm", 'DateTime'>
   }
@@ -26598,6 +26607,7 @@ export namespace Prisma {
     dataFechamento: 'dataFechamento',
     valor: 'valor',
     dadosMarketing: 'dadosMarketing',
+    dadosCv: 'dadosCv',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -28613,6 +28623,7 @@ export namespace Prisma {
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: JsonNullableFilter<"LeadCrm">
+    dadosCv?: JsonNullableFilter<"LeadCrm">
     createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
     updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -28638,6 +28649,7 @@ export namespace Prisma {
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
     dadosMarketing?: SortOrderInput | SortOrder
+    dadosCv?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
@@ -28667,6 +28679,7 @@ export namespace Prisma {
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: JsonNullableFilter<"LeadCrm">
+    dadosCv?: JsonNullableFilter<"LeadCrm">
     createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
     updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
@@ -28692,6 +28705,7 @@ export namespace Prisma {
     dataFechamento?: SortOrderInput | SortOrder
     valor?: SortOrderInput | SortOrder
     dadosMarketing?: SortOrderInput | SortOrder
+    dadosCv?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: LeadCrmCountOrderByAggregateInput
@@ -28723,6 +28737,7 @@ export namespace Prisma {
     dataFechamento?: DateTimeNullableWithAggregatesFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableWithAggregatesFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: JsonNullableWithAggregatesFilter<"LeadCrm">
+    dadosCv?: JsonNullableWithAggregatesFilter<"LeadCrm">
     createdAt?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"LeadCrm"> | Date | string
   }
@@ -30898,6 +30913,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutLeadsCrmInput
@@ -30923,6 +30939,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -30944,6 +30961,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutLeadsCrmNestedInput
@@ -30969,6 +30987,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -30992,6 +31011,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31013,6 +31033,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31036,6 +31057,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32830,6 +32852,7 @@ export namespace Prisma {
     dataFechamento?: SortOrder
     valor?: SortOrder
     dadosMarketing?: SortOrder
+    dadosCv?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -35103,6 +35126,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     crmConfig: CrmConfigCreateNestedOneWithoutLeadsInput
@@ -35126,6 +35150,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35702,6 +35727,7 @@ export namespace Prisma {
     dataFechamento?: DateTimeNullableFilter<"LeadCrm"> | Date | string | null
     valor?: DecimalNullableFilter<"LeadCrm"> | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: JsonNullableFilter<"LeadCrm">
+    dadosCv?: JsonNullableFilter<"LeadCrm">
     createdAt?: DateTimeFilter<"LeadCrm"> | Date | string
     updatedAt?: DateTimeFilter<"LeadCrm"> | Date | string
   }
@@ -38488,6 +38514,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutLeadsCrmInput
@@ -38511,6 +38538,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39226,6 +39254,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39900,6 +39929,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     crmConfig?: CrmConfigUpdateOneRequiredWithoutLeadsNestedInput
@@ -39923,6 +39953,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -39945,6 +39976,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -40498,6 +40530,7 @@ export namespace Prisma {
     dataFechamento?: Date | string | null
     valor?: Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -40519,6 +40552,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutLeadsCrmNestedInput
@@ -40542,6 +40576,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -40564,6 +40599,7 @@ export namespace Prisma {
     dataFechamento?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     valor?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
     dadosMarketing?: NullableJsonNullValueInput | InputJsonValue
+    dadosCv?: NullableJsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }

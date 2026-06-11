@@ -14,6 +14,8 @@ export interface NormalizedLead {
   dataEntrada: Date;
   dataFechamento?: Date | null;
   valor?: number | null;
+  /** Campos adicionais do CV CRM (origem, mídia, empreendimento, score, etc.) */
+  dadosCv?: Record<string, unknown> | null;
 }
 
 export interface CrmAdapter {

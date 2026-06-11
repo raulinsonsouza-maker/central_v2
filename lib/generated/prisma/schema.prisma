@@ -400,6 +400,7 @@ model LeadCrm {
   dataFechamento DateTime?
   valor          Decimal?  @db.Decimal(14, 2)
   dadosMarketing Json?
+  dadosCv        Json?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   cliente        Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)

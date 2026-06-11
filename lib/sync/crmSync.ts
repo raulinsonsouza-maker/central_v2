@@ -1,3 +1,4 @@
+import { Prisma } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/db";
 import { getCrmAdapter } from "@/lib/crm/factory";
 
@@ -44,6 +45,7 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
           rating: lead.rating ?? null,
           status: lead.status ?? null,
           rdContactId: lead.rdContactId ?? null,
+          dadosCv: (lead.dadosCv as Prisma.InputJsonValue) ?? Prisma.JsonNull,
         },
         update: {
           etapa: lead.etapa,
@@ -57,6 +59,7 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
           rating: lead.rating ?? null,
           status: lead.status ?? null,
           rdContactId: lead.rdContactId ?? null,
+          dadosCv: (lead.dadosCv as Prisma.InputJsonValue) ?? Prisma.JsonNull,
         },
       });
       upserted++;

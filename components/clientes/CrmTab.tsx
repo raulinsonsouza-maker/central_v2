@@ -40,6 +40,23 @@ interface Lead {
     empresa?: string | null;
     lifecycleStage?: string | null;
   } | null;
+  dadosCv?: {
+    origem?: string | null;
+    midiaOriginal?: string | null;
+    midiaUltimo?: string | null;
+    conversaoOriginal?: string | null;
+    empreendimento?: string | null;
+    empreendimentoUltimo?: string | null;
+    score?: number | null;
+    possibilidadeVenda?: string | null;
+    profissao?: string | null;
+    rendaFamiliar?: string | null;
+    motivoCancelamento?: string | null;
+    descricaoCancelamento?: string | null;
+    corretor?: string | null;
+    pontoVenda?: string | null;
+    tags?: string[] | null;
+  } | null;
 }
 
 interface PorFonte {
@@ -557,6 +574,7 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
               <tbody className="divide-y divide-[var(--border)]">
                 {leads.map((lead) => {
                   const mkt = lead.dadosMarketing ?? null;
+                  const cv = lead.dadosCv ?? null;
                   return (
                   <tr
                     key={lead.id}
@@ -595,23 +613,86 @@ export function CrmTab({ clienteId }: { clienteId: string }) {
                       )}
                     </td>
 
-                    {/* Origem (fonte) */}
-                    <td className="px-4 py-3 max-w-[160px]">
-                      {lead.fonte ? (
-                        <span
-                          className="block truncate rounded-md bg-[var(--muted)] px-2 py-0.5 text-[11px] font-medium text-[var(--foreground)]"
-                          title={lead.fonte}
-                        >
-                          {lead.fonte}
-                        </span>
-                      ) : (
-                        <span className="text-[var(--border)]">—</span>
-                      )}
+                    {/* Origem (fonte + mídia CV) */}
+                    <td className="px-4 py-3 max-w-[180px]">
+                      <div className="flex flex-col gap-0.5">
+                        {lead.fonte ? (
+                          <span
+                            className="block truncate rounded-md bg-[var(--muted)] px-2 py-0.5 text-[11px] font-medium text-[var(--foreground)]"
+                            title={lead.fonte}
+                          >
+                            {lead.fonte}
+                          </span>
+                        ) : null}
+                        {cv?.midiaOriginal && (
+                          <span
+                            className="block truncate rounded-md bg-[var(--primary)]/10 px-2 py-0.5 text-[10px] font-semibold text-[var(--primary)]"
+                            title={cv.midiaOriginal}
+                          >
+                            {cv.midiaOriginal}
+                          </span>
+                        )}
+                        {cv?.conversaoOriginal && (
+                          <span
+                            className="block truncate text-[10px] text-[var(--muted-foreground)]"
+                            title={cv.conversaoOriginal}
+                          >
+                            {cv.conversaoOriginal}
+                          </span>
+                        )}
+                        {!lead.fonte && !cv?.midiaOriginal && (
+                          <span className="text-[var(--border)]">—</span>
+                        )}
+                      </div>
                     </td>
 
-                    {/* Qualificação (dadosMarketing) */}
+                    {/* Qualificação (dadosCv ou dadosMarketing) */}
                     <td className="px-4 py-3 max-w-[200px]">
-                      {mkt ? (
+                      {cv ? (
+                        <div className="flex flex-col gap-0.5">
+                          {cv.empreendimento && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Emp.</span>
+                              <span className="truncate text-[var(--foreground)]" title={cv.empreendimento}>{cv.empreendimento}</span>
+                            </span>
+                          )}
+                          {cv.possibilidadeVenda && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Possib.</span>
+                              <span className="truncate text-[var(--foreground)]" title={cv.possibilidadeVenda}>{cv.possibilidadeVenda}</span>
+                            </span>
+                          )}
+                          {cv.profissao && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Prof.</span>
+                              <span className="truncate text-[var(--foreground)]" title={cv.profissao}>{cv.profissao}</span>
+                            </span>
+                          )}
+                          {cv.rendaFamiliar && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Renda</span>
+                              <span className="truncate text-[var(--foreground)]" title={cv.rendaFamiliar}>{cv.rendaFamiliar}</span>
+                            </span>
+                          )}
+                          {cv.corretor && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Corretor</span>
+                              <span className="truncate text-[var(--foreground)]" title={cv.corretor}>{cv.corretor}</span>
+                            </span>
+                          )}
+                          {cv.motivoCancelamento && (
+                            <span className="flex items-center gap-1 text-[11px]">
+                              <span className="shrink-0 text-[9px] font-semibold uppercase tracking-[0.12em] text-red-400">Perda</span>
+                              <span className="truncate text-red-400" title={cv.descricaoCancelamento ?? cv.motivoCancelamento}>
+                                {cv.descricaoCancelamento ?? cv.motivoCancelamento}
+                              </span>
+                            </span>
+                          )}
+                          {!cv.empreendimento && !cv.possibilidadeVenda && !cv.profissao && !cv.rendaFamiliar && !cv.corretor && !cv.motivoCancelamento && (
+                            <span className="text-[11px] text-[var(--muted-foreground)]">sem dados</span>
+                          )}
+                        </div>
+                      ) : mkt ? (
                         <div className="flex flex-col gap-0.5">
                           {mkt.faturamento && (
                             <span className="flex items-center gap-1 text-[11px]">
