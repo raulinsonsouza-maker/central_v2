@@ -585,7 +585,7 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
           <table className="min-w-[600px] w-full text-sm">
             <thead>
               <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-                {["Campanha / Mídia", "Leads", "Visitou", "Em aberto", "Ganhos", "Conv%"].map((h) => (
+                {["Conversão / Portal CRM", "Leads", "Visitou", "Em aberto", "Ganhos", "Conv%"].map((h) => (
                   <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
                     {h}
                   </th>

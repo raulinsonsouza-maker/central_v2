@@ -157,11 +157,12 @@ export async function GET(
     const conversao = cv?.conversaoOriginal?.trim() || midiaOriginal || null;
     if (conversao) { leadsComConversao++; addTo(conversaoMap, conversao); }
 
-    // porCampanha: group by conversaoOriginal for paid-channel breakdown
+    // porCampanha: group by canal + conversaoOriginal (compound key prevents canal bleed)
     const conversaoKey = cv?.conversaoOriginal?.trim() ?? null;
     if (conversaoKey && (canal === "META" || canal === "GOOGLE")) {
-      let b = campanhaMap.get(conversaoKey);
-      if (!b) { b = { canal, ...emptyBucket() }; campanhaMap.set(conversaoKey, b); }
+      const cKey = `${canal}:::${conversaoKey}`;
+      let b = campanhaMap.get(cKey);
+      if (!b) { b = { canal, ...emptyBucket() }; campanhaMap.set(cKey, b); }
       b.leads++;
       if (visitou) b.visitou++;
       if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
@@ -243,11 +244,14 @@ export async function GET(
     .slice(0, 50);
 
   const porCampanha = [...campanhaMap.entries()]
-    .map(([campanha, b]) => ({
-      campanha, canal: b.canal,
-      ...toRow(campanha, b),
-      investCanal: b.canal === "META" ? investMeta : b.canal === "GOOGLE" ? investGoogle : null,
-    }))
+    .map(([cKey, b]) => {
+      const campanha = cKey.includes(":::") ? cKey.split(":::")[1] : cKey;
+      return {
+        campanha, canal: b.canal,
+        ...toRow(campanha, b),
+        investCanal: b.canal === "META" ? investMeta : b.canal === "GOOGLE" ? investGoogle : null,
+      };
+    })
     .sort((a, b) => b.leads - a.leads);
 
   const porCriativo = [...criativoMap.entries()]
