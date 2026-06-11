@@ -383,8 +383,11 @@ export async function GET(
     }))
     .sort((a, b) => b.leads - a.leads);
 
-  // Tag breakdown — individual tags sorted by count
+  // Tag breakdown — exclude tags that are part of the tagFilter config (they are filter
+  // criteria stored on leads as tracking metadata, not lead-quality signals).
+  const tagFilterNorm = new Set(tagFilter.map((t) => norm(t.trim())));
   const porTags = [...tagMap.entries()]
+    .filter(([tag]) => !tagFilterNorm.has(tag))
     .map(([tag, count]) => ({ tag, count, isAlerta: isAlertaTag(tag) }))
     .sort((a, b) => b.count - a.count)
     .slice(0, 30);
