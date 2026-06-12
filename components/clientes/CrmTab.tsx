@@ -213,7 +213,7 @@ interface AtribuicaoData {
 // ─── Filter type ──────────────────────────────────────────────────────────────
 
 type LeadFilter = {
-  type: "canal" | "estado" | "conversao";
+  type: "canal" | "estado" | "conversao" | "etapa";
   value: string;
   label: string;
 } | null;
@@ -480,11 +480,25 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
               {mkt?.metaAdsetName && <DField label="Conjunto de anúncios" value={mkt.metaAdsetName} />}
               {mkt?.metaAdName && <DField label="Anúncio / Criativo" value={mkt.metaAdName} />}
               {mkt?.metaFormName && <DField label="Formulário" value={mkt.metaFormName} />}
+              {cv?.conversaoOriginal && (
+                <div className="col-span-2">
+                  <DField label="Conversão (CRM)" value={cv.conversaoOriginal} />
+                </div>
+              )}
+              {cv?.conversaoUltimo && cv.conversaoUltimo !== cv.conversaoOriginal && (
+                <div className="col-span-2">
+                  <DField label="Última conversão (CRM)" value={cv.conversaoUltimo} />
+                </div>
+              )}
               {cv?.utmCampaign && <DField label="UTM campaign" value={cv.utmCampaign} />}
               {cv?.utmContent && <DField label="UTM content" value={cv.utmContent} />}
               {cv?.utmTerm && <DField label="UTM term" value={cv.utmTerm} />}
               {cv?.midiaOriginal && !mkt?.metaCampaignName && (
                 <DField label="Mídia original" value={cv.midiaOriginal} />
+              )}
+              {cv?.origem && <DField label="Origem" value={cv.origem} />}
+              {cv?.origemUltimo && cv.origemUltimo !== cv.origem && (
+                <DField label="Origem (último)" value={cv.origemUltimo} />
               )}
               {cv?.estado && (
                 <DField label="Localização" value={
@@ -1288,7 +1302,7 @@ export function CrmTab({
       )}
 
       {/* Funil */}
-      <FunilCrmSection clienteId={clienteId} dateRange={dateRange} leadFilter={leadFilter} />
+      <FunilCrmSection clienteId={clienteId} dateRange={dateRange} leadFilter={leadFilter} onFilter={setLeadFilter} />
 
       {/* Análise de Origem */}
       <AtribuicaoSection

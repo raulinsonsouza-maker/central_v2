@@ -94,5 +94,9 @@ export function buildLeadFilterWhere(
     return { dadosCv: { path: ["conversaoOriginal"], equals: filterValue } };
   }
 
+  if (filterType === "etapa") {
+    return { etapa: filterValue };
+  }
+
   return {};
 }

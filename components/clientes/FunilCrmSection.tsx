@@ -67,16 +67,18 @@ function fmtValor(v: number): string {
   return `R$ ${v.toLocaleString("pt-BR")}`;
 }
 
-type LeadFilter = { type: string; value: string; label: string } | null;
+type LeadFilter = { type: "canal" | "estado" | "conversao" | "etapa"; value: string; label: string } | null;
 
 export function FunilCrmSection({
   clienteId,
   dateRange,
   leadFilter,
+  onFilter,
 }: {
   clienteId: string;
   dateRange: { from: string; to: string };
   leadFilter?: LeadFilter;
+  onFilter?: (f: LeadFilter) => void;
 }) {
   const filterQs = leadFilter
     ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
@@ -195,10 +197,27 @@ export function FunilCrmSection({
                     {grupo.etapas.map((e) => {
                       const pct = maxCount > 0 ? (e.count / maxCount) * 100 : 0;
                       const pctTotal = totalLeads > 0 ? (e.count / totalLeads) * 100 : 0;
+                      const isActive = leadFilter?.type === "etapa" && leadFilter.value === e.etapa;
+                      const clickable = !!onFilter;
+                      const toggle = clickable
+                        ? () => onFilter!(isActive ? null : { type: "etapa", value: e.etapa, label: `Etapa: ${e.etapa}` })
+                        : undefined;
                       return (
                         <div
                           key={e.etapa}
-                          className="group relative overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--card)] px-3 py-2"
+                          onClick={toggle}
+                          onKeyDown={clickable ? (ev) => {
+                            if (ev.key === "Enter" || ev.key === " ") {
+                              ev.preventDefault();
+                              toggle!();
+                            }
+                          } : undefined}
+                          role={clickable ? "button" : undefined}
+                          tabIndex={clickable ? 0 : undefined}
+                          aria-pressed={clickable ? isActive : undefined}
+                          className={`group relative overflow-hidden rounded-lg border bg-[var(--card)] px-3 py-2 transition-all ${
+                            clickable ? "cursor-pointer hover:border-[color-mix(in_srgb,var(--primary)_30%,var(--border))]" : ""
+                          } ${isActive ? "border-[var(--primary)] ring-1 ring-[var(--primary)]/40" : "border-[var(--border)]"}`}
                         >
                           {/* Background fill bar */}
                           <div
