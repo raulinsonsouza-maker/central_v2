@@ -1297,7 +1297,7 @@ export function CrmTab({
         <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações & Funil</h2>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Funil & Leads CRM</h2>
         </div>
       </div>
 
@@ -1308,7 +1308,12 @@ export function CrmTab({
       )}
 
       {/* Funil */}
-      <FunilCrmSection clienteId={clienteId} dateRange={dateRange} leadFilter={leadFilter} />
+      <FunilCrmSection
+        clienteId={clienteId}
+        dateRange={dateRange}
+        leadFilter={leadFilter}
+        onEtapaFilter={setLeadFilter}
+      />
 
       {/* Análise de Origem */}
       <AtribuicaoSection
@@ -1318,34 +1323,39 @@ export function CrmTab({
         onFilter={setLeadFilter}
       />
 
-      {/* Negociações */}
+      {/* Detalhamento dos Leads */}
       <div className="space-y-3">
-        <div className="flex items-start gap-3">
-          <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações</h2>
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+            <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
+              <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">
+                Detalhamento dos Leads
+                {leadFilter && (
+                  <span className="ml-2 text-base font-semibold text-[var(--muted-foreground)]">
+                    — {leadFilter.label}
+                  </span>
+                )}
+              </h2>
+            </div>
           </div>
+          {leadFilter && (
+            <button
+              onClick={() => setLeadFilter(null)}
+              className="mt-1 flex shrink-0 items-center gap-1.5 rounded-full border border-[var(--border)] px-3 py-1 text-[11px] text-[var(--muted-foreground)] hover:border-[var(--primary)]/40 hover:text-[var(--foreground)] transition-colors"
+            >
+              <X className="h-3 w-3" />
+              Limpar filtro
+            </button>
+          )}
         </div>
 
-        {/* Active filter chip */}
+        {/* Active filter result count */}
         {leadFilter && (
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-[11px] text-[var(--muted-foreground)]">Filtro ativo:</span>
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--primary)]/30 bg-[var(--primary)]/10 py-1 pl-3 pr-2 text-[11px] font-semibold text-[var(--primary)]">
-              {leadFilter.label}
-              <button
-                onClick={() => setLeadFilter(null)}
-                className="flex h-4 w-4 items-center justify-center rounded-full hover:bg-[var(--primary)]/20 transition-colors"
-                title="Limpar filtro"
-              >
-                <X className="h-2.5 w-2.5" />
-              </button>
-            </span>
-            <span className="text-[10px] text-[var(--muted-foreground)] opacity-60">
-              {total.toLocaleString("pt-BR")} resultado{total !== 1 ? "s" : ""}
-            </span>
-          </div>
+          <p className="text-[11px] text-[var(--muted-foreground)]">
+            {total.toLocaleString("pt-BR")} lead{total !== 1 ? "s" : ""} em <span className="font-semibold text-[var(--foreground)]">{leadFilter.label}</span>
+          </p>
         )}
 
         {/* Search */}

@@ -94,5 +94,35 @@ export function buildLeadFilterWhere(
     return { dadosCv: { path: ["conversaoOriginal"], equals: filterValue } };
   }
 
+  if (filterType === "etapa") {
+    const ETAPA_PATTERNS: Record<string, string[]> = {
+      Vendas:      ["venda", "contrato", "assinado"],
+      Reservas:    ["reserva"],
+      Visitas:     ["visita", "reagendar"],
+      // Both accented (Simulação/Qualificação) and unaccented variants
+      Atendimento: ["atendimento", "simulaç", "simulac", "proposta", "qualificaç", "qualificac"],
+    };
+    const EXCLUDED_PATTERNS = ["perdido", "cancelado", "descartado", "desistiu", "sem interesse", "inativo"];
+
+    if (filterValue === "Leads") {
+      const allKnown = [...Object.values(ETAPA_PATTERNS).flat(), ...EXCLUDED_PATTERNS];
+      return {
+        NOT: {
+          OR: allKnown.map((p) => ({
+            etapa: { contains: p, mode: "insensitive" as const },
+          })),
+        },
+      };
+    }
+
+    const patterns = ETAPA_PATTERNS[filterValue] ?? [];
+    if (patterns.length === 0) return {};
+    return {
+      OR: patterns.map((p) => ({
+        etapa: { contains: p, mode: "insensitive" as const },
+      })),
+    };
+  }
+
   return {};
 }
