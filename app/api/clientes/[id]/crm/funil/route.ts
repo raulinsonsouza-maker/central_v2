@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { getTagFilter, buildTagFilterWhere } from "@/lib/crm/tagFilter";
+import { getCrmFilters, buildTagFilterWhere, buildJsonStringFilterWhere } from "@/lib/crm/tagFilter";
 import { buildLeadFilterWhere } from "@/lib/crm/canalFilter";
+import type { Prisma } from "@/lib/generated/prisma";
 
 export async function GET(
   request: NextRequest,
@@ -31,12 +32,16 @@ export async function GET(
     return NextResponse.json({ configured: false });
   }
 
-  const tagFilter = await getTagFilter(id);
-  const tagFilterWhere = buildTagFilterWhere(tagFilter);
+  const crmFilters = await getCrmFilters(id);
+  const { tagFilter, conversaoOriginalFilter, conversaoUltimoFilter, midiaFilter, origemUltimoFilter } = crmFilters;
   const leadFilterWhere = buildLeadFilterWhere(filterType, filterValue);
 
-  const andClauses = [
-    ...(tagFilter.length > 0 ? [tagFilterWhere] : []),
+  const andClauses: Prisma.LeadCrmWhereInput[] = [
+    ...(tagFilter.length > 0 ? [buildTagFilterWhere(tagFilter)] : []),
+    ...(conversaoOriginalFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoOriginal", conversaoOriginalFilter)] : []),
+    ...(conversaoUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoUltimo", conversaoUltimoFilter)] : []),
+    ...(midiaFilter.length > 0 ? [buildJsonStringFilterWhere("midiaOriginal", midiaFilter)] : []),
+    ...(origemUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("origemUltimo", origemUltimoFilter)] : []),
     ...(filterType && filterValue ? [leadFilterWhere] : []),
   ];
 
