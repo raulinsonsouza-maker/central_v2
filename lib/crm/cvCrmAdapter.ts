@@ -146,6 +146,9 @@ export class CvCrmAdapter implements CrmAdapter {
   private token: string;
   private tagFilter: string[];
   private conversaoOriginalFilter: string[];
+  private conversaoUltimoFilter: string[];
+  private midiaFilter: string[];
+  private origemUltimoFilter: string[];
 
   constructor(domain: string, creds: CvCrmCredentials) {
     this.domain = domain.replace(/^https?:\/\//, "").replace(/\.cvcrm\.com\.br.*$/, "");
@@ -153,6 +156,9 @@ export class CvCrmAdapter implements CrmAdapter {
     this.token = creds.token;
     this.tagFilter = creds.tagFilter?.filter(Boolean) ?? [];
     this.conversaoOriginalFilter = creds.conversaoOriginalFilter?.filter(Boolean) ?? [];
+    this.conversaoUltimoFilter = creds.conversaoUltimoFilter?.filter(Boolean) ?? [];
+    this.midiaFilter = creds.midiaFilter?.filter(Boolean) ?? [];
+    this.origemUltimoFilter = creds.origemUltimoFilter?.filter(Boolean) ?? [];
   }
 
   private get baseUrl() {
@@ -307,35 +313,56 @@ export class CvCrmAdapter implements CrmAdapter {
       };
     });
 
-    // Apply tag filter: only keep leads that have at least one matching tag
+    const before = normalized.length;
+    let result = normalized;
+
+    // All configured filters are applied in AND — a lead must pass every active filter.
+
     if (this.tagFilter.length > 0) {
       const filterSet = new Set(this.tagFilter.map((t) => t.toLowerCase().trim()));
-      const before = normalized.length;
-      const filtered = normalized.filter((lead) => {
+      result = result.filter((lead) => {
         const tags = (lead.dadosCv?.tags as string[] | undefined) ?? [];
         return tags.some((t) => filterSet.has(t.toLowerCase().trim()));
       });
-      console.log(
-        `[CvCrmAdapter] tag filter applied: ${filtered.length}/${before} leads match [${this.tagFilter.join(", ")}]`,
-      );
-      return filtered;
     }
 
-    // Apply conversaoOriginal filter: only keep leads whose first conversion matches
     if (this.conversaoOriginalFilter.length > 0) {
       const filterSet = new Set(this.conversaoOriginalFilter.map((v) => v.toLowerCase().trim()));
-      const before = normalized.length;
-      const filtered = normalized.filter((lead) => {
+      result = result.filter((lead) => {
         const conv = ((lead.dadosCv?.conversaoOriginal as string | undefined) ?? "").toLowerCase().trim();
         return conv !== "" && filterSet.has(conv);
       });
-      console.log(
-        `[CvCrmAdapter] conversaoOriginal filter applied: ${filtered.length}/${before} leads match [${this.conversaoOriginalFilter.join(", ")}]`,
-      );
-      return filtered;
     }
 
-    return normalized;
+    if (this.conversaoUltimoFilter.length > 0) {
+      const filterSet = new Set(this.conversaoUltimoFilter.map((v) => v.toLowerCase().trim()));
+      result = result.filter((lead) => {
+        const conv = ((lead.dadosCv?.conversaoUltimo as string | undefined) ?? "").toLowerCase().trim();
+        return conv !== "" && filterSet.has(conv);
+      });
+    }
+
+    if (this.midiaFilter.length > 0) {
+      const filterSet = new Set(this.midiaFilter.map((v) => v.toLowerCase().trim()));
+      result = result.filter((lead) => {
+        const midia = ((lead.dadosCv?.midiaOriginal as string | undefined) ?? "").toLowerCase().trim();
+        return midia !== "" && filterSet.has(midia);
+      });
+    }
+
+    if (this.origemUltimoFilter.length > 0) {
+      const filterSet = new Set(this.origemUltimoFilter.map((v) => v.toLowerCase().trim()));
+      result = result.filter((lead) => {
+        const origemUltimo = ((lead.dadosCv?.origemUltimo as string | undefined) ?? "").toLowerCase().trim();
+        return origemUltimo !== "" && filterSet.has(origemUltimo);
+      });
+    }
+
+    if (result.length !== before) {
+      console.log(`[CvCrmAdapter] filters applied: ${result.length}/${before} leads passed all configured filters`);
+    }
+
+    return result;
   }
 
   async testConnection(): Promise<{ ok: boolean; error?: string }> {

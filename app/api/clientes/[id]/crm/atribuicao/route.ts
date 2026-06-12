@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma";
-import { getTagFilter, buildTagFilterWhere } from "@/lib/crm/tagFilter";
+import { getCrmFilters, buildTagFilterWhere, buildJsonStringFilterWhere } from "@/lib/crm/tagFilter";
 import { buildLeadFilterWhere } from "@/lib/crm/canalFilter";
 
 type Canal = "META" | "GOOGLE" | "ORGANICO" | "INDICACAO" | "DIRETO" | "OUTRO";
@@ -118,12 +118,16 @@ export async function GET(
     return NextResponse.json({ configured: false });
   }
 
-  const tagFilter = await getTagFilter(id);
-  const tagFilterWhere = buildTagFilterWhere(tagFilter);
+  const crmFilters = await getCrmFilters(id);
+  const { tagFilter, conversaoOriginalFilter, conversaoUltimoFilter, midiaFilter, origemUltimoFilter } = crmFilters;
   const leadFilterWhere = buildLeadFilterWhere(filterType, filterValue);
 
-  const andClauses = [
-    ...(tagFilter.length > 0 ? [tagFilterWhere] : []),
+  const andClauses: Prisma.LeadCrmWhereInput[] = [
+    ...(tagFilter.length > 0 ? [buildTagFilterWhere(tagFilter)] : []),
+    ...(conversaoOriginalFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoOriginal", conversaoOriginalFilter)] : []),
+    ...(conversaoUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoUltimo", conversaoUltimoFilter)] : []),
+    ...(midiaFilter.length > 0 ? [buildJsonStringFilterWhere("midiaOriginal", midiaFilter)] : []),
+    ...(origemUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("origemUltimo", origemUltimoFilter)] : []),
     ...(filterType && filterValue ? [leadFilterWhere] : []),
   ];
 
@@ -383,9 +387,15 @@ export async function GET(
     }))
     .sort((a, b) => b.leads - a.leads);
 
-  // Tag breakdown — exclude tags that are part of the tagFilter config (they are filter
-  // criteria stored on leads as tracking metadata, not lead-quality signals).
-  const tagFilterNorm = new Set(tagFilter.map((t) => norm(t.trim())));
+  // Tag breakdown — exclude tags that are part of any configured filter dimension
+  // (they are filter criteria stored on leads as tracking metadata, not quality signals).
+  const tagFilterNorm = new Set([
+    ...tagFilter,
+    ...conversaoOriginalFilter,
+    ...conversaoUltimoFilter,
+    ...midiaFilter,
+    ...origemUltimoFilter,
+  ].map((t) => norm(t.trim())));
   const porTags = [...tagMap.entries()]
     .filter(([tag]) => !tagFilterNorm.has(tag))
     .map(([tag, count]) => ({ tag, count, isAlerta: isAlertaTag(tag) }))

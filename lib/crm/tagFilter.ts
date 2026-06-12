@@ -40,17 +40,62 @@ export function buildTagFilterWhere(tagFilter: string[]): Prisma.LeadCrmWhereInp
 }
 
 /**
- * Loads the tag filter for a client from their CrmConfig credentials.
- * Returns an empty array when no config or no tag filter is set.
+ * Returns a Prisma `WhereInput` that restricts leads to those whose `dadosCv[field]`
+ * matches one of the given values (case-insensitive exact match via OR).
+ * Returns `{}` when values array is empty.
  */
-export async function getTagFilter(clienteId: string): Promise<string[]> {
+export function buildJsonStringFilterWhere(
+  field: string,
+  values: string[],
+): Prisma.LeadCrmWhereInput {
+  if (!values || values.length === 0) return {};
+  return {
+    OR: values.map((v) => ({
+      dadosCv: { path: [field], string_contains: v },
+    })),
+  };
+}
+
+export interface CrmFilters {
+  tagFilter: string[];
+  conversaoOriginalFilter: string[];
+  conversaoUltimoFilter: string[];
+  midiaFilter: string[];
+  origemUltimoFilter: string[];
+}
+
+function toStringArray(raw: unknown): string[] {
+  if (!Array.isArray(raw)) return [];
+  return (raw as unknown[]).filter((t): t is string => typeof t === "string" && t.trim() !== "");
+}
+
+/**
+ * Loads all configured CRM filters for a client from their CrmConfig credentials.
+ * Returns empty arrays for each dimension when no config is set.
+ */
+export async function getCrmFilters(clienteId: string): Promise<CrmFilters> {
   const config = await prisma.crmConfig.findUnique({
     where: { clienteId },
     select: { credenciais: true, ativo: true },
   });
-  if (!config || !config.ativo) return [];
+  if (!config || !config.ativo) {
+    return { tagFilter: [], conversaoOriginalFilter: [], conversaoUltimoFilter: [], midiaFilter: [], origemUltimoFilter: [] };
+  }
   const creds = config.credenciais as Record<string, unknown>;
-  const raw = creds.tagFilter;
-  if (!Array.isArray(raw) || raw.length === 0) return [];
-  return (raw as unknown[]).filter((t): t is string => typeof t === "string" && t.trim() !== "");
+  return {
+    tagFilter: toStringArray(creds.tagFilter),
+    conversaoOriginalFilter: toStringArray(creds.conversaoOriginalFilter),
+    conversaoUltimoFilter: toStringArray(creds.conversaoUltimoFilter),
+    midiaFilter: toStringArray(creds.midiaFilter),
+    origemUltimoFilter: toStringArray(creds.origemUltimoFilter),
+  };
+}
+
+/**
+ * Loads the tag filter for a client from their CrmConfig credentials.
+ * Returns an empty array when no config or no tag filter is set.
+ */
+export async function getTagFilter(clienteId: string): Promise<string[]> {
+  const filters = await getCrmFilters(clienteId);
+  return filters.tagFilter;
 }

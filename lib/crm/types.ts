@@ -35,6 +35,21 @@ export interface CvCrmCredentials {
    * Case-insensitive exact match. Empty/absent = no filter.
    */
   conversaoOriginalFilter?: string[];
+  /**
+   * Only import leads whose `conversao_ultimo` (last conversion) matches one of these values.
+   * Case-insensitive exact match. Empty/absent = no filter.
+   */
+  conversaoUltimoFilter?: string[];
+  /**
+   * Only import leads whose `midia_original` matches one of these values.
+   * Case-insensitive exact match. Empty/absent = no filter.
+   */
+  midiaFilter?: string[];
+  /**
+   * Only import leads whose `origem_ultimo_nome` (last origin) matches one of these values.
+   * Case-insensitive exact match. Empty/absent = no filter.
+   */
+  origemUltimoFilter?: string[];
 }
 
 export interface RdStationCredentials {
