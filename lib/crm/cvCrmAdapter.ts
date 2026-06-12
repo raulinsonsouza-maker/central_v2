@@ -53,6 +53,15 @@ interface CvDwResponse {
   dados?: CvLead[];
 }
 
+interface CvReserva {
+  idreserva?: number;
+  idlead?: string | number | null;
+  valor_contrato?: number | null;
+  vgv_tabela?: number | null;
+  situacao?: string | null;
+  ativo?: string | null;
+}
+
 function parseDate(v?: string | null): Date | null {
   if (!v) return null;
   const d = new Date(v);
@@ -173,7 +182,7 @@ export class CvCrmAdapter implements CrmAdapter {
     };
   }
 
-  async fetchLeads(opts?: { since?: Date }): Promise<NormalizedLead[]> {
+  private async _fetchAllLeads(opts?: { since?: Date }): Promise<CvLead[]> {
     const leads: CvLead[] = [];
     let pagina = 1;
     const registrosPorPagina = 500;
@@ -208,6 +217,69 @@ export class CvCrmAdapter implements CrmAdapter {
       pagina++;
       if (pagina > 100) break;
     }
+
+    return leads;
+  }
+
+  /** Fetch all reservas and return a map of idlead → valor_contrato (the deal value). */
+  async fetchReservas(): Promise<Map<string, number>> {
+    const map = new Map<string, number>();
+    let pagina = 1;
+    const registrosPorPagina = 500;
+
+    while (true) {
+      const params = new URLSearchParams({
+        pagina: String(pagina),
+        registros_por_pagina: String(registrosPorPagina),
+      });
+
+      const res = await fetch(`${this.baseUrl}/reservas?${params}`, {
+        headers: this.headers(),
+      });
+
+      if (res.status === 204) break;
+      if (!res.ok) {
+        const text = await res.text().catch(() => "");
+        console.warn(`[CvCrmAdapter] reservas fetch failed ${res.status}: ${text.slice(0, 200)}`);
+        break;
+      }
+
+      const data = await res.json() as { dados?: CvReserva[] };
+      const batch: CvReserva[] = data.dados ?? [];
+
+      for (const r of batch) {
+        if (!r.idlead) continue;
+        // idlead can be comma-separated (multiple leads linked to one reserva)
+        const ids = String(r.idlead).split(",").map((s) => s.trim()).filter(Boolean);
+        const valor = r.valor_contrato ?? r.vgv_tabela ?? null;
+        if (valor !== null && valor > 0) {
+          for (const id of ids) {
+            // Keep the highest value if a lead has multiple reservas
+            const existing = map.get(id) ?? 0;
+            if (valor > existing) map.set(id, valor);
+          }
+        }
+      }
+
+      if (batch.length < registrosPorPagina) break;
+      pagina++;
+      if (pagina > 100) break;
+    }
+
+    console.log(`[CvCrmAdapter] fetchReservas: ${map.size} leads with deal value`);
+    return map;
+  }
+
+  async fetchLeads(opts?: { since?: Date }): Promise<NormalizedLead[]> {
+    // Fetch reservas in parallel with leads — provides the deal value (valor_contrato)
+    // which is not present on the /cvdw/leads endpoint.
+    const [leads, reservaValorMap] = await Promise.all([
+      this._fetchAllLeads(opts),
+      this.fetchReservas().catch((e) => {
+        console.warn("[CvCrmAdapter] fetchReservas failed, valor will be null:", e instanceof Error ? e.message : e);
+        return new Map<string, number>();
+      }),
+    ]);
 
     const now = new Date();
 
@@ -304,7 +376,8 @@ export class CvCrmAdapter implements CrmAdapter {
         dataFechamento: parseDate(l.data_cancelamento),
         // Campos diretos mapeados para campos de 1ª classe
         fonte: l.origem_nome ?? null,
-        valor: parseValor(l.valor),
+        // Prefer deal value from /cvdw/reservas (valor_contrato); fall back to lead's own valor field
+        valor: reservaValorMap.get(String(l.idlead)) ?? parseValor(l.valor),
         rating: l.score ?? null,
         status: inferStatus(l),
         // momentoLead: prefer dedicated moment_lead field, then textual possibilidade_venda
