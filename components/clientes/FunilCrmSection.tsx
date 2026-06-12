@@ -3,7 +3,7 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { RefreshCw, X } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 
 interface EtapaFunil {
   etapa: string;
@@ -42,8 +42,9 @@ const MACRO_COLORS: Record<MacroGrupo, string> = {
   Vendas:      "#10b981",
 };
 
-export function getMacroGrupo(etapa: string): MacroGrupo | null {
+function getMacroGrupo(etapa: string): MacroGrupo | null {
   const e = etapa.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  // Exclude terminal loss stages from the active funnel
   if (
     e.includes("perdido") || e.includes("cancelado") || e.includes("descartado") ||
     e.includes("desistiu") || e.includes("sem interesse") || e.includes("inativo")
@@ -75,12 +76,10 @@ export function FunilCrmSection({
   clienteId,
   dateRange,
   leadFilter,
-  onEtapaFilter,
 }: {
   clienteId: string;
   dateRange: { from: string; to: string };
   leadFilter?: LeadFilter;
-  onEtapaFilter?: (filter: LeadFilter) => void;
 }) {
   const filterQs = leadFilter
     ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
@@ -95,8 +94,6 @@ export function FunilCrmSection({
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
-
-  const activeEtapa = leadFilter?.type === "etapa" ? leadFilter.value : null;
 
   if (isLoading) {
     return (
@@ -113,9 +110,9 @@ export function FunilCrmSection({
   const etapas = data.etapas ?? [];
   const totalLeads = data.totalLeads;
 
-  // Aggregate into macro-groups and collect sub-etapas per group
-  const macroMap = new Map<MacroGrupo, { count: number; ganhos: number; subEtapas: EtapaFunil[] }>();
-  for (const grupo of MACRO_ORDER) macroMap.set(grupo, { count: 0, ganhos: 0, subEtapas: [] });
+  // Aggregate into macro-groups (null = terminal loss stage, excluded from funnel)
+  const macroMap = new Map<MacroGrupo, { count: number; ganhos: number }>();
+  for (const grupo of MACRO_ORDER) macroMap.set(grupo, { count: 0, ganhos: 0 });
   let leadsExcluidos = 0;
   for (const e of etapas) {
     const g = getMacroGrupo(e.etapa);
@@ -123,7 +120,6 @@ export function FunilCrmSection({
     const b = macroMap.get(g)!;
     b.count += e.count;
     b.ganhos += e.ganhos;
-    b.subEtapas.push(e);
   }
 
   const macroGroups = MACRO_ORDER
@@ -135,15 +131,6 @@ export function FunilCrmSection({
   const taxaFechamento = totalLeads > 0
     ? ((data.totalGanhos / totalLeads) * 100).toFixed(1)
     : "0.0";
-
-  function handleGrupoClick(grupo: MacroGrupo) {
-    if (!onEtapaFilter) return;
-    if (activeEtapa === grupo) {
-      onEtapaFilter(null);
-    } else {
-      onEtapaFilter({ type: "etapa", value: grupo, label: grupo });
-    }
-  }
 
   return (
     <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
@@ -194,107 +181,54 @@ export function FunilCrmSection({
           </div>
         </div>
 
-        {/* Hint when clickable */}
-        {onEtapaFilter && macroGroups.length > 0 && (
-          <p className="text-[10px] text-[var(--muted-foreground)]">
-            Clique em uma etapa para filtrar os leads abaixo
-          </p>
-        )}
-
-        {/* Macro-group funnel — clickable */}
+        {/* Macro-group funnel */}
         {macroGroups.length > 0 && (
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             {macroGroups.map((grupo) => {
               const pct = maxCount > 0 ? (grupo.count / maxCount) * 100 : 0;
-              const pctTotal = totalLeads > 0 ? ((grupo.count / totalLeads) * 100) : 0;
+              const pctTotal = totalLeads > 0
+                ? ((grupo.count / totalLeads) * 100)
+                : 0;
               const color = MACRO_COLORS[grupo.grupo];
-              const isActive = activeEtapa === grupo.grupo;
-              const isClickable = !!onEtapaFilter;
-
-              // Sort sub-etapas descending by count
-              const subs = [...grupo.subEtapas].sort((a, b) => b.count - a.count);
-
               return (
                 <div
                   key={grupo.grupo}
-                  onClick={() => isClickable && handleGrupoClick(grupo.grupo)}
-                  role={isClickable ? "button" : undefined}
-                  tabIndex={isClickable ? 0 : undefined}
-                  onKeyDown={(e) => { if (isClickable && (e.key === "Enter" || e.key === " ")) handleGrupoClick(grupo.grupo); }}
-                  className={[
-                    "group relative overflow-hidden rounded-xl border p-3 transition-all",
-                    isClickable ? "cursor-pointer select-none" : "",
-                    isActive
-                      ? "border-[color-mix(in_srgb,currentColor_40%,transparent)] bg-[var(--card)]"
-                      : "border-[var(--border)] bg-[var(--card)]",
-                    isClickable && !isActive ? "hover:border-[var(--border)] hover:bg-[var(--muted)]/10" : "",
-                  ].join(" ")}
-                  style={isActive ? { borderColor: `${color}50` } : undefined}
+                  className="group relative overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--card)] p-3"
                 >
                   {/* Background fill bar */}
                   <div
-                    className="pointer-events-none absolute inset-y-0 left-0 rounded-l-xl transition-all"
-                    style={{
-                      width: `${pct}%`,
-                      backgroundColor: color,
-                      opacity: isActive ? 0.14 : 0.07,
-                    }}
+                    className="pointer-events-none absolute inset-y-0 left-0 rounded-l-xl opacity-[0.07] transition-all group-hover:opacity-[0.12]"
+                    style={{ width: `${pct}%`, backgroundColor: color }}
                   />
-
-                  <div className="relative space-y-2">
-                    {/* Main row */}
-                    <div className="flex items-center gap-3">
-                      <div className="flex min-w-0 flex-1 items-center gap-2">
-                        <span
-                          className="inline-block h-2 w-2 shrink-0 rounded-full"
-                          style={{ backgroundColor: color }}
-                        />
-                        <p className="text-sm font-semibold text-[var(--foreground)]">
-                          {grupo.grupo}
-                        </p>
-                        {isActive && (
-                          <span
-                            className="inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide"
-                            style={{ backgroundColor: `${color}20`, color }}
-                          >
-                            filtrado
-                            <X className="ml-0.5 h-2.5 w-2.5" />
-                          </span>
-                        )}
-                      </div>
-                      <span className="shrink-0 text-[11px] tabular-nums text-[var(--muted-foreground)]">
-                        {pctTotal < 1 ? pctTotal.toFixed(1) : Math.round(pctTotal)}% do total
-                      </span>
+                  <div className="relative flex items-center gap-3">
+                    {/* Color dot + label */}
+                    <div className="flex min-w-0 flex-1 items-center gap-2">
                       <span
-                        className="w-14 shrink-0 text-right text-sm font-bold tabular-nums"
-                        style={{ color }}
-                      >
-                        {grupo.count.toLocaleString("pt-BR")}
-                      </span>
+                        className="inline-block h-2 w-2 shrink-0 rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                      <p className="text-sm font-semibold text-[var(--foreground)]">
+                        {grupo.grupo}
+                      </p>
                     </div>
-
-                    {/* Sub-etapas */}
-                    {subs.length > 1 && (
-                      <div className="flex flex-wrap gap-1.5 pl-4">
-                        {subs.map((s) => (
-                          <span
-                            key={s.etapa}
-                            className="rounded-full border px-2 py-0.5 text-[10px] tabular-nums text-[var(--muted-foreground)]"
-                            style={{ borderColor: `${color}30`, backgroundColor: `${color}08` }}
-                          >
-                            {s.etapa}
-                            <span className="ml-1 font-semibold" style={{ color }}>
-                              {s.count}
-                            </span>
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    {/* % do total */}
+                    <span className="shrink-0 text-[11px] tabular-nums text-[var(--muted-foreground)]">
+                      {pctTotal < 1
+                        ? pctTotal.toFixed(1)
+                        : Math.round(pctTotal)}
+                      % do total
+                    </span>
+                    {/* Count */}
+                    <span
+                      className="w-14 shrink-0 text-right text-sm font-bold tabular-nums"
+                      style={{ color }}
+                    >
+                      {grupo.count.toLocaleString("pt-BR")}
+                    </span>
                   </div>
                 </div>
               );
             })}
-
             {leadsExcluidos > 0 && (
               <p className="pt-1 text-[10px] text-[var(--muted-foreground)]">
                 + {leadsExcluidos.toLocaleString("pt-BR")} leads perdidos / cancelados (não exibidos no funil)
