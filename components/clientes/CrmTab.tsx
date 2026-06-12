@@ -74,6 +74,11 @@ interface Lead {
     estado?: string | null;
     tags?: string[] | string | null;
     reserva?: string | null;
+    utmSource?: string | null;
+    utmMedium?: string | null;
+    utmCampaign?: string | null;
+    utmContent?: string | null;
+    utmTerm?: string | null;
   } | null;
 }
 
@@ -438,50 +443,37 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
               {lead.email && <DField label="E-mail" value={lead.email} />}
               {lead.telefone && <DField label="Telefone" value={lead.telefone} />}
               <DField label="Data de entrada" value={formatDateBR(lead.dataEntrada)} />
-              {lead.dataFechamento && <DField label="Fechamento" value={formatDateBR(lead.dataFechamento)} />}
-              {lead.valor != null && (
-                <DField label="Valor" value={
-                  <span className="font-bold text-emerald-400">{formatCurrencyBR(lead.valor)}</span>
-                } />
-              )}
-              {cv?.score != null && (
-                <DField label="Score CV" value={
-                  <span className="font-bold text-[var(--primary)]">{cv.score}</span>
-                } />
-              )}
-              {lead.momentoLead && (() => {
-                const m = getMomentoLabel(lead.momentoLead);
-                return m ? (
-                  <DField label="Temperatura" value={
-                    <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${m.chip}`}>{m.label}</span>
-                  } />
-                ) : null;
-              })()}
             </DSection>
 
             <div className="h-px bg-[var(--border)]" />
 
-            {/* Origem */}
-            <DSection title="Origem & Mídia">
-              {lead.fonte && <DField label="Fonte" value={lead.fonte} />}
+            {/* Campanha & Mídia — o que ajuda a melhorar campanhas */}
+            <DSection title="Campanha & Mídia">
               <DField label="Canal" value={
-                <span className={`font-semibold ${canalCfg.color}`}>{canalCfg.label}</span>
+                <span className="inline-flex items-center gap-1.5">
+                  <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: canalCfg.hex }} />
+                  <span className={`font-semibold ${canalCfg.color}`}>{canalCfg.label}</span>
+                </span>
               } />
-              {cv?.midiaOriginal && <DField label="Mídia original" value={cv.midiaOriginal} />}
-              {cv?.midiaUltimo && cv.midiaUltimo !== cv.midiaOriginal && (
-                <DField label="Mídia último toque" value={cv.midiaUltimo} />
-              )}
-              {cv?.conversaoOriginal && (
+              {mkt?.metaCampaignName && (
                 <div className="col-span-2">
-                  <DField label="Conversão original" value={cv.conversaoOriginal} />
+                  <DField label="Campanha" value={
+                    <span className="inline-flex items-center gap-1.5">
+                      {mkt.metaCampaignName}
+                      <span className="shrink-0 rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-400">✓ confirmado</span>
+                    </span>
+                  } />
                 </div>
               )}
-              {cv?.conversaoUltimo && cv.conversaoUltimo !== cv.conversaoOriginal && (
-                <div className="col-span-2">
-                  <DField label="Conversão último" value={cv.conversaoUltimo} />
-                </div>
+              {mkt?.metaAdsetName && <DField label="Conjunto de anúncios" value={mkt.metaAdsetName} />}
+              {mkt?.metaAdName && <DField label="Anúncio / Criativo" value={mkt.metaAdName} />}
+              {mkt?.metaFormName && <DField label="Formulário" value={mkt.metaFormName} />}
+              {cv?.utmCampaign && <DField label="UTM campaign" value={cv.utmCampaign} />}
+              {cv?.utmContent && <DField label="UTM content" value={cv.utmContent} />}
+              {cv?.utmTerm && <DField label="UTM term" value={cv.utmTerm} />}
+              {cv?.midiaOriginal && !mkt?.metaCampaignName && (
+                <DField label="Mídia original" value={cv.midiaOriginal} />
               )}
-              {cv?.pontoVenda && <DField label="Ponto de venda" value={cv.pontoVenda} />}
               {cv?.estado && (
                 <DField label="Localização" value={
                   [cv.cidade, cv.estado].filter(Boolean).join(" / ")
@@ -490,44 +482,25 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
               {!cv?.estado && cv?.regiao && <DField label="Região" value={cv.regiao} />}
             </DSection>
 
-            {/* Empreendimento */}
-            {(cv?.empreendimento || cv?.corretor || cv?.gestor || cv?.imobiliaria) && (
+            {/* Qualidade do lead */}
+            {(cv?.score != null || lead.momentoLead || cv?.possibilidadeVenda != null || cv?.profissao || cv?.rendaFamiliar) && (
               <>
                 <div className="h-px bg-[var(--border)]" />
-                <DSection title="Empreendimento">
-                  {cv.empreendimento && (
-                    <div className="col-span-2">
-                      <DField label="Empreendimento" value={cv.empreendimento} />
-                    </div>
+                <DSection title="Qualidade do Lead">
+                  {cv?.score != null && (
+                    <DField label="Score CV" value={
+                      <span className="font-bold text-[var(--primary)]">{cv.score}</span>
+                    } />
                   )}
-                  {cv.empreendimentoPrimeiro && cv.empreendimentoPrimeiro !== cv.empreendimento && (
-                    <DField label="1º interesse" value={cv.empreendimentoPrimeiro} />
-                  )}
-                  {cv.empreendimentoUltimo && cv.empreendimentoUltimo !== cv.empreendimento && (
-                    <DField label="Último interesse" value={cv.empreendimentoUltimo} />
-                  )}
-                  {cv.corretor && <DField label="Corretor" value={cv.corretor} />}
-                  {cv.corretorUltimo && cv.corretorUltimo !== cv.corretor && (
-                    <DField label="Último corretor" value={cv.corretorUltimo} />
-                  )}
-                  {cv.gestor && <DField label="Gestor" value={cv.gestor} />}
-                  {cv.imobiliaria && (
-                    <div className="col-span-2">
-                      <DField label="Imobiliária" value={cv.imobiliaria} />
-                    </div>
-                  )}
-                </DSection>
-              </>
-            )}
-
-            {/* Perfil */}
-            {(cv?.profissao || cv?.rendaFamiliar || cv?.possibilidadeVenda || cv?.feedback || cv?.reserva) && (
-              <>
-                <div className="h-px bg-[var(--border)]" />
-                <DSection title="Perfil do Lead">
-                  {cv.profissao && <DField label="Profissão" value={cv.profissao} />}
-                  {cv.rendaFamiliar && <DField label="Renda familiar" value={cv.rendaFamiliar} />}
-                  {cv.possibilidadeVenda != null && (
+                  {lead.momentoLead && (() => {
+                    const m = getMomentoLabel(lead.momentoLead);
+                    return m ? (
+                      <DField label="Temperatura" value={
+                        <span className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${m.chip}`}>{m.label}</span>
+                      } />
+                    ) : null;
+                  })()}
+                  {cv?.possibilidadeVenda != null && (
                     <DField label="Possib. de venda" value={
                       (() => {
                         const key = String(cv.possibilidadeVenda);
@@ -538,8 +511,38 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
                       })()
                     } />
                   )}
-                  {cv.reserva && <DField label="Reserva" value={cv.reserva} />}
-                  {cv.feedback && (
+                  {cv?.profissao && <DField label="Profissão" value={cv.profissao} />}
+                  {cv?.rendaFamiliar && <DField label="Renda familiar" value={cv.rendaFamiliar} />}
+                </DSection>
+              </>
+            )}
+
+            {/* Comercial — o que ajuda a fechar a venda */}
+            {(cv?.empreendimento || cv?.corretor || cv?.gestor || cv?.imobiliaria || cv?.pontoVenda || lead.valor != null || cv?.reserva || lead.dataFechamento) && (
+              <>
+                <div className="h-px bg-[var(--border)]" />
+                <DSection title="Comercial">
+                  {cv?.empreendimento && (
+                    <div className="col-span-2">
+                      <DField label="Empreendimento" value={cv.empreendimento} />
+                    </div>
+                  )}
+                  {cv?.pontoVenda && <DField label="Ponto de venda" value={cv.pontoVenda} />}
+                  {cv?.corretor && <DField label="Corretor" value={cv.corretor} />}
+                  {cv?.gestor && <DField label="Gestor" value={cv.gestor} />}
+                  {cv?.imobiliaria && (
+                    <div className="col-span-2">
+                      <DField label="Imobiliária" value={cv.imobiliaria} />
+                    </div>
+                  )}
+                  {lead.valor != null && (
+                    <DField label="Valor" value={
+                      <span className="font-bold text-emerald-400">{formatCurrencyBR(lead.valor)}</span>
+                    } />
+                  )}
+                  {cv?.reserva && <DField label="Reserva" value={cv.reserva} />}
+                  {lead.dataFechamento && <DField label="Fechamento" value={formatDateBR(lead.dataFechamento)} />}
+                  {cv?.feedback && (
                     <div className="col-span-2">
                       <DField label="Feedback" value={cv.feedback} />
                     </div>
@@ -1357,7 +1360,7 @@ export function CrmTab({
         <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações & Funil</h2>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Funil & Leads</h2>
         </div>
       </div>
 
@@ -1384,7 +1387,7 @@ export function CrmTab({
           <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Negociações</h2>
+            <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Detalhamento dos Leads</h2>
           </div>
         </div>
 
@@ -1430,7 +1433,7 @@ export function CrmTab({
         {/* Count line */}
         {!leadsLoading && total > 0 && (
           <p className="text-[11px] text-[var(--muted-foreground)]">
-            <span className="font-semibold text-[var(--foreground)]">{total.toLocaleString("pt-BR")}</span> negociações
+            <span className="font-semibold text-[var(--foreground)]">{total.toLocaleString("pt-BR")}</span> leads
             {debouncedSearch && <span className="italic"> · buscando "{debouncedSearch}"</span>}
             {totalPages > 1 && ` · página ${page} de ${totalPages}`}
             {!leadsLoading && <span className="ml-1 opacity-60">· clique para ver detalhes</span>}
@@ -1451,9 +1454,9 @@ export function CrmTab({
                 <Inbox className="h-5 w-5 text-[var(--muted-foreground)]" />
               </div>
               <div>
-                <p className="text-sm font-medium text-[var(--foreground)]">Nenhuma negociação encontrada</p>
+                <p className="text-sm font-medium text-[var(--foreground)]">Nenhum lead encontrado</p>
                 <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-                  Clique em Sincronizar para importar as negociações do CRM.
+                  Clique em Sincronizar para importar os leads do CRM.
                 </p>
               </div>
               <button
@@ -1474,10 +1477,10 @@ export function CrmTab({
         ) : (
           <>
             <div className="overflow-x-auto rounded-2xl border border-[var(--border)]">
-              <table className="min-w-[1040px] w-full text-sm">
+              <table className="min-w-[680px] w-full text-sm">
                 <thead>
                   <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-                    {["Status", "Etapa", "Contato", "Origem", "Qualificação", "Entrada", "Fechamento", "Valor"].map((h) => (
+                    {["Etapa", "Contato", "Origem", "Entrada", "Valor"].map((h) => (
                       <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
                         {h}
                       </th>
@@ -1490,7 +1493,6 @@ export function CrmTab({
                     const mkt = lead.dadosMarketing ?? null;
                     const canal = canalFromMidia(lead.fonte, cv?.midiaOriginal);
                     const canalCfg = CANAL_CFG[canal] ?? CANAL_CFG.OUTRO;
-                    const displayOrigem = cv?.midiaOriginal ?? lead.fonte ?? "—";
                     const confirmedCampaign = mkt?.metaCampaignName ?? null;
                     return (
                       <tr
@@ -1501,15 +1503,12 @@ export function CrmTab({
                         }`}
                       >
                         <td className="px-4 py-2.5">
-                          <StatusBadge status={lead.status} />
-                        </td>
-                        <td className="px-4 py-2.5">
-                          <span className="max-w-[160px] block truncate rounded-full bg-[var(--primary)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
+                          <span className="max-w-[180px] block truncate rounded-full bg-[var(--primary)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
                             {lead.etapa}
                           </span>
                         </td>
                         <td className="px-4 py-2.5">
-                          <div className="max-w-[160px]">
+                          <div className="max-w-[200px]">
                             <p className="truncate font-medium text-[var(--foreground)]">
                               {lead.nome ?? lead.email ?? lead.telefone ?? "—"}
                             </p>
@@ -1519,52 +1518,21 @@ export function CrmTab({
                           </div>
                         </td>
                         <td className="px-4 py-2.5">
-                          <div className="max-w-[170px]">
-                            <div className="flex items-center gap-1">
-                              <p className={`truncate text-[11px] font-semibold ${canalCfg.color}`}>{canalCfg.label}</p>
-                              {confirmedCampaign ? (
-                                <span className="shrink-0 rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-400">
-                                  ✓ confirmado
-                                </span>
-                              ) : canal === "META" || canal === "GOOGLE" ? (
-                                <span className="shrink-0 rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-amber-400/80">
-                                  CRM
-                                </span>
-                              ) : null}
-                            </div>
-                            <p className="truncate text-[11px] text-[var(--muted-foreground)]" title={displayOrigem}>
-                              {displayOrigem}
-                            </p>
+                          <div className="flex items-center gap-1.5">
+                            <span
+                              className="inline-block h-2 w-2 shrink-0 rounded-full"
+                              style={{ backgroundColor: canalCfg.hex }}
+                            />
+                            <span className={`text-[12px] font-semibold ${canalCfg.color}`}>{canalCfg.label}</span>
                             {confirmedCampaign && (
-                              <p className="truncate text-[10px] text-emerald-400/70" title={confirmedCampaign}>
-                                {confirmedCampaign}
-                              </p>
+                              <span className="shrink-0 rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-400">
+                                ✓
+                              </span>
                             )}
-                          </div>
-                        </td>
-                        <td className="px-4 py-2.5 text-[11px]">
-                          <div className="flex flex-col gap-0.5">
-                            {lead.momentoLead && (() => {
-                              const m = getMomentoLabel(lead.momentoLead);
-                              return m ? (
-                                <span className={`inline-block w-fit rounded-full px-2 py-0.5 text-[10px] font-semibold ${m.chip}`}>{m.label}</span>
-                              ) : null;
-                            })()}
-                            {cv?.possibilidadeVenda != null
-                              ? (() => {
-                                  const key = String(cv.possibilidadeVenda);
-                                  const cfg = PV_LABELS[key];
-                                  return <span className={cfg?.color ?? "text-[var(--muted-foreground)]"} title="Possibilidade de venda (avaliação do corretor, 1–5)">{cfg?.label ?? key}</span>;
-                                })()
-                              : (!lead.momentoLead && <span className="text-[var(--muted-foreground)]">—</span>)
-                            }
                           </div>
                         </td>
                         <td className="px-4 py-2.5 tabular-nums text-[12px] text-[var(--muted-foreground)]">
                           {formatDateBR(lead.dataEntrada)}
-                        </td>
-                        <td className="px-4 py-2.5 tabular-nums text-[12px] text-[var(--muted-foreground)]">
-                          {formatDateBR(lead.dataFechamento)}
                         </td>
                         <td className="px-4 py-2.5 tabular-nums font-semibold text-emerald-400">
                           {lead.valor != null ? formatCurrencyBR(lead.valor) : "—"}
