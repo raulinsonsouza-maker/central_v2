@@ -146,6 +146,9 @@ interface PorCriativo {
   visitou: number;
   valor: number;
   taxaGanho: number;
+  spend: number;
+  impressions: number;
+  clicks: number;
 }
 
 interface PorCampanhaConfirmada {
@@ -816,75 +819,118 @@ function CriativoSection({ data }: { data: AtribuicaoData }) {
       </div>
 
       <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
-        <table className="min-w-[640px] w-full text-sm">
+        <table className="min-w-[960px] w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-              {["Criativo (Anúncio)", "Conjunto", "Leads", "Visitou", "Em aberto", "Ganhos", "Conv%", "Valor"].map((h) => (
-                <th key={h} className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">
-                  {h}
-                </th>
-              ))}
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Criativo (Anúncio)</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Campanha</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Conjunto</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Leads</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Visitou</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Em aberto</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Ganhos</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Invest.</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Cliques</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">CPL</th>
+              <th className="px-4 py-2.5 text-left text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Conv%</th>
             </tr>
           </thead>
           <tbody>
-            {rows.map((row, i) => (
-              <tr
-                key={row.adName}
-                className={`border-b border-[var(--border)]/50 transition-colors hover:bg-[var(--muted)]/20 ${
-                  i % 2 === 0 ? "" : "bg-[var(--muted)]/10"
-                }`}
-              >
-                <td className="px-4 py-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: metaHex }} />
-                    <span className="max-w-[180px] block truncate font-medium text-[var(--foreground)]" title={row.adName}>
-                      {row.adName}
-                    </span>
-                  </div>
-                </td>
-                <td className="px-4 py-2.5">
-                  {row.adsetName ? (
-                    <span className="max-w-[140px] block truncate text-xs text-[var(--muted-foreground)]" title={row.adsetName}>
-                      {row.adsetName}
-                    </span>
-                  ) : (
-                    <span className="opacity-30 text-xs">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="tabular-nums font-semibold text-[var(--foreground)]">{row.leads}</span>
-                    {totalLeads > 0 && (
-                      <div className="h-1.5 w-16 overflow-hidden rounded-full bg-[var(--muted)]/40">
-                        <div
-                          className="h-full rounded-full"
-                          style={{ width: `${(row.leads / totalLeads) * 100}%`, backgroundColor: metaHex, opacity: 0.7 }}
-                        />
-                      </div>
+            {rows.map((row, i) => {
+              const cpl = row.leads > 0 && row.spend > 0 ? row.spend / row.leads : null;
+              return (
+                <tr
+                  key={row.adName}
+                  className={`border-b border-[var(--border)]/50 transition-colors hover:bg-[var(--muted)]/20 ${
+                    i % 2 === 0 ? "" : "bg-[var(--muted)]/10"
+                  }`}
+                >
+                  {/* Criativo */}
+                  <td className="px-4 py-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: metaHex }} />
+                      <span className="max-w-[160px] block truncate font-medium text-[var(--foreground)]" title={row.adName}>
+                        {row.adName}
+                      </span>
+                    </div>
+                  </td>
+                  {/* Campanha */}
+                  <td className="px-4 py-2.5">
+                    {row.campaignName ? (
+                      <span className="max-w-[140px] block truncate text-xs text-[var(--muted-foreground)]" title={row.campaignName}>
+                        {row.campaignName}
+                      </span>
+                    ) : (
+                      <span className="opacity-30 text-xs">—</span>
                     )}
-                  </div>
-                </td>
-                <td className="px-4 py-2.5 tabular-nums text-[var(--muted-foreground)]">
-                  {row.visitou > 0 ? row.visitou : <span className="opacity-40">—</span>}
-                </td>
-                <td className="px-4 py-2.5 tabular-nums text-blue-400">{row.andamento}</td>
-                <td className="px-4 py-2.5 tabular-nums font-bold text-emerald-400">
-                  {row.ganhos > 0 ? row.ganhos : <span className="font-normal opacity-40">—</span>}
-                </td>
-                <td className="px-4 py-2.5">
-                  {row.leads > 0 ? (
-                    <span className={`tabular-nums font-semibold ${row.taxaGanho > 0 ? "text-emerald-400" : "text-[var(--muted-foreground)]"}`}>
-                      {row.taxaGanho}%
-                    </span>
-                  ) : (
-                    <span className="opacity-40">—</span>
-                  )}
-                </td>
-                <td className="px-4 py-2.5 tabular-nums text-emerald-400/80">
-                  {row.valor > 0 ? formatCurrencyBR(row.valor) : <span className="opacity-40">—</span>}
-                </td>
-              </tr>
-            ))}
+                  </td>
+                  {/* Conjunto */}
+                  <td className="px-4 py-2.5">
+                    {row.adsetName ? (
+                      <span className="max-w-[130px] block truncate text-xs text-[var(--muted-foreground)]" title={row.adsetName}>
+                        {row.adsetName}
+                      </span>
+                    ) : (
+                      <span className="opacity-30 text-xs">—</span>
+                    )}
+                  </td>
+                  {/* Leads */}
+                  <td className="px-4 py-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="tabular-nums font-semibold text-[var(--foreground)]">{row.leads}</span>
+                      {totalLeads > 0 && (
+                        <div className="h-1.5 w-12 overflow-hidden rounded-full bg-[var(--muted)]/40">
+                          <div
+                            className="h-full rounded-full"
+                            style={{ width: `${(row.leads / totalLeads) * 100}%`, backgroundColor: metaHex, opacity: 0.7 }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                  {/* Visitou */}
+                  <td className="px-4 py-2.5 tabular-nums text-amber-400">
+                    {row.visitou > 0 ? row.visitou : <span className="opacity-30 text-[var(--muted-foreground)]">—</span>}
+                  </td>
+                  {/* Em aberto */}
+                  <td className="px-4 py-2.5 tabular-nums text-blue-400 font-medium">{row.andamento}</td>
+                  {/* Ganhos */}
+                  <td className="px-4 py-2.5 tabular-nums font-bold text-emerald-400">
+                    {row.ganhos > 0 ? row.ganhos : <span className="font-normal opacity-30">—</span>}
+                  </td>
+                  {/* Invest. */}
+                  <td className="px-4 py-2.5 tabular-nums text-[var(--muted-foreground)]">
+                    {row.spend > 0 ? (
+                      <span className="text-[var(--foreground)]">{formatCurrencyBR(row.spend)}</span>
+                    ) : (
+                      <span className="opacity-30">—</span>
+                    )}
+                  </td>
+                  {/* Cliques */}
+                  <td className="px-4 py-2.5 tabular-nums text-[var(--muted-foreground)]">
+                    {row.clicks > 0 ? row.clicks.toLocaleString("pt-BR") : <span className="opacity-30">—</span>}
+                  </td>
+                  {/* CPL */}
+                  <td className="px-4 py-2.5 tabular-nums">
+                    {cpl != null ? (
+                      <span className="font-semibold text-[var(--primary)]">{formatCurrencyBR(cpl)}</span>
+                    ) : (
+                      <span className="opacity-30">—</span>
+                    )}
+                  </td>
+                  {/* Conv% */}
+                  <td className="px-4 py-2.5">
+                    {row.leads > 0 ? (
+                      <span className={`tabular-nums font-semibold ${row.taxaGanho > 0 ? "text-emerald-400" : "text-[var(--muted-foreground)]"}`}>
+                        {row.taxaGanho}%
+                      </span>
+                    ) : (
+                      <span className="opacity-30">—</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

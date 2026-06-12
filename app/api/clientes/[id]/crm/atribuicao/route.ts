@@ -360,14 +360,41 @@ export async function GET(
     })
     .sort((a, b) => b.leads - a.leads);
 
+  // Enrich porCriativo with Meta Ads performance metrics (spend/impressions/clicks)
+  const adIds = [...criativoMap.values()]
+    .map((v) => v.adId)
+    .filter((aid): aid is string => aid != null);
+
+  const metaSpendByAdId = new Map<string, { spend: number; impressions: number; clicks: number }>();
+  if (adIds.length > 0) {
+    const metaRows = await prisma.metaAdsCriativo.groupBy({
+      by: ["adId"],
+      where: { clienteId: id, adId: { in: adIds }, data: { gte: dateFrom, lte: dateTo } },
+      _sum: { spend: true, impressions: true, clicks: true },
+    });
+    for (const row of metaRows) {
+      metaSpendByAdId.set(row.adId, {
+        spend: Number(row._sum.spend ?? 0),
+        impressions: Number(row._sum.impressions ?? 0),
+        clicks: Number(row._sum.clicks ?? 0),
+      });
+    }
+  }
+
   const porCriativo = [...criativoMap.entries()]
-    .map(([adName, b]) => ({
-      adName,
-      adId: b.adId,
-      adsetName: b.adsetName,
-      campaignName: b.campaignName,
-      ...toRow(adName, b),
-    }))
+    .map(([adName, b]) => {
+      const meta = b.adId ? metaSpendByAdId.get(b.adId) : null;
+      return {
+        adName,
+        adId: b.adId,
+        adsetName: b.adsetName,
+        campaignName: b.campaignName,
+        ...toRow(adName, b),
+        spend: meta?.spend ?? 0,
+        impressions: meta?.impressions ?? 0,
+        clicks: meta?.clicks ?? 0,
+      };
+    })
     .sort((a, b) => b.leads - a.leads);
 
   const totalLeads = leads.length;
