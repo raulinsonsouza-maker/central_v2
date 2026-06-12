@@ -258,6 +258,18 @@ function canalFromMidia(
   return "OUTRO";
 }
 
+// Alert tags: leads that should probably not be in the active funnel
+const ALERTA_KEYWORDS = [
+  "nao quer", "sem interesse", "renda insuficiente", "contato inexistente",
+  "desistencia", "invalido", "duplicado", "descartado", "nao quer imovel",
+  "busca outra", "nao retorna",
+];
+
+function isAlertaTag(tag: string): boolean {
+  const t = tag.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  return ALERTA_KEYWORDS.some((k) => t.includes(k));
+}
+
 // ─── Sub-components ───────────────────────────────────────────────────────────
 
 const STATUS_CFG: Record<string, { label: string; cls: string }> = {
@@ -558,14 +570,24 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
                 <div className="space-y-2">
                   <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary)]">Tags</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {cvTags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-full border border-[var(--border)] bg-[var(--muted)] px-2.5 py-0.5 text-[11px] text-[var(--foreground)]"
-                      >
-                        {tag}
-                      </span>
-                    ))}
+                    {[...cvTags]
+                      .sort((a, b) => Number(isAlertaTag(b)) - Number(isAlertaTag(a)))
+                      .map((tag) => {
+                        const alerta = isAlertaTag(tag);
+                        return (
+                          <span
+                            key={tag}
+                            className={
+                              alerta
+                                ? "inline-flex items-center gap-1 rounded-full border border-red-500/25 bg-red-500/10 px-2.5 py-0.5 text-[11px] font-medium text-red-400"
+                                : "rounded-full border border-[var(--border)] bg-[var(--muted)] px-2.5 py-0.5 text-[11px] text-[var(--foreground)]"
+                            }
+                          >
+                            {alerta && <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-red-400" />}
+                            {tag}
+                          </span>
+                        );
+                      })}
                   </div>
                 </div>
               </>
