@@ -769,15 +769,6 @@ function CriativoSection({ data }: { data: AtribuicaoData }) {
 
       {/* Summary chips */}
       <div className="flex flex-wrap gap-2">
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--card)] px-3 py-1.5">
-          <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ backgroundColor: metaHex }} />
-          <span className="text-xs font-semibold text-[var(--foreground)]">{totalLeads} formulários Meta</span>
-          {data.leadsMeta > 0 && (
-            <span className="text-xs text-[var(--muted-foreground)]">
-              de {data.leadsMeta} totais ({Math.round((totalLeads / data.leadsMeta) * 100)}% sincronizados)
-            </span>
-          )}
-        </div>
         {totalGanhos > 0 && (
           <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5">
             <span className="text-xs font-semibold text-emerald-400">{totalGanhos} vendas atribuídas</span>
@@ -902,11 +893,6 @@ function CriativoSection({ data }: { data: AtribuicaoData }) {
           </tbody>
         </table>
       </div>
-      <p className="text-[10px] text-[var(--muted-foreground)]">
-        Leads contados pelo data de preenchimento do formulário Meta (MetaLeadForms), não pela data de entrada no CRM.
-        O total pode ser menor que o Meta Ads Manager quando o sync ainda não capturou os leads mais recentes — o saldo restante aparece no total do tab META.
-        Métricas CRM (Visitou, Em aberto, Ganhos) via cruzamento por e-mail e telefone com os registros do CRM.
-      </p>
     </div>
   );
 }
@@ -986,24 +972,6 @@ function AtribuicaoSection({
                 <p className="mt-2 text-[10px] text-emerald-400/40">Valor não disponível via API do CRM</p>
               )}
             </div>
-            {/* Leads */}
-            <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-              <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[var(--primary)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.05]" />
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Leads CRM</p>
-              <p className="mt-1 text-2xl font-extrabold tabular-nums text-[var(--foreground)]">{totalLeads.toLocaleString("pt-BR")}</p>
-              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
-                {((data.totalGanhos / Math.max(totalLeads, 1)) * 100).toFixed(1)}% conv. geral
-              </p>
-            </div>
-            {/* Em aberto */}
-            <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-              <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-blue-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Em aberto</p>
-              <p className="mt-1 text-2xl font-extrabold tabular-nums text-blue-400">{data.totalAndamento}</p>
-              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
-                {data.totalPerdidos} perdidos · {((data.totalPerdidos / Math.max(totalLeads, 1)) * 100).toFixed(0)}%
-              </p>
-            </div>
           </div>
 
           {/* ── Performance por Canal ─────────────────────────────────────── */}
@@ -1025,9 +993,6 @@ function AtribuicaoSection({
                       const cfg = CANAL_CFG[c.canal] ?? CANAL_CFG.OUTRO;
                       const meta = canalMeta[c.canal];
                       const isActive = activeFilter?.type === "canal" && activeFilter.value === c.canal;
-                      const cplDelta = meta.cpl != null && meta.cplPlat != null
-                        ? ((meta.cpl - meta.cplPlat) / meta.cplPlat) * 100
-                        : null;
                       const perdidos = c.leads - c.ganhos - c.andamento;
 
                       return (
@@ -1092,15 +1057,6 @@ function AtribuicaoSection({
                                 <span className="text-[10px] font-semibold text-[var(--foreground)]">CPL real (CRM)</span>
                                 <div className="flex items-center gap-1.5">
                                   <span className="tabular-nums text-[13px] font-bold" style={{ color: cfg.hex }}>{formatCurrencyBR(meta.cpl)}</span>
-                                  {cplDelta != null && (
-                                    <span className={`rounded px-1 py-0.5 text-[9px] font-bold ${
-                                      cplDelta > 15 ? "bg-orange-500/15 text-orange-400"
-                                      : cplDelta > 0 ? "bg-amber-500/10 text-amber-400"
-                                      : "bg-emerald-500/10 text-emerald-400"
-                                    }`}>
-                                      {cplDelta > 0 ? "+" : ""}{cplDelta.toFixed(0)}% vs plat.
-                                    </span>
-                                  )}
                                 </div>
                               </div>
                             )}
@@ -1391,15 +1347,6 @@ export function CrmTab({
           )}
         </div>
 
-        {/* Count line */}
-        {!leadsLoading && total > 0 && (
-          <p className="text-[11px] text-[var(--muted-foreground)]">
-            <span className="font-semibold text-[var(--foreground)]">{total.toLocaleString("pt-BR")}</span> leads
-            {debouncedSearch && <span className="italic"> · buscando "{debouncedSearch}"</span>}
-            {totalPages > 1 && ` · página ${page} de ${totalPages}`}
-            {!leadsLoading && <span className="ml-1 opacity-60">· clique para ver detalhes</span>}
-          </p>
-        )}
 
         {/* Table */}
         {leadsLoading ? (

@@ -67,17 +67,6 @@ function fmtValor(v: number): string {
   return `R$ ${v.toLocaleString("pt-BR")}`;
 }
 
-function formatRelativeTime(iso: string) {
-  const diff = Date.now() - new Date(iso).getTime();
-  if (isNaN(diff)) return "";
-  const min = Math.floor(diff / 60000);
-  if (min < 1) return "agora mesmo";
-  if (min < 60) return `há ${min} min`;
-  const h = Math.floor(min / 60);
-  if (h < 24) return `há ${h}h`;
-  return `há ${Math.floor(h / 24)}d`;
-}
-
 type LeadFilter = { type: string; value: string; label: string } | null;
 
 export function FunilCrmSection({
@@ -146,16 +135,6 @@ export function FunilCrmSection({
               </p>
               <CardTitle className="mt-0">Funil CRM</CardTitle>
             </div>
-          </div>
-          <div className="flex flex-col items-end gap-1">
-            {data.ultimoSyncAt && (
-              <span className="text-[10px] text-[var(--muted-foreground)]">
-                Sync {formatRelativeTime(data.ultimoSyncAt)}
-              </span>
-            )}
-            <span className="rounded-full bg-emerald-500/10 px-2 py-0.5 text-[10px] font-semibold text-emerald-400">
-              {taxaFechamento}% conversão geral
-            </span>
           </div>
         </div>
       </CardHeader>
