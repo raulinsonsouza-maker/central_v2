@@ -7,7 +7,7 @@ import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
 import {
   RefreshCw, Inbox, Search, X,
   ChevronLeft, ChevronRight,
-  BarChart3, MapPin, Layers,
+  BarChart3, MapPin, Layers, Filter,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -1009,89 +1009,97 @@ function AtribuicaoSection({
                       const isActive = activeFilter?.type === "canal" && activeFilter.value === c.canal;
                       const perdidos = c.leads - c.ganhos - c.andamento;
 
+                      const ganhosPct = c.leads > 0 ? (c.ganhos / c.leads) * 100 : 0;
+                      const andamentoPct = c.leads > 0 ? (c.andamento / c.leads) * 100 : 0;
+                      const perdidosPct = c.leads > 0 ? (perdidos / c.leads) * 100 : 0;
+
                       return (
                         <div
                           key={c.canal}
                           onClick={() => isActive ? onFilter(null) : onFilter({ type: "canal", value: c.canal, label: `Canal: ${cfg.label}` })}
-                          className={`group relative cursor-pointer overflow-hidden rounded-2xl border p-4 transition-all ${
+                          className={`group relative cursor-pointer overflow-hidden rounded-2xl border p-5 transition-all ${
                             isActive
                               ? "border-[color-mix(in_srgb,var(--primary)_35%,var(--border))] bg-[var(--primary)]/5"
-                              : "border-[var(--border)] bg-[var(--card)] hover:border-[color-mix(in_srgb,var(--primary)_20%,var(--border))]"
+                              : "border-[var(--border)] bg-[var(--card)] hover:border-[color-mix(in_srgb,var(--primary)_25%,var(--border))]"
                           }`}
                         >
-                          {/* Canal header */}
-                          <div className="mb-3 flex items-center justify-between">
+                          {/* Channel accent line */}
+                          <div className="pointer-events-none absolute inset-x-0 top-0 h-[3px] opacity-70" style={{ backgroundColor: cfg.hex }} />
+                          {/* Hover glow in channel color */}
+                          <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.1]" style={{ backgroundColor: cfg.hex }} />
+
+                          {/* Header */}
+                          <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: cfg.hex }} />
-                              <span className={`text-sm font-bold ${cfg.color}`}>{cfg.label}</span>
+                              <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cfg.hex }} />
+                              <span className="text-sm font-bold text-[var(--foreground)]">{cfg.label}</span>
                             </div>
-                            {isActive
-                              ? <span className="text-[9px] text-[var(--primary)]/70">✓ filtrado · clique para limpar</span>
-                              : <span className="text-[9px] text-[var(--muted-foreground)]/50">clique para filtrar</span>
-                            }
-                          </div>
-
-                          {/* Volume row */}
-                          <div className="mb-3 grid grid-cols-3 gap-2">
-                            <div>
-                              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Leads CRM</p>
-                              <p className="mt-0.5 text-xl font-extrabold tabular-nums text-[var(--foreground)]">{c.leads.toLocaleString("pt-BR")}</p>
-                            </div>
-                            <div>
-                              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Em aberto</p>
-                              <p className="mt-0.5 text-xl font-extrabold tabular-nums text-blue-400">{c.andamento}</p>
-                            </div>
-                            <div>
-                              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Ganhos</p>
-                              <p className="mt-0.5 text-xl font-extrabold tabular-nums text-emerald-400">
-                                {c.ganhos > 0 ? c.ganhos : <span className="text-base font-normal opacity-25">—</span>}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Divider */}
-                          <div className="my-3 border-t border-[var(--border)]/60" />
-
-                          {/* Cost metrics */}
-                          <div className="space-y-2">
-                            {meta.invest > 0 && (
-                              <div className="flex items-baseline justify-between">
-                                <span className="text-[10px] text-[var(--muted-foreground)]">Investimento</span>
-                                <span className="tabular-nums text-[12px] font-semibold text-[var(--foreground)]">{formatCurrencyBR(meta.invest)}</span>
-                              </div>
-                            )}
-                            {meta.cplPlat != null && (
-                              <div className="flex items-baseline justify-between">
-                                <span className="text-[10px] text-[var(--muted-foreground)]">CPL plataforma</span>
-                                <span className="tabular-nums text-[11px] text-[var(--muted-foreground)]">{formatCurrencyBR(meta.cplPlat)}</span>
-                              </div>
-                            )}
-                            {meta.cpl != null && (
-                              <div className="flex items-baseline justify-between">
-                                <span className="text-[10px] font-semibold text-[var(--foreground)]">CPL real (CRM)</span>
-                                <div className="flex items-center gap-1.5">
-                                  <span className="tabular-nums text-[13px] font-bold" style={{ color: cfg.hex }}>{formatCurrencyBR(meta.cpl)}</span>
-                                </div>
-                              </div>
-                            )}
-                            {meta.cac != null && (
-                              <div className="flex items-baseline justify-between">
-                                <span className="text-[10px] text-[var(--muted-foreground)]">CAC real</span>
-                                <span className="tabular-nums text-[12px] font-semibold text-emerald-400">{formatCurrencyBR(meta.cac)}</span>
-                              </div>
-                            )}
-                          </div>
-
-                          {/* Footer: secondary signals */}
-                          {(perdidos > 0 || c.pvMedio != null) && (
-                            <div className="mt-3 flex items-center gap-3 border-t border-[var(--border)]/60 pt-2.5 text-[10px] text-[var(--muted-foreground)]">
-                              {perdidos > 0 && (
-                                <span>{perdidos} perdidos ({c.leads > 0 ? ((perdidos / c.leads) * 100).toFixed(0) : 0}%)</span>
-                              )}
+                            <div className="flex items-center gap-2">
                               {c.pvMedio != null && (
-                                <span className={`ml-auto font-semibold ${PV_LABELS[String(Math.round(c.pvMedio))]?.color ?? ""}`}>
+                                <span className={`rounded-full bg-[var(--muted)]/40 px-2 py-0.5 text-[10px] font-semibold ${PV_LABELS[String(Math.round(c.pvMedio))]?.color ?? ""}`}>
                                   Qualif. {c.pvMedio.toFixed(1)}
                                 </span>
+                              )}
+                              <Filter className={`h-3.5 w-3.5 transition-colors ${isActive ? "fill-[var(--primary)] text-[var(--primary)]" : "text-[var(--muted-foreground)]/30 group-hover:text-[var(--muted-foreground)]/70"}`} />
+                            </div>
+                          </div>
+
+                          {/* Hero: Leads + Ganhos */}
+                          <div className="mt-4 flex items-end justify-between gap-4">
+                            <div>
+                              <p className="text-3xl font-extrabold leading-none tabular-nums text-[var(--foreground)]">{c.leads.toLocaleString("pt-BR")}</p>
+                              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]">Leads no CRM</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="text-2xl font-extrabold leading-none tabular-nums text-emerald-400">
+                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal opacity-25">—</span>}
+                              </p>
+                              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]">Ganhos</p>
+                            </div>
+                          </div>
+
+                          {/* Status breakdown bar */}
+                          <div className="mt-4">
+                            <div className="flex h-1.5 w-full gap-0.5 overflow-hidden rounded-full">
+                              {ganhosPct > 0 && <div className="h-full bg-emerald-400" style={{ width: `${ganhosPct}%` }} />}
+                              {andamentoPct > 0 && <div className="h-full bg-blue-400" style={{ width: `${andamentoPct}%` }} />}
+                              {perdidosPct > 0 && <div className="h-full bg-[var(--muted-foreground)]/40" style={{ width: `${perdidosPct}%` }} />}
+                              {c.leads === 0 && <div className="h-full w-full bg-[var(--muted)]/30" />}
+                            </div>
+                            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--muted-foreground)]">
+                              <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-blue-400" />{c.andamento} em aberto</span>
+                              {perdidos > 0 && (
+                                <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />{perdidos} perdidos ({perdidosPct.toFixed(0)}%)</span>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Cost metric tiles */}
+                          {(meta.invest > 0 || meta.cpl != null || meta.cplPlat != null || meta.cac != null) && (
+                            <div className="mt-4 grid grid-cols-2 gap-2">
+                              {meta.invest > 0 && (
+                                <div className="rounded-xl bg-[var(--muted)]/20 px-3 py-2.5">
+                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Investimento</p>
+                                  <p className="mt-0.5 tabular-nums text-sm font-bold text-[var(--foreground)]">{formatCurrencyBR(meta.invest)}</p>
+                                </div>
+                              )}
+                              {meta.cpl != null && (
+                                <div className="rounded-xl px-3 py-2.5" style={{ backgroundColor: `color-mix(in srgb, ${cfg.hex} 9%, transparent)` }}>
+                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">CPL real · CRM</p>
+                                  <p className="mt-0.5 tabular-nums text-sm font-bold" style={{ color: cfg.hex }}>{formatCurrencyBR(meta.cpl)}</p>
+                                </div>
+                              )}
+                              {meta.cplPlat != null && (
+                                <div className="rounded-xl bg-[var(--muted)]/20 px-3 py-2.5">
+                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">CPL plataforma</p>
+                                  <p className="mt-0.5 tabular-nums text-sm font-semibold text-[var(--muted-foreground)]">{formatCurrencyBR(meta.cplPlat)}</p>
+                                </div>
+                              )}
+                              {meta.cac != null && (
+                                <div className="rounded-xl bg-emerald-500/[0.07] px-3 py-2.5">
+                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">CAC real</p>
+                                  <p className="mt-0.5 tabular-nums text-sm font-bold text-emerald-400">{formatCurrencyBR(meta.cac)}</p>
+                                </div>
                               )}
                             </div>
                           )}
