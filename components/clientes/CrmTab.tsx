@@ -104,6 +104,7 @@ interface PorCanal {
   leads: number;
   ganhos: number;
   perdidos: number;
+  andamento: number;
   ratingMedio: number | null;
   pvMedio: number | null;
   investCanal: number | null;
@@ -1038,77 +1039,175 @@ function AtribuicaoSection({
             </div>
           </div>
 
-          {/* 2-column visual grid */}
-          {totalLeads > 0 && (
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              {/* Canais de Origem */}
-              <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-                <div className="mb-3 flex items-center gap-2">
-                  <BarChart3 className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
-                  <p className="text-sm font-bold text-[var(--foreground)]">Canais de Origem</p>
-                  {activeFilter?.type === "canal" && (
-                    <span className="ml-auto text-[10px] text-[var(--primary)] opacity-70">· clique novamente para limpar</span>
-                  )}
-                </div>
-                {porCanal.length === 0 ? (
-                  <p className="py-6 text-center text-xs text-[var(--muted-foreground)]">Sem dados</p>
-                ) : (
-                  <div className="overflow-x-auto">
+          {/* ── Performance por Canal ─────────────────────────────────────── */}
+          {totalLeads > 0 && (() => {
+            const paidCanais = porCanal.filter((c) => c.canal === "META" || c.canal === "GOOGLE");
+            const outrosCanais = porCanal.filter((c) => c.canal !== "META" && c.canal !== "GOOGLE");
+
+            const canalMeta: Record<string, { cpl: number | null; cplPlat: number | null; cac: number | null; invest: number }> = {
+              META:   { cpl: data.cplMetaCrm ?? null,   cplPlat: data.cplMetaCampanha ?? null,   cac: data.cacMetaCrm ?? null,   invest: data.investMeta },
+              GOOGLE: { cpl: data.cplGoogleCrm ?? null, cplPlat: data.cplGoogleCampanha ?? null, cac: data.cacGoogleCrm ?? null, invest: data.investGoogle },
+            };
+
+            return (
+              <div className="space-y-3">
+                {/* Paid channel unified cards */}
+                {paidCanais.length > 0 && (
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {paidCanais.map((c) => {
+                      const cfg = CANAL_CFG[c.canal] ?? CANAL_CFG.OUTRO;
+                      const meta = canalMeta[c.canal];
+                      const isActive = activeFilter?.type === "canal" && activeFilter.value === c.canal;
+                      const cplDelta = meta.cpl != null && meta.cplPlat != null
+                        ? ((meta.cpl - meta.cplPlat) / meta.cplPlat) * 100
+                        : null;
+                      const perdidos = c.leads - c.ganhos - c.andamento;
+
+                      return (
+                        <div
+                          key={c.canal}
+                          onClick={() => isActive ? onFilter(null) : onFilter({ type: "canal", value: c.canal, label: `Canal: ${cfg.label}` })}
+                          className={`group relative cursor-pointer overflow-hidden rounded-2xl border p-4 transition-all ${
+                            isActive
+                              ? "border-[color-mix(in_srgb,var(--primary)_35%,var(--border))] bg-[var(--primary)]/5"
+                              : "border-[var(--border)] bg-[var(--card)] hover:border-[color-mix(in_srgb,var(--primary)_20%,var(--border))]"
+                          }`}
+                        >
+                          {/* Canal header */}
+                          <div className="mb-3 flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: cfg.hex }} />
+                              <span className={`text-sm font-bold ${cfg.color}`}>{cfg.label}</span>
+                            </div>
+                            {isActive
+                              ? <span className="text-[9px] text-[var(--primary)]/70">✓ filtrado · clique para limpar</span>
+                              : <span className="text-[9px] text-[var(--muted-foreground)]/50">clique para filtrar</span>
+                            }
+                          </div>
+
+                          {/* Volume row */}
+                          <div className="mb-3 grid grid-cols-3 gap-2">
+                            <div>
+                              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Leads CRM</p>
+                              <p className="mt-0.5 text-xl font-extrabold tabular-nums text-[var(--foreground)]">{c.leads.toLocaleString("pt-BR")}</p>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Em aberto</p>
+                              <p className="mt-0.5 text-xl font-extrabold tabular-nums text-blue-400">{c.andamento}</p>
+                            </div>
+                            <div>
+                              <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Ganhos</p>
+                              <p className="mt-0.5 text-xl font-extrabold tabular-nums text-emerald-400">
+                                {c.ganhos > 0 ? c.ganhos : <span className="text-base font-normal opacity-25">—</span>}
+                              </p>
+                            </div>
+                          </div>
+
+                          {/* Divider */}
+                          <div className="my-3 border-t border-[var(--border)]/60" />
+
+                          {/* Cost metrics */}
+                          <div className="space-y-2">
+                            {meta.invest > 0 && (
+                              <div className="flex items-baseline justify-between">
+                                <span className="text-[10px] text-[var(--muted-foreground)]">Investimento</span>
+                                <span className="tabular-nums text-[12px] font-semibold text-[var(--foreground)]">{formatCurrencyBR(meta.invest)}</span>
+                              </div>
+                            )}
+                            {meta.cplPlat != null && (
+                              <div className="flex items-baseline justify-between">
+                                <span className="text-[10px] text-[var(--muted-foreground)]">CPL plataforma</span>
+                                <span className="tabular-nums text-[11px] text-[var(--muted-foreground)]">{formatCurrencyBR(meta.cplPlat)}</span>
+                              </div>
+                            )}
+                            {meta.cpl != null && (
+                              <div className="flex items-baseline justify-between">
+                                <span className="text-[10px] font-semibold text-[var(--foreground)]">CPL real (CRM)</span>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="tabular-nums text-[13px] font-bold" style={{ color: cfg.hex }}>{formatCurrencyBR(meta.cpl)}</span>
+                                  {cplDelta != null && (
+                                    <span className={`rounded px-1 py-0.5 text-[9px] font-bold ${
+                                      cplDelta > 15 ? "bg-orange-500/15 text-orange-400"
+                                      : cplDelta > 0 ? "bg-amber-500/10 text-amber-400"
+                                      : "bg-emerald-500/10 text-emerald-400"
+                                    }`}>
+                                      {cplDelta > 0 ? "+" : ""}{cplDelta.toFixed(0)}% vs plat.
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                            {meta.cac != null && (
+                              <div className="flex items-baseline justify-between">
+                                <span className="text-[10px] text-[var(--muted-foreground)]">CAC real</span>
+                                <span className="tabular-nums text-[12px] font-semibold text-emerald-400">{formatCurrencyBR(meta.cac)}</span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Footer: secondary signals */}
+                          {(perdidos > 0 || c.pvMedio != null) && (
+                            <div className="mt-3 flex items-center gap-3 border-t border-[var(--border)]/60 pt-2.5 text-[10px] text-[var(--muted-foreground)]">
+                              {perdidos > 0 && (
+                                <span>{perdidos} perdidos ({c.leads > 0 ? ((perdidos / c.leads) * 100).toFixed(0) : 0}%)</span>
+                              )}
+                              {c.pvMedio != null && (
+                                <span className={`ml-auto font-semibold ${PV_LABELS[String(Math.round(c.pvMedio))]?.color ?? ""}`}>
+                                  Qualif. {c.pvMedio.toFixed(1)}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* Other channels compact table */}
+                {outrosCanais.length > 0 && (
+                  <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+                    <div className="mb-2 flex items-center gap-2">
+                      <BarChart3 className="h-3.5 w-3.5 shrink-0 text-[var(--muted-foreground)]" />
+                      <p className="text-xs font-semibold text-[var(--muted-foreground)]">Outros canais</p>
+                    </div>
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="border-b border-[var(--border)]">
-                          {["Canal", "Leads", "Vendas", "Conv%", "Qualif."].map((h) => (
-                            <th key={h} className={`pb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)] ${h === "Canal" ? "text-left" : "text-right"}`} title={h === "Qualif." ? "Média de Possibilidade de Venda (1–5) atribuída pelo corretor" : undefined}>
+                          {["Canal", "Leads", "Ganhos", "Conv%", "Qualif."].map((h) => (
+                            <th key={h} className={`pb-1.5 text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)] ${h === "Canal" ? "text-left" : "text-right"}`}>
                               {h}
                             </th>
                           ))}
                         </tr>
                       </thead>
                       <tbody>
-                        {porCanal.map((c) => {
+                        {outrosCanais.map((c) => {
                           const cfg = CANAL_CFG[c.canal] ?? CANAL_CFG.OUTRO;
-                          const taxaGanho = c.leads > 0 ? ((c.ganhos / c.leads) * 100) : 0;
                           const isActive = activeFilter?.type === "canal" && activeFilter.value === c.canal;
-                          const handleClick = () => {
-                            if (isActive) onFilter(null);
-                            else onFilter({ type: "canal", value: c.canal, label: `Canal: ${cfg.label}` });
-                          };
                           return (
                             <tr
                               key={c.canal}
-                              onClick={handleClick}
-                              className={`cursor-pointer border-b border-[var(--border)]/40 last:border-0 transition-colors hover:bg-[var(--primary)]/5 ${
-                                isActive ? "bg-[var(--primary)]/8" : ""
-                              }`}
+                              onClick={() => isActive ? onFilter(null) : onFilter({ type: "canal", value: c.canal, label: `Canal: ${cfg.label}` })}
+                              className={`cursor-pointer border-b border-[var(--border)]/40 last:border-0 transition-colors hover:bg-[var(--primary)]/5 ${isActive ? "bg-[var(--primary)]/8" : ""}`}
                             >
                               <td className="py-2 pr-3">
                                 <div className="flex items-center gap-1.5">
                                   <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ backgroundColor: cfg.hex }} />
-                                  <span className={`text-[12px] font-semibold ${isActive ? "text-[var(--primary)]" : cfg.color}`}>{cfg.label}</span>
-                                  {isActive && <span className="text-[9px] text-[var(--primary)]/60">✓ filtrado</span>}
+                                  <span className={`text-[11px] font-semibold ${isActive ? "text-[var(--primary)]" : cfg.color}`}>{cfg.label}</span>
                                 </div>
                               </td>
-                              <td className={`py-2 text-right tabular-nums text-[12px] ${isActive ? "font-bold text-[var(--primary)]" : "text-[var(--foreground)]"}`}>
-                                {c.leads.toLocaleString("pt-BR")}
+                              <td className="py-2 text-right tabular-nums text-[11px] text-[var(--foreground)]">{c.leads}</td>
+                              <td className="py-2 text-right tabular-nums text-[11px] font-bold text-emerald-400">
+                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal opacity-30">—</span>}
                               </td>
-                              <td className="py-2 text-right tabular-nums text-[12px] font-bold text-emerald-400">
-                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal text-[var(--muted-foreground)]">—</span>}
+                              <td className="py-2 text-right tabular-nums text-[11px]">
+                                {c.ganhos > 0 ? <span className="text-emerald-400">{((c.ganhos / c.leads) * 100).toFixed(1)}%</span> : <span className="opacity-30">—</span>}
                               </td>
-                              <td className="py-2 text-right tabular-nums text-[12px]">
-                                {taxaGanho > 0 ? (
-                                  <span className="font-semibold text-emerald-400">{taxaGanho.toFixed(1)}%</span>
-                                ) : (
-                                  <span className="text-[var(--muted-foreground)]">—</span>
-                                )}
-                              </td>
-                              <td className="py-2 text-right tabular-nums text-[12px]">
+                              <td className="py-2 text-right tabular-nums text-[11px]">
                                 {c.pvMedio != null ? (
-                                  <span className={PV_LABELS[String(Math.round(c.pvMedio))]?.color ?? "text-[var(--muted-foreground)]"}>
-                                    {c.pvMedio.toFixed(1)}
-                                  </span>
-                                ) : (
-                                  <span className="text-[var(--muted-foreground)] opacity-40">—</span>
-                                )}
+                                  <span className={PV_LABELS[String(Math.round(c.pvMedio))]?.color ?? ""}>{c.pvMedio.toFixed(1)}</span>
+                                ) : <span className="opacity-30">—</span>}
                               </td>
                             </tr>
                           );
@@ -1117,126 +1216,54 @@ function AtribuicaoSection({
                     </table>
                   </div>
                 )}
-                <p className="mt-3 text-[10px] text-[var(--muted-foreground)]">Clique em um canal para filtrar as negociações</p>
-              </div>
 
-              {/* Fonte de Conversão — only shown when there are 2+ distinct sources */}
-              {(data.porConversao ?? []).length >= 2 && (
-                <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-                  <div className="mb-3 flex items-center justify-between gap-2">
-                    <div className="flex items-center gap-2">
-                      <Layers className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
-                      <p className="text-sm font-bold text-[var(--foreground)]">Fonte de Conversão</p>
-                    </div>
-                    {leadsComConversao > 0 && (
-                      <span className="shrink-0 text-[10px] text-[var(--muted-foreground)]">
-                        {leadsComConversao.toLocaleString("pt-BR")} de {totalLeads.toLocaleString("pt-BR")}
-                      </span>
-                    )}
-                  </div>
-                  <div className="relative mb-2">
-                    <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--muted-foreground)]" />
-                    <input
-                      value={convSearch}
-                      onChange={(e) => setConvSearch(e.target.value)}
-                      placeholder="Buscar fonte de conversão…"
-                      className="w-full rounded-lg border border-[var(--border)] bg-[var(--muted)]/30 py-1.5 pl-8 pr-3 text-[11px] placeholder-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none"
-                    />
-                  </div>
-                  <div className="max-h-[240px] flex-1 space-y-0.5 overflow-y-auto">
-                    {porConversao.length === 0 ? (
-                      <p className="py-4 text-center text-xs text-[var(--muted-foreground)]">Nenhum resultado</p>
-                    ) : (
-                      porConversao.map((c) => {
-                        const isActive = activeFilter?.type === "conversao" && activeFilter.value === c.conversao;
-                        return (
-                          <HorizontalBar
-                            key={c.conversao}
-                            label={c.conversao}
-                            value={c.leads}
-                            total={leadsComConversao}
-                            isActive={isActive}
-                            onClick={() => onFilter(isActive ? null : { type: "conversao", value: c.conversao, label: `Conversão: ${c.conversao}` })}
-                          />
-                        );
-                      })
-                    )}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* CPL cards */}
-          {(data.cplMetaCrm != null || data.cplGoogleCrm != null) && (
-            <div className="space-y-3">
-              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                CPL Real por Canal
-              </p>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                {data.cplMetaCrm != null && (
-                  <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-                    <div className="flex items-center gap-1.5">
-                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-blue-400" />
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Meta — Custo por Lead / Venda</p>
-                    </div>
-                    <div className="mt-2 grid grid-cols-2 gap-3">
-                      <div>
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CPL Real</p>
-                        <p className="mt-0.5 text-lg font-extrabold tabular-nums text-blue-400">{formatCurrencyBR(data.cplMetaCrm)}</p>
-                        <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">{data.metaCrmLeads} leads CRM</p>
+                {/* Fonte de Conversão */}
+                {(data.porConversao ?? []).length >= 2 && (
+                  <div className="flex flex-col rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
+                    <div className="mb-3 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <Layers className="h-3.5 w-3.5 shrink-0 text-[var(--primary)]" />
+                        <p className="text-sm font-bold text-[var(--foreground)]">Fonte de Conversão</p>
                       </div>
-                      {data.cacMetaCrm != null && (
-                        <div>
-                          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CAC Real</p>
-                          <p className="mt-0.5 text-lg font-extrabold tabular-nums text-blue-300">{formatCurrencyBR(data.cacMetaCrm)}</p>
-                          <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">
-                            {(data.porCanal ?? []).find(c => c.canal === "META")?.ganhos ?? 0} vendas
-                          </p>
-                        </div>
+                      {leadsComConversao > 0 && (
+                        <span className="shrink-0 text-[10px] text-[var(--muted-foreground)]">
+                          {leadsComConversao.toLocaleString("pt-BR")} de {totalLeads.toLocaleString("pt-BR")}
+                        </span>
                       )}
                     </div>
-                    <p className="mt-2 text-[10px] text-[var(--muted-foreground)]">
-                      {formatCurrencyBR(data.investMeta)} investidos
-                      {data.cplMetaCampanha != null && (
-                        <span className="ml-1 opacity-60">· plataforma: {formatCurrencyBR(data.cplMetaCampanha)}</span>
-                      )}
-                    </p>
-                  </div>
-                )}
-                {data.cplGoogleCrm != null && (
-                  <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4">
-                    <div className="flex items-center gap-1.5">
-                      <span className="inline-block h-1.5 w-1.5 rounded-full bg-red-400" />
-                      <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Google — Custo por Lead / Venda</p>
+                    <div className="relative mb-2">
+                      <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[var(--muted-foreground)]" />
+                      <input
+                        value={convSearch}
+                        onChange={(e) => setConvSearch(e.target.value)}
+                        placeholder="Buscar fonte de conversão…"
+                        className="w-full rounded-lg border border-[var(--border)] bg-[var(--muted)]/30 py-1.5 pl-8 pr-3 text-[11px] placeholder-[var(--muted-foreground)] focus:border-[var(--primary)] focus:outline-none"
+                      />
                     </div>
-                    <div className="mt-2 grid grid-cols-2 gap-3">
-                      <div>
-                        <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CPL Real</p>
-                        <p className="mt-0.5 text-lg font-extrabold tabular-nums text-red-400">{formatCurrencyBR(data.cplGoogleCrm)}</p>
-                        <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">{data.googleCrmLeads} leads CRM</p>
-                      </div>
-                      {data.cacGoogleCrm != null && (
-                        <div>
-                          <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CAC Real</p>
-                          <p className="mt-0.5 text-lg font-extrabold tabular-nums text-red-300">{formatCurrencyBR(data.cacGoogleCrm)}</p>
-                          <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]">
-                            {(data.porCanal ?? []).find(c => c.canal === "GOOGLE")?.ganhos ?? 0} vendas
-                          </p>
-                        </div>
+                    <div className="max-h-[220px] flex-1 space-y-0.5 overflow-y-auto">
+                      {porConversao.length === 0 ? (
+                        <p className="py-4 text-center text-xs text-[var(--muted-foreground)]">Nenhum resultado</p>
+                      ) : (
+                        porConversao.map((c) => {
+                          const isActive = activeFilter?.type === "conversao" && activeFilter.value === c.conversao;
+                          return (
+                            <HorizontalBar
+                              key={c.conversao}
+                              label={c.conversao}
+                              value={c.leads}
+                              total={leadsComConversao}
+                              isActive={isActive}
+                              onClick={() => onFilter(isActive ? null : { type: "conversao", value: c.conversao, label: `Conversão: ${c.conversao}` })}
+                            />
+                          );
+                        })
                       )}
                     </div>
-                    <p className="mt-2 text-[10px] text-[var(--muted-foreground)]">
-                      {formatCurrencyBR(data.investGoogle)} investidos
-                      {data.cplGoogleCampanha != null && (
-                        <span className="ml-1 opacity-60">· plataforma: {formatCurrencyBR(data.cplGoogleCampanha)}</span>
-                      )}
-                    </p>
                   </div>
                 )}
               </div>
-            </div>
-          )}
+            );
+          })()}
 
           {/* Campaign breakdown (by CRM entry portal) */}
           <CampanhaSection data={data} />
