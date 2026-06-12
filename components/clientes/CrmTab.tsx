@@ -722,64 +722,6 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
   );
 }
 
-// ─── Qualidade dos Leads Section ──────────────────────────────────────────────
-
-function QualidadeLeadsSection({ data }: { data: AtribuicaoData }) {
-  const porTags = data.porTags ?? [];
-  const alertaLeads = data.alertaLeads ?? 0;
-  const alertaTags = porTags.filter((t) => t.isAlerta);
-
-  // Only render when there are alert tags — origin/tracking tags are noise.
-  if (alertaTags.length === 0) return null;
-
-  return (
-    <div className="space-y-4">
-      <div className="flex items-start gap-3">
-        <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
-        <div>
-          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM</p>
-          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Qualidade dos Leads</h2>
-        </div>
-      </div>
-
-      {/* KPI strip — only alert count */}
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:w-1/2">
-        <div className={`rounded-2xl border p-3.5 ${alertaLeads > 0 ? "border-orange-500/20 bg-orange-500/5" : "border-[var(--border)] bg-[var(--card)]"}`}>
-          <p className={`text-[10px] font-semibold uppercase tracking-[0.12em] ${alertaLeads > 0 ? "text-orange-400/80" : "text-[var(--muted-foreground)]"}`}>
-            Leads em alerta
-          </p>
-          <p className={`mt-1 text-2xl font-extrabold tabular-nums ${alertaLeads > 0 ? "text-orange-400" : "text-[var(--foreground)]"}`}>
-            {alertaLeads}
-          </p>
-          <p className={`mt-0.5 text-[10px] ${alertaLeads > 0 ? "text-orange-400/60" : "text-[var(--muted-foreground)]"}`}>
-            {alertaLeads > 0 ? "desistência, sem renda, sem contato" : "Sem alertas"}
-          </p>
-        </div>
-      </div>
-
-      {/* Alert tag breakdown */}
-      <div className="rounded-2xl border border-orange-500/15 bg-[var(--card)] p-4 md:w-1/2">
-        <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.15em] text-orange-400">
-          Tags de alerta
-        </p>
-        <div className="space-y-2">
-          {alertaTags.map((t) => (
-            <div key={t.tag} className="flex items-center justify-between gap-2">
-              <span className="flex items-center gap-1.5 text-[11px] text-orange-300/80">
-                <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400/60" />
-                {t.tag}
-              </span>
-              <span className="shrink-0 rounded-full bg-orange-500/10 px-2 py-0.5 text-[10px] font-bold tabular-nums text-orange-400">
-                {t.count}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
 // ─── Criativo Section (Meta Lead ID matching) ─────────────────────────────────
 
 function CriativoSection({ data }: { data: AtribuicaoData }) {
@@ -1268,8 +1210,6 @@ function AtribuicaoSection({
           {/* Campaign breakdown (by CRM entry portal) */}
           <CampanhaSection data={data} />
 
-          {/* Lead quality by tags — component renders only when alert tags exist */}
-          <QualidadeLeadsSection data={data} />
         </>
       )}
 
