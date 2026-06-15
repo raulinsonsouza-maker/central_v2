@@ -1455,8 +1455,24 @@ function AtribuicaoSection({
       )}
 
       {/* Meta hierarchy (campanha → conjunto → anúncio) via dadosMarketing */}
-      {!isLoading && data?.configured && (data.porMetaHierarquia?.length ?? 0) > 0 && (
-        <MetaHierarquiaSection data={data} activeFilter={activeFilter} onFilter={onFilter} />
+      {!isLoading && data?.configured && (
+        (data.porMetaHierarquia?.length ?? 0) > 0
+          ? <MetaHierarquiaSection data={data} activeFilter={activeFilter} onFilter={onFilter} />
+          : (
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM × Meta</p>
+                  <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Campanha → Conjunto → Anúncio</h2>
+                </div>
+              </div>
+              <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--card)] px-5 py-6 text-center">
+                <p className="text-sm text-[var(--muted-foreground)]">Nenhum lead com rastreamento de campanha Meta no período selecionado.</p>
+                <p className="mt-1 text-xs text-[var(--muted-foreground)]/60">Os IDs de campanha são gravados no momento da entrada do lead via formulário Meta. Tente um período mais amplo.</p>
+              </div>
+            </div>
+          )
       )}
 
       {/* Creative attribution via Meta Lead ID matching */}
