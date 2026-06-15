@@ -1,3 +1,4 @@
 - [Replit deployment count constraint](replit-deployment-constraint.md) — `.replit` holds ONE `[deployment]`; agent can't create a 2nd (scheduled) deployment by code, only the UI can.
 - [Viewer-triggered sync pattern](viewer-triggered-sync.md) — background fire-and-forget sync on dashboard mount, throttled via an atomic DB claim; replaces a cron that can't run.
+- [CRM per-lead attribution limits](crm-lead-attribution.md) — Meta lead campaign/adset/ad is real (lead-form match); Google per-lead campaign/keyword is impossible (CVCRM API has no gclid/UTM/keyword).
 - [CRM filters live in per-env DB](crm-filter-config-prod.md) — attribution filters are CrmConfig.credenciais data, not code; publish ships code only, prod DB is separate; edit filters in prod via admin panel.

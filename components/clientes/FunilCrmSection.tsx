@@ -25,12 +25,6 @@ interface FunilData {
   etapas: EtapaFunil[];
 }
 
-const CRM_LABELS: Record<string, string> = {
-  CVCRM: "CV CRM",
-  RDSTATION_CRM: "RD Station CRM",
-  KOMMO: "Kommo",
-};
-
 type MacroGrupo = "Leads" | "Atendimento" | "Visitas" | "Reservas" | "Vendas" | "Perdidos";
 const MACRO_ORDER: MacroGrupo[] = ["Leads", "Atendimento", "Visitas", "Reservas", "Vendas", "Perdidos"];
 
@@ -128,13 +122,6 @@ export function FunilCrmSection({
   return (
     <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
       <CardContent className="space-y-4 pt-6">
-        {(CRM_LABELS[data.tipo ?? ""] ?? data.tipo) && (
-          <div className="flex items-center justify-end">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--muted)]/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-              Fonte: {CRM_LABELS[data.tipo ?? ""] ?? data.tipo}
-            </span>
-          </div>
-        )}
         {/* KPI strip */}
         <div className="grid grid-cols-2 divide-x divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 sm:grid-cols-3">
           <div className="px-4 py-3 text-center">
