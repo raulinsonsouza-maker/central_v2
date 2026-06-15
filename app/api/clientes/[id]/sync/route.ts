@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { syncClienteCanais } from "@/lib/sync/syncClienteCanais";
 import { prisma } from "@/lib/db";
 
+export const maxDuration = 300;
+
 /**
  * Sincroniza os canais configurados deste cliente para o banco.
  *
