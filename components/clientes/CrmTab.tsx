@@ -506,13 +506,6 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
                 } />
               )}
               {!cv?.estado && cv?.regiao && <DField label="Região" value={cv.regiao} />}
-              {!mkt?.metaCampaignName && !cv?.utmCampaign && !cv?.utmTerm && (
-                <div className="col-span-2 rounded-lg border border-[var(--border)] bg-[var(--muted)]/20 px-3 py-2">
-                  <p className="text-[11px] leading-relaxed text-[var(--muted-foreground)]">
-                    Campanha e palavra-chave por lead não estão disponíveis para este canal. O CRM registra apenas origem, mídia e conversão — o detalhamento de campanha / conjunto / anúncio só existe para leads de formulário do Meta (Facebook/Instagram Ads). Para a performance de palavras-chave do Google Ads, consulte a aba <span className="font-semibold text-[var(--foreground)]">Criativos</span>.
-                  </p>
-                </div>
-              )}
             </DSection>
 
             {/* Qualidade do lead */}
