@@ -215,7 +215,7 @@ interface AtribuicaoData {
 // ─── Filter type ──────────────────────────────────────────────────────────────
 
 type LeadFilter = {
-  type: "canal" | "estado" | "conversao" | "etapa";
+  type: "canal" | "estado" | "conversao" | "etapa" | "funil";
   value: string;
   label: string;
 } | null;
@@ -1025,30 +1025,36 @@ function AtribuicaoSection({
                             </div>
                           </div>
 
-                          {/* Funil: Leads → Em atendimento → Visitas → Fecharam */}
-                          <div className="mt-4 grid grid-cols-4 gap-2 text-center">
-                            <div>
-                              <p className="text-2xl font-extrabold leading-none tabular-nums text-[var(--foreground)]">{c.leads.toLocaleString("pt-BR")}</p>
-                              <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Leads</p>
-                            </div>
-                            <div>
-                              <p className="text-2xl font-extrabold leading-none tabular-nums text-blue-400">
-                                {c.andamento > 0 ? c.andamento : <span className="font-normal opacity-25 text-[var(--muted-foreground)]">—</span>}
-                              </p>
-                              <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Em atend.</p>
-                            </div>
-                            <div>
-                              <p className="text-2xl font-extrabold leading-none tabular-nums text-amber-400">
-                                {c.visitou > 0 ? c.visitou : <span className="font-normal opacity-25 text-[var(--muted-foreground)]">—</span>}
-                              </p>
-                              <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Visitas</p>
-                            </div>
-                            <div>
-                              <p className="text-2xl font-extrabold leading-none tabular-nums text-emerald-400">
-                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal opacity-25 text-[var(--muted-foreground)]">—</span>}
-                              </p>
-                              <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Fecharam</p>
-                            </div>
+                          {/* Funil clicável: Leads · Atendimento · Visitas · Vendas */}
+                          <div className="mt-4 grid grid-cols-4 gap-1.5 text-center">
+                            {([
+                              { key: "leads",       label: "Leads",       val: c.leads,     cls: "text-[var(--foreground)]", dash: false },
+                              { key: "atendimento", label: "Atendimento", val: c.andamento, cls: "text-blue-400",           dash: true  },
+                              { key: "visitas",     label: "Visitas",     val: c.visitou,   cls: "text-amber-400",          dash: true  },
+                              { key: "vendas",      label: "Vendas",      val: c.ganhos,    cls: "text-emerald-400",        dash: true  },
+                            ] as const).map((s) => {
+                              const stageActive = activeFilter?.type === "funil" && activeFilter.value === `${c.canal}|${s.key}`;
+                              return (
+                                <button
+                                  key={s.key}
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    onFilter(stageActive ? null : { type: "funil", value: `${c.canal}|${s.key}`, label: `${cfg.label} · ${s.label}` });
+                                  }}
+                                  className={`rounded-lg px-1 py-1.5 transition-colors ${
+                                    stageActive
+                                      ? "bg-[var(--primary)]/10 ring-1 ring-[var(--primary)]/30"
+                                      : "hover:bg-[var(--muted)]/40"
+                                  }`}
+                                >
+                                  <p className={`text-2xl font-extrabold leading-none tabular-nums ${s.cls}`}>
+                                    {s.val > 0 ? s.val.toLocaleString("pt-BR") : (s.dash ? <span className="font-normal opacity-25 text-[var(--muted-foreground)]">—</span> : "0")}
+                                  </p>
+                                  <p className="mt-1.5 text-[9px] font-semibold uppercase leading-tight tracking-[0.06em] text-[var(--muted-foreground)]">{s.label}</p>
+                                </button>
+                              );
+                            })}
                           </div>
 
                           {/* Status breakdown bar */}

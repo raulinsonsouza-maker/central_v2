@@ -98,5 +98,18 @@ export function buildLeadFilterWhere(
     return { etapa: filterValue };
   }
 
+  if (filterType === "funil") {
+    // value = "CANAL|stage" (stage: leads | atendimento | visitas | vendas)
+    const [canal, stage] = filterValue.split("|");
+    const or = buildMidiaOR(canal);
+    const canalWhere: Prisma.LeadCrmWhereInput = or.length > 0 ? { OR: or } : {};
+    if (stage === "vendas") return { AND: [canalWhere, { status: "won" }] };
+    // andamento (atendimento) = tudo que não é won/lost, incluindo status nulo
+    // (espelha o else do bucket em /crm/atribuicao, onde status null cai em andamento)
+    if (stage === "atendimento") return { AND: [canalWhere, { NOT: { status: { in: ["won", "lost"] } } }] };
+    if (stage === "visitas") return { AND: [canalWhere, { etapa: { contains: "visit", mode: "insensitive" } }] };
+    return canalWhere; // leads (todos do canal)
+  }
+
   return {};
 }
