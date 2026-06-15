@@ -24,6 +24,15 @@ export interface MetaLeadsSyncResult {
   formsProcessed: number;
   formsSummary: Array<{ formId: string; formName: string; leadsFound: number }>;
   error?: string;
+  /**
+   * Non-fatal diagnostic: set when the sync technically succeeded but found
+   * zero lead-gen forms to read. This is almost always a Meta *Page-access*
+   * gap (the token can read ads/insights but is not assigned to the Page that
+   * owns the forms, so leadgen_forms/leads return empty/forbidden) rather than
+   * a code error. Surfaced so a 0-leads outcome is distinguishable from a
+   * healthy "no new leads" run.
+   */
+  warning?: string;
 }
 
 export async function syncMetaLeadsCliente(
@@ -163,7 +172,11 @@ export async function syncMetaLeadsCliente(
       }
     }
 
-    return { leadsProcessed, leadsCreated, leadsFailed, formsFound: allForms.length, formsProcessed: forms.length, formsSummary };
+    const warning =
+      allForms.length === 0
+        ? "Nenhum formulário de lead acessível. O token Meta consegue ler anúncios/investimento, mas não tem acesso de Página aos formulários (o system user precisa estar atribuído à Página com pages_manage_ads/pages_read_engagement). Sem isso, os leads de formulário não são sincronizados."
+        : undefined;
+    return { leadsProcessed, leadsCreated, leadsFailed, formsFound: allForms.length, formsProcessed: forms.length, formsSummary, warning };
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
     return { leadsProcessed: 0, leadsCreated: 0, leadsFailed: 0, formsFound: 0, formsProcessed: 0, formsSummary: [], error: message };

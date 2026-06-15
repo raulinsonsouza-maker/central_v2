@@ -234,7 +234,11 @@ export async function fetchLeadGenForms(
   const adsParams = new URLSearchParams({
     access_token: token,
     fields: "id,adcreatives{leadgen_id}",
-    effective_status: JSON.stringify(["ACTIVE", "PAUSED", "ARCHIVED", "DELETED"]),
+    // NB: "DELETED" is no longer a valid value for the ads `effective_status`
+    // filter — including it makes Meta reject the whole request with
+    // error 100 / subcode 1815001 ("Invalid parameter"), silently breaking
+    // this fallback tier. Keep only the values Meta still accepts here.
+    effective_status: JSON.stringify(["ACTIVE", "PAUSED", "ARCHIVED"]),
     limit: "500",
   });
   let adsUrl: string | null = `${GRAPH_BASE}/${actId}/ads?${adsParams.toString()}`;
