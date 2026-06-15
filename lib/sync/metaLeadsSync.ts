@@ -59,16 +59,11 @@ export async function syncMetaLeadsCliente(
 
   try {
     const { forms: allForms, permissionError } = await fetchLeadGenFormsWithDiag(accountId, token);
-    // Include all forms regardless of status — archived/draft forms still have historical leads.
-    const forms = allForms;
 
-    console.log(`[metaLeadsSync] clienteId=${clienteId} accountId=${accountId} formsFound=${forms.length}`, forms.map(f => `${f.id}(${f.status ?? 'no-status'})`));
+    console.log(`[metaLeadsSync] clienteId=${clienteId} accountId=${accountId} formsFound=${allForms.length}`, allForms.map(f => `${f.id}(${f.status ?? 'no-status'})`));
 
-    if (forms.length === 0 && permissionError) {
-      const isAccountNotAccessible = permissionError.includes("ACCOUNT_NOT_ACCESSIBLE:");
-      const errorMsg = isAccountNotAccessible
-        ? permissionError.replace("ACCOUNT_NOT_ACCESSIBLE:", "").trim()
-        : `Permissão insuficiente para acessar formulários de lead. O token Meta precisa da permissão leads_retrieval aprovada no Meta App Review. Detalhes: ${permissionError}`;
+    // If the account itself is not accessible, stop immediately — no fallback helps.
+    if (allForms.length === 0 && permissionError?.includes("ACCOUNT_NOT_ACCESSIBLE:")) {
       return {
         leadsProcessed: 0,
         leadsCreated: 0,
@@ -76,9 +71,28 @@ export async function syncMetaLeadsCliente(
         formsFound: 0,
         formsProcessed: 0,
         formsSummary: [],
-        error: errorMsg,
-        accountNotAccessible: isAccountNotAccessible,
+        error: permissionError.replace("ACCOUNT_NOT_ACCESSIBLE:", "").trim(),
+        accountNotAccessible: true,
       } as MetaLeadsSyncResult & { accountNotAccessible?: boolean };
+    }
+
+    // When form discovery returns 0 (e.g. token lost Page permissions but leads endpoint still
+    // works), fall back to form IDs previously stored in MetaLeadIndividual for this client.
+    let forms: Array<{ id: string; name: string; status?: string }> = allForms;
+    let usingFallbackForms = false;
+    if (forms.length === 0) {
+      const knownForms = await prisma.metaLeadIndividual.findMany({
+        where: { clienteId },
+        distinct: ["formId"],
+        select: { formId: true, formName: true },
+      });
+      if (knownForms.length > 0) {
+        forms = knownForms.map((f) => ({ id: f.formId, name: f.formName ?? f.formId }));
+        usingFallbackForms = true;
+        console.log(
+          `[metaLeadsSync] form discovery returned 0 — using ${forms.length} fallback formIds from MetaLeadIndividual: ${forms.map((f) => f.id).join(", ")}`
+        );
+      }
     }
 
     let leadsProcessed = 0;
@@ -172,10 +186,13 @@ export async function syncMetaLeadsCliente(
       }
     }
 
-    const warning =
-      allForms.length === 0
-        ? "Nenhum formulário de lead acessível. O token Meta consegue ler anúncios/investimento, mas não tem acesso de Página aos formulários (o system user precisa estar atribuído à Página com pages_manage_ads/pages_read_engagement). Sem isso, os leads de formulário não são sincronizados."
-        : undefined;
+    let warning: string | undefined;
+    if (allForms.length === 0 && usingFallbackForms) {
+      warning = `Descoberta de formulários falhou (acesso à Página insuficiente) — sincronizado via ${forms.length} formulário(s) conhecido(s) de sincronizações anteriores.${permissionError ? ` Erro original: ${permissionError}` : ""}`;
+    } else if (allForms.length === 0 && !usingFallbackForms) {
+      warning =
+        "Nenhum formulário de lead acessível. O token Meta consegue ler anúncios/investimento, mas não tem acesso de Página aos formulários (o system user precisa estar atribuído à Página com pages_manage_ads/pages_read_engagement). Sem isso, os leads de formulário não são sincronizados.";
+    }
     return { leadsProcessed, leadsCreated, leadsFailed, formsFound: allForms.length, formsProcessed: forms.length, formsSummary, warning };
   } catch (e) {
     const message = e instanceof Error ? e.message : String(e);
