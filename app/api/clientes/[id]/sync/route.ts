@@ -22,6 +22,15 @@ export async function POST(
   const { id } = await params;
   const isBackground = request.nextUrl.searchParams.get("background") === "1";
 
+  // Backfill manual: ?from=YYYY-MM-DD[&to=YYYY-MM-DD] força a janela de datas da
+  // Meta e do Google Ads, ignorando a lógica incremental (que só revisita os
+  // últimos dias). Usado para puxar histórico, ex.: desde 2026-01-01.
+  const dateRe = /^\d{4}-\d{2}-\d{2}$/;
+  const fromParam = request.nextUrl.searchParams.get("from");
+  const toParam = request.nextUrl.searchParams.get("to");
+  const dateFrom = fromParam && dateRe.test(fromParam) ? fromParam : undefined;
+  const dateTo = toParam && dateRe.test(toParam) ? toParam : undefined;
+
   try {
     if (isBackground) {
       const threshold = new Date(Date.now() - STALE_THRESHOLD_MS);
@@ -43,7 +52,7 @@ export async function POST(
     // Manual ("Atualizar agora") sync does a FULL CRM re-sync to repair leads
     // whose CV attribution (origem/mídia/conversão) was filled in after they were
     // first synced — the incremental background sync can never re-fetch those.
-    const result = await syncClienteCanais(id, { crmFull: !isBackground });
+    const result = await syncClienteCanais(id, { crmFull: !isBackground, dateFrom, dateTo });
 
     // Atualiza o carimbo de tempo ao concluir (não bloqueia a resposta em caso de falha).
     await prisma.cliente

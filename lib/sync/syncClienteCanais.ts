@@ -39,7 +39,7 @@ export interface SyncClienteCanaisResult {
 
 export async function syncClienteCanais(
   clienteId: string,
-  options?: { crmFull?: boolean },
+  options?: { crmFull?: boolean; dateFrom?: string; dateTo?: string },
 ): Promise<SyncClienteCanaisResult> {
   const contas = await prisma.conta.findMany({
     where: {
@@ -53,8 +53,20 @@ export async function syncClienteCanais(
   const analyticsConta = contas.find((conta) => conta.plataforma === "GOOGLE_ANALYTICS");
 
   const [googleAdsResult, metaResult, analyticsResult, metaLeadsResult, crmResult] = await Promise.all([
-    googleConta ? syncGoogleAdsCliente(clienteId, { customerId: googleConta.accountIdPlataforma ?? undefined }) : null,
-    metaConta ? syncMetaCliente(clienteId, { accountId: metaConta.accountIdPlataforma ?? undefined }) : null,
+    googleConta
+      ? syncGoogleAdsCliente(clienteId, {
+          customerId: googleConta.accountIdPlataforma ?? undefined,
+          dateFrom: options?.dateFrom,
+          dateTo: options?.dateTo,
+        })
+      : null,
+    metaConta
+      ? syncMetaCliente(clienteId, {
+          accountId: metaConta.accountIdPlataforma ?? undefined,
+          dateFrom: options?.dateFrom,
+          dateTo: options?.dateTo,
+        })
+      : null,
     analyticsConta
       ? syncAnalyticsCliente(clienteId, { propertyId: analyticsConta.accountIdPlataforma ?? undefined })
       : null,

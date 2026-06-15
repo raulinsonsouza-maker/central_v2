@@ -39,10 +39,12 @@ function formatDate(d: Date): string {
   return d.toISOString().slice(0, 10);
 }
 
+// Baseline para a primeira sync de um cliente sem dados — alinhado com a Meta
+// (DEFAULT_DATE_FROM em metaApiSync.ts) para que ambos os canais cubram o ano todo.
+const DEFAULT_DATE_FROM = "2026-01-01";
+
 function getDefaultDateFrom(): string {
-  const d = new Date();
-  d.setDate(d.getDate() - 90);
-  return formatDate(d);
+  return DEFAULT_DATE_FROM;
 }
 
 export interface GoogleAdsSyncOptions {
