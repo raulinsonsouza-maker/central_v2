@@ -110,6 +110,8 @@ interface PorCanal {
   ganhos: number;
   perdidos: number;
   andamento: number;
+  visitou: number;
+  valor: number;
   ratingMedio: number | null;
   pvMedio: number | null;
   investCanal: number | null;
@@ -967,27 +969,6 @@ function AtribuicaoSection({
         </div>
       ) : (
         <>
-          {/* KPI Cards — Valor Vendido em destaque */}
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {/* Valor Vendido — destaque principal */}
-            <div className="group relative col-span-2 overflow-hidden rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 sm:col-span-2">
-              <div className="pointer-events-none absolute -right-6 -top-6 h-32 w-32 rounded-full bg-emerald-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.08]" />
-              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-emerald-400/70">Valor Vendido</p>
-              <p className="mt-1 text-3xl font-extrabold tabular-nums text-emerald-400">
-                {data.totalValor > 0 ? formatCurrencyBR(data.totalValor) : "—"}
-              </p>
-              <div className="mt-1 flex items-center gap-3 text-[11px] text-emerald-400/60">
-                <span>{data.totalGanhos} unidade{data.totalGanhos !== 1 ? "s" : ""} vendida{data.totalGanhos !== 1 ? "s" : ""}</span>
-                {data.totalGanhos > 0 && data.totalValor > 0 && (
-                  <span>· ticket médio {formatCurrencyBR(data.totalValor / data.totalGanhos)}</span>
-                )}
-              </div>
-              {data.totalGanhos > 0 && data.totalValor === 0 && (
-                <p className="mt-2 text-[10px] text-emerald-400/40">Valor não disponível via API do CRM</p>
-              )}
-            </div>
-          </div>
-
           {/* ── Performance por Canal ─────────────────────────────────────── */}
           {totalLeads > 0 && (() => {
             const paidCanais = porCanal.filter((c) => c.canal === "META" || c.canal === "GOOGLE");
@@ -1044,17 +1025,29 @@ function AtribuicaoSection({
                             </div>
                           </div>
 
-                          {/* Hero: Leads + Ganhos */}
-                          <div className="mt-4 flex items-end justify-between gap-4">
+                          {/* Funil: Leads → Em atendimento → Visitas → Fecharam */}
+                          <div className="mt-4 grid grid-cols-4 gap-2 text-center">
                             <div>
-                              <p className="text-3xl font-extrabold leading-none tabular-nums text-[var(--foreground)]">{c.leads.toLocaleString("pt-BR")}</p>
-                              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]">Leads no CRM</p>
+                              <p className="text-2xl font-extrabold leading-none tabular-nums text-[var(--foreground)]">{c.leads.toLocaleString("pt-BR")}</p>
+                              <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Leads</p>
                             </div>
-                            <div className="text-right">
-                              <p className="text-2xl font-extrabold leading-none tabular-nums text-emerald-400">
-                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal opacity-25">—</span>}
+                            <div>
+                              <p className="text-2xl font-extrabold leading-none tabular-nums text-blue-400">
+                                {c.andamento > 0 ? c.andamento : <span className="font-normal opacity-25 text-[var(--muted-foreground)]">—</span>}
                               </p>
-                              <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-[var(--muted-foreground)]">Ganhos</p>
+                              <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Em atend.</p>
+                            </div>
+                            <div>
+                              <p className="text-2xl font-extrabold leading-none tabular-nums text-amber-400">
+                                {c.visitou > 0 ? c.visitou : <span className="font-normal opacity-25 text-[var(--muted-foreground)]">—</span>}
+                              </p>
+                              <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Visitas</p>
+                            </div>
+                            <div>
+                              <p className="text-2xl font-extrabold leading-none tabular-nums text-emerald-400">
+                                {c.ganhos > 0 ? c.ganhos : <span className="font-normal opacity-25 text-[var(--muted-foreground)]">—</span>}
+                              </p>
+                              <p className="mt-1.5 text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Fecharam</p>
                             </div>
                           </div>
 
@@ -1066,13 +1059,22 @@ function AtribuicaoSection({
                               {perdidosPct > 0 && <div className="h-full bg-[var(--muted-foreground)]/40" style={{ width: `${perdidosPct}%` }} />}
                               {c.leads === 0 && <div className="h-full w-full bg-[var(--muted)]/30" />}
                             </div>
-                            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--muted-foreground)]">
-                              <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-blue-400" />{c.andamento} em aberto</span>
-                              {perdidos > 0 && (
+                            {perdidos > 0 && (
+                              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--muted-foreground)]">
                                 <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />{perdidos} perdidos ({perdidosPct.toFixed(0)}%)</span>
-                              )}
-                            </div>
+                              </div>
+                            )}
                           </div>
+
+                          {/* Valor vendido do canal */}
+                          {c.ganhos > 0 && (
+                            <div className="mt-4 flex items-center justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-3 py-2.5">
+                              <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-emerald-400/70">Valor Vendido</p>
+                              <p className="tabular-nums text-sm font-bold text-emerald-400">
+                                {c.valor > 0 ? formatCurrencyBR(c.valor) : "—"}
+                              </p>
+                            </div>
+                          )}
 
                           {/* Cost metric tiles */}
                           {(meta.invest > 0 || meta.cpl != null || meta.cplPlat != null || meta.cac != null) && (
