@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { RefreshCw } from "lucide-react";
 
 interface EtapaFunil {
@@ -127,21 +127,14 @@ export function FunilCrmSection({
 
   return (
     <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
-      <CardHeader>
-        <div className="flex items-start justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
-            <div>
-              <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">
-                {CRM_LABELS[data.tipo ?? ""] ?? data.tipo}
-              </p>
-              <CardTitle className="mt-0">Funil CRM</CardTitle>
-            </div>
+      <CardContent className="space-y-4 pt-6">
+        {(CRM_LABELS[data.tipo ?? ""] ?? data.tipo) && (
+          <div className="flex items-center justify-end">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--muted)]/30 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+              Fonte: {CRM_LABELS[data.tipo ?? ""] ?? data.tipo}
+            </span>
           </div>
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
+        )}
         {/* KPI strip */}
         <div className="grid grid-cols-2 divide-x divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 sm:grid-cols-3">
           <div className="px-4 py-3 text-center">
