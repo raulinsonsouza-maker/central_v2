@@ -169,6 +169,12 @@ export async function GET(
   const criativoMap = new Map<string, { adId: string | null; adsetName: string | null; campaignName: string | null } & Bucket>();
   const campanhaConfirmadaMap = new Map<string, Bucket>();
 
+  // Hierarquia Meta (campanha → conjunto → anúncio) a partir do dadosMarketing do lead
+  type MetaNode = Bucket & { id: string | null; name: string };
+  type MetaAdset = MetaNode & { ads: Map<string, MetaNode> };
+  type MetaCampanha = MetaNode & { adsets: Map<string, MetaAdset> };
+  const metaHierMap = new Map<string, MetaCampanha>();
+
   // Tag tracking
   const tagMap = new Map<string, number>();
   let leadsComTags = 0;
@@ -208,15 +214,45 @@ export async function GET(
       if (hasAlerta) alertaLeads++;
     }
 
-    const addTo = (map: Map<string, Bucket>, key: string) => {
-      let b = map.get(key);
-      if (!b) { b = emptyBucket(); map.set(key, b); }
+    const applyBucket = (b: Bucket) => {
       b.leads++;
       if (visitou) b.visitou++;
       if (isWon) { b.ganhos++; b.valor += valor; } else if (isLost) b.perdidos++; else b.andamento++;
       if (rating != null) { b.ratingSum += rating; b.ratingCount++; }
       if (pv != null) { b.pvSum += pv; b.pvCount++; }
     };
+
+    const addTo = (map: Map<string, Bucket>, key: string) => {
+      let b = map.get(key);
+      if (!b) { b = emptyBucket(); map.set(key, b); }
+      applyBucket(b);
+    };
+
+    // Hierarquia Meta a partir dos IDs/nomes gravados no lead (dadosMarketing)
+    const mkt = parseDadosMarketing(lead.dadosMarketing);
+    if (mkt && (mkt.metaCampaignId || mkt.metaCampaignName)) {
+      const campId = mkt.metaCampaignId?.trim() || null;
+      const campName = mkt.metaCampaignName?.trim() || "(sem campanha)";
+      const campKey = campId || campName;
+      const adsetId = mkt.metaAdsetId?.trim() || null;
+      const adsetName = mkt.metaAdsetName?.trim() || "(sem conjunto)";
+      const adsetKey = adsetId || adsetName;
+      const adId = mkt.metaAdId?.trim() || null;
+      const adName = mkt.metaAdName?.trim() || "(sem anúncio)";
+      const adKey = adId || adName;
+
+      let camp = metaHierMap.get(campKey);
+      if (!camp) { camp = { id: campId, name: campName, ...emptyBucket(), adsets: new Map() }; metaHierMap.set(campKey, camp); }
+      applyBucket(camp);
+
+      let adset = camp.adsets.get(adsetKey);
+      if (!adset) { adset = { id: adsetId, name: adsetName, ...emptyBucket(), ads: new Map() }; camp.adsets.set(adsetKey, adset); }
+      applyBucket(adset);
+
+      let ad = adset.ads.get(adKey);
+      if (!ad) { ad = { id: adId, name: adName, ...emptyBucket() }; adset.ads.set(adKey, ad); }
+      applyBucket(ad);
+    }
 
     addTo(fonteMap, lead.fonte ?? "(sem fonte)");
     addTo(canalMap, canal);
@@ -397,6 +433,75 @@ export async function GET(
     })
     .sort((a, b) => b.leads - a.leads);
 
+  // ── porMetaHierarquia (campanha → conjunto → anúncio via dadosMarketing) ──────
+  const campanhas = [...metaHierMap.values()];
+  const hierCampIds = campanhas.map((c) => c.id).filter((x): x is string => !!x);
+  const hierAdsetIds = campanhas.flatMap((c) => [...c.adsets.values()].map((a) => a.id)).filter((x): x is string => !!x);
+  const hierAdIds = campanhas.flatMap((c) => [...c.adsets.values()].flatMap((a) => [...a.ads.values()].map((ad) => ad.id))).filter((x): x is string => !!x);
+
+  const campSpend = new Map<string, number>();
+  const adsetSpend = new Map<string, number>();
+  const adSpendHier = new Map<string, number>();
+  if (hierCampIds.length > 0) {
+    const rows = await prisma.metaAdsCriativo.groupBy({
+      by: ["campaignId"],
+      where: { clienteId: id, campaignId: { in: hierCampIds }, data: { gte: dateFrom, lte: dateTo } },
+      _sum: { spend: true },
+    });
+    for (const r of rows) if (r.campaignId) campSpend.set(r.campaignId, Number(r._sum.spend ?? 0));
+  }
+  if (hierAdsetIds.length > 0) {
+    const rows = await prisma.metaAdsCriativo.groupBy({
+      by: ["adsetId"],
+      where: { clienteId: id, adsetId: { in: hierAdsetIds }, data: { gte: dateFrom, lte: dateTo } },
+      _sum: { spend: true },
+    });
+    for (const r of rows) if (r.adsetId) adsetSpend.set(r.adsetId, Number(r._sum.spend ?? 0));
+  }
+  if (hierAdIds.length > 0) {
+    const rows = await prisma.metaAdsCriativo.groupBy({
+      by: ["adId"],
+      where: { clienteId: id, adId: { in: hierAdIds }, data: { gte: dateFrom, lte: dateTo } },
+      _sum: { spend: true },
+    });
+    for (const r of rows) adSpendHier.set(r.adId, Number(r._sum.spend ?? 0));
+  }
+
+  const hierNode = (b: typeof campanhas[number] | MetaAdset | MetaNode) => ({
+    leads: b.leads,
+    ganhos: b.ganhos,
+    perdidos: b.perdidos,
+    andamento: b.andamento,
+    visitou: b.visitou,
+    valor: b.valor,
+    taxaGanho: b.leads > 0 ? Math.round((b.ganhos / b.leads) * 100) : 0,
+  });
+
+  const porMetaHierarquia = campanhas
+    .map((camp) => ({
+      campaignId: camp.id,
+      campaignName: camp.name,
+      spend: camp.id ? (campSpend.get(camp.id) ?? 0) : 0,
+      ...hierNode(camp),
+      adsets: [...camp.adsets.values()]
+        .map((as) => ({
+          adsetId: as.id,
+          adsetName: as.name,
+          spend: as.id ? (adsetSpend.get(as.id) ?? 0) : 0,
+          ...hierNode(as),
+          ads: [...as.ads.values()]
+            .map((ad) => ({
+              adId: ad.id,
+              adName: ad.name,
+              spend: ad.id ? (adSpendHier.get(ad.id) ?? 0) : 0,
+              ...hierNode(ad),
+            }))
+            .sort((a, b) => b.leads - a.leads),
+        }))
+        .sort((a, b) => b.leads - a.leads),
+    }))
+    .sort((a, b) => b.leads - a.leads);
+
   const totalLeads = leads.length;
   const totalGanhos = leads.filter((l) => l.status === "won").length;
   const totalPerdidos = leads.filter((l) => l.status === "lost").length;
@@ -443,7 +548,7 @@ export async function GET(
     cacMetaCrm: metaGanhos > 0 && investMeta > 0 ? investMeta / metaGanhos : null,
     cacGoogleCrm: googleGanhos > 0 && investGoogle > 0 ? investGoogle / googleGanhos : null,
     porFonte, porCanal, porEstado, porConversao, porCampanha, porCriativo,
-    porCampanhaConfirmada,
+    porCampanhaConfirmada, porMetaHierarquia,
     leadsComEstado, leadsComConversao,
     porTags, totalComTags: leadsComTags, alertaLeads,
     ultimoSyncAt: config.ultimoSyncAt,

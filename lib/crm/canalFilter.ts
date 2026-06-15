@@ -98,6 +98,18 @@ export function buildLeadFilterWhere(
     return { etapa: filterValue };
   }
 
+  // Filtros da hierarquia Meta (campanha / conjunto / anúncio) gravados no lead.
+  // value = ID do Meta (campaignId/adsetId/adId) gravado em dadosMarketing.
+  if (filterType === "metaCampaign") {
+    return { dadosMarketing: { path: ["metaCampaignId"], equals: filterValue } };
+  }
+  if (filterType === "metaAdset") {
+    return { dadosMarketing: { path: ["metaAdsetId"], equals: filterValue } };
+  }
+  if (filterType === "metaAd") {
+    return { dadosMarketing: { path: ["metaAdId"], equals: filterValue } };
+  }
+
   if (filterType === "funil") {
     // value = "CANAL|stage" (stage: leads | atendimento | visitas | vendas)
     const [canal, stage] = filterValue.split("|");

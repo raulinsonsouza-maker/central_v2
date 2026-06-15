@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
 import {
   RefreshCw, Inbox, Search, X,
-  ChevronLeft, ChevronRight,
+  ChevronLeft, ChevronRight, ChevronDown,
   BarChart3, MapPin, Layers, Filter,
 } from "lucide-react";
 
@@ -170,6 +170,34 @@ interface PorCampanhaConfirmada {
   taxaGanho: number;
 }
 
+interface MetaHierNodeBase {
+  leads: number;
+  ganhos: number;
+  perdidos: number;
+  andamento: number;
+  visitou: number;
+  valor: number;
+  taxaGanho: number;
+  spend: number;
+}
+
+interface MetaAdNode extends MetaHierNodeBase {
+  adId: string | null;
+  adName: string;
+}
+
+interface MetaAdsetNode extends MetaHierNodeBase {
+  adsetId: string | null;
+  adsetName: string;
+  ads: MetaAdNode[];
+}
+
+interface MetaCampanhaNode extends MetaHierNodeBase {
+  campaignId: string | null;
+  campaignName: string;
+  adsets: MetaAdsetNode[];
+}
+
 interface TagRow {
   tag: string;
   count: number;
@@ -204,6 +232,7 @@ interface AtribuicaoData {
   porCampanha: PorCampanha[];
   porCriativo: PorCriativo[];
   porCampanhaConfirmada: PorCampanhaConfirmada[];
+  porMetaHierarquia: MetaCampanhaNode[];
   leadsComEstado: number;
   leadsComConversao: number;
   porTags: TagRow[];
@@ -215,7 +244,7 @@ interface AtribuicaoData {
 // ─── Filter type ──────────────────────────────────────────────────────────────
 
 type LeadFilter = {
-  type: "canal" | "estado" | "conversao" | "etapa" | "funil";
+  type: "canal" | "estado" | "conversao" | "etapa" | "funil" | "metaCampaign" | "metaAdset" | "metaAd";
   value: string;
   label: string;
 } | null;
@@ -913,6 +942,208 @@ function CriativoSection({ data }: { data: AtribuicaoData }) {
   );
 }
 
+// ─── Meta Hierarquia (Campanha → Conjunto → Anúncio) ──────────────────────────
+
+function MetaHierStat({ value, cls, dash }: { value: number; cls: string; dash?: boolean }) {
+  if (value > 0) return <span className={`tabular-nums font-semibold ${cls}`}>{value.toLocaleString("pt-BR")}</span>;
+  return dash ? <span className="opacity-25 text-[var(--muted-foreground)]">—</span> : <span className="tabular-nums text-[var(--muted-foreground)]">0</span>;
+}
+
+function MetaHierarquiaSection({
+  data,
+  activeFilter,
+  onFilter,
+}: {
+  data: AtribuicaoData;
+  activeFilter: LeadFilter;
+  onFilter: (f: LeadFilter) => void;
+}) {
+  const campanhas = data.porMetaHierarquia ?? [];
+  const [openCamp, setOpenCamp] = React.useState<Set<string>>(new Set());
+  const [openAdset, setOpenAdset] = React.useState<Set<string>>(new Set());
+
+  if (campanhas.length === 0) return null;
+
+  const toggle = (set: Set<string>, key: string, setter: (s: Set<string>) => void) => {
+    const next = new Set(set);
+    if (next.has(key)) next.delete(key); else next.add(key);
+    setter(next);
+  };
+
+  const totalLeads = campanhas.reduce((s, c) => s + c.leads, 0);
+  const totalGanhos = campanhas.reduce((s, c) => s + c.ganhos, 0);
+  const totalValor = campanhas.reduce((s, c) => s + c.valor, 0);
+  const metaHex = "#3b82f6";
+
+  const isNodeActive = (type: "metaCampaign" | "metaAdset" | "metaAd", id: string | null) =>
+    id != null && activeFilter?.type === type && activeFilter.value === id;
+
+  const cpl = (spend: number, leads: number) => (spend > 0 && leads > 0 ? spend / leads : null);
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-start gap-3">
+        <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM × Meta</p>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Campanha → Conjunto → Anúncio</h2>
+        </div>
+      </div>
+
+      {/* Summary chips */}
+      <div className="flex flex-wrap gap-2">
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--card)] px-3 py-1.5">
+          <span className="text-xs font-semibold text-[var(--foreground)]">{totalLeads.toLocaleString("pt-BR")} leads rastreados</span>
+        </div>
+        {totalGanhos > 0 && (
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5">
+            <span className="text-xs font-semibold text-emerald-400">{totalGanhos} vendas</span>
+            {totalValor > 0 && <span className="text-xs text-emerald-400/60">· {formatCurrencyBR(totalValor)}</span>}
+          </div>
+        )}
+      </div>
+
+      <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
+        <table className="min-w-[860px] w-full text-sm">
+          <thead>
+            <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
+              {["Campanha / Conjunto / Anúncio", "Leads", "Visitas", "Atend.", "Vendas", "Valor", "Invest.", "CPL", "Conv%"].map((h, i) => (
+                <th key={h} className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)] ${i === 0 ? "text-left" : "text-right"}`}>
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {campanhas.map((camp) => {
+              const campKey = camp.campaignId ?? camp.campaignName;
+              const campOpen = openCamp.has(campKey);
+              const campActive = isNodeActive("metaCampaign", camp.campaignId);
+              const campCpl = cpl(camp.spend, camp.leads);
+              return (
+                <React.Fragment key={campKey}>
+                  {/* Campaign row */}
+                  <tr className={`border-b border-[var(--border)]/60 transition-colors hover:bg-[var(--muted)]/20 ${campActive ? "bg-[var(--primary)]/[0.06]" : ""}`}>
+                    <td className="px-4 py-2.5">
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => toggle(openCamp, campKey, setOpenCamp)}
+                          className="shrink-0 rounded p-0.5 text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"
+                          aria-label={campOpen ? "Recolher" : "Expandir"}
+                        >
+                          {campOpen ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+                        </button>
+                        <span className="inline-block h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: metaHex }} />
+                        <button
+                          type="button"
+                          disabled={camp.campaignId == null}
+                          onClick={() => onFilter(campActive ? null : { type: "metaCampaign", value: camp.campaignId!, label: `Campanha: ${camp.campaignName}` })}
+                          className={`max-w-[280px] truncate text-left font-semibold ${camp.campaignId == null ? "cursor-default" : "hover:text-[var(--primary)]"} ${campActive ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}
+                          title={camp.campaignName}
+                        >
+                          {camp.campaignName}
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.leads} cls="text-[var(--foreground)]" /></td>
+                    <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.visitou} cls="text-amber-400" dash /></td>
+                    <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.andamento} cls="text-blue-400" dash /></td>
+                    <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.ganhos} cls="text-emerald-400" dash /></td>
+                    <td className="px-4 py-2.5 text-right tabular-nums text-[var(--muted-foreground)]">{camp.valor > 0 ? formatCurrencyBR(camp.valor) : <span className="opacity-25">—</span>}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums text-[var(--muted-foreground)]">{camp.spend > 0 ? formatCurrencyBR(camp.spend) : <span className="opacity-25">—</span>}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums">{campCpl != null ? <span className="font-semibold text-[var(--primary)]">{formatCurrencyBR(campCpl)}</span> : <span className="opacity-25">—</span>}</td>
+                    <td className="px-4 py-2.5 text-right tabular-nums">{camp.leads > 0 ? <span className={camp.taxaGanho > 0 ? "font-semibold text-emerald-400" : "text-[var(--muted-foreground)]"}>{camp.taxaGanho}%</span> : <span className="opacity-25">—</span>}</td>
+                  </tr>
+
+                  {/* Adset rows */}
+                  {campOpen && camp.adsets.map((as) => {
+                    const adsetKey = `${campKey}::${as.adsetId ?? as.adsetName}`;
+                    const adsetOpen = openAdset.has(adsetKey);
+                    const adsetActive = isNodeActive("metaAdset", as.adsetId);
+                    const adsetCpl = cpl(as.spend, as.leads);
+                    return (
+                      <React.Fragment key={adsetKey}>
+                        <tr className={`border-b border-[var(--border)]/40 bg-[var(--muted)]/[0.08] transition-colors hover:bg-[var(--muted)]/20 ${adsetActive ? "bg-[var(--primary)]/[0.06]" : ""}`}>
+                          <td className="px-4 py-2">
+                            <div className="flex items-center gap-1.5 pl-6">
+                              <button
+                                type="button"
+                                onClick={() => toggle(openAdset, adsetKey, setOpenAdset)}
+                                className="shrink-0 rounded p-0.5 text-[var(--muted-foreground)] hover:bg-[var(--muted)]/50 hover:text-[var(--foreground)]"
+                                aria-label={adsetOpen ? "Recolher" : "Expandir"}
+                              >
+                                {adsetOpen ? <ChevronDown className="h-3.5 w-3.5" /> : <ChevronRight className="h-3.5 w-3.5" />}
+                              </button>
+                              <button
+                                type="button"
+                                disabled={as.adsetId == null}
+                                onClick={() => onFilter(adsetActive ? null : { type: "metaAdset", value: as.adsetId!, label: `Conjunto: ${as.adsetName}` })}
+                                className={`max-w-[260px] truncate text-left text-xs font-medium ${as.adsetId == null ? "cursor-default" : "hover:text-[var(--primary)]"} ${adsetActive ? "text-[var(--primary)]" : "text-[var(--muted-foreground)]"}`}
+                                title={as.adsetName}
+                              >
+                                {as.adsetName}
+                              </button>
+                            </div>
+                          </td>
+                          <td className="px-4 py-2 text-right"><MetaHierStat value={as.leads} cls="text-[var(--foreground)]" /></td>
+                          <td className="px-4 py-2 text-right"><MetaHierStat value={as.visitou} cls="text-amber-400" dash /></td>
+                          <td className="px-4 py-2 text-right"><MetaHierStat value={as.andamento} cls="text-blue-400" dash /></td>
+                          <td className="px-4 py-2 text-right"><MetaHierStat value={as.ganhos} cls="text-emerald-400" dash /></td>
+                          <td className="px-4 py-2 text-right tabular-nums text-[var(--muted-foreground)]">{as.valor > 0 ? formatCurrencyBR(as.valor) : <span className="opacity-25">—</span>}</td>
+                          <td className="px-4 py-2 text-right tabular-nums text-[var(--muted-foreground)]">{as.spend > 0 ? formatCurrencyBR(as.spend) : <span className="opacity-25">—</span>}</td>
+                          <td className="px-4 py-2 text-right tabular-nums">{adsetCpl != null ? <span className="font-semibold text-[var(--primary)]">{formatCurrencyBR(adsetCpl)}</span> : <span className="opacity-25">—</span>}</td>
+                          <td className="px-4 py-2 text-right tabular-nums">{as.leads > 0 ? <span className={as.taxaGanho > 0 ? "font-semibold text-emerald-400" : "text-[var(--muted-foreground)]"}>{as.taxaGanho}%</span> : <span className="opacity-25">—</span>}</td>
+                        </tr>
+
+                        {/* Ad rows */}
+                        {adsetOpen && as.ads.map((ad) => {
+                          const adKey = `${adsetKey}::${ad.adId ?? ad.adName}`;
+                          const adActive = isNodeActive("metaAd", ad.adId);
+                          const adCpl = cpl(ad.spend, ad.leads);
+                          return (
+                            <tr key={adKey} className={`border-b border-[var(--border)]/30 transition-colors hover:bg-[var(--muted)]/20 ${adActive ? "bg-[var(--primary)]/[0.06]" : ""}`}>
+                              <td className="px-4 py-1.5">
+                                <div className="flex items-center gap-1.5 pl-[3.25rem]">
+                                  <span className="inline-block h-1 w-1 shrink-0 rounded-full bg-[var(--muted-foreground)]/40" />
+                                  <button
+                                    type="button"
+                                    disabled={ad.adId == null}
+                                    onClick={() => onFilter(adActive ? null : { type: "metaAd", value: ad.adId!, label: `Anúncio: ${ad.adName}` })}
+                                    className={`max-w-[240px] truncate text-left text-xs ${ad.adId == null ? "cursor-default" : "hover:text-[var(--primary)]"} ${adActive ? "font-semibold text-[var(--primary)]" : "text-[var(--muted-foreground)]"}`}
+                                    title={ad.adName}
+                                  >
+                                    {ad.adName}
+                                  </button>
+                                </div>
+                              </td>
+                              <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.leads} cls="text-[var(--foreground)]" /></td>
+                              <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.visitou} cls="text-amber-400" dash /></td>
+                              <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.andamento} cls="text-blue-400" dash /></td>
+                              <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.ganhos} cls="text-emerald-400" dash /></td>
+                              <td className="px-4 py-1.5 text-right tabular-nums text-[var(--muted-foreground)]">{ad.valor > 0 ? formatCurrencyBR(ad.valor) : <span className="opacity-25">—</span>}</td>
+                              <td className="px-4 py-1.5 text-right tabular-nums text-[var(--muted-foreground)]">{ad.spend > 0 ? formatCurrencyBR(ad.spend) : <span className="opacity-25">—</span>}</td>
+                              <td className="px-4 py-1.5 text-right tabular-nums">{adCpl != null ? <span className="font-semibold text-[var(--primary)]">{formatCurrencyBR(adCpl)}</span> : <span className="opacity-25">—</span>}</td>
+                              <td className="px-4 py-1.5 text-right tabular-nums">{ad.leads > 0 ? <span className={ad.taxaGanho > 0 ? "font-semibold text-emerald-400" : "text-[var(--muted-foreground)]"}>{ad.taxaGanho}%</span> : <span className="opacity-25">—</span>}</td>
+                            </tr>
+                          );
+                        })}
+                      </React.Fragment>
+                    );
+                  })}
+                </React.Fragment>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+      <p className="text-[10px] text-[var(--muted-foreground)]">
+        Baseado nos identificadores de campanha/conjunto/anúncio gravados em cada lead pelo formulário do Meta. Clique no nome para filtrar a lista de leads abaixo; use as setas para abrir conjuntos e anúncios. <span className="font-medium">Atend.</span> = em atendimento · <span className="font-medium">CPL</span> = investimento ÷ leads rastreados.
+      </p>
+    </div>
+  );
+}
+
 // ─── Análise de Origem Section ────────────────────────────────────────────────
 
 function AtribuicaoSection({
@@ -1221,6 +1452,11 @@ function AtribuicaoSection({
           {/* Campaign breakdown (by CRM entry portal) */}
           <CampanhaSection data={data} />
         </>
+      )}
+
+      {/* Meta hierarchy (campanha → conjunto → anúncio) via dadosMarketing */}
+      {!isLoading && data?.configured && (data.porMetaHierarquia?.length ?? 0) > 0 && (
+        <MetaHierarquiaSection data={data} activeFilter={activeFilter} onFilter={onFilter} />
       )}
 
       {/* Creative attribution via Meta Lead ID matching */}
