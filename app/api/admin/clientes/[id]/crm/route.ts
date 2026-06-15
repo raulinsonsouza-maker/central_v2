@@ -29,6 +29,13 @@ export async function GET(
   if (creds.token) safeCredenciais.token = creds.token;
   safeCredenciais.connected = !!(creds.accessToken);
   if (Array.isArray(creds.tagFilter)) safeCredenciais.tagFilter = creds.tagFilter;
+  if (Array.isArray(creds.midiaFilter)) safeCredenciais.midiaFilter = creds.midiaFilter;
+  if (Array.isArray(creds.origemUltimoFilter))
+    safeCredenciais.origemUltimoFilter = creds.origemUltimoFilter;
+  if (Array.isArray(creds.conversaoOriginalFilter))
+    safeCredenciais.conversaoOriginalFilter = creds.conversaoOriginalFilter;
+  if (Array.isArray(creds.conversaoUltimoFilter))
+    safeCredenciais.conversaoUltimoFilter = creds.conversaoUltimoFilter;
 
   return NextResponse.json({
     id: config.id,
@@ -83,6 +90,14 @@ export async function PUT(
         ...(credenciais.clientId ? { clientId: credenciais.clientId } : {}),
         ...(credenciais.clientSecret ? { clientSecret: credenciais.clientSecret } : {}),
       };
+    }
+  } else if (body.tipo === "CVCRM") {
+    // Merge over existing creds so saving the form never wipes fields it
+    // doesn't manage (e.g. tokens, future config keys).
+    const existing = await prisma.crmConfig.findUnique({ where: { clienteId: id } });
+    if (existing?.tipo === "CVCRM") {
+      const prev = existing.credenciais as Record<string, unknown>;
+      credenciais = { ...prev, ...credenciais };
     }
   }
 

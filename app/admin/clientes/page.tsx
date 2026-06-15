@@ -589,6 +589,10 @@ function CrmConfigSection({
   const [email, setEmail] = useState("");
   const [token, setToken] = useState("");
   const [tagFilterText, setTagFilterText] = useState("");
+  const [midiaFilterText, setMidiaFilterText] = useState("");
+  const [origemUltimoFilterText, setOrigemUltimoFilterText] = useState("");
+  const [conversaoOriginalFilterText, setConversaoOriginalFilterText] = useState("");
+  const [conversaoUltimoFilterText, setConversaoUltimoFilterText] = useState("");
   const [rdClientId, setRdClientId] = useState("");
   const [rdClientSecret, setRdClientSecret] = useState("");
   const [rdConnected, setRdConnected] = useState(false);
@@ -616,6 +620,21 @@ function CrmConfigSection({
         if (Array.isArray(creds.tagFilter) && creds.tagFilter.length > 0) {
           setTagFilterText((creds.tagFilter as string[]).join(", "));
         }
+        if (Array.isArray(creds.midiaFilter) && creds.midiaFilter.length > 0) {
+          setMidiaFilterText((creds.midiaFilter as string[]).join(", "));
+        }
+        if (Array.isArray(creds.origemUltimoFilter) && creds.origemUltimoFilter.length > 0) {
+          setOrigemUltimoFilterText((creds.origemUltimoFilter as string[]).join(", "));
+        }
+        if (
+          Array.isArray(creds.conversaoOriginalFilter) &&
+          creds.conversaoOriginalFilter.length > 0
+        ) {
+          setConversaoOriginalFilterText((creds.conversaoOriginalFilter as string[]).join(", "));
+        }
+        if (Array.isArray(creds.conversaoUltimoFilter) && creds.conversaoUltimoFilter.length > 0) {
+          setConversaoUltimoFilterText((creds.conversaoUltimoFilter as string[]).join(", "));
+        }
         if (data.tipo === "RDSTATION_CRM") {
           setRdClientId(creds.clientId ?? "");
           setRdConnected(!!creds.connected);
@@ -631,10 +650,15 @@ function CrmConfigSection({
     try {
       const credenciais: Record<string, unknown> = {};
       if (tipo === "CVCRM") {
+        const parseList = (s: string) =>
+          s.split(/[\n,]/).map((t) => t.trim()).filter(Boolean);
         credenciais.email = email.trim();
         credenciais.token = token.trim();
-        const tags = tagFilterText.split(/[\n,]/).map((t) => t.trim()).filter(Boolean);
-        credenciais.tagFilter = tags;
+        credenciais.tagFilter = parseList(tagFilterText);
+        credenciais.midiaFilter = parseList(midiaFilterText);
+        credenciais.origemUltimoFilter = parseList(origemUltimoFilterText);
+        credenciais.conversaoOriginalFilter = parseList(conversaoOriginalFilterText);
+        credenciais.conversaoUltimoFilter = parseList(conversaoUltimoFilterText);
       } else if (tipo === "RDSTATION_CRM") {
         if (rdClientId.trim()) credenciais.clientId = rdClientId.trim();
         if (rdClientSecret && !rdClientSecret.startsWith("•"))
@@ -800,6 +824,67 @@ function CrmConfigSection({
                 ))}
               </p>
             )}
+          </div>
+
+          <div className="space-y-3 rounded-lg border border-[var(--border)] bg-[var(--background)]/40 p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+              Filtros de atribuição{" "}
+              <span className="font-normal normal-case tracking-normal text-[var(--muted-foreground)]/70">
+                — só contam leads cujos campos batem com estes valores. Vazio = sem filtro. Separe por vírgula.
+              </span>
+            </p>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-[var(--muted-foreground)]">
+                Mídia original{" "}
+                <span className="font-normal text-[var(--muted-foreground)]/70">(canal pago: Meta / Google)</span>
+              </label>
+              <input
+                type="text"
+                value={midiaFilterText}
+                onChange={(e) => setMidiaFilterText(e.target.value)}
+                placeholder="Ex.: Facebook Ads, Google"
+                className={inputClass}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-[var(--muted-foreground)]">
+                Origem do último{" "}
+                <span className="font-normal text-[var(--muted-foreground)]/70">(inclua &quot;Busca Orgânica&quot; p/ contar Google orgânico)</span>
+              </label>
+              <input
+                type="text"
+                value={origemUltimoFilterText}
+                onChange={(e) => setOrigemUltimoFilterText(e.target.value)}
+                placeholder="Ex.: Busca Compartilhada, Facebook, Google, Busca Orgânica"
+                className={inputClass}
+              />
+            </div>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-[var(--muted-foreground)]">
+                  Conversão original
+                </label>
+                <input
+                  type="text"
+                  value={conversaoOriginalFilterText}
+                  onChange={(e) => setConversaoOriginalFilterText(e.target.value)}
+                  placeholder="Ex.: RdStation"
+                  className={inputClass}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-[var(--muted-foreground)]">
+                  Conversão último
+                </label>
+                <input
+                  type="text"
+                  value={conversaoUltimoFilterText}
+                  onChange={(e) => setConversaoUltimoFilterText(e.target.value)}
+                  placeholder="Ex.: RdStation"
+                  className={inputClass}
+                />
+              </div>
+            </div>
           </div>
         </>
       )}

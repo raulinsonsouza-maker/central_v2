@@ -1,2 +1,3 @@
 - [Replit deployment count constraint](replit-deployment-constraint.md) — `.replit` holds ONE `[deployment]`; agent can't create a 2nd (scheduled) deployment by code, only the UI can.
 - [Viewer-triggered sync pattern](viewer-triggered-sync.md) — background fire-and-forget sync on dashboard mount, throttled via an atomic DB claim; replaces a cron that can't run.
+- [CRM filters live in per-env DB](crm-filter-config-prod.md) — attribution filters are CrmConfig.credenciais data, not code; publish ships code only, prod DB is separate; edit filters in prod via admin panel.
