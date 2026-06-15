@@ -176,10 +176,19 @@ export async function syncMetaCliente(
       });
     }
 
-    const ads = await fetchAdsWithCreatives(accountId, token, {
-      dateFrom: creativeDateFrom,
-      dateTo: creativeDateTo,
-    });
+    // Criativos: fetch isolado — falha de rate-limit aqui NÃO invalida os dados de
+    // campanha já gravados acima. Se o Meta API estiver sobrecarregado neste momento,
+    // os criativos ficam desatualizados mas o investimento/conversões permanecem.
+    let ads: Awaited<ReturnType<typeof fetchAdsWithCreatives>> = [];
+    try {
+      ads = await fetchAdsWithCreatives(accountId, token, {
+        dateFrom: creativeDateFrom,
+        dateTo: creativeDateTo,
+      });
+    } catch (creativeErr) {
+      const creativeMsg = creativeErr instanceof Error ? creativeErr.message : String(creativeErr);
+      console.warn(`[metaSync] criativos falhou (não-fatal) clienteId=${clienteId} accountId=${accountId}:`, creativeMsg);
+    }
 
     // Helpers para extrair conversões dos arrays actions/action_values
     const getAction = (arr: Array<{ action_type: string; value: string }> | undefined, type: string) =>
