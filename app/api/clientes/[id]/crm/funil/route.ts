@@ -33,7 +33,7 @@ export async function GET(
   }
 
   const crmFilters = await getCrmFilters(id);
-  const { tagFilter, conversaoOriginalFilter, conversaoUltimoFilter, midiaFilter, origemUltimoFilter } = crmFilters;
+  const { tagFilter, conversaoOriginalFilter, conversaoUltimoFilter, midiaFilter, origemOriginalFilter, origemUltimoFilter } = crmFilters;
   const leadFilterWhere = buildLeadFilterWhere(filterType, filterValue);
 
   const andClauses: Prisma.LeadCrmWhereInput[] = [
@@ -41,6 +41,7 @@ export async function GET(
     ...(conversaoOriginalFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoOriginal", conversaoOriginalFilter)] : []),
     ...(conversaoUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoUltimo", conversaoUltimoFilter)] : []),
     ...(midiaFilter.length > 0 ? [buildJsonStringFilterWhere("midiaOriginal", midiaFilter)] : []),
+    ...(origemOriginalFilter.length > 0 ? [buildJsonStringFilterWhere("origem", origemOriginalFilter)] : []),
     ...(origemUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("origemUltimo", origemUltimoFilter)] : []),
     ...(filterType && filterValue ? [leadFilterWhere] : []),
   ];

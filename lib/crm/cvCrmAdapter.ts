@@ -157,6 +157,7 @@ export class CvCrmAdapter implements CrmAdapter {
   private conversaoOriginalFilter: string[];
   private conversaoUltimoFilter: string[];
   private midiaFilter: string[];
+  private origemOriginalFilter: string[];
   private origemUltimoFilter: string[];
 
   constructor(domain: string, creds: CvCrmCredentials) {
@@ -167,6 +168,7 @@ export class CvCrmAdapter implements CrmAdapter {
     this.conversaoOriginalFilter = creds.conversaoOriginalFilter?.filter(Boolean) ?? [];
     this.conversaoUltimoFilter = creds.conversaoUltimoFilter?.filter(Boolean) ?? [];
     this.midiaFilter = creds.midiaFilter?.filter(Boolean) ?? [];
+    this.origemOriginalFilter = creds.origemOriginalFilter?.filter(Boolean) ?? [];
     this.origemUltimoFilter = creds.origemUltimoFilter?.filter(Boolean) ?? [];
   }
 
@@ -420,6 +422,14 @@ export class CvCrmAdapter implements CrmAdapter {
       result = result.filter((lead) => {
         const midia = ((lead.dadosCv?.midiaOriginal as string | undefined) ?? "").toLowerCase().trim();
         return midia !== "" && filterSet.has(midia);
+      });
+    }
+
+    if (this.origemOriginalFilter.length > 0) {
+      const filterSet = new Set(this.origemOriginalFilter.map((v) => v.toLowerCase().trim()));
+      result = result.filter((lead) => {
+        const origem = ((lead.dadosCv?.origem as string | undefined) ?? "").toLowerCase().trim();
+        return origem !== "" && filterSet.has(origem);
       });
     }
 

@@ -45,13 +45,14 @@ export async function GET(
   }
 
   const crmFilters = await getCrmFilters(id);
-  const { tagFilter, conversaoOriginalFilter, conversaoUltimoFilter, midiaFilter, origemUltimoFilter } = crmFilters;
+  const { tagFilter, conversaoOriginalFilter, conversaoUltimoFilter, midiaFilter, origemOriginalFilter, origemUltimoFilter } = crmFilters;
 
   const andClauses: Prisma.LeadCrmWhereInput[] = [
     ...(tagFilter.length > 0 ? [buildTagFilterWhere(tagFilter)] : []),
     ...(conversaoOriginalFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoOriginal", conversaoOriginalFilter)] : []),
     ...(conversaoUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoUltimo", conversaoUltimoFilter)] : []),
     ...(midiaFilter.length > 0 ? [buildJsonStringFilterWhere("midiaOriginal", midiaFilter)] : []),
+    ...(origemOriginalFilter.length > 0 ? [buildJsonStringFilterWhere("origem", origemOriginalFilter)] : []),
     ...(origemUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("origemUltimo", origemUltimoFilter)] : []),
     ...(filterCondition && Object.keys(filterCondition).length > 0 ? [filterCondition] : []),
   ];

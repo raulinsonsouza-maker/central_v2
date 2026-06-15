@@ -49,6 +49,7 @@ export interface CvCrmCredentials {
    * Only import leads whose `origem_ultimo_nome` (last origin) matches one of these values.
    * Case-insensitive exact match. Empty/absent = no filter.
    */
+  origemOriginalFilter?: string[];
   origemUltimoFilter?: string[];
 }
 

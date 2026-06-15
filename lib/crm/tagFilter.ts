@@ -61,6 +61,7 @@ export interface CrmFilters {
   conversaoOriginalFilter: string[];
   conversaoUltimoFilter: string[];
   midiaFilter: string[];
+  origemOriginalFilter: string[];
   origemUltimoFilter: string[];
 }
 
@@ -79,7 +80,7 @@ export async function getCrmFilters(clienteId: string): Promise<CrmFilters> {
     select: { credenciais: true, ativo: true },
   });
   if (!config || !config.ativo) {
-    return { tagFilter: [], conversaoOriginalFilter: [], conversaoUltimoFilter: [], midiaFilter: [], origemUltimoFilter: [] };
+    return { tagFilter: [], conversaoOriginalFilter: [], conversaoUltimoFilter: [], midiaFilter: [], origemOriginalFilter: [], origemUltimoFilter: [] };
   }
   const creds = config.credenciais as Record<string, unknown>;
   return {
@@ -87,6 +88,7 @@ export async function getCrmFilters(clienteId: string): Promise<CrmFilters> {
     conversaoOriginalFilter: toStringArray(creds.conversaoOriginalFilter),
     conversaoUltimoFilter: toStringArray(creds.conversaoUltimoFilter),
     midiaFilter: toStringArray(creds.midiaFilter),
+    origemOriginalFilter: toStringArray(creds.origemOriginalFilter),
     origemUltimoFilter: toStringArray(creds.origemUltimoFilter),
   };
 }

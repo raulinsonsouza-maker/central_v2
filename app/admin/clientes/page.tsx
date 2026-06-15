@@ -590,6 +590,7 @@ function CrmConfigSection({
   const [token, setToken] = useState("");
   const [tagFilterText, setTagFilterText] = useState("");
   const [midiaFilterText, setMidiaFilterText] = useState("");
+  const [origemOriginalFilterText, setOrigemOriginalFilterText] = useState("");
   const [origemUltimoFilterText, setOrigemUltimoFilterText] = useState("");
   const [conversaoOriginalFilterText, setConversaoOriginalFilterText] = useState("");
   const [conversaoUltimoFilterText, setConversaoUltimoFilterText] = useState("");
@@ -622,6 +623,9 @@ function CrmConfigSection({
         }
         if (Array.isArray(creds.midiaFilter) && creds.midiaFilter.length > 0) {
           setMidiaFilterText((creds.midiaFilter as string[]).join(", "));
+        }
+        if (Array.isArray(creds.origemOriginalFilter) && creds.origemOriginalFilter.length > 0) {
+          setOrigemOriginalFilterText((creds.origemOriginalFilter as string[]).join(", "));
         }
         if (Array.isArray(creds.origemUltimoFilter) && creds.origemUltimoFilter.length > 0) {
           setOrigemUltimoFilterText((creds.origemUltimoFilter as string[]).join(", "));
@@ -656,6 +660,7 @@ function CrmConfigSection({
         credenciais.token = token.trim();
         credenciais.tagFilter = parseList(tagFilterText);
         credenciais.midiaFilter = parseList(midiaFilterText);
+        credenciais.origemOriginalFilter = parseList(origemOriginalFilterText);
         credenciais.origemUltimoFilter = parseList(origemUltimoFilterText);
         credenciais.conversaoOriginalFilter = parseList(conversaoOriginalFilterText);
         credenciais.conversaoUltimoFilter = parseList(conversaoUltimoFilterText);
@@ -843,6 +848,19 @@ function CrmConfigSection({
                 value={midiaFilterText}
                 onChange={(e) => setMidiaFilterText(e.target.value)}
                 placeholder="Ex.: Facebook Ads, Google"
+                className={inputClass}
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-[var(--muted-foreground)]">
+                Origens{" "}
+                <span className="font-normal text-[var(--muted-foreground)]/70">(origem original do lead — campo &quot;Origens&quot; no CV CRM)</span>
+              </label>
+              <input
+                type="text"
+                value={origemOriginalFilterText}
+                onChange={(e) => setOrigemOriginalFilterText(e.target.value)}
+                placeholder="Ex.: Busca Compartilhada"
                 className={inputClass}
               />
             </div>

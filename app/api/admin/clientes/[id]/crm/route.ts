@@ -30,6 +30,8 @@ export async function GET(
   safeCredenciais.connected = !!(creds.accessToken);
   if (Array.isArray(creds.tagFilter)) safeCredenciais.tagFilter = creds.tagFilter;
   if (Array.isArray(creds.midiaFilter)) safeCredenciais.midiaFilter = creds.midiaFilter;
+  if (Array.isArray(creds.origemOriginalFilter))
+    safeCredenciais.origemOriginalFilter = creds.origemOriginalFilter;
   if (Array.isArray(creds.origemUltimoFilter))
     safeCredenciais.origemUltimoFilter = creds.origemUltimoFilter;
   if (Array.isArray(creds.conversaoOriginalFilter))
