@@ -37,7 +37,10 @@ export interface SyncClienteCanaisResult {
   };
 }
 
-export async function syncClienteCanais(clienteId: string): Promise<SyncClienteCanaisResult> {
+export async function syncClienteCanais(
+  clienteId: string,
+  options?: { crmFull?: boolean },
+): Promise<SyncClienteCanaisResult> {
   const contas = await prisma.conta.findMany({
     where: {
       clienteId,
@@ -56,7 +59,7 @@ export async function syncClienteCanais(clienteId: string): Promise<SyncClienteC
       ? syncAnalyticsCliente(clienteId, { propertyId: analyticsConta.accountIdPlataforma ?? undefined })
       : null,
     metaConta ? syncMetaLeadsCliente(clienteId) : null,
-    syncCrmCliente(clienteId),
+    syncCrmCliente(clienteId, { full: options?.crmFull }),
   ]);
 
   return {

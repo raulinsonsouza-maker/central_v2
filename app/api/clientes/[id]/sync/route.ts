@@ -40,7 +40,10 @@ export async function POST(
       }
     }
 
-    const result = await syncClienteCanais(id);
+    // Manual ("Atualizar agora") sync does a FULL CRM re-sync to repair leads
+    // whose CV attribution (origem/mídia/conversão) was filled in after they were
+    // first synced — the incremental background sync can never re-fetch those.
+    const result = await syncClienteCanais(id, { crmFull: !isBackground });
 
     // Atualiza o carimbo de tempo ao concluir (não bloqueia a resposta em caso de falha).
     await prisma.cliente

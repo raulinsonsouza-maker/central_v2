@@ -10,7 +10,10 @@ export interface CrmSyncResult {
   error?: string;
 }
 
-export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> {
+export async function syncCrmCliente(
+  clienteId: string,
+  options?: { full?: boolean },
+): Promise<CrmSyncResult> {
   const config = await prisma.crmConfig.findUnique({ where: { clienteId } });
 
   if (!config || !config.ativo) {
@@ -20,9 +23,17 @@ export async function syncCrmCliente(clienteId: string): Promise<CrmSyncResult> 
   try {
     const adapter = await getCrmAdapter(config);
 
-    const since = config.ultimoSyncAt
-      ? new Date(config.ultimoSyncAt.getTime() - 3 * 24 * 60 * 60 * 1000)
-      : undefined;
+    // Incremental sync (default) only fetches leads whose CV "data de referência"
+    // changed recently. Problem: CV/RD Station attributes origem/mídia/conversão
+    // *asynchronously* after a lead is created, and once a lead falls outside the
+    // incremental window it is never re-fetched — so any lead first synced before
+    // its attribution was filled in stays permanently "sparse" (empty dadosCv) and
+    // silently fails the attribution filters. A full sync (no `since`) re-fetches
+    // every lead and repairs them; it is used by the manual "Atualizar agora".
+    const since =
+      options?.full || !config.ultimoSyncAt
+        ? undefined
+        : new Date(config.ultimoSyncAt.getTime() - 3 * 24 * 60 * 60 * 1000);
 
     const leads = await adapter.fetchLeads(since ? { since } : undefined);
 
