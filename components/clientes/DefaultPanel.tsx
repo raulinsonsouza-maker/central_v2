@@ -501,6 +501,7 @@ export function DefaultPanel({
                     axisLine={false}
                   />
                   {chartRevenueKey && <YAxis yAxisId="revenue" hide={true} />}
+                  <YAxis yAxisId="cpl" hide={true} />
                   <Tooltip
                     formatter={(value: number, name: string) => {
                       if (name === "Investimento" || name === cplLabel || name === chartRevenueKey) {
@@ -543,7 +544,7 @@ export function DefaultPanel({
                     dot={{ fill: "var(--primary)", r: 4, strokeWidth: 0 }}
                     activeDot={{ r: 6, strokeWidth: 0, fill: "var(--primary)" }}
                   />
-                  <Line yAxisId="right" dataKey="CPL" name={cplLabel} stroke="transparent" dot={false} activeDot={false} />
+                  <Line yAxisId="cpl" dataKey="CPL" name={cplLabel} stroke="transparent" dot={false} activeDot={false} />
                 </ComposedChart>
               </ResponsiveContainer>
             </div>
