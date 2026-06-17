@@ -87,7 +87,9 @@ export async function syncMetaLeadsCliente(
         select: { formId: true, formName: true },
       });
       if (knownForms.length > 0) {
-        forms = knownForms.map((f) => ({ id: f.formId, name: f.formName ?? f.formId }));
+        forms = knownForms
+          .filter((f): f is { formId: string; formName: string | null } => f.formId !== null)
+          .map((f) => ({ id: f.formId, name: f.formName ?? f.formId }));
         usingFallbackForms = true;
         console.log(
           `[metaLeadsSync] form discovery returned 0 — using ${forms.length} fallback formIds from MetaLeadIndividual: ${forms.map((f) => f.id).join(", ")}`
