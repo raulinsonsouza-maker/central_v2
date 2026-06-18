@@ -841,17 +841,14 @@ function MetaHierarquiaSection({
       </div>
 
       {/* Summary chips */}
-      <div className="flex flex-wrap gap-2">
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] bg-[var(--card)] px-3 py-1.5">
-          <span className="text-xs font-semibold text-[var(--foreground)]">{totalLeads.toLocaleString("pt-BR")} leads rastreados</span>
-        </div>
-        {totalGanhos > 0 && (
+      {totalGanhos > 0 && (
+        <div className="flex flex-wrap gap-2">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5">
             <span className="text-xs font-semibold text-emerald-400">{totalGanhos} vendas</span>
             {totalValor > 0 && <span className="text-xs text-emerald-400/60">· {formatCurrencyBR(totalValor)}</span>}
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
         <table className="min-w-[860px] w-full text-sm">
@@ -987,9 +984,6 @@ function MetaHierarquiaSection({
           </tbody>
         </table>
       </div>
-      <p className="text-[10px] text-[var(--muted-foreground)]">
-        Baseado nos identificadores de campanha/conjunto/anúncio gravados em cada lead pelo formulário do Meta. Clique no nome para filtrar a lista de leads abaixo; use as setas para abrir conjuntos e anúncios. <span className="font-medium">Atend.</span> = em atendimento · <span className="font-medium">CPL</span> = investimento ÷ leads rastreados.
-      </p>
     </div>
   );
 }
