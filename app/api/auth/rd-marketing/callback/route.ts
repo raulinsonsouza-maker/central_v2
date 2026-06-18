@@ -2,12 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/db";
 
-function getAppUrl(): string {
-  if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
-  if (process.env.REPLIT_DEV_DOMAIN) return `https://${process.env.REPLIT_DEV_DOMAIN}`;
-  return "http://localhost:5000";
-}
-
 interface RdTokenResponse {
   access_token?: string;
   refresh_token?: string;
@@ -20,7 +14,7 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const code = searchParams.get("code");
   const state = searchParams.get("state");
-  const appUrl = getAppUrl();
+  const appUrl = new URL(request.url).origin;
   const redirectBase = `${appUrl}/admin/clientes`;
 
   if (!code || !state) {
