@@ -464,6 +464,67 @@ export async function GET(
     }
   }
 
+  // ── Reconversões Google: GOOGLE CRM leads in period whose email existed in CRM before the period ──
+  let reconversoesGoogle: Array<{
+    leadCrmId: string; nome: string | null; email: string;
+    dataEntrada: Date; fonte: string | null; utmCampaign: string | null;
+    dataEntradaAnterior: Date; etapa: string | null;
+  }> = [];
+
+  {
+    // Fetch unfiltered CRM leads in period with email (no andClauses — matches Meta approach)
+    const periodLeadsWithEmail = await prisma.leadCrm.findMany({
+      where: { clienteId: id, dataEntrada: { gte: dateFrom, lte: dateTo }, email: { not: null } },
+      select: { id: true, nome: true, email: true, fonte: true, etapa: true, dataEntrada: true, dadosCv: true, dadosMarketing: true },
+    });
+
+    // Filter to GOOGLE-attributed leads using the same canal detection logic
+    const googleCrmInPeriod = periodLeadsWithEmail.filter((l) => {
+      const cv = parseDadosCv(l.dadosCv);
+      const mktRaw = parseDadosMarketing(l.dadosMarketing);
+      const rdEnr = mktRaw ? {
+        rdTags: Array.isArray((mktRaw as Record<string, unknown>).rdTags) ? (mktRaw as Record<string, unknown>).rdTags as string[] : null,
+        trafficSource: (mktRaw as Record<string, unknown>).trafficSource as string | null ?? null,
+        utmSource: (mktRaw as Record<string, unknown>).utmSource as string | null ?? null,
+        utmMedium: (mktRaw as Record<string, unknown>).utmMedium as string | null ?? null,
+      } : null;
+      return canalFromMidia(cv?.midiaOriginal?.trim() ?? null, l.fonte, rdEnr) === "GOOGLE";
+    });
+
+    if (googleCrmInPeriod.length > 0) {
+      // Find emails that appeared in CRM BEFORE the period start (unfiltered — no filter bias)
+      const prePeriodRows = await prisma.leadCrm.findMany({
+        where: { clienteId: id, dataEntrada: { lt: dateFrom }, email: { not: null } },
+        select: { email: true, dataEntrada: true },
+        orderBy: { dataEntrada: "asc" },
+      });
+      const prePeriodEmailMap = new Map<string, Date>();
+      for (const row of prePeriodRows) {
+        const key = (row.email ?? "").trim().toLowerCase();
+        if (key && !prePeriodEmailMap.has(key)) prePeriodEmailMap.set(key, row.dataEntrada);
+      }
+
+      reconversoesGoogle = googleCrmInPeriod
+        .map((l) => {
+          const key = (l.email ?? "").trim().toLowerCase();
+          const prevDate = prePeriodEmailMap.get(key);
+          if (!prevDate) return null;
+          const mkt = parseDadosMarketing(l.dadosMarketing);
+          return {
+            leadCrmId: l.id,
+            nome: l.nome ?? null,
+            email: l.email as string,
+            dataEntrada: l.dataEntrada,
+            fonte: l.fonte ?? null,
+            utmCampaign: mkt?.utmCampaign ?? null,
+            dataEntradaAnterior: prevDate,
+            etapa: l.etapa ?? null,
+          };
+        })
+        .filter((x): x is NonNullable<typeof x> => x !== null);
+    }
+  }
+
   const toRow = (key: string, b: Bucket) => ({
     key,
     leads: b.leads,
@@ -672,6 +733,7 @@ export async function GET(
     porFonte, porCanal, porEstado, porConversao, porCampanha, porCriativo,
     porCampanhaConfirmada, porMetaHierarquia,
     totalLeadsMeta, reconversoesMeta,
+    reconversoesGoogle,
     leadsComEstado, leadsComConversao,
     porTags, totalComTags: leadsComTags, alertaLeads,
     ultimoSyncAt: config.ultimoSyncAt,

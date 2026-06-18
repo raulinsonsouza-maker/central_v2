@@ -216,6 +216,17 @@ interface ReconversaoMeta {
   etapa: string | null;
 }
 
+interface ReconversaoGoogle {
+  leadCrmId: string;
+  nome: string | null;
+  email: string;
+  dataEntrada: string;
+  fonte: string | null;
+  utmCampaign: string | null;
+  dataEntradaAnterior: string;
+  etapa: string | null;
+}
+
 interface AtribuicaoData {
   configured: boolean;
   totalLeads: number;
@@ -247,6 +258,7 @@ interface AtribuicaoData {
   porMetaHierarquia: MetaCampanhaNode[];
   totalLeadsMeta?: number;
   reconversoesMeta?: ReconversaoMeta[];
+  reconversoesGoogle?: ReconversaoGoogle[];
   leadsComEstado: number;
   leadsComConversao: number;
   porTags: TagRow[];
@@ -1100,10 +1112,14 @@ function MetaHierarquiaSection({
 // ─── Reconversões Modal ───────────────────────────────────────────────────────
 
 function ReconversoesModal({
-  items,
+  canal,
+  metaItems,
+  googleItems,
   onClose,
 }: {
-  items: ReconversaoMeta[];
+  canal: "META" | "GOOGLE";
+  metaItems?: ReconversaoMeta[];
+  googleItems?: ReconversaoGoogle[];
   onClose: () => void;
 }) {
   React.useEffect(() => {
@@ -1111,6 +1127,36 @@ function ReconversoesModal({
     document.addEventListener("keydown", handler);
     return () => document.removeEventListener("keydown", handler);
   }, [onClose]);
+
+  const isMeta = canal === "META";
+
+  // Normalise both sources to a unified display row
+  const rows = isMeta
+    ? (metaItems ?? []).map((r) => ({
+        id: r.metaLeadId,
+        nome: r.fullName,
+        email: r.emailLead,
+        primary: r.adName,
+        secondary: r.campaignName,
+        dataConversao: r.createdTime,
+        dataCrm: r.dataEntrada,
+        etapa: r.etapa,
+      }))
+    : (googleItems ?? []).map((r) => ({
+        id: r.leadCrmId,
+        nome: r.nome,
+        email: r.email,
+        primary: r.fonte,
+        secondary: r.utmCampaign,
+        dataConversao: r.dataEntrada,
+        dataCrm: r.dataEntradaAnterior,
+        etapa: r.etapa,
+      }));
+
+  const accentColor = isMeta ? "var(--primary)" : "#3b82f6";
+  const labelCanal  = isMeta ? "Meta Ads" : "Google Ads";
+  const colAtrib    = isMeta ? "Anúncio / Campanha" : "Origem / Campanha UTM";
+  const colConv     = isMeta ? "Nova conversão" : "Nova entrada";
 
   return (
     <div
@@ -1123,14 +1169,16 @@ function ReconversoesModal({
       >
         {/* Header */}
         <div className="flex items-start gap-3 px-5 pt-5 pb-4 border-b border-white/[0.06]">
-          <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+          <div className="mt-1 h-8 w-1 shrink-0 rounded-full" style={{ backgroundColor: accentColor }} />
           <div className="flex-1 min-w-0">
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Meta Ads</p>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em]" style={{ color: accentColor }}>{labelCanal}</p>
             <h3 className="text-lg font-extrabold tracking-tight text-[var(--foreground)]">
-              Reconversões · {items.length}
+              Reconversões · {rows.length}
             </h3>
             <p className="mt-0.5 text-xs text-[var(--muted-foreground)] leading-snug">
-              Leads que já estavam no CRM e preencheram o formulário novamente no período
+              {isMeta
+                ? "Leads que já estavam no CRM e preencheram o formulário novamente no período"
+                : "Leads Google do período cujo e-mail já constava no CRM antes do período selecionado"}
             </p>
           </div>
           <button
@@ -1148,7 +1196,7 @@ function ReconversoesModal({
           <table className="min-w-[600px] w-full text-sm">
             <thead className="sticky top-0 z-10 bg-[var(--card)] border-b border-white/[0.06]">
               <tr>
-                {["Lead", "Anúncio / Campanha", "Nova conversão", "No CRM desde", "Etapa atual"].map((h) => (
+                {["Lead", colAtrib, colConv, "No CRM desde", "Etapa atual"].map((h) => (
                   <th key={h} className="px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)] text-left whitespace-nowrap">
                     {h}
                   </th>
@@ -1156,25 +1204,25 @@ function ReconversoesModal({
               </tr>
             </thead>
             <tbody>
-              {items.map((r) => (
-                <tr key={r.metaLeadId} className="border-b border-white/[0.04] hover:bg-white/[0.025] transition-colors">
+              {rows.map((r) => (
+                <tr key={r.id} className="border-b border-white/[0.04] hover:bg-white/[0.025] transition-colors">
                   <td className="px-5 py-3.5">
-                    <p className="font-semibold text-[var(--foreground)] leading-tight">{r.fullName || "—"}</p>
-                    {r.emailLead && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5">{r.emailLead}</p>}
+                    <p className="font-semibold text-[var(--foreground)] leading-tight">{r.nome || "—"}</p>
+                    {r.email && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5">{r.email}</p>}
                   </td>
                   <td className="px-5 py-3.5 max-w-[200px]">
-                    <p className="text-xs font-medium text-[var(--foreground)] leading-snug">{r.adName || "—"}</p>
-                    {r.campaignName && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5 leading-snug">{r.campaignName}</p>}
+                    <p className="text-xs font-medium text-[var(--foreground)] leading-snug">{r.primary || "—"}</p>
+                    {r.secondary && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5 leading-snug">{r.secondary}</p>}
                   </td>
                   <td className="px-5 py-3.5 text-xs text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
-                    {formatDateBR(r.createdTime)}
+                    {formatDateBR(r.dataConversao)}
                   </td>
                   <td className="px-5 py-3.5 text-xs text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
-                    {formatDateBR(r.dataEntrada)}
+                    {formatDateBR(r.dataCrm)}
                   </td>
                   <td className="px-5 py-3.5">
                     {r.etapa ? (
-                      <span className="inline-flex items-center rounded-full border border-[var(--primary)]/20 bg-[var(--primary)]/[0.08] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
+                      <span className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-[11px] font-semibold" style={{ borderColor: `color-mix(in srgb, ${accentColor} 20%, transparent)`, backgroundColor: `color-mix(in srgb, ${accentColor} 8%, transparent)`, color: accentColor }}>
                         {r.etapa}
                       </span>
                     ) : (
@@ -1206,6 +1254,7 @@ function AtribuicaoSection({
 }) {
   const [convSearch, setConvSearch] = React.useState("");
   const [reconversoesOpen, setReconversoesOpen] = React.useState(false);
+  const [reconversoesGoogleOpen, setReconversoesGoogleOpen] = React.useState(false);
 
   const filterQs = activeFilter
     ? `&filterType=${encodeURIComponent(activeFilter.type)}&filterValue=${encodeURIComponent(activeFilter.value)}`
@@ -1366,7 +1415,7 @@ function AtribuicaoSection({
                                   <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />{perdidos} perdidos ({perdidosPct.toFixed(0)}%)</span>
                                 </div>
                               )}
-                              {/* Duplicados chip — only META */}
+                              {/* Duplicados chip — META */}
                               {c.canal === "META" && (data.reconversoesMeta?.length ?? 0) > 0 && (
                                 <button
                                   type="button"
@@ -1375,6 +1424,17 @@ function AtribuicaoSection({
                                 >
                                   <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
                                   Duplicados · {data.reconversoesMeta!.length}
+                                </button>
+                              )}
+                              {/* Duplicados chip — GOOGLE */}
+                              {c.canal === "GOOGLE" && (data.reconversoesGoogle?.length ?? 0) > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); setReconversoesGoogleOpen(true); }}
+                                  className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-blue-400/50 bg-blue-400/[0.06] px-2.5 py-0.5 text-[10px] font-semibold text-blue-400 transition-colors hover:bg-blue-400/10"
+                                >
+                                  <span className="h-1.5 w-1.5 rounded-full bg-blue-400/70" />
+                                  Duplicados · {data.reconversoesGoogle!.length}
                                 </button>
                               )}
                             </div>
@@ -1554,8 +1614,16 @@ function AtribuicaoSection({
 
       {reconversoesOpen && (data.reconversoesMeta?.length ?? 0) > 0 && (
         <ReconversoesModal
-          items={data.reconversoesMeta!}
+          canal="META"
+          metaItems={data.reconversoesMeta}
           onClose={() => setReconversoesOpen(false)}
+        />
+      )}
+      {reconversoesGoogleOpen && (data.reconversoesGoogle?.length ?? 0) > 0 && (
+        <ReconversoesModal
+          canal="GOOGLE"
+          googleItems={data.reconversoesGoogle}
+          onClose={() => setReconversoesGoogleOpen(false)}
         />
       )}
     </div>
