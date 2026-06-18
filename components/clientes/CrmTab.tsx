@@ -1114,37 +1114,42 @@ function ReconversoesModal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-2xl overflow-hidden"
+        className="w-full max-w-2xl rounded-3xl border border-white/[0.08] bg-[var(--card)] shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-amber-400">Meta Ads</p>
-            <h3 className="text-base font-extrabold tracking-tight text-[var(--foreground)]">
+        {/* Header */}
+        <div className="flex items-start gap-3 px-5 pt-5 pb-4 border-b border-white/[0.06]">
+          <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+          <div className="flex-1 min-w-0">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">Meta Ads</p>
+            <h3 className="text-lg font-extrabold tracking-tight text-[var(--foreground)]">
               Reconversões · {items.length}
             </h3>
-            <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
+            <p className="mt-0.5 text-xs text-[var(--muted-foreground)] leading-snug">
               Leads que já estavam no CRM e preencheram o formulário novamente no período
             </p>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-[var(--muted-foreground)] hover:bg-[var(--muted)]/40 hover:text-[var(--foreground)] transition-colors"
+            className="mt-0.5 shrink-0 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+            aria-label="Fechar"
           >
-            <X className="h-4 w-4" />
+            ✕
           </button>
         </div>
-        <div className="overflow-x-auto max-h-[70vh] overflow-y-auto">
-          <table className="min-w-[580px] w-full text-sm">
-            <thead className="sticky top-0 bg-[var(--card)] border-b border-[var(--border)]">
+
+        {/* Table */}
+        <div className="overflow-x-auto max-h-[68vh] overflow-y-auto">
+          <table className="min-w-[600px] w-full text-sm">
+            <thead className="sticky top-0 z-10 bg-[var(--card)] border-b border-white/[0.06]">
               <tr>
-                {["Lead", "Anúncio / Campanha", "Nova conversão", "No CRM desde", "Etapa atual"].map((h, i) => (
-                  <th key={h} className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)] ${i === 0 ? "text-left" : "text-left"}`}>
+                {["Lead", "Anúncio / Campanha", "Nova conversão", "No CRM desde", "Etapa atual"].map((h) => (
+                  <th key={h} className="px-5 py-3 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)] text-left whitespace-nowrap">
                     {h}
                   </th>
                 ))}
@@ -1152,27 +1157,29 @@ function ReconversoesModal({
             </thead>
             <tbody>
               {items.map((r) => (
-                <tr key={r.metaLeadId} className="border-b border-[var(--border)]/50 hover:bg-[var(--muted)]/10 transition-colors">
-                  <td className="px-4 py-3">
-                    <p className="font-medium text-[var(--foreground)] leading-tight">{r.fullName || "—"}</p>
+                <tr key={r.metaLeadId} className="border-b border-white/[0.04] hover:bg-white/[0.025] transition-colors">
+                  <td className="px-5 py-3.5">
+                    <p className="font-semibold text-[var(--foreground)] leading-tight">{r.fullName || "—"}</p>
                     {r.emailLead && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5">{r.emailLead}</p>}
                   </td>
-                  <td className="px-4 py-3">
-                    <p className="text-xs text-[var(--foreground)] leading-tight">{r.adName || "—"}</p>
-                    {r.campaignName && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5">{r.campaignName}</p>}
+                  <td className="px-5 py-3.5 max-w-[200px]">
+                    <p className="text-xs font-medium text-[var(--foreground)] leading-snug">{r.adName || "—"}</p>
+                    {r.campaignName && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5 leading-snug">{r.campaignName}</p>}
                   </td>
-                  <td className="px-4 py-3 text-xs text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
+                  <td className="px-5 py-3.5 text-xs text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
                     {formatDateBR(r.createdTime)}
                   </td>
-                  <td className="px-4 py-3 text-xs text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
+                  <td className="px-5 py-3.5 text-xs text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
                     {formatDateBR(r.dataEntrada)}
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-5 py-3.5">
                     {r.etapa ? (
-                      <span className="inline-block rounded-full border border-[var(--border)] bg-[var(--muted)]/30 px-2 py-0.5 text-[11px] font-medium text-[var(--foreground)]">
+                      <span className="inline-flex items-center rounded-full border border-[var(--primary)]/20 bg-[var(--primary)]/[0.08] px-2.5 py-0.5 text-[11px] font-semibold text-[var(--primary)]">
                         {r.etapa}
                       </span>
-                    ) : <span className="text-xs text-[var(--muted-foreground)] opacity-40">—</span>}
+                    ) : (
+                      <span className="text-xs text-[var(--muted-foreground)] opacity-40">—</span>
+                    )}
                   </td>
                 </tr>
               ))}
