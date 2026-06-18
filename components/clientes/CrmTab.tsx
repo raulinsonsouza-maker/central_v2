@@ -1554,11 +1554,6 @@ export function CrmTab({
                               style={{ backgroundColor: canalCfg.hex }}
                             />
                             <span className={`text-[12px] font-semibold ${canalCfg.color}`}>{canalCfg.label}</span>
-                            {confirmedCampaign && (
-                              <span className="shrink-0 rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-400">
-                                ✓
-                              </span>
-                            )}
                           </div>
                         </td>
                         <td className="px-4 py-2.5 tabular-nums text-[12px] text-[var(--muted-foreground)]">
