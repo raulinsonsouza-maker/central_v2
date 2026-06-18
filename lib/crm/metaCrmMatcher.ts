@@ -44,11 +44,13 @@ export async function matchMetaCrmLeads(
 
   if (metaLeads.length === 0) return { matched: 0, alreadyMatched: 0, notFound: 0 };
 
-  // Build lookup maps: normalized email → first match, normalized phone → first match
+  // Build lookup maps: normalized email → first match, normalized phone → first match, metaLeadId → record
   const byEmail = new Map<string, typeof metaLeads[0]>();
   const byPhone = new Map<string, typeof metaLeads[0]>();
+  const byMetaLeadId = new Map<string, typeof metaLeads[0]>();
 
   for (const ml of metaLeads) {
+    byMetaLeadId.set(ml.metaLeadId, ml);
     if (ml.emailLead) {
       const e = ml.emailLead.trim().toLowerCase();
       if (e && !byEmail.has(e)) byEmail.set(e, ml);
@@ -78,9 +80,32 @@ export async function matchMetaCrmLeads(
   const updates: Array<{ id: string; metaLeadId: string; dadosMarketing: object }> = [];
 
   for (const crm of crmLeads) {
-    // Already matched — skip unless attribution data is missing
+    // Already matched — skip only if dadosMarketing already has campaign info
     if (crm.metaLeadId) {
-      alreadyMatched++;
+      const mkt = crm.dadosMarketing as Record<string, unknown> | null;
+      const hasCampInfo = !!(mkt?.metaCampaignId || mkt?.metaCampaignName);
+      if (hasCampInfo) {
+        alreadyMatched++;
+        continue;
+      }
+      // metaLeadId set but dadosMarketing missing campaign info — re-enrich
+      const metaLead = byMetaLeadId.get(crm.metaLeadId);
+      if (!metaLead || (!metaLead.campaignId && !metaLead.campaignName)) {
+        alreadyMatched++;
+        continue;
+      }
+      const dadosMarketing: Record<string, string | null> = {};
+      if (metaLead.adId) dadosMarketing.metaAdId = metaLead.adId;
+      if (metaLead.adName) dadosMarketing.metaAdName = metaLead.adName;
+      if (metaLead.adsetId) dadosMarketing.metaAdsetId = metaLead.adsetId;
+      if (metaLead.adsetName) dadosMarketing.metaAdsetName = metaLead.adsetName;
+      if (metaLead.campaignId) dadosMarketing.metaCampaignId = metaLead.campaignId;
+      if (metaLead.campaignName) dadosMarketing.metaCampaignName = metaLead.campaignName;
+      if (metaLead.formId) dadosMarketing.metaFormId = metaLead.formId;
+      if (metaLead.formName) dadosMarketing.metaFormName = metaLead.formName;
+      updates.push({ id: crm.id, metaLeadId: crm.metaLeadId, dadosMarketing });
+      matched++;
+      if (updates.length >= BATCH_SIZE) await flushUpdates(updates.splice(0));
       continue;
     }
 
