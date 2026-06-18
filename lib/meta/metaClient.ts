@@ -403,6 +403,41 @@ export async function fetchLeadsFromForm(
   return all;
 }
 
+/**
+ * Fetch leads directly from a specific ad via /{ad_id}/leads.
+ * Works with ads_read + leads_retrieval without requiring Page access token.
+ * This is Tier 4 fallback when form-based endpoints fail due to missing Page permissions.
+ */
+export async function fetchLeadsFromAd(
+  adId: string,
+  token: string,
+  options?: { maxLeads?: number }
+): Promise<MetaLeadEntry[]> {
+  const maxLeads = options?.maxLeads ?? 10000;
+  const fields = "id,created_time,field_data,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,form_id,platform";
+  const params = new URLSearchParams({ access_token: token, fields, limit: "100" });
+
+  const all: MetaLeadEntry[] = [];
+  let url: string | null = `${GRAPH_BASE}/${adId}/leads?${params.toString()}`;
+
+  while (url && all.length < maxLeads) {
+    const res = await fetch(url);
+    const data = (await res.json()) as MetaLeadsResponse;
+    if (!res.ok || data.error) {
+      const code = data?.error?.code;
+      const msg = data?.error?.message ?? `HTTP ${res.status}`;
+      // Silently skip — non-lead-gen ads return error 100 for this endpoint
+      if (code === 100 || code === 200 || code === 190) break;
+      console.warn(`[fetchLeadsFromAd] ad=${adId} code=${code} msg=${msg}`);
+      break;
+    }
+    if (data.data?.length) all.push(...data.data);
+    url = data.paging?.next ?? null;
+  }
+
+  return all;
+}
+
 /** Ad formats supported by Meta preview API */
 export type MetaAdPreviewFormat =
   | "DESKTOP_FEED_STANDARD"

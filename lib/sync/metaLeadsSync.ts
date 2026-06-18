@@ -1,4 +1,4 @@
-import { fetchLeadGenFormsWithDiag, fetchLeadsFromForm } from "@/lib/meta/metaClient";
+import { fetchLeadGenFormsWithDiag, fetchLeadsFromForm, fetchLeadsFromAd } from "@/lib/meta/metaClient";
 import { prisma } from "@/lib/db";
 import { getIntegrationsConfig } from "@/lib/config/integrations";
 import { dddToEstado } from "@/lib/utils/dddToEstado";
@@ -188,10 +188,132 @@ export async function syncMetaLeadsCliente(
       }
     }
 
+    // ── Tier 4: /{ad_id}/leads — fallback when all form endpoints fail ────────
+    // When form discovery/fetch returns 0 leads (typically because the token lacks
+    // Page access), try fetching leads directly per-ad. This works with only
+    // ads_read + leads_retrieval (no Page token required).
+    let usingAdFallback = false;
+    if (leadsProcessed === 0) {
+      // Build ad ID set: try full account list first, fall back to known adIds in DB
+      const adIdSet = new Set<string>();
+
+      // Try fetching all ads from account (may be rate-limited — silently skip on failure)
+      try {
+        const adsParams = new URLSearchParams({
+          access_token: token,
+          fields: "id",
+          effective_status: JSON.stringify(["ACTIVE", "PAUSED", "ARCHIVED"]),
+          limit: "500",
+        });
+        let adsUrl: string | null = `https://graph.facebook.com/v19.0/${accountId}/ads?${adsParams}`;
+        while (adsUrl) {
+          const r = await fetch(adsUrl);
+          const d = (await r.json()) as { data?: Array<{ id: string }>; paging?: { next?: string }; error?: { code: number } };
+          if (!r.ok || d.error) break;
+          for (const ad of d.data ?? []) adIdSet.add(ad.id);
+          adsUrl = d.paging?.next ?? null;
+        }
+        if (adIdSet.size > 0) console.log(`[metaLeadsSync] T4 fetched ${adIdSet.size} adIds from account`);
+      } catch { /* rate limited or network error — fall through to known adIds */ }
+
+      // Supplement with adIds already recorded in MetaLeadIndividual
+      const knownAds = await prisma.metaLeadIndividual.findMany({
+        where: { clienteId, adId: { not: null } },
+        distinct: ["adId"],
+        select: { adId: true },
+      });
+      for (const a of knownAds) if (a.adId) adIdSet.add(a.adId);
+
+      const adIds = [...adIdSet];
+
+      if (adIds.length > 0) {
+        usingAdFallback = true;
+        console.log(`[metaLeadsSync] T4 per-ad fallback: trying ${adIds.length} adIds (account + known)`);
+        for (const adId of adIds) {
+          const adLeads = await fetchLeadsFromAd(adId, token);
+          if (adLeads.length === 0) continue;
+          console.log(`[metaLeadsSync] T4 ad=${adId} leads=${adLeads.length}`);
+          for (const lead of adLeads) {
+            leadsProcessed++;
+            const fd = lead.field_data ?? [];
+            const fullName = getFieldValue(fd, "full_name", "nome completo", "nome", "name");
+            const nomeEmpresa = getFieldValue(fd, "empresa", "company", "nome_empresa", "razao_social");
+            const telefone = getFieldValue(fd, "phone", "telefone", "celular", "whatsapp");
+            const emailLead = getFieldValue(fd, "email");
+            const tipoEmpresa = getFieldValue(fd, "tipo_empresa", "tipo", "segmento", "ramo");
+            const faixaFaturamento = getFieldValue(fd, "faturamento", "receita", "faixa", "faturamento_anual", "faturamento_mensal");
+            const statusCrm = getFieldValue(fd, "status_crm", "status", "crm_status", "etapa", "fase", "pipeline");
+            const estado = dddToEstado(telefone);
+            const createdTime = new Date(lead.created_time);
+            try {
+              const existing = await prisma.metaLeadIndividual.findUnique({
+                where: { clienteId_metaLeadId: { clienteId, metaLeadId: lead.id } },
+                select: { id: true },
+              });
+              const isNew = !existing;
+              await prisma.metaLeadIndividual.upsert({
+                where: { clienteId_metaLeadId: { clienteId, metaLeadId: lead.id } },
+                create: {
+                  clienteId,
+                  contaId,
+                  metaLeadId: lead.id,
+                  formId: lead.form_id ?? null,
+                  formName: null,
+                  campaignId: lead.campaign_id ?? null,
+                  campaignName: lead.campaign_name ?? null,
+                  adId: lead.ad_id ?? null,
+                  adName: lead.ad_name ?? null,
+                  adsetId: lead.adset_id ?? null,
+                  adsetName: lead.adset_name ?? null,
+                  fullName,
+                  createdTime,
+                  nomeEmpresa,
+                  telefone,
+                  estado,
+                  tipoEmpresa,
+                  faixaFaturamento,
+                  emailLead,
+                  statusCrm,
+                  platform: (lead as any).platform ?? null,
+                  rawFieldData: fd as object,
+                },
+                update: {
+                  campaignId: lead.campaign_id ?? null,
+                  campaignName: lead.campaign_name ?? null,
+                  adId: lead.ad_id ?? null,
+                  adName: lead.ad_name ?? null,
+                  adsetId: lead.adset_id ?? null,
+                  adsetName: lead.adset_name ?? null,
+                  fullName,
+                  nomeEmpresa,
+                  telefone,
+                  estado,
+                  tipoEmpresa,
+                  faixaFaturamento,
+                  emailLead,
+                  ...(statusCrm !== null ? { statusCrm } : {}),
+                  rawFieldData: fd as object,
+                },
+              });
+              if (isNew) leadsCreated++;
+            } catch (e) {
+              leadsFailed++;
+              console.error(`[metaLeadsSync] T4 failed lead ${lead.id}:`, e instanceof Error ? e.message : e);
+            }
+          }
+        }
+        if (leadsProcessed > 0) {
+          console.log(`[metaLeadsSync] T4 completed: ${leadsProcessed} leads via per-ad endpoint`);
+        }
+      }
+    }
+
     let warning: string | undefined;
-    if (allForms.length === 0 && usingFallbackForms) {
+    if (allForms.length === 0 && usingAdFallback && leadsProcessed > 0) {
+      warning = `Acesso à Página insuficiente para formulários — sincronizado via endpoint por anúncio (T4). ${leadsProcessed} lead(s) obtidos.${permissionError ? ` Erro original: ${permissionError}` : ""}`;
+    } else if (allForms.length === 0 && usingFallbackForms && !usingAdFallback) {
       warning = `Descoberta de formulários falhou (acesso à Página insuficiente) — sincronizado via ${forms.length} formulário(s) conhecido(s) de sincronizações anteriores.${permissionError ? ` Erro original: ${permissionError}` : ""}`;
-    } else if (allForms.length === 0 && !usingFallbackForms) {
+    } else if (allForms.length === 0 && !usingFallbackForms && !usingAdFallback) {
       warning =
         "Nenhum formulário de lead acessível. O token Meta consegue ler anúncios/investimento, mas não tem acesso de Página aos formulários (o system user precisa estar atribuído à Página com pages_manage_ads/pages_read_engagement). Sem isso, os leads de formulário não são sincronizados.";
     }

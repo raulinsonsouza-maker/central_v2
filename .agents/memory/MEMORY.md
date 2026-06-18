@@ -4,3 +4,4 @@
 - [CRM lead attribution](crm-lead-attribution.md) — Meta hierarchy (campaign→adset→ad) comes from MetaLeadIndividual; recent leads losing it = Page-access gap in form sync, not token expiry; spend keeps flowing regardless.
 - [CRM per-lead attribution limits](crm-lead-attribution.md) — Meta lead campaign/adset/ad is real (lead-form match); Google per-lead campaign/keyword is impossible (CVCRM API has no gclid/UTM/keyword).
 - [CRM filters live in per-env DB](crm-filter-config-prod.md) — attribution filters are CrmConfig.credenciais data, not code; publish ships code only, prod DB is separate; edit filters in prod via admin panel.
+- [Meta leads sync T4 per-ad fallback](meta-leads-sync-t4.md) — /{form_id}/leads needs Page token; /{ad_id}/leads works with only ads_read+leads_retrieval; T4 added to metaLeadsSync.ts.
