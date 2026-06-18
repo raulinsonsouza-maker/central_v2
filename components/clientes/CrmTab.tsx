@@ -1471,14 +1471,19 @@ function AtribuicaoSection({
                         >
                           {/* Channel accent line */}
                           <div className="pointer-events-none absolute inset-x-0 top-0 h-[3px] opacity-70" style={{ backgroundColor: cfg.hex }} />
-                          {/* Hover glow in channel color */}
+                          {/* Hover glow */}
                           <div className="pointer-events-none absolute -right-8 -top-8 h-28 w-28 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.1]" style={{ backgroundColor: cfg.hex }} />
 
-                          {/* Header */}
+                          {/* ── Header ── */}
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                               <span className="inline-block h-2.5 w-2.5 rounded-full" style={{ backgroundColor: cfg.hex }} />
                               <span className="text-sm font-bold text-[var(--foreground)]">{cfg.label}</span>
+                              {c.canal === "META" && (data.totalLeadsMeta ?? 0) > 0 && (
+                                <span className="rounded-full bg-[var(--muted)]/40 px-2 py-0.5 text-[10px] font-semibold text-[var(--muted-foreground)]">
+                                  {data.totalLeadsMeta} forms
+                                </span>
+                              )}
                             </div>
                             <div className="flex items-center gap-2">
                               {c.pvMedio != null && (
@@ -1490,21 +1495,35 @@ function AtribuicaoSection({
                             </div>
                           </div>
 
-                          {/* Total Meta (plataforma) — only for META canal */}
-                          {c.canal === "META" && (data.totalLeadsMeta ?? 0) > 0 && (
-                            <div className="mt-4 flex items-center justify-between">
-                              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Total Meta</p>
-                              <span className="tabular-nums text-xs font-semibold text-[var(--muted-foreground)]">{data.totalLeadsMeta}</span>
+                          {/* ── Hero: leads CRM em destaque ── */}
+                          <div className="mt-4 flex items-end justify-between gap-3">
+                            <div>
+                              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Leads no CRM</p>
+                              <p className="mt-0.5 tabular-nums text-5xl font-black leading-none" style={{ color: cfg.hex }}>
+                                {c.leads.toLocaleString("pt-BR")}
+                              </p>
                             </div>
-                          )}
+                            {/* Meta: proporção forms → CRM */}
+                            {c.canal === "META" && (data.totalLeadsMeta ?? 0) > 0 && (
+                              <div className="shrink-0 text-right">
+                                <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]/60">Confirmados</p>
+                                <p className="tabular-nums text-lg font-bold leading-none text-[var(--muted-foreground)]/50 mt-0.5">
+                                  {(data.totalLeadsMeta ?? 0) > 0
+                                    ? `${Math.round((c.leads / (data.totalLeadsMeta as number)) * 100)}%`
+                                    : "—"}
+                                </p>
+                                <p className="text-[9px] text-[var(--muted-foreground)]/40 mt-0.5">de {data.totalLeadsMeta} forms</p>
+                              </div>
+                            )}
+                          </div>
 
-                          {/* Funil clicável: Leads · Atendimento · Visitas · Vendas */}
-                          <div className="mt-2 grid grid-cols-4 gap-1.5 text-center">
+                          {/* ── Funil clicável ── */}
+                          <div className="mt-5 grid grid-cols-4 gap-1 border-t border-[var(--border)]/50 pt-4 text-center">
                             {([
-                              { key: "leads",       label: "Leads",       val: c.leads,     cls: "text-[var(--foreground)]", dash: false },
-                              { key: "atendimento", label: "Atendimento", val: c.andamento, cls: "text-blue-400",           dash: true  },
-                              { key: "visitas",     label: "Visitas",     val: c.visitou,   cls: "text-amber-400",          dash: true  },
-                              { key: "vendas",      label: "Vendas",      val: c.ganhos,    cls: "text-emerald-400",        dash: true  },
+                              { key: "leads",       label: "Leads",  val: c.leads,     cls: "text-[var(--foreground)]", dash: false },
+                              { key: "atendimento", label: "Atend.", val: c.andamento, cls: "text-blue-400",            dash: true  },
+                              { key: "visitas",     label: "Visitas",val: c.visitou,   cls: "text-amber-400",           dash: true  },
+                              { key: "vendas",      label: "Vendas", val: c.ganhos,    cls: "text-emerald-400",         dash: true  },
                             ] as const).map((s) => {
                               const stageActive = activeFilter?.type === "funil" && activeFilter.value === `${c.canal}|${s.key}`;
                               return (
@@ -1521,8 +1540,8 @@ function AtribuicaoSection({
                                       : "hover:bg-[var(--muted)]/40"
                                   }`}
                                 >
-                                  <p className={`text-2xl font-extrabold leading-none tabular-nums ${s.cls}`}>
-                                    {s.val > 0 ? s.val.toLocaleString("pt-BR") : (s.dash ? <span className="font-normal opacity-25 text-[var(--muted-foreground)]">—</span> : "0")}
+                                  <p className={`text-xl font-extrabold leading-none tabular-nums ${s.cls}`}>
+                                    {s.val > 0 ? s.val.toLocaleString("pt-BR") : (s.dash ? <span className="font-normal opacity-20 text-[var(--muted-foreground)]">—</span> : "0")}
                                   </p>
                                   <p className="mt-1.5 text-[9px] font-semibold uppercase leading-tight tracking-[0.06em] text-[var(--muted-foreground)]">{s.label}</p>
                                 </button>
@@ -1530,79 +1549,104 @@ function AtribuicaoSection({
                             })}
                           </div>
 
-                          {/* Status breakdown bar */}
+                          {/* ── Barra de status com legendas ── */}
                           <div className="mt-4">
                             <div className="flex h-1.5 w-full gap-0.5 overflow-hidden rounded-full">
                               {ganhosPct > 0 && <div className="h-full bg-emerald-400" style={{ width: `${ganhosPct}%` }} />}
                               {andamentoPct > 0 && <div className="h-full bg-blue-400" style={{ width: `${andamentoPct}%` }} />}
-                              {perdidosPct > 0 && <div className="h-full bg-[var(--muted-foreground)]/40" style={{ width: `${perdidosPct}%` }} />}
-                              {c.leads === 0 && <div className="h-full w-full bg-[var(--muted)]/30" />}
+                              {perdidosPct > 0 && <div className="h-full bg-[var(--muted-foreground)]/30" style={{ width: `${perdidosPct}%` }} />}
+                              {c.leads === 0 && <div className="h-full w-full rounded-full bg-[var(--muted)]/30" />}
                             </div>
-                            <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
-                              {perdidos > 0 && (
-                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--muted-foreground)]">
-                                  <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />{perdidos} perdidos ({perdidosPct.toFixed(0)}%)</span>
-                                </div>
+                            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--muted-foreground)]">
+                              {c.ganhos > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
+                                  {c.ganhos} venda{c.ganhos !== 1 ? "s" : ""} ({ganhosPct.toFixed(0)}%)
+                                </span>
                               )}
-                              {/* Duplicados chip — META */}
-                              {c.canal === "META" && (data.reconversoesMeta?.length ?? 0) > 0 && (
-                                <button
-                                  type="button"
-                                  onClick={(e) => { e.stopPropagation(); setReconversoesOpen(true); }}
-                                  className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-amber-400/50 bg-amber-400/[0.06] px-2.5 py-0.5 text-[10px] font-semibold text-amber-400 transition-colors hover:bg-amber-400/10"
-                                >
-                                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
-                                  Duplicados · {data.reconversoesMeta!.length}
-                                </button>
-                              )}
-                              {/* Duplicados chip — GOOGLE */}
-                              {c.canal === "GOOGLE" && (data.reconversoesGoogle?.length ?? 0) > 0 && (
-                                <button
-                                  type="button"
-                                  onClick={(e) => { e.stopPropagation(); setReconversoesGoogleOpen(true); }}
-                                  className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-blue-400/50 bg-blue-400/[0.06] px-2.5 py-0.5 text-[10px] font-semibold text-blue-400 transition-colors hover:bg-blue-400/10"
-                                >
+                              {c.andamento > 0 && (
+                                <span className="flex items-center gap-1">
                                   <span className="h-1.5 w-1.5 rounded-full bg-blue-400/70" />
-                                  Duplicados · {data.reconversoesGoogle!.length}
-                                </button>
+                                  {c.andamento} em atend.
+                                </span>
+                              )}
+                              {perdidos > 0 && (
+                                <span className="flex items-center gap-1">
+                                  <span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />
+                                  {perdidos} perdido{perdidos !== 1 ? "s" : ""} ({perdidosPct.toFixed(0)}%)
+                                </span>
                               )}
                             </div>
                           </div>
 
-                          {/* Valor vendido do canal */}
-                          {c.ganhos > 0 && (
+                          {/* ── Duplicados — linha própria, mais visível ── */}
+                          {((c.canal === "META" && (data.reconversoesMeta?.length ?? 0) > 0) ||
+                            (c.canal === "GOOGLE" && (data.reconversoesGoogle?.length ?? 0) > 0)) && (
+                            <div className="mt-3 flex items-center gap-2">
+                              {c.canal === "META" && (data.reconversoesMeta?.length ?? 0) > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); setReconversoesOpen(true); }}
+                                  className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/[0.07] px-3 py-1 text-[10px] font-semibold text-amber-400 transition-colors hover:bg-amber-400/[0.12]"
+                                >
+                                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400/80" />
+                                  {data.reconversoesMeta!.length} duplicado{data.reconversoesMeta!.length !== 1 ? "s" : ""}
+                                </button>
+                              )}
+                              {c.canal === "GOOGLE" && (data.reconversoesGoogle?.length ?? 0) > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); setReconversoesGoogleOpen(true); }}
+                                  className="inline-flex items-center gap-1.5 rounded-full border border-amber-400/40 bg-amber-400/[0.07] px-3 py-1 text-[10px] font-semibold text-amber-400 transition-colors hover:bg-amber-400/[0.12]"
+                                >
+                                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400/80" />
+                                  {data.reconversoesGoogle!.length} duplicado{data.reconversoesGoogle!.length !== 1 ? "s" : ""}
+                                </button>
+                              )}
+                            </div>
+                          )}
+
+                          {/* ── Valor vendido ── */}
+                          {c.ganhos > 0 && c.valor > 0 && (
                             <div className="mt-4 flex items-center justify-between rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-3 py-2.5">
                               <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-emerald-400/70">Valor Vendido</p>
-                              <p className="tabular-nums text-sm font-bold text-emerald-400">
-                                {c.valor > 0 ? formatCurrencyBR(c.valor) : "—"}
+                              <p className="tabular-nums text-sm font-bold text-emerald-400">{formatCurrencyBR(c.valor)}</p>
+                            </div>
+                          )}
+
+                          {/* ── CPL Real CRM — tile hero full-width ── */}
+                          {meta.cpl != null && (
+                            <div
+                              className="mt-4 flex items-center justify-between rounded-xl border px-4 py-3"
+                              style={{
+                                borderColor: `color-mix(in srgb, ${cfg.hex} 22%, var(--border))`,
+                                backgroundColor: `color-mix(in srgb, ${cfg.hex} 7%, transparent)`,
+                              }}
+                            >
+                              <div>
+                                <p className="text-[9px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">CPL Real · CRM</p>
+                                {meta.cplPlat != null && (
+                                  <p className="mt-0.5 text-[10px] text-[var(--muted-foreground)]/55">
+                                    vs {formatCurrencyBR(meta.cplPlat)} plataforma
+                                  </p>
+                                )}
+                              </div>
+                              <p className="tabular-nums text-2xl font-black leading-none" style={{ color: cfg.hex }}>
+                                {formatCurrencyBR(meta.cpl)}
                               </p>
                             </div>
                           )}
 
-                          {/* Cost metric tiles */}
-                          {(meta.invest > 0 || meta.cpl != null || meta.cplPlat != null || meta.cac != null) && (
-                            <div className="mt-4 grid grid-cols-2 gap-2">
-                              {meta.invest > 0 && (
-                                <div className="rounded-xl bg-[var(--muted)]/20 px-3 py-2.5">
-                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Investimento</p>
-                                  <p className="mt-0.5 tabular-nums text-sm font-bold text-[var(--foreground)]">{formatCurrencyBR(meta.invest)}</p>
-                                </div>
-                              )}
-                              {meta.cpl != null && (
-                                <div className="rounded-xl px-3 py-2.5" style={{ backgroundColor: `color-mix(in srgb, ${cfg.hex} 9%, transparent)` }}>
-                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">CPL real · CRM</p>
-                                  <p className="mt-0.5 tabular-nums text-sm font-bold" style={{ color: cfg.hex }}>{formatCurrencyBR(meta.cpl)}</p>
-                                </div>
-                              )}
-                              {meta.cplPlat != null && (
-                                <div className="rounded-xl bg-[var(--muted)]/20 px-3 py-2.5">
-                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">CPL plataforma</p>
-                                  <p className="mt-0.5 tabular-nums text-sm font-semibold text-[var(--muted-foreground)]">{formatCurrencyBR(meta.cplPlat)}</p>
-                                </div>
-                              )}
+                          {/* ── Investimento + CAC ── */}
+                          {meta.invest > 0 && (
+                            <div className={`mt-2 grid gap-2 ${meta.cac != null ? "grid-cols-2" : "grid-cols-1"}`}>
+                              <div className="rounded-xl bg-[var(--muted)]/20 px-3 py-2.5">
+                                <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">Investimento</p>
+                                <p className="mt-0.5 tabular-nums text-sm font-bold text-[var(--foreground)]">{formatCurrencyBR(meta.invest)}</p>
+                              </div>
                               {meta.cac != null && (
                                 <div className="rounded-xl bg-emerald-500/[0.07] px-3 py-2.5">
-                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]">CAC real</p>
+                                  <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-emerald-400/80">CAC Real</p>
                                   <p className="mt-0.5 tabular-nums text-sm font-bold text-emerald-400">{formatCurrencyBR(meta.cac)}</p>
                                 </div>
                               )}
