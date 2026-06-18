@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 
+function getAppUrl(): string {
+  // REPLIT_DEV_DOMAIN is set only in dev — takes priority so dev never uses APP_URL (prod URL)
+  if (process.env.REPLIT_DEV_DOMAIN) return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
+  return "http://localhost:5000";
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const clienteId = searchParams.get("clienteId");
-  const appUrl = new URL(request.url).origin;
+  const appUrl = getAppUrl();
 
   if (!clienteId) {
     return NextResponse.json({ error: "clienteId é obrigatório" }, { status: 400 });

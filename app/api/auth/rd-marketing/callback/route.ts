@@ -10,11 +10,17 @@ interface RdTokenResponse {
   error_description?: string;
 }
 
+function getAppUrl(): string {
+  if (process.env.REPLIT_DEV_DOMAIN) return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
+  return "http://localhost:5000";
+}
+
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const code = searchParams.get("code");
   const state = searchParams.get("state");
-  const appUrl = new URL(request.url).origin;
+  const appUrl = getAppUrl();
   const redirectBase = `${appUrl}/admin/clientes`;
 
   if (!code || !state) {
