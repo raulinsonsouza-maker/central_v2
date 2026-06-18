@@ -1485,36 +1485,17 @@ function AtribuicaoSection({
                                 </span>
                               )}
                             </div>
-                            <div className="flex items-center gap-2">
-                              {c.pvMedio != null && (
-                                <span className={`rounded-full bg-[var(--muted)]/40 px-2 py-0.5 text-[10px] font-semibold ${PV_LABELS[String(Math.round(c.pvMedio))]?.color ?? ""}`}>
-                                  Qualif. {c.pvMedio.toFixed(1)}
-                                </span>
-                              )}
-                              <Filter className={`h-3.5 w-3.5 transition-colors ${isActive ? "fill-[var(--primary)] text-[var(--primary)]" : "text-[var(--muted-foreground)]/30 group-hover:text-[var(--muted-foreground)]/70"}`} />
-                            </div>
+                            <Filter className={`h-3.5 w-3.5 transition-colors ${isActive ? "fill-[var(--primary)] text-[var(--primary)]" : "text-[var(--muted-foreground)]/30 group-hover:text-[var(--muted-foreground)]/70"}`} />
                           </div>
 
                           {/* ── Hero: leads CRM em destaque ── */}
-                          <div className="mt-4 flex items-end justify-between gap-3">
+                          <div className="mt-4">
                             <div>
                               <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)]">Leads no CRM</p>
                               <p className="mt-0.5 tabular-nums text-5xl font-black leading-none" style={{ color: cfg.hex }}>
                                 {c.leads.toLocaleString("pt-BR")}
                               </p>
                             </div>
-                            {/* Meta: proporção forms → CRM */}
-                            {c.canal === "META" && (data.totalLeadsMeta ?? 0) > 0 && (
-                              <div className="shrink-0 text-right">
-                                <p className="text-[9px] font-semibold uppercase tracking-[0.1em] text-[var(--muted-foreground)]/60">Confirmados</p>
-                                <p className="tabular-nums text-lg font-bold leading-none text-[var(--muted-foreground)]/50 mt-0.5">
-                                  {(data.totalLeadsMeta ?? 0) > 0
-                                    ? `${Math.round((c.leads / (data.totalLeadsMeta as number)) * 100)}%`
-                                    : "—"}
-                                </p>
-                                <p className="text-[9px] text-[var(--muted-foreground)]/40 mt-0.5">de {data.totalLeadsMeta} forms</p>
-                              </div>
-                            )}
                           </div>
 
                           {/* ── Funil clicável ── */}
