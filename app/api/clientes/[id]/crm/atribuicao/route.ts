@@ -420,7 +420,13 @@ export async function GET(
     }
 
     // ── Reconversões: forms in period not matched to CRM, but email exists in CRM ──
-    const unmatchedForms = metaLeadForms.filter((ml) => !crmByMeta.has(ml.metaLeadId));
+    // Use unfiltered CRM metaLeadIds — active tag/UI filters must NOT affect reconversão detection
+    const allCrmMetaLeadIdRows = await prisma.leadCrm.findMany({
+      where: { clienteId: id, metaLeadId: { not: null } },
+      select: { metaLeadId: true },
+    });
+    const allCrmMetaLeadIds = new Set(allCrmMetaLeadIdRows.map((r) => r.metaLeadId as string));
+    const unmatchedForms = metaLeadForms.filter((ml) => !allCrmMetaLeadIds.has(ml.metaLeadId));
     if (unmatchedForms.length > 0) {
       const unmatchedEmails = unmatchedForms
         .map((ml) => ml.emailLead?.trim())

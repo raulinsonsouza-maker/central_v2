@@ -1242,8 +1242,16 @@ function AtribuicaoSection({
       ) : (
         <>
           {/* ── Performance por Canal ─────────────────────────────────────── */}
-          {totalLeads > 0 && (() => {
-            const paidCanais = porCanal.filter((c) => c.canal === "META" || c.canal === "GOOGLE");
+          {(totalLeads > 0 || (data.totalLeadsMeta ?? 0) > 0) && (() => {
+            let paidCanais = porCanal.filter((c) => c.canal === "META" || c.canal === "GOOGLE");
+            // Ensure META card renders when Meta form submissions exist but no CRM leads yet
+            if ((data.totalLeadsMeta ?? 0) > 0 && !paidCanais.find((c) => c.canal === "META")) {
+              const metaZero: PorCanal = {
+                canal: "META", leads: 0, ganhos: 0, perdidos: 0, andamento: 0, visitou: 0, valor: 0,
+                ratingMedio: null, pvMedio: null, investCanal: data.investMeta,
+              };
+              paidCanais = [metaZero, ...paidCanais];
+            }
             const outrosCanais = porCanal.filter((c) => c.canal !== "META" && c.canal !== "GOOGLE");
 
             const canalMeta: Record<string, { cpl: number | null; cplPlat: number | null; cac: number | null; invest: number }> = {
