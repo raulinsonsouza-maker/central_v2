@@ -505,23 +505,29 @@ export async function GET(
     });
 
     if (googleCrmInPeriod.length > 0) {
-      // Find emails that appeared in CRM BEFORE the period start (unfiltered — no filter bias)
-      const prePeriodRows = await prisma.leadCrm.findMany({
-        where: { clienteId: id, dataEntrada: { lt: dateFrom }, email: { not: null } },
-        select: { email: true, dataEntrada: true },
+      // Find the earliest CRM lead per email across ALL dates (not just before dateFrom).
+      // This catches cross-channel duplicates within the same period — e.g. someone who
+      // first converted via Meta in February and then via Google in April (both in YTD).
+      // We keep the earliest entry per email; if a Google lead IS the earliest, it's genuine.
+      const allCrmEmailRows = await prisma.leadCrm.findMany({
+        where: { clienteId: id, email: { not: null } },
+        select: { id: true, email: true, dataEntrada: true },
         orderBy: { dataEntrada: "asc" },
       });
-      const prePeriodEmailMap = new Map<string, Date>();
-      for (const row of prePeriodRows) {
+      // Map email → { id, dataEntrada } of the FIRST (oldest) occurrence
+      const firstByEmail = new Map<string, { id: string; dataEntrada: Date }>();
+      for (const row of allCrmEmailRows) {
         const key = (row.email ?? "").trim().toLowerCase();
-        if (key && !prePeriodEmailMap.has(key)) prePeriodEmailMap.set(key, row.dataEntrada);
+        if (key && !firstByEmail.has(key)) firstByEmail.set(key, { id: row.id, dataEntrada: row.dataEntrada });
       }
 
       reconversoesGoogle = googleCrmInPeriod
         .map((l) => {
           const key = (l.email ?? "").trim().toLowerCase();
-          const prevDate = prePeriodEmailMap.get(key);
-          if (!prevDate) return null;
+          const first = firstByEmail.get(key);
+          // Not a duplicate if: no other lead found, or THIS lead is the first/oldest occurrence
+          if (!first || first.id === l.id) return null;
+          const prevDate = first.dataEntrada;
           const mkt = parseDadosMarketing(l.dadosMarketing);
           return {
             leadCrmId: l.id,
