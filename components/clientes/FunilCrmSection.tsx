@@ -39,7 +39,6 @@ const MACRO_COLORS: Record<MacroGrupo, string> = {
 
 function getMacroGrupo(etapa: string): MacroGrupo {
   const e = etapa.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  // Terminal loss / inactive stages
   if (
     e.includes("perdido") || e.includes("cancelado") || e.includes("descartado") ||
     e.includes("desistiu") || e.includes("desistencia") || e.includes("sem interesse") ||
@@ -103,8 +102,6 @@ export function FunilCrmSection({
   const etapas = data.etapas ?? [];
   const totalLeads = data.totalLeads;
 
-  // Group the detailed CRM stages under their macro-group, preserving the
-  // API ordering (by ordemEtapa) within each group.
   const grouped = MACRO_ORDER.map((grupo) => {
     const grupoEtapas = etapas.filter((e) => getMacroGrupo(e.etapa) === grupo);
     const count = grupoEtapas.reduce((s, e) => s + e.count, 0);
@@ -112,54 +109,146 @@ export function FunilCrmSection({
     return { grupo, etapas: grupoEtapas, count, valor };
   }).filter((g) => g.etapas.length > 0);
 
-  // Bar scale is relative to the busiest single stage.
-  const maxCount = Math.max(...etapas.map((e) => e.count), 1);
-
   const taxaFechamento = totalLeads > 0
     ? ((data.totalGanhos / totalLeads) * 100).toFixed(1)
     : "0.0";
 
+  // Donut ring
+  const r = 44;
+  const cx = 56;
+  const cy = 56;
+  const circumference = 2 * Math.PI * r;
+  let offset = 0;
+  const slices = grouped.map((g) => {
+    const pct = totalLeads > 0 ? (g.count / totalLeads) * 100 : 0;
+    const dash = (pct / 100) * circumference;
+    const slice = { grupo: g.grupo, count: g.count, pct, dash, offset };
+    offset += dash;
+    return slice;
+  });
+
   return (
     <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
       <CardContent className="space-y-4 pt-6">
-        {/* KPI strip */}
-        <div className="grid grid-cols-2 divide-x divide-[var(--border)] rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 sm:grid-cols-3">
-          <div className="px-4 py-3 text-center">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Leads no período</p>
-            <p className="mt-1 text-lg font-extrabold tabular-nums text-[var(--foreground)]">
-              {totalLeads.toLocaleString("pt-BR")}
-            </p>
-          </div>
-          <div className="px-4 py-3 text-center">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Fechamentos</p>
-            <p className="mt-1 text-lg font-extrabold tabular-nums text-emerald-400">
-              {data.totalGanhos.toLocaleString("pt-BR")}
-            </p>
-          </div>
-          <div className="hidden px-4 py-3 text-center sm:block">
-            <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Taxa de fechamento</p>
-            <p className="mt-1 text-lg font-extrabold tabular-nums text-[var(--primary)]">
-              {taxaFechamento}%
-            </p>
-          </div>
+
+        {/* KPI cards */}
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            { label: "Leads no período", value: totalLeads.toLocaleString("pt-BR"), color: "var(--foreground)" },
+            { label: "Fechamentos", value: data.totalGanhos.toLocaleString("pt-BR"), color: "#10b981" },
+            { label: "Taxa de fechamento", value: `${taxaFechamento}%`, color: "var(--primary)" },
+          ].map((kpi) => (
+            <div
+              key={kpi.label}
+              className="rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 px-4 py-3 text-center"
+            >
+              <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">
+                {kpi.label}
+              </p>
+              <p
+                className="mt-1 text-lg font-extrabold tabular-nums"
+                style={{ color: kpi.color }}
+              >
+                {kpi.value}
+              </p>
+            </div>
+          ))}
         </div>
 
-        {/* Detailed stage funnel, grouped by macro-stage */}
+        {/* Donut ring + legend */}
+        {grouped.length > 0 && (
+          <div className="flex items-center gap-5 rounded-xl border border-[var(--border)] bg-[var(--muted)]/10 px-4 py-4">
+            {/* Ring */}
+            <div className="relative shrink-0" style={{ width: 112, height: 112 }}>
+              <svg width={112} height={112}>
+                <circle
+                  cx={cx}
+                  cy={cy}
+                  r={r}
+                  fill="none"
+                  stroke="rgba(255,255,255,0.06)"
+                  strokeWidth={12}
+                />
+                {slices.map((s) => (
+                  <circle
+                    key={s.grupo}
+                    cx={cx}
+                    cy={cy}
+                    r={r}
+                    fill="none"
+                    stroke={MACRO_COLORS[s.grupo as MacroGrupo]}
+                    strokeWidth={12}
+                    strokeDasharray={`${s.dash} ${circumference - s.dash}`}
+                    strokeDashoffset={-s.offset + circumference * 0.25}
+                    strokeLinecap="butt"
+                  />
+                ))}
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <p className="text-xl font-extrabold tabular-nums text-[var(--foreground)]">{totalLeads}</p>
+                <p className="text-[9px] uppercase tracking-wide text-[var(--muted-foreground)]">leads</p>
+              </div>
+            </div>
+
+            {/* Legend bars */}
+            <div className="flex-1 space-y-2.5">
+              {slices.map((s) => (
+                <div key={s.grupo} className="space-y-0.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-1.5">
+                      <span
+                        className="h-2 w-2 rounded-full"
+                        style={{ background: MACRO_COLORS[s.grupo as MacroGrupo] }}
+                      />
+                      <span className="text-[11px] font-semibold text-[var(--foreground)]">{s.grupo}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="text-[11px] font-bold tabular-nums"
+                        style={{ color: MACRO_COLORS[s.grupo as MacroGrupo] }}
+                      >
+                        {s.count.toLocaleString("pt-BR")}
+                      </span>
+                      <span className="w-8 text-right text-[10px] tabular-nums text-[var(--muted-foreground)]">
+                        {s.pct < 1 ? s.pct.toFixed(1) : Math.round(s.pct)}%
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    className="h-1 w-full overflow-hidden rounded-full"
+                    style={{ background: "rgba(255,255,255,0.06)" }}
+                  >
+                    <div
+                      className="h-full rounded-full"
+                      style={{
+                        width: `${s.pct}%`,
+                        background: MACRO_COLORS[s.grupo as MacroGrupo],
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Detailed stages grouped by macro */}
         {grouped.length > 0 && (
           <div className="space-y-4">
             {grouped.map((grupo) => {
               const color = MACRO_COLORS[grupo.grupo];
               const pctGrupo = totalLeads > 0 ? (grupo.count / totalLeads) * 100 : 0;
+              const maxInGroup = Math.max(...grupo.etapas.map((e) => e.count), 1);
               return (
                 <div key={grupo.grupo} className="space-y-1.5">
                   {/* Group header */}
                   <div className="flex items-center gap-2">
                     <span
-                      className="inline-block h-2 w-2 shrink-0 rounded-full"
+                      className="inline-block h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{ backgroundColor: color }}
                     />
                     <p
-                      className="text-[11px] font-bold uppercase tracking-[0.14em]"
+                      className="text-[10px] font-bold uppercase tracking-[0.14em]"
                       style={{ color }}
                     >
                       {grupo.grupo}
@@ -172,10 +261,10 @@ export function FunilCrmSection({
                     <div className="h-px flex-1 bg-[var(--border)]" />
                   </div>
 
-                  {/* Detailed stages within the group */}
+                  {/* Stage rows */}
                   <div className="space-y-1">
                     {grupo.etapas.map((e) => {
-                      const pct = maxCount > 0 ? (e.count / maxCount) * 100 : 0;
+                      const pctInGroup = (e.count / maxInGroup) * 100;
                       const pctTotal = totalLeads > 0 ? (e.count / totalLeads) * 100 : 0;
                       const isActive = leadFilter?.type === "etapa" && leadFilter.value === e.etapa;
                       const clickable = !!onFilter;
@@ -199,27 +288,40 @@ export function FunilCrmSection({
                             clickable ? "cursor-pointer hover:border-[color-mix(in_srgb,var(--primary)_30%,var(--border))]" : ""
                           } ${isActive ? "border-[var(--primary)] ring-1 ring-[var(--primary)]/40" : "border-[var(--border)]"}`}
                         >
-                          {/* Background fill bar */}
+                          {/* Gradient fill bar */}
                           <div
-                            className="pointer-events-none absolute inset-y-0 left-0 opacity-[0.08] transition-all group-hover:opacity-[0.14]"
-                            style={{ width: `${pct}%`, backgroundColor: color }}
+                            className="pointer-events-none absolute inset-y-0 left-0 transition-all"
+                            style={{
+                              width: `${pctInGroup}%`,
+                              background: `linear-gradient(90deg, ${color}22, transparent)`,
+                              borderLeft: `2px solid ${color}55`,
+                            }}
                           />
                           <div className="relative flex items-center gap-3">
-                            {/* Stage name */}
                             <p className="min-w-0 flex-1 truncate text-[13px] font-medium text-[var(--foreground)]">
                               {e.etapa}
                             </p>
-                            {/* Total value */}
                             {e.valor > 0 && (
                               <span className="hidden shrink-0 text-[10px] tabular-nums text-[var(--muted-foreground)] sm:inline">
                                 {fmtValor(e.valor)}
                               </span>
                             )}
-                            {/* % do total */}
-                            <span className="shrink-0 text-[11px] tabular-nums text-[var(--muted-foreground)]">
+                            {/* Mini progress bar */}
+                            <div
+                              className="hidden h-1 shrink-0 overflow-hidden rounded-full sm:block"
+                              style={{ width: 64, background: "rgba(255,255,255,0.06)" }}
+                            >
+                              <div
+                                className="h-full rounded-full"
+                                style={{
+                                  width: `${pctInGroup}%`,
+                                  background: `linear-gradient(90deg, ${color}, ${color}88)`,
+                                }}
+                              />
+                            </div>
+                            <span className="shrink-0 w-8 text-right text-[11px] tabular-nums text-[var(--muted-foreground)]">
                               {pctTotal < 1 ? pctTotal.toFixed(1) : Math.round(pctTotal)}%
                             </span>
-                            {/* Count */}
                             <span
                               className="w-12 shrink-0 text-right text-sm font-bold tabular-nums"
                               style={{ color }}
