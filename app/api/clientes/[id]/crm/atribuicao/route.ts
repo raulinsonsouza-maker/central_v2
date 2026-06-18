@@ -138,8 +138,33 @@ export async function GET(
       dataEntrada: { gte: dateFrom, lte: dateTo },
       ...(andClauses.length > 0 ? { AND: andClauses } : {}),
     },
-    select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true, dadosCv: true, etapa: true, dadosMarketing: true },
+    select: { fonte: true, valor: true, dataFechamento: true, status: true, rating: true, dadosCv: true, etapa: true, dadosMarketing: true, metaLeadId: true },
   });
+
+  // Build a fallback map: metaLeadId → MetaLeadIndividual attribution data
+  // Used to attribute leads that have metaLeadId but no campaign info in dadosMarketing
+  const leadMetaIds = leads.map((l) => l.metaLeadId).filter((id): id is string => !!id);
+  const metaLeadAttrMap = new Map<string, {
+    campaignId: string | null; campaignName: string | null;
+    adsetId: string | null; adsetName: string | null;
+    adId: string | null; adName: string | null;
+  }>();
+  if (leadMetaIds.length > 0) {
+    const metaAttrRows = await prisma.metaLeadIndividual.findMany({
+      where: { clienteId: id, metaLeadId: { in: leadMetaIds } },
+      select: { metaLeadId: true, campaignId: true, campaignName: true, adsetId: true, adsetName: true, adId: true, adName: true },
+    });
+    for (const r of metaAttrRows) {
+      metaLeadAttrMap.set(r.metaLeadId, {
+        campaignId: r.campaignId ?? null,
+        campaignName: r.campaignName ?? null,
+        adsetId: r.adsetId ?? null,
+        adsetName: r.adsetName ?? null,
+        adId: r.adId ?? null,
+        adName: r.adName ?? null,
+      });
+    }
+  }
 
   const fatoRows = await prisma.fatoMidiaDiario.findMany({
     where: { clienteId: id, data: { gte: dateFrom, lte: dateTo }, canal: { in: ["META", "GOOGLE"] } },
@@ -229,21 +254,26 @@ export async function GET(
       applyBucket(b);
     };
 
-    // Hierarquia Meta a partir dos IDs/nomes gravados no lead (dadosMarketing)
+    // Hierarquia Meta: usa dadosMarketing do lead; fallback para MetaLeadIndividual via metaLeadId
     const mkt = parseDadosMarketing(lead.dadosMarketing);
-    if (mkt && (mkt.metaCampaignId || mkt.metaCampaignName)) {
-      const campId = mkt.metaCampaignId?.trim() || null;
-      const campName = mkt.metaCampaignName?.trim() || "(sem campanha)";
-      const campKey = campId || campName;
-      const adsetId = mkt.metaAdsetId?.trim() || null;
-      const adsetName = mkt.metaAdsetName?.trim() || "(sem conjunto)";
-      const adsetKey = adsetId || adsetName;
-      const adId = mkt.metaAdId?.trim() || null;
-      const adName = mkt.metaAdName?.trim() || "(sem anúncio)";
-      const adKey = adId || adName;
+    const hasMktCamp = !!(mkt?.metaCampaignId || mkt?.metaCampaignName);
+    const fallbackAttr = !hasMktCamp && lead.metaLeadId ? metaLeadAttrMap.get(lead.metaLeadId) : null;
+
+    const campId   = (hasMktCamp ? mkt!.metaCampaignId?.trim() : fallbackAttr?.campaignId) || null;
+    const campName = (hasMktCamp ? mkt!.metaCampaignName?.trim() : fallbackAttr?.campaignName) || null;
+
+    if (campId || campName) {
+      const campLabel  = campName || "(sem campanha)";
+      const campKey    = campId || campLabel;
+      const adsetId    = (hasMktCamp ? mkt!.metaAdsetId?.trim() : fallbackAttr?.adsetId) || null;
+      const adsetName  = (hasMktCamp ? mkt!.metaAdsetName?.trim() : fallbackAttr?.adsetName) || "(sem conjunto)";
+      const adsetKey   = adsetId || adsetName;
+      const adId       = (hasMktCamp ? mkt!.metaAdId?.trim() : fallbackAttr?.adId) || null;
+      const adName     = (hasMktCamp ? mkt!.metaAdName?.trim() : fallbackAttr?.adName) || "(sem anúncio)";
+      const adKey      = adId || adName;
 
       let camp = metaHierMap.get(campKey);
-      if (!camp) { camp = { id: campId, name: campName, ...emptyBucket(), adsets: new Map() }; metaHierMap.set(campKey, camp); }
+      if (!camp) { camp = { id: campId, name: campLabel, ...emptyBucket(), adsets: new Map() }; metaHierMap.set(campKey, camp); }
       applyBucket(camp);
 
       let adset = camp.adsets.get(adsetKey);
