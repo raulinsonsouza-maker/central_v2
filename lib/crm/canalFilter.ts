@@ -65,6 +65,20 @@ export function buildCanalFonteOR(canal: string): Prisma.LeadCrmWhereInput[] {
 }
 
 /**
+ * Builds a Prisma WHERE fragment that isolates leads belonging to `canal`.
+ * Special case: "OUTRO" means "does not match any known canal pattern".
+ */
+function buildCanalWhere(canal: string): Prisma.LeadCrmWhereInput {
+  if (canal === "OUTRO") {
+    // Negate every known canal pattern so only unclassified leads match.
+    const allKnownOR = Object.keys(CANAL_MIDIA_PATTERNS).flatMap(buildMidiaOR);
+    return allKnownOR.length > 0 ? { NOT: { OR: allKnownOR } } : {};
+  }
+  const or = buildMidiaOR(canal);
+  return or.length > 0 ? { OR: or } : {};
+}
+
+/**
  * Builds a Prisma WHERE fragment from a filterType/filterValue pair.
  * Returns `{}` when no filter is set.
  */
@@ -82,8 +96,7 @@ export function buildLeadFilterWhere(
       const or = buildMidiaOR("META");
       return or.length > 0 ? { metaLeadId: null, OR: or } : { metaLeadId: null };
     }
-    const or = buildMidiaOR(filterValue);
-    return or.length > 0 ? { OR: or } : {};
+    return buildCanalWhere(filterValue);
   }
 
   if (filterType === "estado") {
@@ -113,8 +126,7 @@ export function buildLeadFilterWhere(
   if (filterType === "funil") {
     // value = "CANAL|stage" (stage: leads | atendimento | visitas | vendas)
     const [canal, stage] = filterValue.split("|");
-    const or = buildMidiaOR(canal);
-    const canalWhere: Prisma.LeadCrmWhereInput = or.length > 0 ? { OR: or } : {};
+    const canalWhere = buildCanalWhere(canal);
     if (stage === "vendas") return { AND: [canalWhere, { status: "won" }] };
     // andamento (atendimento) = tudo que não é won/lost, incluindo status nulo
     // (espelha o else do bucket em /crm/atribuicao, onde status null cai em andamento)
