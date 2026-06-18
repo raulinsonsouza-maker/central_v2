@@ -500,12 +500,7 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
               } />
               {mkt?.metaCampaignName && (
                 <div className="col-span-2">
-                  <DField label="Campanha" value={
-                    <span className="inline-flex items-center gap-1.5">
-                      {mkt.metaCampaignName}
-                      <span className="shrink-0 rounded-full bg-emerald-500/15 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-wide text-emerald-400">✓ confirmado</span>
-                    </span>
-                  } />
+                  <DField label="Campanha" value={mkt.metaCampaignName} />
                 </div>
               )}
               {mkt?.metaAdsetName && <DField label="Conjunto de anúncios" value={mkt.metaAdsetName} />}
