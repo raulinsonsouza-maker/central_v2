@@ -224,4 +224,83 @@ export class RdMarketingClient {
       return { ok: false, error: e instanceof Error ? e.message : String(e) };
     }
   }
+
+  /** Lista todas as segmentações da conta. */
+  async listSegmentations(): Promise<Array<{ id: string; name: string }>> {
+    try {
+      const res = await fetch(`${BASE}/segmentations`, { headers: this.headers() });
+      if (!res.ok) return [];
+      const body = await res.json() as { segmentations?: Array<{ id: string; name: string }> } | Array<{ id: string; name: string }>;
+      if (Array.isArray(body)) return body;
+      if (body && "segmentations" in body && Array.isArray(body.segmentations)) return body.segmentations;
+      return [];
+    } catch {
+      return [];
+    }
+  }
+
+  /**
+   * Lista contatos de uma segmentação (paginado).
+   * Retorna contatos com uuid, email, last_conversion_date, created_at.
+   */
+  async listSegmentationContacts(
+    segmentationId: string,
+    page = 1,
+  ): Promise<{
+    contacts: Array<{
+      uuid: string;
+      name?: string;
+      email?: string;
+      last_conversion_date?: string;
+      created_at?: string;
+    }>;
+    hasMore: boolean;
+  }> {
+    try {
+      const url = `${BASE}/segmentations/${segmentationId}/contacts?page=${page}`;
+      const res = await fetch(url, { headers: this.headers() });
+      if (!res.ok) return { contacts: [], hasMore: false };
+      const body = await res.json() as {
+        contacts?: Array<{ uuid: string; name?: string; email?: string; last_conversion_date?: string; created_at?: string }>;
+      };
+      const contacts = body?.contacts ?? [];
+      return { contacts, hasMore: contacts.length > 0 };
+    } catch {
+      return { contacts: [], hasMore: false };
+    }
+  }
+
+  /**
+   * Lista todos os contatos de uma segmentação (pagina automaticamente).
+   * Limita a maxPages para não travar o processo.
+   */
+  async listAllSegmentationContacts(
+    segmentationId: string,
+    options?: {
+      since?: Date;
+      maxPages?: number;
+    },
+  ): Promise<Array<{ uuid: string; name?: string; email?: string; last_conversion_date?: string; created_at?: string }>> {
+    const maxPages = options?.maxPages ?? 50;
+    const since = options?.since;
+    const all: Array<{ uuid: string; name?: string; email?: string; last_conversion_date?: string; created_at?: string }> = [];
+
+    for (let page = 1; page <= maxPages; page++) {
+      const { contacts, hasMore } = await this.listSegmentationContacts(segmentationId, page);
+      if (contacts.length === 0) break;
+
+      for (const c of contacts) {
+        // Filter by last_conversion_date if since is provided
+        if (since && c.last_conversion_date) {
+          const convDate = new Date(c.last_conversion_date);
+          if (convDate <= since) continue;
+        }
+        all.push(c);
+      }
+
+      if (!hasMore) break;
+    }
+
+    return all;
+  }
 }

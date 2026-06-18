@@ -1083,6 +1083,10 @@ function RdMarketingConfigSection({
   const [mktClientId, setMktClientId] = useState("");
   const [mktClientSecret, setMktClientSecret] = useState("");
   const [mktConnected, setMktConnected] = useState(false);
+  const [segmentationId, setSegmentationId] = useState("");
+  const [segmentations, setSegmentations] = useState<Array<{ id: string; name: string }>>([]);
+  const [discoverLoading, setDiscoverLoading] = useState(false);
+  const [rdSyncLoading, setRdSyncLoading] = useState(false);
   const [ativo, setAtivo] = useState(true);
   const [loading, setLoading] = useState(false);
   const [testLoading, setTestLoading] = useState(false);
@@ -1107,6 +1111,7 @@ function RdMarketingConfigSection({
         setMktClientId(creds.clientId ?? "");
         setMktConnected(!!creds.connected);
         if (creds.clientSecretSet) setMktClientSecret("••••••••");
+        setSegmentationId(creds.segmentationId ?? "");
       })
       .catch(() => {});
   }, [clienteId, adminToken, initialLoaded]);
@@ -1122,6 +1127,7 @@ function RdMarketingConfigSection({
           clientId: mktClientId.trim() || undefined,
           clientSecret: mktClientSecret && !mktClientSecret.startsWith("•") ? mktClientSecret.trim() : undefined,
           ativo,
+          segmentationId: segmentationId.trim() || undefined,
         }),
       });
       const data = await res.json().catch(() => ({}));
@@ -1172,6 +1178,51 @@ function RdMarketingConfigSection({
       setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
     } finally {
       setEnrichLoading(false);
+    }
+  }
+
+  async function handleDiscover() {
+    setDiscoverLoading(true);
+    setStatusMsg(null);
+    try {
+      const res = await fetch(`/api/admin/clientes/${clienteId}/rd-marketing/segmentations`, {
+        headers: { "x-admin-token": adminToken },
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setStatusMsg({ ok: false, msg: data.error ?? "Erro ao listar segmentações" });
+        return;
+      }
+      const list: Array<{ id: string; name: string }> = data.segmentations ?? [];
+      setSegmentations(list);
+      if (list.length === 0) {
+        setStatusMsg({ ok: false, msg: "Nenhuma segmentação encontrada na conta." });
+      } else {
+        setStatusMsg({ ok: true, msg: `${list.length} segmentação(ões) encontrada(s). Selecione abaixo.` });
+      }
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setDiscoverLoading(false);
+    }
+  }
+
+  async function handleRdSync() {
+    setRdSyncLoading(true);
+    setStatusMsg(null);
+    try {
+      const res = await fetch(`/api/clientes/${clienteId}/crm/enrich?mode=rd_contacts`, { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      setStatusMsg({
+        ok: !!data.ok,
+        msg: data.ok
+          ? `Sync RD concluído — ${data.processed ?? 0} processados, ${data.enriched ?? 0} enriquecidos, ${data.created ?? 0} stubs criados, ${data.skipped ?? 0} ignorados.`
+          : (data.error ?? "Falha no sync RD"),
+      });
+    } catch (e) {
+      setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro desconhecido" });
+    } finally {
+      setRdSyncLoading(false);
     }
   }
 
@@ -1237,6 +1288,48 @@ function RdMarketingConfigSection({
           placeholder={mktConnected ? "Deixe em branco para manter" : "••••••••••••••••"}
           className={inputClass}
         />
+      </div>
+
+      <div className="space-y-1">
+        <div className="flex items-center justify-between">
+          <label className="text-xs font-medium text-[var(--muted-foreground)]">
+            ID da Segmentação (fonte primária de leads)
+          </label>
+          {mktConnected && (
+            <button
+              onClick={handleDiscover}
+              disabled={discoverLoading}
+              className="text-[10px] font-semibold text-[var(--primary)] hover:opacity-70 disabled:opacity-40 transition-opacity"
+            >
+              {discoverLoading ? "Buscando..." : "Descobrir →"}
+            </button>
+          )}
+        </div>
+        {segmentations.length > 0 ? (
+          <select
+            value={segmentationId}
+            onChange={(e) => setSegmentationId(e.target.value)}
+            className={inputClass}
+          >
+            <option value="">— selecione —</option>
+            {segmentations.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name} ({s.id})
+              </option>
+            ))}
+          </select>
+        ) : (
+          <input
+            type="text"
+            value={segmentationId}
+            onChange={(e) => setSegmentationId(e.target.value)}
+            placeholder="Ex: 1234567 (use Descobrir para buscar automaticamente)"
+            className={inputClass}
+          />
+        )}
+        <p className="text-[10px] text-[var(--muted-foreground)]">
+          ID da segmentação RD que contém os leads a importar. Use "Descobrir" para listar as segmentações da conta.
+        </p>
       </div>
 
       <div className="space-y-2">
@@ -1306,10 +1399,19 @@ function RdMarketingConfigSection({
         >
           {loading ? "Salvando..." : "Salvar Marketing"}
         </button>
+        {mktConnected && segmentationId && (
+          <button
+            onClick={handleRdSync}
+            disabled={rdSyncLoading || enrichLoading || testLoading}
+            className="rounded-xl bg-[var(--primary)]/10 border border-[var(--primary)]/20 px-4 py-2 text-xs font-semibold text-[var(--primary)] transition hover:bg-[var(--primary)]/20 disabled:opacity-50"
+          >
+            {rdSyncLoading ? "Sincronizando..." : "Sync contatos RD →"}
+          </button>
+        )}
         {mktConnected && (
           <button
             onClick={handleEnrich}
-            disabled={enrichLoading || testLoading}
+            disabled={enrichLoading || testLoading || rdSyncLoading}
             className="rounded-xl border border-[var(--border)] px-4 py-2 text-xs font-semibold text-[var(--foreground)] transition hover:bg-[var(--muted)] disabled:opacity-50"
           >
             {enrichLoading ? "Enriquecendo..." : "Enriquecer leads agora"}
@@ -1318,7 +1420,7 @@ function RdMarketingConfigSection({
         {mktConnected && (
           <button
             onClick={handleTest}
-            disabled={testLoading || enrichLoading}
+            disabled={testLoading || enrichLoading || rdSyncLoading}
             className="rounded-xl border border-[var(--border)] px-4 py-2 text-xs font-semibold text-[var(--foreground)] transition hover:bg-[var(--muted)] disabled:opacity-50"
           >
             {testLoading ? "Testando..." : "Testar conexão"}

@@ -28,6 +28,7 @@ export async function GET(
       clientId: creds.clientId ?? "",
       clientSecretSet: !!creds.clientSecret,
       connected: !!creds.accessToken,
+      segmentationId: creds.segmentationId ?? "",
     },
   });
 }
@@ -43,6 +44,7 @@ export async function PUT(
     clientId?: string;
     clientSecret?: string;
     ativo?: boolean;
+    segmentationId?: string;
   };
 
   const existing = await prisma.rdMarketingConfig.findUnique({ where: { clienteId: id } });
@@ -53,6 +55,7 @@ export async function PUT(
   if (body.clientSecret && !body.clientSecret.startsWith("•")) {
     credenciais.clientSecret = body.clientSecret.trim();
   }
+  if (body.segmentationId !== undefined) credenciais.segmentationId = body.segmentationId.trim();
 
   await prisma.rdMarketingConfig.upsert({
     where: { clienteId: id },

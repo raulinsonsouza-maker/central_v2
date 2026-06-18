@@ -2,6 +2,7 @@ import { Prisma } from "@/lib/generated/prisma";
 import { prisma } from "@/lib/db";
 import { getCrmAdapter } from "@/lib/crm/factory";
 import { matchMetaCrmLeads } from "@/lib/crm/metaCrmMatcher";
+import { syncRdMarketingContacts } from "@/lib/rdMarketing/syncContacts";
 
 export interface CrmSyncResult {
   ok: boolean;
@@ -91,6 +92,17 @@ export async function syncCrmCliente(
     } catch (e) {
       // Non-fatal — log and continue
       console.warn(`[crmSync] metaCrmMatch failed for ${clienteId}:`, e instanceof Error ? e.message : e);
+    }
+
+    // Sync invertido RD Marketing: RD como fonte primária de origem/atribuição
+    try {
+      const rdResult = await syncRdMarketingContacts(clienteId, { full: options?.full });
+      if (rdResult.processed > 0 || rdResult.error) {
+        console.log(`[crmSync] rdContactsSync clienteId=${clienteId} processed=${rdResult.processed} enriched=${rdResult.enriched} created=${rdResult.created} skipped=${rdResult.skipped}${rdResult.error ? ` error=${rdResult.error}` : ""}`);
+      }
+    } catch (e) {
+      // Non-fatal — log and continue
+      console.warn(`[crmSync] rdContactsSync failed for ${clienteId}:`, e instanceof Error ? e.message : e);
     }
 
     return { ok: true, leadsProcessed: leads.length, leadsUpserted: upserted };
