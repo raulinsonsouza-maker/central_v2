@@ -7,7 +7,7 @@ import { FunilCrmSection } from "@/components/clientes/FunilCrmSection";
 import {
   RefreshCw, Inbox, Search, X,
   ChevronLeft, ChevronRight, ChevronDown,
-  BarChart3, MapPin, Layers, Filter,
+  BarChart3, MapPin, Layers, Filter, Eye,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -794,6 +794,87 @@ function CampanhaSection({ data }: { data: AtribuicaoData }) {
 
 // ─── Meta Hierarquia (Campanha → Conjunto → Anúncio) ──────────────────────────
 
+function AdPreviewModal({ adId, adName, onClose }: { adId: string; adName: string; onClose: () => void }) {
+  const [iframeBody, setIframeBody] = React.useState<string | null>(null);
+  const [loading, setLoading] = React.useState(true);
+  const [failed, setFailed] = React.useState(false);
+  const [preview, setPreview] = React.useState<{ src: string; w: number; h: number } | null>(null);
+
+  React.useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
+
+  React.useEffect(() => {
+    setLoading(true);
+    fetch(`/api/meta/preview?adId=${encodeURIComponent(adId)}&adFormat=MOBILE_FEED_STANDARD`)
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
+      .then((data: { body?: string }) => {
+        if (data?.body) setIframeBody(data.body);
+        else setFailed(true);
+      })
+      .catch(() => setFailed(true))
+      .finally(() => setLoading(false));
+  }, [adId]);
+
+  React.useEffect(() => {
+    if (!iframeBody) return;
+    try {
+      const doc = new DOMParser().parseFromString(iframeBody, "text/html");
+      const iframe = doc.querySelector("iframe");
+      const src = iframe?.getAttribute("src") ?? "";
+      const w = parseInt(iframe?.getAttribute("width") ?? "0", 10) || 320;
+      const h = parseInt(iframe?.getAttribute("height") ?? "0", 10) || 560;
+      if (src) setPreview({ src, w, h });
+      else setFailed(true);
+    } catch { setFailed(true); }
+  }, [iframeBody]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <div
+        className="relative w-full max-w-sm rounded-3xl bg-[var(--card)] border border-white/[0.08] overflow-hidden shadow-2xl"
+        onClick={e => e.stopPropagation()}
+      >
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-white/[0.06]">
+          <Eye className="w-4 h-4 text-[var(--primary)] flex-shrink-0" />
+          <p className="text-sm font-semibold text-[var(--foreground)] flex-1 min-w-0 truncate">{adName}</p>
+          <button onClick={onClose} className="text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors flex-shrink-0 p-1" aria-label="Fechar">✕</button>
+        </div>
+        <div className="flex items-center justify-center bg-black min-h-[300px]">
+          {loading ? (
+            <div className="flex flex-col items-center gap-3 py-12 text-[var(--muted-foreground)]">
+              <div className="w-8 h-8 border-2 border-[var(--primary)] border-t-transparent rounded-full animate-spin" />
+              <p className="text-xs">Carregando prévia…</p>
+            </div>
+          ) : preview ? (
+            (() => {
+              const scale = 320 / preview.w;
+              const displayH = Math.round(preview.h * scale);
+              return (
+                <div style={{ width: 320, height: displayH, overflow: "hidden", position: "relative" }}>
+                  <div style={{ transform: `scale(${scale})`, transformOrigin: "top left", width: preview.w, height: preview.h }}>
+                    <iframe title="Prévia do anúncio" src={preview.src} scrolling="no" style={{ border: "none", display: "block", width: preview.w, height: preview.h }} />
+                  </div>
+                </div>
+              );
+            })()
+          ) : (
+            <div className="flex flex-col items-center gap-3 py-12 text-[var(--muted-foreground)]">
+              <Eye className="w-12 h-12 opacity-20" />
+              <p className="text-xs">{failed ? "Prévia não disponível" : "Nenhuma prévia"}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MetaHierStat({ value, cls, dash }: { value: number; cls: string; dash?: boolean }) {
   if (value > 0) return <span className={`tabular-nums font-semibold ${cls}`}>{value.toLocaleString("pt-BR")}</span>;
   return dash ? <span className="opacity-25 text-[var(--muted-foreground)]">—</span> : <span className="tabular-nums text-[var(--muted-foreground)]">0</span>;
@@ -811,6 +892,7 @@ function MetaHierarquiaSection({
   const campanhas = data.porMetaHierarquia ?? [];
   const [openCamp, setOpenCamp] = React.useState<Set<string>>(new Set());
   const [openAdset, setOpenAdset] = React.useState<Set<string>>(new Set());
+  const [previewAd, setPreviewAd] = React.useState<{ adId: string; adName: string } | null>(null);
 
   if (campanhas.length === 0) return null;
 
@@ -957,11 +1039,21 @@ function MetaHierarquiaSection({
                                     type="button"
                                     disabled={ad.adId == null}
                                     onClick={() => onFilter(adActive ? null : { type: "metaAd", value: ad.adId!, label: `Anúncio: ${ad.adName}` })}
-                                    className={`max-w-[240px] truncate text-left text-xs ${ad.adId == null ? "cursor-default" : "hover:text-[var(--primary)]"} ${adActive ? "font-semibold text-[var(--primary)]" : "text-[var(--muted-foreground)]"}`}
+                                    className={`max-w-[200px] truncate text-left text-xs ${ad.adId == null ? "cursor-default" : "hover:text-[var(--primary)]"} ${adActive ? "font-semibold text-[var(--primary)]" : "text-[var(--muted-foreground)]"}`}
                                     title={ad.adName}
                                   >
                                     {ad.adName}
                                   </button>
+                                  {ad.adId && (
+                                    <button
+                                      type="button"
+                                      onClick={() => setPreviewAd({ adId: ad.adId!, adName: ad.adName })}
+                                      className="shrink-0 rounded p-0.5 text-[var(--muted-foreground)]/50 hover:text-[var(--primary)] transition-colors"
+                                      title="Ver criativo"
+                                    >
+                                      <Eye className="w-3 h-3" />
+                                    </button>
+                                  )}
                                 </div>
                               </td>
                               <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.leads} cls="text-[var(--foreground)]" /></td>
@@ -984,6 +1076,14 @@ function MetaHierarquiaSection({
           </tbody>
         </table>
       </div>
+
+      {previewAd && (
+        <AdPreviewModal
+          adId={previewAd.adId}
+          adName={previewAd.adName}
+          onClose={() => setPreviewAd(null)}
+        />
+      )}
     </div>
   );
 }
