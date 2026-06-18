@@ -350,8 +350,15 @@ export async function GET(
   // ── porCriativo + porCampanhaConfirmada ─────────────────────────────────────
   const metaLeadForms = await prisma.metaLeadIndividual.findMany({
     where: { clienteId: id, createdTime: { gte: dateFrom, lte: dateTo } },
-    select: { metaLeadId: true, adName: true, adId: true, adsetName: true, campaignName: true },
+    select: { metaLeadId: true, adName: true, adId: true, adsetName: true, campaignName: true, fullName: true, emailLead: true, createdTime: true },
   });
+
+  const totalLeadsMeta = metaLeadForms.length;
+  let reconversoesMeta: Array<{
+    metaLeadId: string; fullName: string | null; emailLead: string | null; createdTime: Date;
+    campaignName: string | null; adsetName: string | null; adName: string | null;
+    dataEntrada: Date; etapa: string | null;
+  }> = [];
 
   if (metaLeadForms.length > 0) {
     const metaLeadIds = metaLeadForms.map((ml) => ml.metaLeadId);
@@ -409,6 +416,44 @@ export async function GET(
           if (isWon) { ccb.ganhos++; ccb.valor += valorCrm; } else if (isLost) ccb.perdidos++; else ccb.andamento++;
           if (r != null) { ccb.ratingSum += r; ccb.ratingCount++; }
         }
+      }
+    }
+
+    // ── Reconversões: forms in period not matched to CRM, but email exists in CRM ──
+    const unmatchedForms = metaLeadForms.filter((ml) => !crmByMeta.has(ml.metaLeadId));
+    if (unmatchedForms.length > 0) {
+      const unmatchedEmails = unmatchedForms
+        .map((ml) => ml.emailLead?.trim())
+        .filter((e): e is string => !!e && e.length > 0);
+      if (unmatchedEmails.length > 0) {
+        const allCrmWithEmail = await prisma.leadCrm.findMany({
+          where: { clienteId: id, email: { not: null } },
+          select: { email: true, dataEntrada: true, etapa: true },
+          orderBy: { dataEntrada: "asc" },
+        });
+        const crmEmailMap = new Map<string, { dataEntrada: Date; etapa: string | null }>();
+        for (const row of allCrmWithEmail) {
+          const key = (row.email ?? "").trim().toLowerCase();
+          if (key && !crmEmailMap.has(key)) crmEmailMap.set(key, { dataEntrada: row.dataEntrada, etapa: row.etapa });
+        }
+        reconversoesMeta = unmatchedForms
+          .map((ml) => {
+            const key = (ml.emailLead ?? "").trim().toLowerCase();
+            const crm = crmEmailMap.get(key);
+            if (!crm) return null;
+            return {
+              metaLeadId: ml.metaLeadId,
+              fullName: ml.fullName ?? null,
+              emailLead: ml.emailLead ?? null,
+              createdTime: ml.createdTime,
+              campaignName: ml.campaignName ?? null,
+              adsetName: ml.adsetName ?? null,
+              adName: ml.adName ?? null,
+              dataEntrada: crm.dataEntrada,
+              etapa: crm.etapa ?? null,
+            };
+          })
+          .filter((x): x is NonNullable<typeof x> => x !== null);
       }
     }
   }
@@ -620,6 +665,7 @@ export async function GET(
     cacGoogleCrm: googleGanhos > 0 && investGoogle > 0 ? investGoogle / googleGanhos : null,
     porFonte, porCanal, porEstado, porConversao, porCampanha, porCriativo,
     porCampanhaConfirmada, porMetaHierarquia,
+    totalLeadsMeta, reconversoesMeta,
     leadsComEstado, leadsComConversao,
     porTags, totalComTags: leadsComTags, alertaLeads,
     ultimoSyncAt: config.ultimoSyncAt,

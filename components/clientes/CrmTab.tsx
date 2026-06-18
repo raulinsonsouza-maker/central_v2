@@ -204,6 +204,18 @@ interface TagRow {
   isAlerta: boolean;
 }
 
+interface ReconversaoMeta {
+  metaLeadId: string;
+  fullName: string | null;
+  emailLead: string | null;
+  createdTime: string;
+  campaignName: string | null;
+  adsetName: string | null;
+  adName: string | null;
+  dataEntrada: string;
+  etapa: string | null;
+}
+
 interface AtribuicaoData {
   configured: boolean;
   totalLeads: number;
@@ -233,6 +245,8 @@ interface AtribuicaoData {
   porCriativo: PorCriativo[];
   porCampanhaConfirmada: PorCampanhaConfirmada[];
   porMetaHierarquia: MetaCampanhaNode[];
+  totalLeadsMeta?: number;
+  reconversoesMeta?: ReconversaoMeta[];
   leadsComEstado: number;
   leadsComConversao: number;
   porTags: TagRow[];
@@ -1083,6 +1097,93 @@ function MetaHierarquiaSection({
   );
 }
 
+// ─── Reconversões Modal ───────────────────────────────────────────────────────
+
+function ReconversoesModal({
+  items,
+  onClose,
+}: {
+  items: ReconversaoMeta[];
+  onClose: () => void;
+}) {
+  React.useEffect(() => {
+    const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", handler);
+    return () => document.removeEventListener("keydown", handler);
+  }, [onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-2xl rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-2xl overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
+          <div>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-amber-400">Meta Ads</p>
+            <h3 className="text-base font-extrabold tracking-tight text-[var(--foreground)]">
+              Reconversões · {items.length}
+            </h3>
+            <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">
+              Leads que já estavam no CRM e preencheram o formulário novamente no período
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-lg p-1.5 text-[var(--muted-foreground)] hover:bg-[var(--muted)]/40 hover:text-[var(--foreground)] transition-colors"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <div className="overflow-x-auto max-h-[70vh] overflow-y-auto">
+          <table className="min-w-[580px] w-full text-sm">
+            <thead className="sticky top-0 bg-[var(--card)] border-b border-[var(--border)]">
+              <tr>
+                {["Lead", "Anúncio / Campanha", "Nova conversão", "No CRM desde", "Etapa atual"].map((h, i) => (
+                  <th key={h} className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)] ${i === 0 ? "text-left" : "text-left"}`}>
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((r) => (
+                <tr key={r.metaLeadId} className="border-b border-[var(--border)]/50 hover:bg-[var(--muted)]/10 transition-colors">
+                  <td className="px-4 py-3">
+                    <p className="font-medium text-[var(--foreground)] leading-tight">{r.fullName || "—"}</p>
+                    {r.emailLead && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5">{r.emailLead}</p>}
+                  </td>
+                  <td className="px-4 py-3">
+                    <p className="text-xs text-[var(--foreground)] leading-tight">{r.adName || "—"}</p>
+                    {r.campaignName && <p className="text-[11px] text-[var(--muted-foreground)] mt-0.5">{r.campaignName}</p>}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
+                    {formatDateBR(r.createdTime)}
+                  </td>
+                  <td className="px-4 py-3 text-xs text-[var(--muted-foreground)] tabular-nums whitespace-nowrap">
+                    {formatDateBR(r.dataEntrada)}
+                  </td>
+                  <td className="px-4 py-3">
+                    {r.etapa ? (
+                      <span className="inline-block rounded-full border border-[var(--border)] bg-[var(--muted)]/30 px-2 py-0.5 text-[11px] font-medium text-[var(--foreground)]">
+                        {r.etapa}
+                      </span>
+                    ) : <span className="text-xs text-[var(--muted-foreground)] opacity-40">—</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ─── Análise de Origem Section ────────────────────────────────────────────────
 
 function AtribuicaoSection({
@@ -1097,6 +1198,7 @@ function AtribuicaoSection({
   onFilter: (f: LeadFilter) => void;
 }) {
   const [convSearch, setConvSearch] = React.useState("");
+  const [reconversoesOpen, setReconversoesOpen] = React.useState(false);
 
   const filterQs = activeFilter
     ? `&filterType=${encodeURIComponent(activeFilter.type)}&filterValue=${encodeURIComponent(activeFilter.value)}`
@@ -1195,8 +1297,16 @@ function AtribuicaoSection({
                             </div>
                           </div>
 
+                          {/* Total Meta (plataforma) — only for META canal */}
+                          {c.canal === "META" && (data.totalLeadsMeta ?? 0) > 0 && (
+                            <div className="mt-4 flex items-center justify-between">
+                              <p className="text-[10px] font-semibold uppercase tracking-[0.12em] text-[var(--muted-foreground)]">Total Meta</p>
+                              <span className="tabular-nums text-xs font-semibold text-[var(--muted-foreground)]">{data.totalLeadsMeta}</span>
+                            </div>
+                          )}
+
                           {/* Funil clicável: Leads · Atendimento · Visitas · Vendas */}
-                          <div className="mt-4 grid grid-cols-4 gap-1.5 text-center">
+                          <div className="mt-2 grid grid-cols-4 gap-1.5 text-center">
                             {([
                               { key: "leads",       label: "Leads",       val: c.leads,     cls: "text-[var(--foreground)]", dash: false },
                               { key: "atendimento", label: "Atendimento", val: c.andamento, cls: "text-blue-400",           dash: true  },
@@ -1235,11 +1345,24 @@ function AtribuicaoSection({
                               {perdidosPct > 0 && <div className="h-full bg-[var(--muted-foreground)]/40" style={{ width: `${perdidosPct}%` }} />}
                               {c.leads === 0 && <div className="h-full w-full bg-[var(--muted)]/30" />}
                             </div>
-                            {perdidos > 0 && (
-                              <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--muted-foreground)]">
-                                <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />{perdidos} perdidos ({perdidosPct.toFixed(0)}%)</span>
-                              </div>
-                            )}
+                            <div className="mt-2 flex flex-wrap items-center justify-between gap-x-3 gap-y-1">
+                              {perdidos > 0 && (
+                                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[10px] text-[var(--muted-foreground)]">
+                                  <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-[var(--muted-foreground)]/40" />{perdidos} perdidos ({perdidosPct.toFixed(0)}%)</span>
+                                </div>
+                              )}
+                              {/* Duplicados chip — only META */}
+                              {c.canal === "META" && (data.reconversoesMeta?.length ?? 0) > 0 && (
+                                <button
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); setReconversoesOpen(true); }}
+                                  className="inline-flex items-center gap-1.5 rounded-full border border-dashed border-amber-400/50 bg-amber-400/[0.06] px-2.5 py-0.5 text-[10px] font-semibold text-amber-400 transition-colors hover:bg-amber-400/10"
+                                >
+                                  <span className="h-1.5 w-1.5 rounded-full bg-amber-400/70" />
+                                  Duplicados · {data.reconversoesMeta!.length}
+                                </button>
+                              )}
+                            </div>
                           </div>
 
                           {/* Valor vendido do canal */}
@@ -1414,6 +1537,12 @@ function AtribuicaoSection({
           )
       )}
 
+      {reconversoesOpen && (data.reconversoesMeta?.length ?? 0) > 0 && (
+        <ReconversoesModal
+          items={data.reconversoesMeta!}
+          onClose={() => setReconversoesOpen(false)}
+        />
+      )}
     </div>
   );
 }
