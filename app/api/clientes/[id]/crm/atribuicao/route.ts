@@ -233,6 +233,9 @@ export async function GET(
   type MetaCampanha = MetaNode & { adsets: Map<string, MetaAdset> };
   const metaHierMap = new Map<string, MetaCampanha>();
 
+  // Hierarquia Google UTM (campanha via utm_campaign do dadosMarketing) — usado para leads RD CRM
+  const googleUtmHierMap = new Map<string, Bucket>();
+
   // Tag tracking
   const tagMap = new Map<string, number>();
   let leadsComTags = 0;
@@ -323,6 +326,16 @@ export async function GET(
       let ad = adset.ads.get(adKey);
       if (!ad) { ad = { id: adId, name: adName, ...emptyBucket() }; adset.ads.set(adKey, ad); }
       applyBucket(ad);
+    }
+
+    // Hierarquia Google UTM: agrupa leads GOOGLE por utm_campaign (dadosMarketing)
+    if (canal === "GOOGLE") {
+      const utmCamp = mkt?.utmCampaign?.trim() || null;
+      if (utmCamp) {
+        let g = googleUtmHierMap.get(utmCamp);
+        if (!g) { g = emptyBucket(); googleUtmHierMap.set(utmCamp, g); }
+        applyBucket(g);
+      }
     }
 
     addTo(fonteMap, lead.fonte ?? "(sem fonte)");
@@ -702,6 +715,14 @@ export async function GET(
     }))
     .sort((a, b) => b.leads - a.leads);
 
+  // ── porGoogleUtmHier (campanha UTM → leads) ─────────────────────────────────
+  const porGoogleUtmHier = [...googleUtmHierMap.entries()]
+    .map(([campaignName, b]) => ({
+      campaignName,
+      ...toRow(campaignName, b),
+    }))
+    .sort((a, b) => b.leads - a.leads);
+
   // Tag breakdown — exclude tags that are part of any configured filter dimension
   // (they are filter criteria stored on leads as tracking metadata, not quality signals).
   const tagFilterNorm = new Set([
@@ -731,7 +752,7 @@ export async function GET(
     cacMetaCrm: metaGanhos > 0 && investMeta > 0 ? investMeta / metaGanhos : null,
     cacGoogleCrm: googleGanhos > 0 && investGoogle > 0 ? investGoogle / googleGanhos : null,
     porFonte, porCanal, porEstado, porConversao, porCampanha, porCriativo,
-    porCampanhaConfirmada, porMetaHierarquia,
+    porCampanhaConfirmada, porMetaHierarquia, porGoogleUtmHier,
     totalLeadsMeta, reconversoesMeta,
     reconversoesGoogle,
     leadsComEstado, leadsComConversao,

@@ -60,7 +60,7 @@ function fmtValor(v: number): string {
   return `R$ ${v.toLocaleString("pt-BR")}`;
 }
 
-type LeadFilter = { type: "canal" | "estado" | "conversao" | "etapa" | "funil" | "metaCampaign" | "metaAdset" | "metaAd"; value: string; label: string } | null;
+type LeadFilter = { type: "canal" | "estado" | "conversao" | "etapa" | "funil" | "metaCampaign" | "metaAdset" | "metaAd" | "utmCampaign"; value: string; label: string } | null;
 
 export function FunilCrmSection({
   clienteId,

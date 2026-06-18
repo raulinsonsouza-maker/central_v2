@@ -45,6 +45,11 @@ interface Lead {
     metaCampaignName?: string | null;
     metaFormId?: string | null;
     metaFormName?: string | null;
+    utmSource?: string | null;
+    utmMedium?: string | null;
+    utmCampaign?: string | null;
+    utmContent?: string | null;
+    trafficSource?: string | null;
   } | null;
   dadosCv?: {
     origem?: string | null;
@@ -198,6 +203,20 @@ interface MetaCampanhaNode extends MetaHierNodeBase {
   adsets: MetaAdsetNode[];
 }
 
+interface GoogleUtmNode {
+  campaignName: string;
+  leads: number;
+  ganhos: number;
+  perdidos: number;
+  andamento: number;
+  visitou: number;
+  valor: number;
+  taxaGanho: number;
+  taxaPerda: number;
+  ratingMedio: number | null;
+  pvMedio: number | null;
+}
+
 interface TagRow {
   tag: string;
   count: number;
@@ -256,6 +275,7 @@ interface AtribuicaoData {
   porCriativo: PorCriativo[];
   porCampanhaConfirmada: PorCampanhaConfirmada[];
   porMetaHierarquia: MetaCampanhaNode[];
+  porGoogleUtmHier?: GoogleUtmNode[];
   totalLeadsMeta?: number;
   reconversoesMeta?: ReconversaoMeta[];
   reconversoesGoogle?: ReconversaoGoogle[];
@@ -270,7 +290,7 @@ interface AtribuicaoData {
 // ─── Filter type ──────────────────────────────────────────────────────────────
 
 type LeadFilter = {
-  type: "canal" | "estado" | "conversao" | "etapa" | "funil" | "metaCampaign" | "metaAdset" | "metaAd";
+  type: "canal" | "estado" | "conversao" | "etapa" | "funil" | "metaCampaign" | "metaAdset" | "metaAd" | "utmCampaign";
   value: string;
   label: string;
 } | null;
@@ -1109,6 +1129,115 @@ function MetaHierarquiaSection({
   );
 }
 
+// ─── Google UTM Hierarquia Section ────────────────────────────────────────────
+
+function GoogleUtmHierarquiaSection({
+  data,
+  activeFilter,
+  onFilter,
+}: {
+  data: AtribuicaoData;
+  activeFilter: LeadFilter;
+  onFilter: (f: LeadFilter) => void;
+}) {
+  const campanhas = data.porGoogleUtmHier ?? [];
+  if (campanhas.length === 0) return null;
+
+  const totalLeads  = campanhas.reduce((s, c) => s + c.leads, 0);
+  const totalGanhos = campanhas.reduce((s, c) => s + c.ganhos, 0);
+  const totalValor  = campanhas.reduce((s, c) => s + c.valor, 0);
+  const googleHex   = "#3b82f6";
+
+  return (
+    <div className="space-y-5">
+      <div className="flex items-start gap-3">
+        <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM × Google</p>
+          <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Campanha UTM → Leads</h2>
+        </div>
+      </div>
+
+      {totalGanhos > 0 && (
+        <div className="flex flex-wrap gap-2">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5">
+            <span className="text-xs font-semibold text-emerald-400">{totalGanhos} {totalGanhos === 1 ? "venda" : "vendas"}</span>
+            {totalValor > 0 && <span className="text-xs text-emerald-400/60">· {formatCurrencyBR(totalValor)}</span>}
+          </div>
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 px-3 py-1.5">
+            <span className="text-xs font-semibold text-blue-400">{totalLeads} leads Google</span>
+          </div>
+        </div>
+      )}
+
+      <div className="overflow-x-auto rounded-xl border border-[var(--border)]">
+        <table className="min-w-[620px] w-full text-sm">
+          <thead>
+            <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
+              {["Campanha UTM", "Leads", "Visitas", "Atend.", "Vendas", "Valor", "Conv%"].map((h, i) => (
+                <th key={h} className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)] ${i === 0 ? "text-left" : "text-right"}`}>
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {campanhas.map((camp) => {
+              const isActive = activeFilter?.type === "utmCampaign" && activeFilter.value === camp.campaignName;
+              return (
+                <tr
+                  key={camp.campaignName}
+                  className={`border-b border-[var(--border)]/60 transition-colors hover:bg-[var(--muted)]/20 ${isActive ? "bg-[var(--primary)]/[0.06]" : ""}`}
+                >
+                  <td className="px-4 py-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block h-2 w-2 shrink-0 rounded-full" style={{ backgroundColor: googleHex }} />
+                      <button
+                        type="button"
+                        onClick={() => onFilter(isActive ? null : { type: "utmCampaign", value: camp.campaignName, label: `Campanha: ${camp.campaignName}` })}
+                        className={`max-w-[340px] truncate text-left font-semibold hover:text-[var(--primary)] ${isActive ? "text-[var(--primary)]" : "text-[var(--foreground)]"}`}
+                        title={camp.campaignName}
+                      >
+                        {camp.campaignName}
+                      </button>
+                    </div>
+                  </td>
+                  <td className="px-4 py-2.5 text-right">
+                    <span className="tabular-nums font-semibold text-[var(--foreground)]">{camp.leads.toLocaleString("pt-BR")}</span>
+                  </td>
+                  <td className="px-4 py-2.5 text-right">
+                    {camp.visitou > 0
+                      ? <span className="tabular-nums font-semibold text-amber-400">{camp.visitou.toLocaleString("pt-BR")}</span>
+                      : <span className="opacity-25 text-[var(--muted-foreground)]">—</span>}
+                  </td>
+                  <td className="px-4 py-2.5 text-right">
+                    {camp.andamento > 0
+                      ? <span className="tabular-nums font-semibold text-blue-400">{camp.andamento.toLocaleString("pt-BR")}</span>
+                      : <span className="opacity-25 text-[var(--muted-foreground)]">—</span>}
+                  </td>
+                  <td className="px-4 py-2.5 text-right">
+                    {camp.ganhos > 0
+                      ? <span className="tabular-nums font-semibold text-emerald-400">{camp.ganhos.toLocaleString("pt-BR")}</span>
+                      : <span className="opacity-25 text-[var(--muted-foreground)]">—</span>}
+                  </td>
+                  <td className="px-4 py-2.5 text-right tabular-nums text-[var(--muted-foreground)]">
+                    {camp.valor > 0 ? formatCurrencyBR(camp.valor) : <span className="opacity-25">—</span>}
+                  </td>
+                  <td className="px-4 py-2.5 text-right tabular-nums">
+                    {camp.leads > 0
+                      ? <span className={camp.taxaGanho > 0 ? "font-semibold text-emerald-400" : "text-[var(--muted-foreground)]"}>{camp.taxaGanho}%</span>
+                      : <span className="opacity-25">—</span>}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 // ─── Reconversões Modal ───────────────────────────────────────────────────────
 
 function ReconversoesModal({
@@ -1610,6 +1739,11 @@ function AtribuicaoSection({
               </div>
             </div>
           )
+      )}
+
+      {/* Google UTM hierarchy (campanha UTM → leads) via dadosMarketing.utmCampaign */}
+      {!isLoading && data?.configured && (data.porGoogleUtmHier?.length ?? 0) > 0 && (
+        <GoogleUtmHierarquiaSection data={data} activeFilter={activeFilter} onFilter={onFilter} />
       )}
 
       {reconversoesOpen && (data.reconversoesMeta?.length ?? 0) > 0 && (

@@ -43,19 +43,57 @@ const CANAL_MIDIA_PATTERNS: Record<string, string[]> = {
 };
 
 /**
- * Builds OR conditions against dadosCv.midiaOriginal for a given canal key.
- * Falls back to fonte column patterns when midiaOriginal is absent.
+ * RD Marketing UTM source patterns per canal.
+ * utm_source values follow UTM convention (typically lowercase).
+ */
+const UTM_SOURCE_PATTERNS: Record<string, string[]> = {
+  META:      ["facebook", "instagram", "meta", "fb"],
+  GOOGLE:    ["google", "youtube", "google.com"],
+  ORGANICO:  ["organic"],
+  INDICACAO: ["referral"],
+  DIRETO:    ["direct"],
+};
+
+/**
+ * RD Marketing trafficSource patterns per canal.
+ * RD Marketing API returns English strings; include common capitalizations.
+ * NOTE: Use specific substrings — "Paid" (not "Search") for GOOGLE to avoid
+ * matching "Organic Search" as GOOGLE.
+ */
+const TRAFFIC_SOURCE_PATTERNS: Record<string, string[]> = {
+  META:      ["Social Media", "social media", "Social", "social", "Facebook", "facebook", "Instagram", "instagram"],
+  GOOGLE:    ["Paid Search", "paid search", "paid_search", "Paid", "cpc", "CPC"],
+  ORGANICO:  ["Organic Search", "organic search", "Organic", "organic"],
+  DIRETO:    ["Direct Traffic", "direct traffic", "Direct", "direct", "Email Marketing", "email marketing"],
+  INDICACAO: ["Referral", "referral"],
+};
+
+/**
+ * Builds OR conditions against dadosCv.midiaOriginal, fonte, dadosMarketing.utmSource,
+ * and dadosMarketing.trafficSource for a given canal key.
+ * Covers both CV CRM (dadosCv.midiaOriginal / fonte) and RD CRM (dadosMarketing enrichment).
  */
 function buildMidiaOR(canal: string): Prisma.LeadCrmWhereInput[] {
-  const patterns = CANAL_MIDIA_PATTERNS[canal] ?? [];
+  const patterns    = CANAL_MIDIA_PATTERNS[canal]    ?? [];
+  const utmPatterns = UTM_SOURCE_PATTERNS[canal]     ?? [];
+  const tsPatterns  = TRAFFIC_SOURCE_PATTERNS[canal] ?? [];
+
   return [
-    // Check dadosCv.midiaOriginal (primary canal signal in CV CRM)
+    // dadosCv.midiaOriginal (primary canal signal for CV CRM leads)
     ...patterns.map((p) => ({
       dadosCv: { path: ["midiaOriginal"], string_contains: p },
     })),
-    // Fallback: check fonte column (standard insensitive mode)
+    // fonte column (fallback — used when midiaOriginal is absent)
     ...patterns.map((p) => ({
       fonte: { contains: p, mode: "insensitive" as const },
+    })),
+    // dadosMarketing.utmSource (RD Marketing enrichment — UTM convention: lowercase)
+    ...utmPatterns.map((p) => ({
+      dadosMarketing: { path: ["utmSource"], string_contains: p },
+    })),
+    // dadosMarketing.trafficSource (RD Marketing enrichment — mixed-case English strings)
+    ...tsPatterns.map((p) => ({
+      dadosMarketing: { path: ["trafficSource"], string_contains: p },
     })),
   ];
 }
@@ -121,6 +159,11 @@ export function buildLeadFilterWhere(
   }
   if (filterType === "metaAd") {
     return { dadosMarketing: { path: ["metaAdId"], equals: filterValue } };
+  }
+
+  // Filtro da hierarquia Google UTM (campanha UTM gravada em dadosMarketing.utmCampaign).
+  if (filterType === "utmCampaign") {
+    return { dadosMarketing: { path: ["utmCampaign"], equals: filterValue } };
   }
 
   if (filterType === "funil") {
