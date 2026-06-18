@@ -225,6 +225,48 @@ export class RdMarketingClient {
     }
   }
 
+  /**
+   * Busca eventos de conversão de um contato (paginado).
+   * Complementa os dados de getContact quando conversion_events não estão no payload.
+   */
+  async getContactEvents(uuid: string, page = 1): Promise<Array<{
+    event_type: string;
+    event_identifier?: string;
+    event_timestamp?: string;
+    payload?: {
+      name?: string;
+      email?: string;
+      utm_source?: string;
+      utm_medium?: string;
+      utm_campaign?: string;
+      traffic_source?: string;
+      [key: string]: unknown;
+    };
+  }>> {
+    try {
+      const url = `${BASE}/contacts/${uuid}/events?page=${page}`;
+      const res = await fetch(url, { headers: this.headers() });
+      if (!res.ok) return [];
+      const body = await res.json() as {
+        events?: Array<{
+          event_type: string;
+          event_identifier?: string;
+          event_timestamp?: string;
+          payload?: Record<string, unknown>;
+        }>;
+      } | Array<{
+        event_type: string;
+        event_identifier?: string;
+        event_timestamp?: string;
+        payload?: Record<string, unknown>;
+      }>;
+      if (Array.isArray(body)) return body;
+      return body?.events ?? [];
+    } catch {
+      return [];
+    }
+  }
+
   /** Lista todas as segmentações da conta. */
   async listSegmentations(): Promise<Array<{ id: string; name: string }>> {
     try {

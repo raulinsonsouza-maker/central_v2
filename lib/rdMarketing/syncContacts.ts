@@ -113,6 +113,23 @@ export async function syncRdMarketingContacts(
 
           const enrichment = normalizeEnrichment(fullContact);
 
+          // Complementa UTMs via getContactEvents se não vieram no payload principal
+          if (!enrichment.utmSource && !enrichment.utmMedium && !enrichment.trafficSource) {
+            const events = await client.getContactEvents(rdContact.uuid, 1);
+            // Usa o evento de conversão mais recente que tenha payload com UTMs
+            const convEvent = events.find(
+              (e) =>
+                e.event_type === "CONVERSION" &&
+                (e.payload?.utm_source || e.payload?.utm_medium || e.payload?.traffic_source),
+            );
+            if (convEvent?.payload) {
+              if (!enrichment.utmSource && convEvent.payload.utm_source) enrichment.utmSource = String(convEvent.payload.utm_source);
+              if (!enrichment.utmMedium && convEvent.payload.utm_medium) enrichment.utmMedium = String(convEvent.payload.utm_medium);
+              if (!enrichment.utmCampaign && convEvent.payload.utm_campaign) enrichment.utmCampaign = String(convEvent.payload.utm_campaign);
+              if (!enrichment.trafficSource && convEvent.payload.traffic_source) enrichment.trafficSource = String(convEvent.payload.traffic_source);
+            }
+          }
+
           // Tenta casar com lead existente
           const email = rdContact.email?.trim().toLowerCase() ?? fullContact.email?.trim().toLowerCase();
           const existingByRd = byRdContactId.get(rdContact.uuid);

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 import { getCrmAdapter } from "@/lib/crm/factory";
 import { matchMetaCrmLeads } from "@/lib/crm/metaCrmMatcher";
 import { syncRdMarketingContacts } from "@/lib/rdMarketing/syncContacts";
+import { enrichCrmLeads } from "@/lib/rdMarketing/enrich";
 
 export interface CrmSyncResult {
   ok: boolean;
@@ -94,15 +95,28 @@ export async function syncCrmCliente(
       console.warn(`[crmSync] metaCrmMatch failed for ${clienteId}:`, e instanceof Error ? e.message : e);
     }
 
-    // Sync invertido RD Marketing: RD como fonte primária de origem/atribuição
+    // RD Marketing: sync invertido (segmentação configurada) ou enrichment legado (fallback)
     try {
-      const rdResult = await syncRdMarketingContacts(clienteId, { full: options?.full });
-      if (rdResult.processed > 0 || rdResult.error) {
-        console.log(`[crmSync] rdContactsSync clienteId=${clienteId} processed=${rdResult.processed} enriched=${rdResult.enriched} created=${rdResult.created} skipped=${rdResult.skipped}${rdResult.error ? ` error=${rdResult.error}` : ""}`);
+      const mktConfig = await prisma.rdMarketingConfig.findUnique({ where: { clienteId } });
+      const mktCreds = mktConfig?.credenciais as Record<string, unknown> | null;
+      const hasSegmentation = !!(mktCreds?.segmentationId && mktCreds?.accessToken);
+
+      if (mktConfig?.ativo && hasSegmentation) {
+        // Modo primário: RD como fonte de leads — lista contatos da segmentação
+        const rdResult = await syncRdMarketingContacts(clienteId, { full: options?.full });
+        if (rdResult.processed > 0 || rdResult.error) {
+          console.log(`[crmSync] rdContactsSync clienteId=${clienteId} processed=${rdResult.processed} enriched=${rdResult.enriched} created=${rdResult.created} skipped=${rdResult.skipped}${rdResult.error ? ` error=${rdResult.error}` : ""}`);
+        }
+      } else {
+        // Fallback legado: enriquece leads CRM existentes com dados do RD via email
+        const enrichResult = await enrichCrmLeads(clienteId);
+        if (enrichResult.enriched > 0 || !enrichResult.ok) {
+          console.log(`[crmSync] rdEnrich(fallback) clienteId=${clienteId} enriched=${enrichResult.enriched} skipped=${enrichResult.skipped}${enrichResult.ok ? "" : ` error=${enrichResult.error}`}`);
+        }
       }
     } catch (e) {
       // Non-fatal — log and continue
-      console.warn(`[crmSync] rdContactsSync failed for ${clienteId}:`, e instanceof Error ? e.message : e);
+      console.warn(`[crmSync] rdMarketingStep failed for ${clienteId}:`, e instanceof Error ? e.message : e);
     }
 
     return { ok: true, leadsProcessed: leads.length, leadsUpserted: upserted };

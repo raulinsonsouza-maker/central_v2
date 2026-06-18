@@ -1198,6 +1198,14 @@ function RdMarketingConfigSection({
       if (list.length === 0) {
         setStatusMsg({ ok: false, msg: "Nenhuma segmentação encontrada na conta." });
       } else {
+        // Auto-seleciona segmentação mais provável: nome contém "todos" / "all" / "base de leads"
+        if (!segmentationId) {
+          const MATCH_PATTERNS = ["todos os contatos", "all contacts", "base de leads", "todos", "all"];
+          const autoMatch = list.find((s) =>
+            MATCH_PATTERNS.some((p) => s.name.toLowerCase().includes(p))
+          );
+          if (autoMatch) setSegmentationId(autoMatch.id);
+        }
         setStatusMsg({ ok: true, msg: `${list.length} segmentação(ões) encontrada(s). Selecione abaixo.` });
       }
     } catch (e) {
