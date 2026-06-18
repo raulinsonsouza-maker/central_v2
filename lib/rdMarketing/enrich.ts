@@ -36,19 +36,25 @@ export async function enrichCrmLeads(clienteId: string): Promise<EnrichResult> {
 
   const client = new RdMarketingClient(accessToken);
 
-  // 2. Busca leads sem enriquecimento (dadosMarketing null) com email ou rdContactId
-  const leads = await prisma.leadCrm.findMany({
+  // 2. Busca leads ainda não enriquecidos pelo RD Marketing (sem rdEnrichedAt em dadosMarketing)
+  // Inclui leads com dadosMarketing null E leads que só têm dados Meta (do matcher), sem enriquecimento RD
+  const allLeads = await prisma.leadCrm.findMany({
     where: {
       clienteId,
-      dadosMarketing: { equals: Prisma.DbNull },
       OR: [
         { rdContactId: { not: null } },
         { email: { not: null } },
       ],
     },
-    select: { id: true, rdContactId: true, email: true },
-    take: 200,
+    select: { id: true, rdContactId: true, email: true, dadosMarketing: true },
   });
+  // Filtra apenas os que não passaram por enriquecimento RD ainda
+  const leads = allLeads
+    .filter((l) => {
+      const mkt = l.dadosMarketing as Record<string, unknown> | null;
+      return !mkt?.rdEnrichedAt;
+    })
+    .slice(0, 200);
 
   let enriched = 0;
   let skipped = 0;
@@ -74,10 +80,14 @@ export async function enrichCrmLeads(clienteId: string): Promise<EnrichResult> {
 
       const enrichment = normalizeEnrichment(contact);
 
+      // Merge: preserva campos Meta existentes (metaCampaignId, etc.) e adiciona os RD Marketing
+      const existing = (lead.dadosMarketing as Record<string, unknown> | null) ?? {};
+      const merged = { ...existing, ...enrichment };
+
       await prisma.leadCrm.update({
         where: { id: lead.id },
         data: {
-          dadosMarketing: enrichment as unknown as Prisma.InputJsonValue,
+          dadosMarketing: merged as unknown as Prisma.InputJsonValue,
           // Atualiza rdContactId se não estava preenchido
           ...(lead.rdContactId ? {} : { rdContactId: contact.uuid }),
         },

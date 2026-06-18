@@ -27,12 +27,19 @@ export interface RdMarketingContact {
   conversion_events?: Array<{
     created_at?: string;
     event_type?: string;
-    content?: { email_name?: string; name?: string };
+    content?: {
+      email_name?: string;
+      name?: string;
+      utm_source?: string;
+      utm_medium?: string;
+      utm_campaign?: string;
+      traffic_source?: string;
+    };
     traffic_source?: string;
   }>;
 }
 
-/** Campos normalizados extraídos dos cf_* */
+/** Campos normalizados extraídos dos cf_* e eventos de conversão */
 export interface MarketingEnrichment {
   faturamento: string | null;
   segmento: string | null;
@@ -43,6 +50,14 @@ export interface MarketingEnrichment {
   eventoConversao: string | null;
   empresa: string | null;
   lifecycleStage: string | null;
+  // Canal/fonte do tráfego (da plataforma RD Marketing)
+  trafficSource: string | null;
+  utmSource: string | null;
+  utmMedium: string | null;
+  utmCampaign: string | null;
+  // Tags do contato (ex: form_meta_arboreto_inout, lp_arboreto_inout)
+  rdTags: string[] | null;
+  rdEnrichedAt: string;
 }
 
 /**
@@ -109,11 +124,29 @@ export function normalizeEnrichment(contact: RdMarketingContact): MarketingEnric
     "_origem_primeira_conversao",
   );
 
-  // Evento de conversão mais recente
+  // Evento de conversão mais recente (primeiro da lista — RD retorna em ordem cronológica inversa)
+  const firstEvent = contact.conversion_events?.[0];
   const eventoConversao =
-    contact.conversion_events?.[0]?.content?.email_name ??
-    contact.conversion_events?.[0]?.content?.name ??
+    firstEvent?.content?.email_name ??
+    firstEvent?.content?.name ??
     null;
+
+  // traffic_source: do conteúdo do evento (mais granular) ou do evento em si
+  const trafficSource =
+    firstEvent?.content?.traffic_source ??
+    firstEvent?.traffic_source ??
+    null;
+
+  // UTMs do evento de conversão mais recente
+  const utmSource = firstEvent?.content?.utm_source ?? null;
+  const utmMedium = firstEvent?.content?.utm_medium ?? null;
+  const utmCampaign = firstEvent?.content?.utm_campaign ?? null;
+
+  // Tags do contato
+  const rdTags =
+    contact.tags && contact.tags.length > 0
+      ? contact.tags.map((t) => t.name).filter(Boolean)
+      : null;
 
   const empresa = pick(cf, "cf_nome_da_empresa") ?? contact.company ?? null;
   const lifecycleStage = contact.lifecycle_stage ?? null;
@@ -128,6 +161,12 @@ export function normalizeEnrichment(contact: RdMarketingContact): MarketingEnric
     eventoConversao,
     empresa,
     lifecycleStage,
+    trafficSource,
+    utmSource,
+    utmMedium,
+    utmCampaign,
+    rdTags,
+    rdEnrichedAt: new Date().toISOString(),
   };
 }
 

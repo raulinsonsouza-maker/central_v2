@@ -13,6 +13,7 @@ function norm(s: string) {
 function canalFromMidia(
   midiaOriginal: string | null,
   fonte: string | null,
+  enrichment?: { rdTags?: string[] | null; trafficSource?: string | null; utmSource?: string | null; utmMedium?: string | null } | null,
 ): Canal {
   if (midiaOriginal) {
     const m = norm(midiaOriginal);
@@ -22,6 +23,37 @@ function canalFromMidia(
     if (m.includes("organic") || m.includes("organico") || m.includes("seo")) return "ORGANICO";
     if (m.includes("email") || m.includes("whatsapp")) return "DIRETO";
   }
+
+  // Enrichment from RD Marketing (tags + traffic_source + UTMs) — used before falling back to fonte
+  if (enrichment) {
+    // Tags são o sinal mais confiável (ex: form_meta_arboreto_inout, lp_arboreto_inout)
+    for (const tag of enrichment.rdTags ?? []) {
+      const t = norm(tag);
+      if (t.includes("meta") || t.includes("facebook") || t.includes("fb")) return "META";
+      if (t.includes("google") || t.includes("pmax") || t.includes("gads")) return "GOOGLE";
+      if (t.includes("indica")) return "INDICACAO";
+    }
+    // trafficSource do evento de conversão RD
+    const ts = norm(enrichment.trafficSource ?? "");
+    if (ts && (ts.includes("facebook") || ts.includes("social") || ts.includes("meta"))) return "META";
+    if (ts && (ts.includes("google") || ts.includes("paid") || ts.includes("search"))) return "GOOGLE";
+    if (ts && ts.includes("organic")) return "ORGANICO";
+    if (ts && (ts.includes("direct") || ts.includes("direto"))) return "DIRETO";
+    if (ts && ts.includes("email")) return "DIRETO";
+    // UTM source como último sinal do enriquecimento
+    const us = norm(enrichment.utmSource ?? "");
+    if (us && (us.includes("facebook") || us.includes("meta") || us.includes("ig"))) return "META";
+    if (us && (us.includes("google") || us.includes("youtube"))) return "GOOGLE";
+    if (us && us.includes("organic")) return "ORGANICO";
+    // UTM medium
+    const um = norm(enrichment.utmMedium ?? "");
+    if (um && (um.includes("cpc") || um.includes("pago") || um.includes("paid"))) {
+      // paid + google source
+      if (us.includes("google")) return "GOOGLE";
+      if (us.includes("facebook") || us.includes("meta")) return "META";
+    }
+  }
+
   if (!fonte) return "OUTRO";
   const f = norm(fonte);
   if (f.includes("facebook") || f.includes("meta") || f.includes("instagram") || f.includes("fb ads") || /\bfb\b/.test(f)) return "META";
@@ -213,7 +245,15 @@ export async function GET(
   for (const lead of leads) {
     const cv = parseDadosCv(lead.dadosCv);
     const midiaOriginal = cv?.midiaOriginal?.trim() ?? null;
-    const canal = canalFromMidia(midiaOriginal, lead.fonte);
+    // Extract RD Marketing enrichment for improved channel detection
+    const mktRaw = parseDadosMarketing(lead.dadosMarketing);
+    const rdEnrichment = mktRaw ? {
+      rdTags: Array.isArray((mktRaw as Record<string, unknown>).rdTags) ? (mktRaw as Record<string, unknown>).rdTags as string[] : null,
+      trafficSource: (mktRaw as Record<string, unknown>).trafficSource as string | null ?? null,
+      utmSource: (mktRaw as Record<string, unknown>).utmSource as string | null ?? null,
+      utmMedium: (mktRaw as Record<string, unknown>).utmMedium as string | null ?? null,
+    } : null;
+    const canal = canalFromMidia(midiaOriginal, lead.fonte, rdEnrichment);
 
     const isWon = lead.status === "won";
     const isLost = lead.status === "lost";
