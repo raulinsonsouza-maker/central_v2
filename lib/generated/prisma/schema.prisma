@@ -51,9 +51,11 @@ model Conta {
   accountIdPlataforma      String?
   googleAdsLoginCustomerId String?
   nomeConta                String?
+  conexaoIntegracaoId      String?
   createdAt                DateTime              @default(now())
   updatedAt                DateTime              @updatedAt
   cliente                  Cliente               @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  conexaoIntegracao        ConexaoIntegracao?    @relation(fields: [conexaoIntegracaoId], references: [id])
   fatosAnalyticsDiario     FatoAnalyticsDiario[]
   fatosMidia               FatoMidiaDiario[]
   googleAdsCampanhas       GoogleAdsCampanha[]
@@ -61,6 +63,22 @@ model Conta {
   metaAdsCriativos         MetaAdsCriativo[]
 
   @@unique([clienteId, plataforma])
+}
+
+model ConexaoIntegracao {
+  id                    String   @id @default(cuid())
+  nome                  String
+  plataforma            String
+  ativo                 Boolean  @default(true)
+  metaAccessToken       String?
+  googleClientId        String?
+  googleClientSecret    String?
+  googleDeveloperToken  String?
+  googleRefreshToken    String?
+  googleLoginCustomerId String?
+  contas                Conta[]
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }
 
 model FatoMidiaDiario {

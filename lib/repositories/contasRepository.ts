@@ -55,6 +55,7 @@ export async function upsertContaPlataforma(params: {
   accountIdPlataforma?: string | null;
   googleAdsLoginCustomerId?: string | null;
   nomeConta?: string | null;
+  conexaoIntegracaoId?: string | null;
 }) {
   const accountIdPlataforma = normalizeAccountIdByPlatform(
     params.plataforma,
@@ -74,6 +75,8 @@ export async function upsertContaPlataforma(params: {
     return null;
   }
 
+  const conexaoIntegracaoId = params.conexaoIntegracaoId ?? undefined;
+
   if (existing) {
     return prisma.conta.update({
       where: { id: existing.id },
@@ -81,6 +84,9 @@ export async function upsertContaPlataforma(params: {
         accountIdPlataforma,
         googleAdsLoginCustomerId,
         nomeConta: params.nomeConta?.trim() || existing.nomeConta || null,
+        ...(conexaoIntegracaoId !== undefined
+          ? { conexaoIntegracaoId: conexaoIntegracaoId || null }
+          : {}),
       },
     });
   }
@@ -92,6 +98,7 @@ export async function upsertContaPlataforma(params: {
       accountIdPlataforma,
       googleAdsLoginCustomerId,
       nomeConta: params.nomeConta?.trim() || null,
+      conexaoIntegracaoId: conexaoIntegracaoId || null,
     },
   });
 }

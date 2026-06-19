@@ -1,13 +1,35 @@
 import { GoogleAdsApi } from "google-ads-api";
 import { getIntegrationsConfig } from "@/lib/config/integrations";
 
-async function getClientAndRefreshToken() {
-  const fromDb = await getIntegrationsConfig();
-  const clientId = fromDb.googleClientId ?? process.env.GOOGLE_ADS_CLIENT_ID;
-  const clientSecret = fromDb.googleClientSecret ?? process.env.GOOGLE_ADS_CLIENT_SECRET;
-  const developerToken = fromDb.googleDeveloperToken ?? process.env.GOOGLE_ADS_DEVELOPER_TOKEN;
-  const refreshToken = fromDb.googleRefreshToken ?? process.env.GOOGLE_ADS_REFRESH_TOKEN;
-  const loginCustomerId = (fromDb.googleLoginCustomerId ?? process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID)?.replace(/-/g, "");
+export interface GoogleAdsCredentialOverride {
+  clientId: string;
+  clientSecret: string;
+  developerToken: string;
+  refreshToken: string;
+  loginCustomerId?: string | null;
+}
+
+async function getClientAndRefreshToken(override?: GoogleAdsCredentialOverride) {
+  let clientId: string | undefined;
+  let clientSecret: string | undefined;
+  let developerToken: string | undefined;
+  let refreshToken: string | undefined;
+  let loginCustomerId: string | undefined;
+
+  if (override) {
+    clientId = override.clientId;
+    clientSecret = override.clientSecret;
+    developerToken = override.developerToken;
+    refreshToken = override.refreshToken;
+    loginCustomerId = override.loginCustomerId?.replace(/-/g, "") || undefined;
+  } else {
+    const fromDb = await getIntegrationsConfig();
+    clientId = fromDb.googleClientId ?? process.env.GOOGLE_ADS_CLIENT_ID ?? undefined;
+    clientSecret = fromDb.googleClientSecret ?? process.env.GOOGLE_ADS_CLIENT_SECRET ?? undefined;
+    developerToken = fromDb.googleDeveloperToken ?? process.env.GOOGLE_ADS_DEVELOPER_TOKEN ?? undefined;
+    refreshToken = fromDb.googleRefreshToken ?? process.env.GOOGLE_ADS_REFRESH_TOKEN ?? undefined;
+    loginCustomerId = (fromDb.googleLoginCustomerId ?? process.env.GOOGLE_ADS_LOGIN_CUSTOMER_ID)?.replace(/-/g, "") || undefined;
+  }
 
   if (!clientId || !clientSecret || !developerToken || !refreshToken) {
     throw new Error(
@@ -103,9 +125,9 @@ export async function fetchCampaignMetrics(
   customerId: string,
   dateFrom: string,
   dateTo: string,
-  options?: { loginCustomerId?: string | null }
+  options?: { loginCustomerId?: string | null; credentials?: GoogleAdsCredentialOverride }
 ): Promise<GoogleAdsCampaignRow[]> {
-  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken();
+  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken(options?.credentials);
   const customer = createCustomer(client, {
     customerId,
     refreshToken,
@@ -147,9 +169,9 @@ export async function fetchBeginCheckoutConversions(
   customerId: string,
   dateFrom: string,
   dateTo: string,
-  options?: { loginCustomerId?: string | null }
+  options?: { loginCustomerId?: string | null; credentials?: GoogleAdsCredentialOverride }
 ): Promise<Map<string, number>> {
-  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken();
+  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken(options?.credentials);
   const customer = createCustomer(client, {
     customerId,
     refreshToken,
@@ -200,9 +222,9 @@ export async function fetchPurchaseConversions(
   customerId: string,
   dateFrom: string,
   dateTo: string,
-  options?: { loginCustomerId?: string | null }
+  options?: { loginCustomerId?: string | null; credentials?: GoogleAdsCredentialOverride }
 ): Promise<Map<string, { count: number; value: number }>> {
-  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken();
+  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken(options?.credentials);
   const customer = createCustomer(client, {
     customerId,
     refreshToken,
@@ -252,9 +274,9 @@ export async function fetchAdCreatives(
   customerId: string,
   dateFrom: string,
   dateTo: string,
-  options?: { loginCustomerId?: string | null }
+  options?: { loginCustomerId?: string | null; credentials?: GoogleAdsCredentialOverride }
 ): Promise<GoogleAdsAdCreativeRow[]> {
-  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken();
+  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken(options?.credentials);
   const customer = createCustomer(client, {
     customerId,
     refreshToken,
@@ -321,9 +343,9 @@ export async function fetchKeywordMetrics(
   customerId: string,
   dateFrom: string,
   dateTo: string,
-  options?: { loginCustomerId?: string | null }
+  options?: { loginCustomerId?: string | null; credentials?: GoogleAdsCredentialOverride }
 ): Promise<GoogleAdsKeywordRow[]> {
-  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken();
+  const { client, refreshToken, loginCustomerId } = await getClientAndRefreshToken(options?.credentials);
   const customer = createCustomer(client, {
     customerId,
     refreshToken,
@@ -373,9 +395,10 @@ export interface GoogleAdsAccountBudget {
  */
 export async function fetchAccountBudget(
   customerId: string,
-  loginCustomerId?: string | null
+  loginCustomerId?: string | null,
+  credentials?: GoogleAdsCredentialOverride
 ): Promise<GoogleAdsAccountBudget | null> {
-  const { client, refreshToken, loginCustomerId: defaultLoginCustomerId } = await getClientAndRefreshToken();
+  const { client, refreshToken, loginCustomerId: defaultLoginCustomerId } = await getClientAndRefreshToken(credentials);
   const customer = createCustomer(client, {
     customerId,
     refreshToken,

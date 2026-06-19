@@ -4,7 +4,7 @@ import { upsertFatoMidia } from "@/lib/repositories/fatosMidiaRepository";
 import { upsertMetaAdsCriativo } from "@/lib/repositories/metaAdsCriativosRepository";
 import { findAllClientes } from "@/lib/repositories/clientesRepository";
 import { prisma } from "@/lib/db";
-import { getIntegrationsConfig } from "@/lib/config/integrations";
+import { resolveMetaCredentials } from "@/lib/config/resolveIntegracao";
 import { isFlorien } from "@/lib/clientProfiles";
 
 const DEFAULT_DATE_FROM = "2026-01-01";
@@ -35,23 +35,12 @@ export async function syncMetaCliente(
   clienteId: string,
   options?: MetaSyncOptions
 ): Promise<MetaSyncResult> {
-  const fromDb = await getIntegrationsConfig();
-  const token = fromDb.metaAccessToken ?? process.env.META_ACCESS_TOKEN;
-  const defaultAccountId = fromDb.metaAdAccountId ?? process.env.META_AD_ACCOUNT_ID;
-
-  if (!token) {
+  const resolved = await resolveMetaCredentials(clienteId);
+  if (!resolved) {
     return { daysProcessed: 0, creativesProcessed: 0, error: "META_ACCESS_TOKEN não configurado" };
   }
-  let accountId = options?.accountId ?? defaultAccountId;
-  if (!accountId) {
-    // Look up the account from the Conta table for this client
-    const conta = await prisma.conta.findFirst({
-      where: { clienteId, plataforma: "META" },
-    });
-    if (conta?.accountIdPlataforma) {
-      accountId = conta.accountIdPlataforma;
-    }
-  }
+  const token = resolved.token;
+  const accountId = options?.accountId ?? resolved.accountId;
   if (!accountId) {
     return { daysProcessed: 0, creativesProcessed: 0, error: "META_AD_ACCOUNT_ID não configurado" };
   }

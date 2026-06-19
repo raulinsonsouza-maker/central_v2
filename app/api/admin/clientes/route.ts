@@ -46,6 +46,8 @@ export async function POST(request: NextRequest) {
     googleAdsLoginCustomerId?: string | null;
     metaAdsAccountId?: string | null;
     ga4PropertyId?: string | null;
+    conexaoMetaId?: string | null;
+    conexaoGoogleId?: string | null;
     leadScoringEnabled?: boolean;
     perfilPanel?: string | null;
     squad?: number | null;
@@ -84,12 +86,14 @@ export async function POST(request: NextRequest) {
       accountIdPlataforma: body.googleAdsAccountId,
       googleAdsLoginCustomerId: body.googleAdsLoginCustomerId,
       nomeConta: nome,
+      conexaoIntegracaoId: body.conexaoGoogleId ?? null,
     });
     await upsertContaPlataforma({
       clienteId: cliente.id,
       plataforma: PLATAFORMA_META,
       accountIdPlataforma: body.metaAdsAccountId,
       nomeConta: nome,
+      conexaoIntegracaoId: body.conexaoMetaId ?? null,
     });
     await upsertContaPlataforma({
       clienteId: cliente.id,

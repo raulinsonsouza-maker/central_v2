@@ -14,6 +14,7 @@ import { upsertGoogleAdsCriativo } from "@/lib/repositories/googleAdsCriativosRe
 import { upsertGoogleAdsCampanha } from "@/lib/repositories/googleAdsCampanhasRepository";
 import { findAllClientes } from "@/lib/repositories/clientesRepository";
 import { prisma } from "@/lib/db";
+import { resolveGoogleAdsCredentials } from "@/lib/config/resolveIntegracao";
 
 /** Extract a human-readable message from google-ads-api errors (which are often non-Error objects). */
 function extractGoogleAdsError(e: unknown): string {
@@ -62,9 +63,14 @@ export async function syncGoogleAdsCliente(
   clienteId: string,
   options?: GoogleAdsSyncOptions
 ): Promise<GoogleAdsSyncResult> {
-  const conta = await prisma.conta.findFirst({
-    where: { clienteId, plataforma: "GOOGLE_ADS" },
-  });
+  const [resolved, conta] = await Promise.all([
+    resolveGoogleAdsCredentials(clienteId),
+    prisma.conta.findFirst({ where: { clienteId, plataforma: "GOOGLE_ADS" } }),
+  ]);
+
+  if (!resolved) {
+    return { daysProcessed: 0, error: "Credenciais Google Ads não configuradas" };
+  }
 
   const customerId = options?.customerId ?? conta?.accountIdPlataforma;
   if (!customerId) {
@@ -93,18 +99,24 @@ export async function syncGoogleAdsCliente(
   const dateTo = options?.dateTo ?? today;
 
   try {
+    const loginCustomerId = conta?.googleAdsLoginCustomerId ?? resolved.loginCustomerId ?? undefined;
+    const credOverride = { ...resolved };
     const [campaignRows, creativeRows, checkoutByDate, purchaseByDate] = await Promise.all([
       fetchCampaignMetrics(customerId, dateFrom, dateTo, {
-        loginCustomerId: conta?.googleAdsLoginCustomerId,
+        loginCustomerId,
+        credentials: credOverride,
       }),
       fetchAdCreatives(customerId, dateFrom, dateTo, {
-        loginCustomerId: conta?.googleAdsLoginCustomerId,
+        loginCustomerId,
+        credentials: credOverride,
       }),
       fetchBeginCheckoutConversions(customerId, dateFrom, dateTo, {
-        loginCustomerId: conta?.googleAdsLoginCustomerId,
+        loginCustomerId,
+        credentials: credOverride,
       }),
       fetchPurchaseConversions(customerId, dateFrom, dateTo, {
-        loginCustomerId: conta?.googleAdsLoginCustomerId,
+        loginCustomerId,
+        credentials: credOverride,
       }),
     ]);
 

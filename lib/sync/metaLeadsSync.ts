@@ -1,6 +1,6 @@
 import { fetchLeadGenFormsWithDiag, fetchLeadsFromForm, fetchLeadsFromAd } from "@/lib/meta/metaClient";
 import { prisma } from "@/lib/db";
-import { getIntegrationsConfig } from "@/lib/config/integrations";
+import { resolveMetaCredentials } from "@/lib/config/resolveIntegracao";
 import { dddToEstado } from "@/lib/utils/dddToEstado";
 
 function getFieldValue(
@@ -39,12 +39,11 @@ export async function syncMetaLeadsCliente(
   clienteId: string,
   options?: { dateFrom?: string }
 ): Promise<MetaLeadsSyncResult> {
-  const config = await getIntegrationsConfig();
-  const token = config.metaAccessToken ?? process.env.META_ACCESS_TOKEN;
-
-  if (!token) {
+  const resolved = await resolveMetaCredentials(clienteId);
+  if (!resolved) {
     return { leadsProcessed: 0, leadsCreated: 0, leadsFailed: 0, formsFound: 0, formsProcessed: 0, formsSummary: [], error: "META_ACCESS_TOKEN não configurado" };
   }
+  const token = resolved.token;
 
   const conta = await prisma.conta.findFirst({
     where: { clienteId, plataforma: "META" },

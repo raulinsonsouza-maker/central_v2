@@ -24,6 +24,11 @@ export type Cliente = $Result.DefaultSelection<Prisma.$ClientePayload>
  */
 export type Conta = $Result.DefaultSelection<Prisma.$ContaPayload>
 /**
+ * Model ConexaoIntegracao
+ * 
+ */
+export type ConexaoIntegracao = $Result.DefaultSelection<Prisma.$ConexaoIntegracaoPayload>
+/**
  * Model FatoMidiaDiario
  * 
  */
@@ -265,6 +270,16 @@ export class PrismaClient<
     * ```
     */
   get conta(): Prisma.ContaDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.conexaoIntegracao`: Exposes CRUD operations for the **ConexaoIntegracao** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more ConexaoIntegracaos
+    * const conexaoIntegracaos = await prisma.conexaoIntegracao.findMany()
+    * ```
+    */
+  get conexaoIntegracao(): Prisma.ConexaoIntegracaoDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.fatoMidiaDiario`: Exposes CRUD operations for the **FatoMidiaDiario** model.
@@ -878,6 +893,7 @@ export namespace Prisma {
   export const ModelName: {
     Cliente: 'Cliente',
     Conta: 'Conta',
+    ConexaoIntegracao: 'ConexaoIntegracao',
     FatoMidiaDiario: 'FatoMidiaDiario',
     AgregadoMidiaSemanal: 'AgregadoMidiaSemanal',
     AgregadoMidiaMensal: 'AgregadoMidiaMensal',
@@ -913,7 +929,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "conta" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm" | "rdMarketingConfig"
+      modelProps: "cliente" | "conta" | "conexaoIntegracao" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm" | "rdMarketingConfig"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1062,6 +1078,80 @@ export namespace Prisma {
           count: {
             args: Prisma.ContaCountArgs<ExtArgs>
             result: $Utils.Optional<ContaCountAggregateOutputType> | number
+          }
+        }
+      }
+      ConexaoIntegracao: {
+        payload: Prisma.$ConexaoIntegracaoPayload<ExtArgs>
+        fields: Prisma.ConexaoIntegracaoFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.ConexaoIntegracaoFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.ConexaoIntegracaoFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>
+          }
+          findFirst: {
+            args: Prisma.ConexaoIntegracaoFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.ConexaoIntegracaoFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>
+          }
+          findMany: {
+            args: Prisma.ConexaoIntegracaoFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>[]
+          }
+          create: {
+            args: Prisma.ConexaoIntegracaoCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>
+          }
+          createMany: {
+            args: Prisma.ConexaoIntegracaoCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.ConexaoIntegracaoCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>[]
+          }
+          delete: {
+            args: Prisma.ConexaoIntegracaoDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>
+          }
+          update: {
+            args: Prisma.ConexaoIntegracaoUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>
+          }
+          deleteMany: {
+            args: Prisma.ConexaoIntegracaoDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.ConexaoIntegracaoUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.ConexaoIntegracaoUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>[]
+          }
+          upsert: {
+            args: Prisma.ConexaoIntegracaoUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$ConexaoIntegracaoPayload>
+          }
+          aggregate: {
+            args: Prisma.ConexaoIntegracaoAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateConexaoIntegracao>
+          }
+          groupBy: {
+            args: Prisma.ConexaoIntegracaoGroupByArgs<ExtArgs>
+            result: $Utils.Optional<ConexaoIntegracaoGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.ConexaoIntegracaoCountArgs<ExtArgs>
+            result: $Utils.Optional<ConexaoIntegracaoCountAggregateOutputType> | number
           }
         }
       }
@@ -2421,6 +2511,7 @@ export namespace Prisma {
   export type GlobalOmitConfig = {
     cliente?: ClienteOmit
     conta?: ContaOmit
+    conexaoIntegracao?: ConexaoIntegracaoOmit
     fatoMidiaDiario?: FatoMidiaDiarioOmit
     agregadoMidiaSemanal?: AgregadoMidiaSemanalOmit
     agregadoMidiaMensal?: AgregadoMidiaMensalOmit
@@ -2716,6 +2807,37 @@ export namespace Prisma {
    */
   export type ContaCountOutputTypeCountMetaAdsCriativosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: MetaAdsCriativoWhereInput
+  }
+
+
+  /**
+   * Count Type ConexaoIntegracaoCountOutputType
+   */
+
+  export type ConexaoIntegracaoCountOutputType = {
+    contas: number
+  }
+
+  export type ConexaoIntegracaoCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contas?: boolean | ConexaoIntegracaoCountOutputTypeCountContasArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * ConexaoIntegracaoCountOutputType without action
+   */
+  export type ConexaoIntegracaoCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracaoCountOutputType
+     */
+    select?: ConexaoIntegracaoCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ConexaoIntegracaoCountOutputType without action
+   */
+  export type ConexaoIntegracaoCountOutputTypeCountContasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ContaWhereInput
   }
 
 
@@ -4434,6 +4556,7 @@ export namespace Prisma {
     accountIdPlataforma: string | null
     googleAdsLoginCustomerId: string | null
     nomeConta: string | null
+    conexaoIntegracaoId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4445,6 +4568,7 @@ export namespace Prisma {
     accountIdPlataforma: string | null
     googleAdsLoginCustomerId: string | null
     nomeConta: string | null
+    conexaoIntegracaoId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -4456,6 +4580,7 @@ export namespace Prisma {
     accountIdPlataforma: number
     googleAdsLoginCustomerId: number
     nomeConta: number
+    conexaoIntegracaoId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -4469,6 +4594,7 @@ export namespace Prisma {
     accountIdPlataforma?: true
     googleAdsLoginCustomerId?: true
     nomeConta?: true
+    conexaoIntegracaoId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4480,6 +4606,7 @@ export namespace Prisma {
     accountIdPlataforma?: true
     googleAdsLoginCustomerId?: true
     nomeConta?: true
+    conexaoIntegracaoId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -4491,6 +4618,7 @@ export namespace Prisma {
     accountIdPlataforma?: true
     googleAdsLoginCustomerId?: true
     nomeConta?: true
+    conexaoIntegracaoId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -4575,6 +4703,7 @@ export namespace Prisma {
     accountIdPlataforma: string | null
     googleAdsLoginCustomerId: string | null
     nomeConta: string | null
+    conexaoIntegracaoId: string | null
     createdAt: Date
     updatedAt: Date
     _count: ContaCountAggregateOutputType | null
@@ -4603,9 +4732,11 @@ export namespace Prisma {
     accountIdPlataforma?: boolean
     googleAdsLoginCustomerId?: boolean
     nomeConta?: boolean
+    conexaoIntegracaoId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conexaoIntegracao?: boolean | Conta$conexaoIntegracaoArgs<ExtArgs>
     fatosAnalyticsDiario?: boolean | Conta$fatosAnalyticsDiarioArgs<ExtArgs>
     fatosMidia?: boolean | Conta$fatosMidiaArgs<ExtArgs>
     googleAdsCampanhas?: boolean | Conta$googleAdsCampanhasArgs<ExtArgs>
@@ -4621,9 +4752,11 @@ export namespace Prisma {
     accountIdPlataforma?: boolean
     googleAdsLoginCustomerId?: boolean
     nomeConta?: boolean
+    conexaoIntegracaoId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conexaoIntegracao?: boolean | Conta$conexaoIntegracaoArgs<ExtArgs>
   }, ExtArgs["result"]["conta"]>
 
   export type ContaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -4633,9 +4766,11 @@ export namespace Prisma {
     accountIdPlataforma?: boolean
     googleAdsLoginCustomerId?: boolean
     nomeConta?: boolean
+    conexaoIntegracaoId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conexaoIntegracao?: boolean | Conta$conexaoIntegracaoArgs<ExtArgs>
   }, ExtArgs["result"]["conta"]>
 
   export type ContaSelectScalar = {
@@ -4645,13 +4780,15 @@ export namespace Prisma {
     accountIdPlataforma?: boolean
     googleAdsLoginCustomerId?: boolean
     nomeConta?: boolean
+    conexaoIntegracaoId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ContaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "plataforma" | "accountIdPlataforma" | "googleAdsLoginCustomerId" | "nomeConta" | "createdAt" | "updatedAt", ExtArgs["result"]["conta"]>
+  export type ContaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "plataforma" | "accountIdPlataforma" | "googleAdsLoginCustomerId" | "nomeConta" | "conexaoIntegracaoId" | "createdAt" | "updatedAt", ExtArgs["result"]["conta"]>
   export type ContaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conexaoIntegracao?: boolean | Conta$conexaoIntegracaoArgs<ExtArgs>
     fatosAnalyticsDiario?: boolean | Conta$fatosAnalyticsDiarioArgs<ExtArgs>
     fatosMidia?: boolean | Conta$fatosMidiaArgs<ExtArgs>
     googleAdsCampanhas?: boolean | Conta$googleAdsCampanhasArgs<ExtArgs>
@@ -4661,15 +4798,18 @@ export namespace Prisma {
   }
   export type ContaIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conexaoIntegracao?: boolean | Conta$conexaoIntegracaoArgs<ExtArgs>
   }
   export type ContaIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+    conexaoIntegracao?: boolean | Conta$conexaoIntegracaoArgs<ExtArgs>
   }
 
   export type $ContaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Conta"
     objects: {
       cliente: Prisma.$ClientePayload<ExtArgs>
+      conexaoIntegracao: Prisma.$ConexaoIntegracaoPayload<ExtArgs> | null
       fatosAnalyticsDiario: Prisma.$FatoAnalyticsDiarioPayload<ExtArgs>[]
       fatosMidia: Prisma.$FatoMidiaDiarioPayload<ExtArgs>[]
       googleAdsCampanhas: Prisma.$GoogleAdsCampanhaPayload<ExtArgs>[]
@@ -4683,6 +4823,7 @@ export namespace Prisma {
       accountIdPlataforma: string | null
       googleAdsLoginCustomerId: string | null
       nomeConta: string | null
+      conexaoIntegracaoId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["conta"]>
@@ -5080,6 +5221,7 @@ export namespace Prisma {
   export interface Prisma__ContaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    conexaoIntegracao<T extends Conta$conexaoIntegracaoArgs<ExtArgs> = {}>(args?: Subset<T, Conta$conexaoIntegracaoArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     fatosAnalyticsDiario<T extends Conta$fatosAnalyticsDiarioArgs<ExtArgs> = {}>(args?: Subset<T, Conta$fatosAnalyticsDiarioArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FatoAnalyticsDiarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     fatosMidia<T extends Conta$fatosMidiaArgs<ExtArgs> = {}>(args?: Subset<T, Conta$fatosMidiaArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$FatoMidiaDiarioPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     googleAdsCampanhas<T extends Conta$googleAdsCampanhasArgs<ExtArgs> = {}>(args?: Subset<T, Conta$googleAdsCampanhasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GoogleAdsCampanhaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -5120,6 +5262,7 @@ export namespace Prisma {
     readonly accountIdPlataforma: FieldRef<"Conta", 'String'>
     readonly googleAdsLoginCustomerId: FieldRef<"Conta", 'String'>
     readonly nomeConta: FieldRef<"Conta", 'String'>
+    readonly conexaoIntegracaoId: FieldRef<"Conta", 'String'>
     readonly createdAt: FieldRef<"Conta", 'DateTime'>
     readonly updatedAt: FieldRef<"Conta", 'DateTime'>
   }
@@ -5518,6 +5661,25 @@ export namespace Prisma {
   }
 
   /**
+   * Conta.conexaoIntegracao
+   */
+  export type Conta$conexaoIntegracaoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    where?: ConexaoIntegracaoWhereInput
+  }
+
+  /**
    * Conta.fatosAnalyticsDiario
    */
   export type Conta$fatosAnalyticsDiarioArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -5653,6 +5815,1167 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: ContaInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model ConexaoIntegracao
+   */
+
+  export type AggregateConexaoIntegracao = {
+    _count: ConexaoIntegracaoCountAggregateOutputType | null
+    _min: ConexaoIntegracaoMinAggregateOutputType | null
+    _max: ConexaoIntegracaoMaxAggregateOutputType | null
+  }
+
+  export type ConexaoIntegracaoMinAggregateOutputType = {
+    id: string | null
+    nome: string | null
+    plataforma: string | null
+    ativo: boolean | null
+    metaAccessToken: string | null
+    googleClientId: string | null
+    googleClientSecret: string | null
+    googleDeveloperToken: string | null
+    googleRefreshToken: string | null
+    googleLoginCustomerId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConexaoIntegracaoMaxAggregateOutputType = {
+    id: string | null
+    nome: string | null
+    plataforma: string | null
+    ativo: boolean | null
+    metaAccessToken: string | null
+    googleClientId: string | null
+    googleClientSecret: string | null
+    googleDeveloperToken: string | null
+    googleRefreshToken: string | null
+    googleLoginCustomerId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type ConexaoIntegracaoCountAggregateOutputType = {
+    id: number
+    nome: number
+    plataforma: number
+    ativo: number
+    metaAccessToken: number
+    googleClientId: number
+    googleClientSecret: number
+    googleDeveloperToken: number
+    googleRefreshToken: number
+    googleLoginCustomerId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type ConexaoIntegracaoMinAggregateInputType = {
+    id?: true
+    nome?: true
+    plataforma?: true
+    ativo?: true
+    metaAccessToken?: true
+    googleClientId?: true
+    googleClientSecret?: true
+    googleDeveloperToken?: true
+    googleRefreshToken?: true
+    googleLoginCustomerId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConexaoIntegracaoMaxAggregateInputType = {
+    id?: true
+    nome?: true
+    plataforma?: true
+    ativo?: true
+    metaAccessToken?: true
+    googleClientId?: true
+    googleClientSecret?: true
+    googleDeveloperToken?: true
+    googleRefreshToken?: true
+    googleLoginCustomerId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type ConexaoIntegracaoCountAggregateInputType = {
+    id?: true
+    nome?: true
+    plataforma?: true
+    ativo?: true
+    metaAccessToken?: true
+    googleClientId?: true
+    googleClientSecret?: true
+    googleDeveloperToken?: true
+    googleRefreshToken?: true
+    googleLoginCustomerId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type ConexaoIntegracaoAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConexaoIntegracao to aggregate.
+     */
+    where?: ConexaoIntegracaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConexaoIntegracaos to fetch.
+     */
+    orderBy?: ConexaoIntegracaoOrderByWithRelationInput | ConexaoIntegracaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: ConexaoIntegracaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConexaoIntegracaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConexaoIntegracaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned ConexaoIntegracaos
+    **/
+    _count?: true | ConexaoIntegracaoCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: ConexaoIntegracaoMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: ConexaoIntegracaoMaxAggregateInputType
+  }
+
+  export type GetConexaoIntegracaoAggregateType<T extends ConexaoIntegracaoAggregateArgs> = {
+        [P in keyof T & keyof AggregateConexaoIntegracao]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateConexaoIntegracao[P]>
+      : GetScalarType<T[P], AggregateConexaoIntegracao[P]>
+  }
+
+
+
+
+  export type ConexaoIntegracaoGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: ConexaoIntegracaoWhereInput
+    orderBy?: ConexaoIntegracaoOrderByWithAggregationInput | ConexaoIntegracaoOrderByWithAggregationInput[]
+    by: ConexaoIntegracaoScalarFieldEnum[] | ConexaoIntegracaoScalarFieldEnum
+    having?: ConexaoIntegracaoScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: ConexaoIntegracaoCountAggregateInputType | true
+    _min?: ConexaoIntegracaoMinAggregateInputType
+    _max?: ConexaoIntegracaoMaxAggregateInputType
+  }
+
+  export type ConexaoIntegracaoGroupByOutputType = {
+    id: string
+    nome: string
+    plataforma: string
+    ativo: boolean
+    metaAccessToken: string | null
+    googleClientId: string | null
+    googleClientSecret: string | null
+    googleDeveloperToken: string | null
+    googleRefreshToken: string | null
+    googleLoginCustomerId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: ConexaoIntegracaoCountAggregateOutputType | null
+    _min: ConexaoIntegracaoMinAggregateOutputType | null
+    _max: ConexaoIntegracaoMaxAggregateOutputType | null
+  }
+
+  type GetConexaoIntegracaoGroupByPayload<T extends ConexaoIntegracaoGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<ConexaoIntegracaoGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof ConexaoIntegracaoGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], ConexaoIntegracaoGroupByOutputType[P]>
+            : GetScalarType<T[P], ConexaoIntegracaoGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type ConexaoIntegracaoSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+    plataforma?: boolean
+    ativo?: boolean
+    metaAccessToken?: boolean
+    googleClientId?: boolean
+    googleClientSecret?: boolean
+    googleDeveloperToken?: boolean
+    googleRefreshToken?: boolean
+    googleLoginCustomerId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    contas?: boolean | ConexaoIntegracao$contasArgs<ExtArgs>
+    _count?: boolean | ConexaoIntegracaoCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["conexaoIntegracao"]>
+
+  export type ConexaoIntegracaoSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+    plataforma?: boolean
+    ativo?: boolean
+    metaAccessToken?: boolean
+    googleClientId?: boolean
+    googleClientSecret?: boolean
+    googleDeveloperToken?: boolean
+    googleRefreshToken?: boolean
+    googleLoginCustomerId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["conexaoIntegracao"]>
+
+  export type ConexaoIntegracaoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    nome?: boolean
+    plataforma?: boolean
+    ativo?: boolean
+    metaAccessToken?: boolean
+    googleClientId?: boolean
+    googleClientSecret?: boolean
+    googleDeveloperToken?: boolean
+    googleRefreshToken?: boolean
+    googleLoginCustomerId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["conexaoIntegracao"]>
+
+  export type ConexaoIntegracaoSelectScalar = {
+    id?: boolean
+    nome?: boolean
+    plataforma?: boolean
+    ativo?: boolean
+    metaAccessToken?: boolean
+    googleClientId?: boolean
+    googleClientSecret?: boolean
+    googleDeveloperToken?: boolean
+    googleRefreshToken?: boolean
+    googleLoginCustomerId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type ConexaoIntegracaoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "plataforma" | "ativo" | "metaAccessToken" | "googleClientId" | "googleClientSecret" | "googleDeveloperToken" | "googleRefreshToken" | "googleLoginCustomerId" | "createdAt" | "updatedAt", ExtArgs["result"]["conexaoIntegracao"]>
+  export type ConexaoIntegracaoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    contas?: boolean | ConexaoIntegracao$contasArgs<ExtArgs>
+    _count?: boolean | ConexaoIntegracaoCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type ConexaoIntegracaoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type ConexaoIntegracaoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $ConexaoIntegracaoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "ConexaoIntegracao"
+    objects: {
+      contas: Prisma.$ContaPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      nome: string
+      plataforma: string
+      ativo: boolean
+      metaAccessToken: string | null
+      googleClientId: string | null
+      googleClientSecret: string | null
+      googleDeveloperToken: string | null
+      googleRefreshToken: string | null
+      googleLoginCustomerId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["conexaoIntegracao"]>
+    composites: {}
+  }
+
+  type ConexaoIntegracaoGetPayload<S extends boolean | null | undefined | ConexaoIntegracaoDefaultArgs> = $Result.GetResult<Prisma.$ConexaoIntegracaoPayload, S>
+
+  type ConexaoIntegracaoCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<ConexaoIntegracaoFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: ConexaoIntegracaoCountAggregateInputType | true
+    }
+
+  export interface ConexaoIntegracaoDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['ConexaoIntegracao'], meta: { name: 'ConexaoIntegracao' } }
+    /**
+     * Find zero or one ConexaoIntegracao that matches the filter.
+     * @param {ConexaoIntegracaoFindUniqueArgs} args - Arguments to find a ConexaoIntegracao
+     * @example
+     * // Get one ConexaoIntegracao
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends ConexaoIntegracaoFindUniqueArgs>(args: SelectSubset<T, ConexaoIntegracaoFindUniqueArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one ConexaoIntegracao that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {ConexaoIntegracaoFindUniqueOrThrowArgs} args - Arguments to find a ConexaoIntegracao
+     * @example
+     * // Get one ConexaoIntegracao
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends ConexaoIntegracaoFindUniqueOrThrowArgs>(args: SelectSubset<T, ConexaoIntegracaoFindUniqueOrThrowArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConexaoIntegracao that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConexaoIntegracaoFindFirstArgs} args - Arguments to find a ConexaoIntegracao
+     * @example
+     * // Get one ConexaoIntegracao
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends ConexaoIntegracaoFindFirstArgs>(args?: SelectSubset<T, ConexaoIntegracaoFindFirstArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first ConexaoIntegracao that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConexaoIntegracaoFindFirstOrThrowArgs} args - Arguments to find a ConexaoIntegracao
+     * @example
+     * // Get one ConexaoIntegracao
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends ConexaoIntegracaoFindFirstOrThrowArgs>(args?: SelectSubset<T, ConexaoIntegracaoFindFirstOrThrowArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more ConexaoIntegracaos that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConexaoIntegracaoFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all ConexaoIntegracaos
+     * const conexaoIntegracaos = await prisma.conexaoIntegracao.findMany()
+     * 
+     * // Get first 10 ConexaoIntegracaos
+     * const conexaoIntegracaos = await prisma.conexaoIntegracao.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const conexaoIntegracaoWithIdOnly = await prisma.conexaoIntegracao.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends ConexaoIntegracaoFindManyArgs>(args?: SelectSubset<T, ConexaoIntegracaoFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a ConexaoIntegracao.
+     * @param {ConexaoIntegracaoCreateArgs} args - Arguments to create a ConexaoIntegracao.
+     * @example
+     * // Create one ConexaoIntegracao
+     * const ConexaoIntegracao = await prisma.conexaoIntegracao.create({
+     *   data: {
+     *     // ... data to create a ConexaoIntegracao
+     *   }
+     * })
+     * 
+     */
+    create<T extends ConexaoIntegracaoCreateArgs>(args: SelectSubset<T, ConexaoIntegracaoCreateArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many ConexaoIntegracaos.
+     * @param {ConexaoIntegracaoCreateManyArgs} args - Arguments to create many ConexaoIntegracaos.
+     * @example
+     * // Create many ConexaoIntegracaos
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends ConexaoIntegracaoCreateManyArgs>(args?: SelectSubset<T, ConexaoIntegracaoCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many ConexaoIntegracaos and returns the data saved in the database.
+     * @param {ConexaoIntegracaoCreateManyAndReturnArgs} args - Arguments to create many ConexaoIntegracaos.
+     * @example
+     * // Create many ConexaoIntegracaos
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many ConexaoIntegracaos and only return the `id`
+     * const conexaoIntegracaoWithIdOnly = await prisma.conexaoIntegracao.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends ConexaoIntegracaoCreateManyAndReturnArgs>(args?: SelectSubset<T, ConexaoIntegracaoCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a ConexaoIntegracao.
+     * @param {ConexaoIntegracaoDeleteArgs} args - Arguments to delete one ConexaoIntegracao.
+     * @example
+     * // Delete one ConexaoIntegracao
+     * const ConexaoIntegracao = await prisma.conexaoIntegracao.delete({
+     *   where: {
+     *     // ... filter to delete one ConexaoIntegracao
+     *   }
+     * })
+     * 
+     */
+    delete<T extends ConexaoIntegracaoDeleteArgs>(args: SelectSubset<T, ConexaoIntegracaoDeleteArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one ConexaoIntegracao.
+     * @param {ConexaoIntegracaoUpdateArgs} args - Arguments to update one ConexaoIntegracao.
+     * @example
+     * // Update one ConexaoIntegracao
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends ConexaoIntegracaoUpdateArgs>(args: SelectSubset<T, ConexaoIntegracaoUpdateArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more ConexaoIntegracaos.
+     * @param {ConexaoIntegracaoDeleteManyArgs} args - Arguments to filter ConexaoIntegracaos to delete.
+     * @example
+     * // Delete a few ConexaoIntegracaos
+     * const { count } = await prisma.conexaoIntegracao.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends ConexaoIntegracaoDeleteManyArgs>(args?: SelectSubset<T, ConexaoIntegracaoDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConexaoIntegracaos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConexaoIntegracaoUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many ConexaoIntegracaos
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends ConexaoIntegracaoUpdateManyArgs>(args: SelectSubset<T, ConexaoIntegracaoUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more ConexaoIntegracaos and returns the data updated in the database.
+     * @param {ConexaoIntegracaoUpdateManyAndReturnArgs} args - Arguments to update many ConexaoIntegracaos.
+     * @example
+     * // Update many ConexaoIntegracaos
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more ConexaoIntegracaos and only return the `id`
+     * const conexaoIntegracaoWithIdOnly = await prisma.conexaoIntegracao.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends ConexaoIntegracaoUpdateManyAndReturnArgs>(args: SelectSubset<T, ConexaoIntegracaoUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one ConexaoIntegracao.
+     * @param {ConexaoIntegracaoUpsertArgs} args - Arguments to update or create a ConexaoIntegracao.
+     * @example
+     * // Update or create a ConexaoIntegracao
+     * const conexaoIntegracao = await prisma.conexaoIntegracao.upsert({
+     *   create: {
+     *     // ... data to create a ConexaoIntegracao
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the ConexaoIntegracao we want to update
+     *   }
+     * })
+     */
+    upsert<T extends ConexaoIntegracaoUpsertArgs>(args: SelectSubset<T, ConexaoIntegracaoUpsertArgs<ExtArgs>>): Prisma__ConexaoIntegracaoClient<$Result.GetResult<Prisma.$ConexaoIntegracaoPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of ConexaoIntegracaos.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConexaoIntegracaoCountArgs} args - Arguments to filter ConexaoIntegracaos to count.
+     * @example
+     * // Count the number of ConexaoIntegracaos
+     * const count = await prisma.conexaoIntegracao.count({
+     *   where: {
+     *     // ... the filter for the ConexaoIntegracaos we want to count
+     *   }
+     * })
+    **/
+    count<T extends ConexaoIntegracaoCountArgs>(
+      args?: Subset<T, ConexaoIntegracaoCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], ConexaoIntegracaoCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a ConexaoIntegracao.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConexaoIntegracaoAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends ConexaoIntegracaoAggregateArgs>(args: Subset<T, ConexaoIntegracaoAggregateArgs>): Prisma.PrismaPromise<GetConexaoIntegracaoAggregateType<T>>
+
+    /**
+     * Group by ConexaoIntegracao.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {ConexaoIntegracaoGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends ConexaoIntegracaoGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: ConexaoIntegracaoGroupByArgs['orderBy'] }
+        : { orderBy?: ConexaoIntegracaoGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, ConexaoIntegracaoGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetConexaoIntegracaoGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the ConexaoIntegracao model
+   */
+  readonly fields: ConexaoIntegracaoFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for ConexaoIntegracao.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__ConexaoIntegracaoClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    contas<T extends ConexaoIntegracao$contasArgs<ExtArgs> = {}>(args?: Subset<T, ConexaoIntegracao$contasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ContaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the ConexaoIntegracao model
+   */
+  interface ConexaoIntegracaoFieldRefs {
+    readonly id: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly nome: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly plataforma: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly ativo: FieldRef<"ConexaoIntegracao", 'Boolean'>
+    readonly metaAccessToken: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly googleClientId: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly googleClientSecret: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly googleDeveloperToken: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly googleRefreshToken: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly googleLoginCustomerId: FieldRef<"ConexaoIntegracao", 'String'>
+    readonly createdAt: FieldRef<"ConexaoIntegracao", 'DateTime'>
+    readonly updatedAt: FieldRef<"ConexaoIntegracao", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * ConexaoIntegracao findUnique
+   */
+  export type ConexaoIntegracaoFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * Filter, which ConexaoIntegracao to fetch.
+     */
+    where: ConexaoIntegracaoWhereUniqueInput
+  }
+
+  /**
+   * ConexaoIntegracao findUniqueOrThrow
+   */
+  export type ConexaoIntegracaoFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * Filter, which ConexaoIntegracao to fetch.
+     */
+    where: ConexaoIntegracaoWhereUniqueInput
+  }
+
+  /**
+   * ConexaoIntegracao findFirst
+   */
+  export type ConexaoIntegracaoFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * Filter, which ConexaoIntegracao to fetch.
+     */
+    where?: ConexaoIntegracaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConexaoIntegracaos to fetch.
+     */
+    orderBy?: ConexaoIntegracaoOrderByWithRelationInput | ConexaoIntegracaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConexaoIntegracaos.
+     */
+    cursor?: ConexaoIntegracaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConexaoIntegracaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConexaoIntegracaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConexaoIntegracaos.
+     */
+    distinct?: ConexaoIntegracaoScalarFieldEnum | ConexaoIntegracaoScalarFieldEnum[]
+  }
+
+  /**
+   * ConexaoIntegracao findFirstOrThrow
+   */
+  export type ConexaoIntegracaoFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * Filter, which ConexaoIntegracao to fetch.
+     */
+    where?: ConexaoIntegracaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConexaoIntegracaos to fetch.
+     */
+    orderBy?: ConexaoIntegracaoOrderByWithRelationInput | ConexaoIntegracaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for ConexaoIntegracaos.
+     */
+    cursor?: ConexaoIntegracaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConexaoIntegracaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConexaoIntegracaos.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of ConexaoIntegracaos.
+     */
+    distinct?: ConexaoIntegracaoScalarFieldEnum | ConexaoIntegracaoScalarFieldEnum[]
+  }
+
+  /**
+   * ConexaoIntegracao findMany
+   */
+  export type ConexaoIntegracaoFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * Filter, which ConexaoIntegracaos to fetch.
+     */
+    where?: ConexaoIntegracaoWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of ConexaoIntegracaos to fetch.
+     */
+    orderBy?: ConexaoIntegracaoOrderByWithRelationInput | ConexaoIntegracaoOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing ConexaoIntegracaos.
+     */
+    cursor?: ConexaoIntegracaoWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` ConexaoIntegracaos from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` ConexaoIntegracaos.
+     */
+    skip?: number
+    distinct?: ConexaoIntegracaoScalarFieldEnum | ConexaoIntegracaoScalarFieldEnum[]
+  }
+
+  /**
+   * ConexaoIntegracao create
+   */
+  export type ConexaoIntegracaoCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * The data needed to create a ConexaoIntegracao.
+     */
+    data: XOR<ConexaoIntegracaoCreateInput, ConexaoIntegracaoUncheckedCreateInput>
+  }
+
+  /**
+   * ConexaoIntegracao createMany
+   */
+  export type ConexaoIntegracaoCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many ConexaoIntegracaos.
+     */
+    data: ConexaoIntegracaoCreateManyInput | ConexaoIntegracaoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConexaoIntegracao createManyAndReturn
+   */
+  export type ConexaoIntegracaoCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * The data used to create many ConexaoIntegracaos.
+     */
+    data: ConexaoIntegracaoCreateManyInput | ConexaoIntegracaoCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * ConexaoIntegracao update
+   */
+  export type ConexaoIntegracaoUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * The data needed to update a ConexaoIntegracao.
+     */
+    data: XOR<ConexaoIntegracaoUpdateInput, ConexaoIntegracaoUncheckedUpdateInput>
+    /**
+     * Choose, which ConexaoIntegracao to update.
+     */
+    where: ConexaoIntegracaoWhereUniqueInput
+  }
+
+  /**
+   * ConexaoIntegracao updateMany
+   */
+  export type ConexaoIntegracaoUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update ConexaoIntegracaos.
+     */
+    data: XOR<ConexaoIntegracaoUpdateManyMutationInput, ConexaoIntegracaoUncheckedUpdateManyInput>
+    /**
+     * Filter which ConexaoIntegracaos to update
+     */
+    where?: ConexaoIntegracaoWhereInput
+    /**
+     * Limit how many ConexaoIntegracaos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConexaoIntegracao updateManyAndReturn
+   */
+  export type ConexaoIntegracaoUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * The data used to update ConexaoIntegracaos.
+     */
+    data: XOR<ConexaoIntegracaoUpdateManyMutationInput, ConexaoIntegracaoUncheckedUpdateManyInput>
+    /**
+     * Filter which ConexaoIntegracaos to update
+     */
+    where?: ConexaoIntegracaoWhereInput
+    /**
+     * Limit how many ConexaoIntegracaos to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConexaoIntegracao upsert
+   */
+  export type ConexaoIntegracaoUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * The filter to search for the ConexaoIntegracao to update in case it exists.
+     */
+    where: ConexaoIntegracaoWhereUniqueInput
+    /**
+     * In case the ConexaoIntegracao found by the `where` argument doesn't exist, create a new ConexaoIntegracao with this data.
+     */
+    create: XOR<ConexaoIntegracaoCreateInput, ConexaoIntegracaoUncheckedCreateInput>
+    /**
+     * In case the ConexaoIntegracao was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<ConexaoIntegracaoUpdateInput, ConexaoIntegracaoUncheckedUpdateInput>
+  }
+
+  /**
+   * ConexaoIntegracao delete
+   */
+  export type ConexaoIntegracaoDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
+    /**
+     * Filter which ConexaoIntegracao to delete.
+     */
+    where: ConexaoIntegracaoWhereUniqueInput
+  }
+
+  /**
+   * ConexaoIntegracao deleteMany
+   */
+  export type ConexaoIntegracaoDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which ConexaoIntegracaos to delete
+     */
+    where?: ConexaoIntegracaoWhereInput
+    /**
+     * Limit how many ConexaoIntegracaos to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * ConexaoIntegracao.contas
+   */
+  export type ConexaoIntegracao$contasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Conta
+     */
+    select?: ContaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Conta
+     */
+    omit?: ContaOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ContaInclude<ExtArgs> | null
+    where?: ContaWhereInput
+    orderBy?: ContaOrderByWithRelationInput | ContaOrderByWithRelationInput[]
+    cursor?: ContaWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: ContaScalarFieldEnum | ContaScalarFieldEnum[]
+  }
+
+  /**
+   * ConexaoIntegracao without action
+   */
+  export type ConexaoIntegracaoDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the ConexaoIntegracao
+     */
+    select?: ConexaoIntegracaoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the ConexaoIntegracao
+     */
+    omit?: ConexaoIntegracaoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ConexaoIntegracaoInclude<ExtArgs> | null
   }
 
 
@@ -26293,11 +27616,30 @@ export namespace Prisma {
     accountIdPlataforma: 'accountIdPlataforma',
     googleAdsLoginCustomerId: 'googleAdsLoginCustomerId',
     nomeConta: 'nomeConta',
+    conexaoIntegracaoId: 'conexaoIntegracaoId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
 
   export type ContaScalarFieldEnum = (typeof ContaScalarFieldEnum)[keyof typeof ContaScalarFieldEnum]
+
+
+  export const ConexaoIntegracaoScalarFieldEnum: {
+    id: 'id',
+    nome: 'nome',
+    plataforma: 'plataforma',
+    ativo: 'ativo',
+    metaAccessToken: 'metaAccessToken',
+    googleClientId: 'googleClientId',
+    googleClientSecret: 'googleClientSecret',
+    googleDeveloperToken: 'googleDeveloperToken',
+    googleRefreshToken: 'googleRefreshToken',
+    googleLoginCustomerId: 'googleLoginCustomerId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type ConexaoIntegracaoScalarFieldEnum = (typeof ConexaoIntegracaoScalarFieldEnum)[keyof typeof ConexaoIntegracaoScalarFieldEnum]
 
 
   export const FatoMidiaDiarioScalarFieldEnum: {
@@ -26992,9 +28334,11 @@ export namespace Prisma {
     accountIdPlataforma?: StringNullableFilter<"Conta"> | string | null
     googleAdsLoginCustomerId?: StringNullableFilter<"Conta"> | string | null
     nomeConta?: StringNullableFilter<"Conta"> | string | null
+    conexaoIntegracaoId?: StringNullableFilter<"Conta"> | string | null
     createdAt?: DateTimeFilter<"Conta"> | Date | string
     updatedAt?: DateTimeFilter<"Conta"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    conexaoIntegracao?: XOR<ConexaoIntegracaoNullableScalarRelationFilter, ConexaoIntegracaoWhereInput> | null
     fatosAnalyticsDiario?: FatoAnalyticsDiarioListRelationFilter
     fatosMidia?: FatoMidiaDiarioListRelationFilter
     googleAdsCampanhas?: GoogleAdsCampanhaListRelationFilter
@@ -27009,9 +28353,11 @@ export namespace Prisma {
     accountIdPlataforma?: SortOrderInput | SortOrder
     googleAdsLoginCustomerId?: SortOrderInput | SortOrder
     nomeConta?: SortOrderInput | SortOrder
+    conexaoIntegracaoId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     cliente?: ClienteOrderByWithRelationInput
+    conexaoIntegracao?: ConexaoIntegracaoOrderByWithRelationInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioOrderByRelationAggregateInput
     fatosMidia?: FatoMidiaDiarioOrderByRelationAggregateInput
     googleAdsCampanhas?: GoogleAdsCampanhaOrderByRelationAggregateInput
@@ -27030,9 +28376,11 @@ export namespace Prisma {
     accountIdPlataforma?: StringNullableFilter<"Conta"> | string | null
     googleAdsLoginCustomerId?: StringNullableFilter<"Conta"> | string | null
     nomeConta?: StringNullableFilter<"Conta"> | string | null
+    conexaoIntegracaoId?: StringNullableFilter<"Conta"> | string | null
     createdAt?: DateTimeFilter<"Conta"> | Date | string
     updatedAt?: DateTimeFilter<"Conta"> | Date | string
     cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+    conexaoIntegracao?: XOR<ConexaoIntegracaoNullableScalarRelationFilter, ConexaoIntegracaoWhereInput> | null
     fatosAnalyticsDiario?: FatoAnalyticsDiarioListRelationFilter
     fatosMidia?: FatoMidiaDiarioListRelationFilter
     googleAdsCampanhas?: GoogleAdsCampanhaListRelationFilter
@@ -27047,6 +28395,7 @@ export namespace Prisma {
     accountIdPlataforma?: SortOrderInput | SortOrder
     googleAdsLoginCustomerId?: SortOrderInput | SortOrder
     nomeConta?: SortOrderInput | SortOrder
+    conexaoIntegracaoId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ContaCountOrderByAggregateInput
@@ -27064,8 +28413,99 @@ export namespace Prisma {
     accountIdPlataforma?: StringNullableWithAggregatesFilter<"Conta"> | string | null
     googleAdsLoginCustomerId?: StringNullableWithAggregatesFilter<"Conta"> | string | null
     nomeConta?: StringNullableWithAggregatesFilter<"Conta"> | string | null
+    conexaoIntegracaoId?: StringNullableWithAggregatesFilter<"Conta"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Conta"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Conta"> | Date | string
+  }
+
+  export type ConexaoIntegracaoWhereInput = {
+    AND?: ConexaoIntegracaoWhereInput | ConexaoIntegracaoWhereInput[]
+    OR?: ConexaoIntegracaoWhereInput[]
+    NOT?: ConexaoIntegracaoWhereInput | ConexaoIntegracaoWhereInput[]
+    id?: StringFilter<"ConexaoIntegracao"> | string
+    nome?: StringFilter<"ConexaoIntegracao"> | string
+    plataforma?: StringFilter<"ConexaoIntegracao"> | string
+    ativo?: BoolFilter<"ConexaoIntegracao"> | boolean
+    metaAccessToken?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleClientId?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleClientSecret?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleDeveloperToken?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleRefreshToken?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleLoginCustomerId?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    createdAt?: DateTimeFilter<"ConexaoIntegracao"> | Date | string
+    updatedAt?: DateTimeFilter<"ConexaoIntegracao"> | Date | string
+    contas?: ContaListRelationFilter
+  }
+
+  export type ConexaoIntegracaoOrderByWithRelationInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    plataforma?: SortOrder
+    ativo?: SortOrder
+    metaAccessToken?: SortOrderInput | SortOrder
+    googleClientId?: SortOrderInput | SortOrder
+    googleClientSecret?: SortOrderInput | SortOrder
+    googleDeveloperToken?: SortOrderInput | SortOrder
+    googleRefreshToken?: SortOrderInput | SortOrder
+    googleLoginCustomerId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    contas?: ContaOrderByRelationAggregateInput
+  }
+
+  export type ConexaoIntegracaoWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: ConexaoIntegracaoWhereInput | ConexaoIntegracaoWhereInput[]
+    OR?: ConexaoIntegracaoWhereInput[]
+    NOT?: ConexaoIntegracaoWhereInput | ConexaoIntegracaoWhereInput[]
+    nome?: StringFilter<"ConexaoIntegracao"> | string
+    plataforma?: StringFilter<"ConexaoIntegracao"> | string
+    ativo?: BoolFilter<"ConexaoIntegracao"> | boolean
+    metaAccessToken?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleClientId?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleClientSecret?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleDeveloperToken?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleRefreshToken?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    googleLoginCustomerId?: StringNullableFilter<"ConexaoIntegracao"> | string | null
+    createdAt?: DateTimeFilter<"ConexaoIntegracao"> | Date | string
+    updatedAt?: DateTimeFilter<"ConexaoIntegracao"> | Date | string
+    contas?: ContaListRelationFilter
+  }, "id">
+
+  export type ConexaoIntegracaoOrderByWithAggregationInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    plataforma?: SortOrder
+    ativo?: SortOrder
+    metaAccessToken?: SortOrderInput | SortOrder
+    googleClientId?: SortOrderInput | SortOrder
+    googleClientSecret?: SortOrderInput | SortOrder
+    googleDeveloperToken?: SortOrderInput | SortOrder
+    googleRefreshToken?: SortOrderInput | SortOrder
+    googleLoginCustomerId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: ConexaoIntegracaoCountOrderByAggregateInput
+    _max?: ConexaoIntegracaoMaxOrderByAggregateInput
+    _min?: ConexaoIntegracaoMinOrderByAggregateInput
+  }
+
+  export type ConexaoIntegracaoScalarWhereWithAggregatesInput = {
+    AND?: ConexaoIntegracaoScalarWhereWithAggregatesInput | ConexaoIntegracaoScalarWhereWithAggregatesInput[]
+    OR?: ConexaoIntegracaoScalarWhereWithAggregatesInput[]
+    NOT?: ConexaoIntegracaoScalarWhereWithAggregatesInput | ConexaoIntegracaoScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"ConexaoIntegracao"> | string
+    nome?: StringWithAggregatesFilter<"ConexaoIntegracao"> | string
+    plataforma?: StringWithAggregatesFilter<"ConexaoIntegracao"> | string
+    ativo?: BoolWithAggregatesFilter<"ConexaoIntegracao"> | boolean
+    metaAccessToken?: StringNullableWithAggregatesFilter<"ConexaoIntegracao"> | string | null
+    googleClientId?: StringNullableWithAggregatesFilter<"ConexaoIntegracao"> | string | null
+    googleClientSecret?: StringNullableWithAggregatesFilter<"ConexaoIntegracao"> | string | null
+    googleDeveloperToken?: StringNullableWithAggregatesFilter<"ConexaoIntegracao"> | string | null
+    googleRefreshToken?: StringNullableWithAggregatesFilter<"ConexaoIntegracao"> | string | null
+    googleLoginCustomerId?: StringNullableWithAggregatesFilter<"ConexaoIntegracao"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"ConexaoIntegracao"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"ConexaoIntegracao"> | Date | string
   }
 
   export type FatoMidiaDiarioWhereInput = {
@@ -29043,6 +30483,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContasInput
+    conexaoIntegracao?: ConexaoIntegracaoCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
     googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
@@ -29057,6 +30498,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
@@ -29075,6 +30517,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
+    conexaoIntegracao?: ConexaoIntegracaoUpdateOneWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
     googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
@@ -29089,6 +30532,7 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
@@ -29105,6 +30549,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -29126,6 +30571,116 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConexaoIntegracaoCreateInput = {
+    id?: string
+    nome: string
+    plataforma: string
+    ativo?: boolean
+    metaAccessToken?: string | null
+    googleClientId?: string | null
+    googleClientSecret?: string | null
+    googleDeveloperToken?: string | null
+    googleRefreshToken?: string | null
+    googleLoginCustomerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    contas?: ContaCreateNestedManyWithoutConexaoIntegracaoInput
+  }
+
+  export type ConexaoIntegracaoUncheckedCreateInput = {
+    id?: string
+    nome: string
+    plataforma: string
+    ativo?: boolean
+    metaAccessToken?: string | null
+    googleClientId?: string | null
+    googleClientSecret?: string | null
+    googleDeveloperToken?: string | null
+    googleRefreshToken?: string | null
+    googleLoginCustomerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    contas?: ContaUncheckedCreateNestedManyWithoutConexaoIntegracaoInput
+  }
+
+  export type ConexaoIntegracaoUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    metaAccessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    googleDeveloperToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contas?: ContaUpdateManyWithoutConexaoIntegracaoNestedInput
+  }
+
+  export type ConexaoIntegracaoUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    metaAccessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    googleDeveloperToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    contas?: ContaUncheckedUpdateManyWithoutConexaoIntegracaoNestedInput
+  }
+
+  export type ConexaoIntegracaoCreateManyInput = {
+    id?: string
+    nome: string
+    plataforma: string
+    ativo?: boolean
+    metaAccessToken?: string | null
+    googleClientId?: string | null
+    googleClientSecret?: string | null
+    googleDeveloperToken?: string | null
+    googleRefreshToken?: string | null
+    googleLoginCustomerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConexaoIntegracaoUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    metaAccessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    googleDeveloperToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConexaoIntegracaoUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    metaAccessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    googleDeveloperToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -31566,6 +33121,11 @@ export namespace Prisma {
     isNot?: ClienteWhereInput
   }
 
+  export type ConexaoIntegracaoNullableScalarRelationFilter = {
+    is?: ConexaoIntegracaoWhereInput | null
+    isNot?: ConexaoIntegracaoWhereInput | null
+  }
+
   export type ContaClienteIdPlataformaCompoundUniqueInput = {
     clienteId: string
     plataforma: string
@@ -31578,6 +33138,7 @@ export namespace Prisma {
     accountIdPlataforma?: SortOrder
     googleAdsLoginCustomerId?: SortOrder
     nomeConta?: SortOrder
+    conexaoIntegracaoId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -31589,6 +33150,7 @@ export namespace Prisma {
     accountIdPlataforma?: SortOrder
     googleAdsLoginCustomerId?: SortOrder
     nomeConta?: SortOrder
+    conexaoIntegracaoId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -31600,6 +33162,52 @@ export namespace Prisma {
     accountIdPlataforma?: SortOrder
     googleAdsLoginCustomerId?: SortOrder
     nomeConta?: SortOrder
+    conexaoIntegracaoId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConexaoIntegracaoCountOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    plataforma?: SortOrder
+    ativo?: SortOrder
+    metaAccessToken?: SortOrder
+    googleClientId?: SortOrder
+    googleClientSecret?: SortOrder
+    googleDeveloperToken?: SortOrder
+    googleRefreshToken?: SortOrder
+    googleLoginCustomerId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConexaoIntegracaoMaxOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    plataforma?: SortOrder
+    ativo?: SortOrder
+    metaAccessToken?: SortOrder
+    googleClientId?: SortOrder
+    googleClientSecret?: SortOrder
+    googleDeveloperToken?: SortOrder
+    googleRefreshToken?: SortOrder
+    googleLoginCustomerId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type ConexaoIntegracaoMinOrderByAggregateInput = {
+    id?: SortOrder
+    nome?: SortOrder
+    plataforma?: SortOrder
+    ativo?: SortOrder
+    metaAccessToken?: SortOrder
+    googleClientId?: SortOrder
+    googleClientSecret?: SortOrder
+    googleDeveloperToken?: SortOrder
+    googleRefreshToken?: SortOrder
+    googleLoginCustomerId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -33623,6 +35231,12 @@ export namespace Prisma {
     connect?: ClienteWhereUniqueInput
   }
 
+  export type ConexaoIntegracaoCreateNestedOneWithoutContasInput = {
+    create?: XOR<ConexaoIntegracaoCreateWithoutContasInput, ConexaoIntegracaoUncheckedCreateWithoutContasInput>
+    connectOrCreate?: ConexaoIntegracaoCreateOrConnectWithoutContasInput
+    connect?: ConexaoIntegracaoWhereUniqueInput
+  }
+
   export type FatoAnalyticsDiarioCreateNestedManyWithoutContaInput = {
     create?: XOR<FatoAnalyticsDiarioCreateWithoutContaInput, FatoAnalyticsDiarioUncheckedCreateWithoutContaInput> | FatoAnalyticsDiarioCreateWithoutContaInput[] | FatoAnalyticsDiarioUncheckedCreateWithoutContaInput[]
     connectOrCreate?: FatoAnalyticsDiarioCreateOrConnectWithoutContaInput | FatoAnalyticsDiarioCreateOrConnectWithoutContaInput[]
@@ -33699,6 +35313,16 @@ export namespace Prisma {
     upsert?: ClienteUpsertWithoutContasInput
     connect?: ClienteWhereUniqueInput
     update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutContasInput, ClienteUpdateWithoutContasInput>, ClienteUncheckedUpdateWithoutContasInput>
+  }
+
+  export type ConexaoIntegracaoUpdateOneWithoutContasNestedInput = {
+    create?: XOR<ConexaoIntegracaoCreateWithoutContasInput, ConexaoIntegracaoUncheckedCreateWithoutContasInput>
+    connectOrCreate?: ConexaoIntegracaoCreateOrConnectWithoutContasInput
+    upsert?: ConexaoIntegracaoUpsertWithoutContasInput
+    disconnect?: ConexaoIntegracaoWhereInput | boolean
+    delete?: ConexaoIntegracaoWhereInput | boolean
+    connect?: ConexaoIntegracaoWhereUniqueInput
+    update?: XOR<XOR<ConexaoIntegracaoUpdateToOneWithWhereWithoutContasInput, ConexaoIntegracaoUpdateWithoutContasInput>, ConexaoIntegracaoUncheckedUpdateWithoutContasInput>
   }
 
   export type FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput = {
@@ -33839,6 +35463,48 @@ export namespace Prisma {
     update?: MetaAdsCriativoUpdateWithWhereUniqueWithoutContaInput | MetaAdsCriativoUpdateWithWhereUniqueWithoutContaInput[]
     updateMany?: MetaAdsCriativoUpdateManyWithWhereWithoutContaInput | MetaAdsCriativoUpdateManyWithWhereWithoutContaInput[]
     deleteMany?: MetaAdsCriativoScalarWhereInput | MetaAdsCriativoScalarWhereInput[]
+  }
+
+  export type ContaCreateNestedManyWithoutConexaoIntegracaoInput = {
+    create?: XOR<ContaCreateWithoutConexaoIntegracaoInput, ContaUncheckedCreateWithoutConexaoIntegracaoInput> | ContaCreateWithoutConexaoIntegracaoInput[] | ContaUncheckedCreateWithoutConexaoIntegracaoInput[]
+    connectOrCreate?: ContaCreateOrConnectWithoutConexaoIntegracaoInput | ContaCreateOrConnectWithoutConexaoIntegracaoInput[]
+    createMany?: ContaCreateManyConexaoIntegracaoInputEnvelope
+    connect?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+  }
+
+  export type ContaUncheckedCreateNestedManyWithoutConexaoIntegracaoInput = {
+    create?: XOR<ContaCreateWithoutConexaoIntegracaoInput, ContaUncheckedCreateWithoutConexaoIntegracaoInput> | ContaCreateWithoutConexaoIntegracaoInput[] | ContaUncheckedCreateWithoutConexaoIntegracaoInput[]
+    connectOrCreate?: ContaCreateOrConnectWithoutConexaoIntegracaoInput | ContaCreateOrConnectWithoutConexaoIntegracaoInput[]
+    createMany?: ContaCreateManyConexaoIntegracaoInputEnvelope
+    connect?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+  }
+
+  export type ContaUpdateManyWithoutConexaoIntegracaoNestedInput = {
+    create?: XOR<ContaCreateWithoutConexaoIntegracaoInput, ContaUncheckedCreateWithoutConexaoIntegracaoInput> | ContaCreateWithoutConexaoIntegracaoInput[] | ContaUncheckedCreateWithoutConexaoIntegracaoInput[]
+    connectOrCreate?: ContaCreateOrConnectWithoutConexaoIntegracaoInput | ContaCreateOrConnectWithoutConexaoIntegracaoInput[]
+    upsert?: ContaUpsertWithWhereUniqueWithoutConexaoIntegracaoInput | ContaUpsertWithWhereUniqueWithoutConexaoIntegracaoInput[]
+    createMany?: ContaCreateManyConexaoIntegracaoInputEnvelope
+    set?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+    disconnect?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+    delete?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+    connect?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+    update?: ContaUpdateWithWhereUniqueWithoutConexaoIntegracaoInput | ContaUpdateWithWhereUniqueWithoutConexaoIntegracaoInput[]
+    updateMany?: ContaUpdateManyWithWhereWithoutConexaoIntegracaoInput | ContaUpdateManyWithWhereWithoutConexaoIntegracaoInput[]
+    deleteMany?: ContaScalarWhereInput | ContaScalarWhereInput[]
+  }
+
+  export type ContaUncheckedUpdateManyWithoutConexaoIntegracaoNestedInput = {
+    create?: XOR<ContaCreateWithoutConexaoIntegracaoInput, ContaUncheckedCreateWithoutConexaoIntegracaoInput> | ContaCreateWithoutConexaoIntegracaoInput[] | ContaUncheckedCreateWithoutConexaoIntegracaoInput[]
+    connectOrCreate?: ContaCreateOrConnectWithoutConexaoIntegracaoInput | ContaCreateOrConnectWithoutConexaoIntegracaoInput[]
+    upsert?: ContaUpsertWithWhereUniqueWithoutConexaoIntegracaoInput | ContaUpsertWithWhereUniqueWithoutConexaoIntegracaoInput[]
+    createMany?: ContaCreateManyConexaoIntegracaoInputEnvelope
+    set?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+    disconnect?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+    delete?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+    connect?: ContaWhereUniqueInput | ContaWhereUniqueInput[]
+    update?: ContaUpdateWithWhereUniqueWithoutConexaoIntegracaoInput | ContaUpdateWithWhereUniqueWithoutConexaoIntegracaoInput[]
+    updateMany?: ContaUpdateManyWithWhereWithoutConexaoIntegracaoInput | ContaUpdateManyWithWhereWithoutConexaoIntegracaoInput[]
+    deleteMany?: ContaScalarWhereInput | ContaScalarWhereInput[]
   }
 
   export type ClienteCreateNestedOneWithoutFatosMidiaInput = {
@@ -34654,6 +36320,7 @@ export namespace Prisma {
     nomeConta?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    conexaoIntegracao?: ConexaoIntegracaoCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
     googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
@@ -34667,6 +36334,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
@@ -35350,6 +37018,7 @@ export namespace Prisma {
     accountIdPlataforma?: StringNullableFilter<"Conta"> | string | null
     googleAdsLoginCustomerId?: StringNullableFilter<"Conta"> | string | null
     nomeConta?: StringNullableFilter<"Conta"> | string | null
+    conexaoIntegracaoId?: StringNullableFilter<"Conta"> | string | null
     createdAt?: DateTimeFilter<"Conta"> | Date | string
     updatedAt?: DateTimeFilter<"Conta"> | Date | string
   }
@@ -35902,6 +37571,41 @@ export namespace Prisma {
     create: XOR<ClienteCreateWithoutContasInput, ClienteUncheckedCreateWithoutContasInput>
   }
 
+  export type ConexaoIntegracaoCreateWithoutContasInput = {
+    id?: string
+    nome: string
+    plataforma: string
+    ativo?: boolean
+    metaAccessToken?: string | null
+    googleClientId?: string | null
+    googleClientSecret?: string | null
+    googleDeveloperToken?: string | null
+    googleRefreshToken?: string | null
+    googleLoginCustomerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConexaoIntegracaoUncheckedCreateWithoutContasInput = {
+    id?: string
+    nome: string
+    plataforma: string
+    ativo?: boolean
+    metaAccessToken?: string | null
+    googleClientId?: string | null
+    googleClientSecret?: string | null
+    googleDeveloperToken?: string | null
+    googleRefreshToken?: string | null
+    googleLoginCustomerId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ConexaoIntegracaoCreateOrConnectWithoutContasInput = {
+    where: ConexaoIntegracaoWhereUniqueInput
+    create: XOR<ConexaoIntegracaoCreateWithoutContasInput, ConexaoIntegracaoUncheckedCreateWithoutContasInput>
+  }
+
   export type FatoAnalyticsDiarioCreateWithoutContaInput = {
     id?: string
     data: Date | string
@@ -36279,6 +37983,47 @@ export namespace Prisma {
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
+  export type ConexaoIntegracaoUpsertWithoutContasInput = {
+    update: XOR<ConexaoIntegracaoUpdateWithoutContasInput, ConexaoIntegracaoUncheckedUpdateWithoutContasInput>
+    create: XOR<ConexaoIntegracaoCreateWithoutContasInput, ConexaoIntegracaoUncheckedCreateWithoutContasInput>
+    where?: ConexaoIntegracaoWhereInput
+  }
+
+  export type ConexaoIntegracaoUpdateToOneWithWhereWithoutContasInput = {
+    where?: ConexaoIntegracaoWhereInput
+    data: XOR<ConexaoIntegracaoUpdateWithoutContasInput, ConexaoIntegracaoUncheckedUpdateWithoutContasInput>
+  }
+
+  export type ConexaoIntegracaoUpdateWithoutContasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    metaAccessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    googleDeveloperToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type ConexaoIntegracaoUncheckedUpdateWithoutContasInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    metaAccessToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientId?: NullableStringFieldUpdateOperationsInput | string | null
+    googleClientSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    googleDeveloperToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleRefreshToken?: NullableStringFieldUpdateOperationsInput | string | null
+    googleLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type FatoAnalyticsDiarioUpsertWithWhereUniqueWithoutContaInput = {
     where: FatoAnalyticsDiarioWhereUniqueInput
     update: XOR<FatoAnalyticsDiarioUpdateWithoutContaInput, FatoAnalyticsDiarioUncheckedUpdateWithoutContaInput>
@@ -36357,6 +38102,64 @@ export namespace Prisma {
   export type MetaAdsCriativoUpdateManyWithWhereWithoutContaInput = {
     where: MetaAdsCriativoScalarWhereInput
     data: XOR<MetaAdsCriativoUpdateManyMutationInput, MetaAdsCriativoUncheckedUpdateManyWithoutContaInput>
+  }
+
+  export type ContaCreateWithoutConexaoIntegracaoInput = {
+    id?: string
+    plataforma: string
+    accountIdPlataforma?: string | null
+    googleAdsLoginCustomerId?: string | null
+    nomeConta?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutContasInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
+    fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
+    googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
+    metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutContaInput
+  }
+
+  export type ContaUncheckedCreateWithoutConexaoIntegracaoInput = {
+    id?: string
+    clienteId: string
+    plataforma: string
+    accountIdPlataforma?: string | null
+    googleAdsLoginCustomerId?: string | null
+    nomeConta?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
+    fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutContaInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutContaInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutContaInput
+  }
+
+  export type ContaCreateOrConnectWithoutConexaoIntegracaoInput = {
+    where: ContaWhereUniqueInput
+    create: XOR<ContaCreateWithoutConexaoIntegracaoInput, ContaUncheckedCreateWithoutConexaoIntegracaoInput>
+  }
+
+  export type ContaCreateManyConexaoIntegracaoInputEnvelope = {
+    data: ContaCreateManyConexaoIntegracaoInput | ContaCreateManyConexaoIntegracaoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type ContaUpsertWithWhereUniqueWithoutConexaoIntegracaoInput = {
+    where: ContaWhereUniqueInput
+    update: XOR<ContaUpdateWithoutConexaoIntegracaoInput, ContaUncheckedUpdateWithoutConexaoIntegracaoInput>
+    create: XOR<ContaCreateWithoutConexaoIntegracaoInput, ContaUncheckedCreateWithoutConexaoIntegracaoInput>
+  }
+
+  export type ContaUpdateWithWhereUniqueWithoutConexaoIntegracaoInput = {
+    where: ContaWhereUniqueInput
+    data: XOR<ContaUpdateWithoutConexaoIntegracaoInput, ContaUncheckedUpdateWithoutConexaoIntegracaoInput>
+  }
+
+  export type ContaUpdateManyWithWhereWithoutConexaoIntegracaoInput = {
+    where: ContaScalarWhereInput
+    data: XOR<ContaUpdateManyMutationInput, ContaUncheckedUpdateManyWithoutConexaoIntegracaoInput>
   }
 
   export type ClienteCreateWithoutFatosMidiaInput = {
@@ -36443,6 +38246,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContasInput
+    conexaoIntegracao?: ConexaoIntegracaoCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
@@ -36456,6 +38260,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
@@ -36570,6 +38375,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
+    conexaoIntegracao?: ConexaoIntegracaoUpdateOneWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
@@ -36583,6 +38389,7 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
@@ -37299,6 +39106,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContasInput
+    conexaoIntegracao?: ConexaoIntegracaoCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
     googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
@@ -37312,6 +39120,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
@@ -37426,6 +39235,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
+    conexaoIntegracao?: ConexaoIntegracaoUpdateOneWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
     googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
@@ -37439,6 +39249,7 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
@@ -37531,6 +39342,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContasInput
+    conexaoIntegracao?: ConexaoIntegracaoCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
@@ -37544,6 +39356,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
@@ -37658,6 +39471,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
+    conexaoIntegracao?: ConexaoIntegracaoUpdateOneWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
@@ -37671,6 +39485,7 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
@@ -37763,6 +39578,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContasInput
+    conexaoIntegracao?: ConexaoIntegracaoCreateNestedOneWithoutContasInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutContaInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
     googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
@@ -37776,6 +39592,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutContaInput
@@ -37890,6 +39707,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
+    conexaoIntegracao?: ConexaoIntegracaoUpdateOneWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
     googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
@@ -37903,6 +39721,7 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
@@ -37995,6 +39814,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     cliente: ClienteCreateNestedOneWithoutContasInput
+    conexaoIntegracao?: ConexaoIntegracaoCreateNestedOneWithoutContasInput
     fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutContaInput
     googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutContaInput
     googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutContaInput
@@ -38008,6 +39828,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutContaInput
@@ -38122,6 +39943,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
+    conexaoIntegracao?: ConexaoIntegracaoUpdateOneWithoutContasNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
     googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
     googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
@@ -38135,6 +39957,7 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutContaNestedInput
@@ -39095,6 +40918,7 @@ export namespace Prisma {
     accountIdPlataforma?: string | null
     googleAdsLoginCustomerId?: string | null
     nomeConta?: string | null
+    conexaoIntegracaoId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39400,6 +41224,7 @@ export namespace Prisma {
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conexaoIntegracao?: ConexaoIntegracaoUpdateOneWithoutContasNestedInput
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
     fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
     googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
@@ -39413,6 +41238,7 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
@@ -39428,6 +41254,7 @@ export namespace Prisma {
     accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
     googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
     nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    conexaoIntegracaoId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -40549,6 +42376,60 @@ export namespace Prisma {
     purchases?: IntFieldUpdateOperationsInput | number
     websitePurchasesConversionValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     messagingConversationsStarted?: IntFieldUpdateOperationsInput | number
+  }
+
+  export type ContaCreateManyConexaoIntegracaoInput = {
+    id?: string
+    clienteId: string
+    plataforma: string
+    accountIdPlataforma?: string | null
+    googleAdsLoginCustomerId?: string | null
+    nomeConta?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type ContaUpdateWithoutConexaoIntegracaoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutContasNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutContaNestedInput
+    fatosMidia?: FatoMidiaDiarioUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutContaNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutContaNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutContaNestedInput
+  }
+
+  export type ContaUncheckedUpdateWithoutConexaoIntegracaoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutContaNestedInput
+    fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutContaNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutContaNestedInput
+  }
+
+  export type ContaUncheckedUpdateManyWithoutConexaoIntegracaoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    plataforma?: StringFieldUpdateOperationsInput | string
+    accountIdPlataforma?: NullableStringFieldUpdateOperationsInput | string | null
+    googleAdsLoginCustomerId?: NullableStringFieldUpdateOperationsInput | string | null
+    nomeConta?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type LeadCrmCreateManyCrmConfigInput = {

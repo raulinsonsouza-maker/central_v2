@@ -38,6 +38,8 @@ export async function PATCH(
     googleAdsLoginCustomerId?: string | null;
     metaAdsAccountId?: string | null;
     ga4PropertyId?: string | null;
+    conexaoMetaId?: string | null;
+    conexaoGoogleId?: string | null;
     leadScoringEnabled?: boolean;
     perfilPanel?: string | null;
     squad?: number | null;
@@ -124,6 +126,7 @@ export async function PATCH(
           ? body.googleAdsLoginCustomerId
           : currentGoogleConta?.googleAdsLoginCustomerId,
       nomeConta: nome,
+      conexaoIntegracaoId: body.conexaoGoogleId !== undefined ? body.conexaoGoogleId : undefined,
     });
     await upsertContaPlataforma({
       clienteId: id,
@@ -131,6 +134,7 @@ export async function PATCH(
       accountIdPlataforma:
         body.metaAdsAccountId !== undefined ? body.metaAdsAccountId : currentMetaConta?.accountIdPlataforma,
       nomeConta: nome,
+      conexaoIntegracaoId: body.conexaoMetaId !== undefined ? body.conexaoMetaId : undefined,
     });
     await upsertContaPlataforma({
       clienteId: id,

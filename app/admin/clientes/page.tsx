@@ -30,6 +30,7 @@ interface ContaAdmin {
   accountIdPlataforma: string | null;
   googleAdsLoginCustomerId?: string | null;
   nomeConta: string | null;
+  conexaoIntegracaoId?: string | null;
 }
 
 interface ClienteAdmin {
@@ -63,9 +64,18 @@ interface ClientePayload {
   googleAdsLoginCustomerId?: string | null;
   metaAdsAccountId?: string | null;
   ga4PropertyId?: string | null;
+  conexaoMetaId?: string | null;
+  conexaoGoogleId?: string | null;
   leadScoringEnabled?: boolean;
   perfilPanel?: string | null;
   squad?: number | null;
+}
+
+interface ConexaoOpcao {
+  id: string;
+  nome: string;
+  plataforma: "META" | "GOOGLE_ADS";
+  ativo: boolean;
 }
 
 function getHeaders(token?: string, includeJson = false): HeadersInit {
@@ -322,6 +332,20 @@ function ClienteForm({
     initialValues.googleAdsLoginCustomerId ?? ""
   );
   const [metaAdsAccountId, setMetaAdsAccountId] = useState(initialValues.metaAdsAccountId ?? "");
+  const [conexaoMetaId, setConexaoMetaId] = useState(initialValues.conexaoMetaId ?? "");
+  const [conexaoGoogleId, setConexaoGoogleId] = useState(initialValues.conexaoGoogleId ?? "");
+
+  const { data: todasConexoes = [] } = useQuery<ConexaoOpcao[]>({
+    queryKey: ["conexoes-lista", adminToken],
+    queryFn: async () => {
+      const r = await fetch("/api/admin/conexoes", { headers: getHeaders(adminToken) });
+      if (!r.ok) return [];
+      return r.json();
+    },
+    staleTime: 60_000,
+  });
+  const conexoesMeta = todasConexoes.filter((c) => c.plataforma === "META" && c.ativo);
+  const conexoesGoogle = todasConexoes.filter((c) => c.plataforma === "GOOGLE_ADS" && c.ativo);
   const [ga4PropertyId, setGa4PropertyId] = useState(initialValues.ga4PropertyId ?? "");
   const [orcamentoGoogle, setOrcamentoGoogle] = useState(
     initialValues.orcamentoMidiaGoogleMensal != null ? String(initialValues.orcamentoMidiaGoogleMensal) : ""
@@ -398,6 +422,39 @@ function ClienteForm({
                 />
               </FormField>
             </div>
+
+            {(conexoesMeta.length > 0 || conexoesGoogle.length > 0) && (
+              <div className="space-y-3 rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
+                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+                  Conexão de credenciais{" "}
+                  <span className="font-normal normal-case tracking-normal text-[var(--muted-foreground)]/70">
+                    — vazio = usa credenciais globais (Inout Principal)
+                  </span>
+                </p>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {conexoesMeta.length > 0 && (
+                    <FormField label="Conexão Meta" hint="Token/BM específico para este cliente.">
+                      <select value={conexaoMetaId} onChange={(e) => setConexaoMetaId(e.target.value)} className={inputClass}>
+                        <option value="">(credenciais globais)</option>
+                        {conexoesMeta.map((c) => (
+                          <option key={c.id} value={c.id}>{c.nome}</option>
+                        ))}
+                      </select>
+                    </FormField>
+                  )}
+                  {conexoesGoogle.length > 0 && (
+                    <FormField label="Conexão Google Ads" hint="OAuth/MCC específico para este cliente.">
+                      <select value={conexaoGoogleId} onChange={(e) => setConexaoGoogleId(e.target.value)} className={inputClass}>
+                        <option value="">(credenciais globais)</option>
+                        {conexoesGoogle.map((c) => (
+                          <option key={c.id} value={c.id}>{c.nome}</option>
+                        ))}
+                      </select>
+                    </FormField>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className="grid gap-4 sm:grid-cols-2">
               <FormField label="Logo do cliente">
@@ -543,6 +600,8 @@ function ClienteForm({
                     googleAdsLoginCustomerId: googleAdsLoginCustomerId.trim() || null,
                     metaAdsAccountId: metaAdsAccountId.trim() || null,
                     ga4PropertyId: ga4PropertyId.trim() || null,
+                    conexaoMetaId: conexaoMetaId || null,
+                    conexaoGoogleId: conexaoGoogleId || null,
                     syncAfterCreate: syncAfterSave,
                     syncNow: syncAfterSave,
                     leadScoringEnabled,
@@ -1785,6 +1844,12 @@ export default function AdminClientesPage() {
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
+            <a
+              href="/admin/conexoes"
+              className="inline-flex items-center gap-2 rounded-xl border border-[var(--border)] bg-[var(--card)] px-4 py-2.5 text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)] transition-all hover:border-[var(--primary)]/30 hover:text-[var(--primary)]"
+            >
+              Conexões
+            </a>
             <button
               onClick={() => syncAllMutation.mutate()}
               disabled={syncAllMutation.isPending}
@@ -2092,6 +2157,8 @@ export default function AdminClientesPage() {
               getConta(editing, "GOOGLE_ADS")?.googleAdsLoginCustomerId ?? null,
             metaAdsAccountId: getConta(editing, "META")?.accountIdPlataforma ?? null,
             ga4PropertyId: getConta(editing, "GOOGLE_ANALYTICS")?.accountIdPlataforma ?? null,
+            conexaoMetaId: getConta(editing, "META")?.conexaoIntegracaoId ?? null,
+            conexaoGoogleId: getConta(editing, "GOOGLE_ADS")?.conexaoIntegracaoId ?? null,
             orcamentoMidiaGoogleMensal: editing.orcamentoMidiaGoogleMensal ?? null,
             orcamentoMidiaMetaMensal: editing.orcamentoMidiaMetaMensal ?? null,
             leadScoringEnabled: editing.leadScoringEnabled ?? false,
