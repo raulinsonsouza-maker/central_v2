@@ -4,8 +4,9 @@ import { prisma } from "@/lib/db";
 import { syncCrmCliente } from "@/lib/sync/crmSync";
 
 function getAppUrl(): string {
-  if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
+  // REPLIT_DEV_DOMAIN is set only in dev — takes priority so dev never uses APP_URL (prod URL)
   if (process.env.REPLIT_DEV_DOMAIN) return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
   return "http://localhost:5000";
 }
 
@@ -21,8 +22,17 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const code = searchParams.get("code");
   const state = searchParams.get("state");
+  const oauthError = searchParams.get("error");
+  const oauthErrorDescription = searchParams.get("error_description");
   const appUrl = getAppUrl();
   const redirectBase = `${appUrl}/admin/clientes`;
+
+  // RD Station devolve ?error=...&error_description=... quando o OAuth falha
+  // (ex: redirect_uri divergente). Mostra a mensagem real em vez de mascarar.
+  if (oauthError) {
+    const errMsg = encodeURIComponent(oauthErrorDescription ?? oauthError);
+    return NextResponse.redirect(`${redirectBase}?rdError=${errMsg}`);
+  }
 
   if (!code || !state) {
     return NextResponse.redirect(`${redirectBase}?rdError=missing_params`);
