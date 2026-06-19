@@ -3,6 +3,7 @@ import { Prisma } from "@/lib/generated/prisma";
 import { CvCrmAdapter } from "./cvCrmAdapter";
 import { RdStationCrmAdapter } from "./rdStationAdapter";
 import { KommoAdapter } from "./kommoAdapter";
+import { ExactSpotterAdapter } from "./exactSpotterAdapter";
 import { prisma } from "@/lib/db";
 
 interface CrmConfigRecord {
@@ -138,6 +139,18 @@ export async function getCrmAdapter(config: CrmConfigRecord): Promise<CrmAdapter
       const token = creds.token as string | undefined;
       if (!token) throw new Error("Kommo requer token nas credenciais.");
       return new KommoAdapter(config.dominio, { token });
+    }
+
+    case "EXACT_SPOTTER": {
+      const token = creds.token as string | undefined;
+      if (!token) throw new Error("Exact Spotter requer token nas credenciais.");
+      const allowedSources = Array.isArray(creds.allowedSources)
+        ? (creds.allowedSources as string[])
+        : undefined;
+      const allowedStages = Array.isArray(creds.allowedStages)
+        ? (creds.allowedStages as string[])
+        : undefined;
+      return new ExactSpotterAdapter({ token, allowedSources, allowedStages });
     }
 
     default:

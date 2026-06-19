@@ -65,3 +65,11 @@ export interface RdStationCredentials {
 export interface KommoCredentials {
   token: string;
 }
+
+export interface ExactSpotterCredentials {
+  token: string;
+  /** Filtro de origem: só importa leads cuja source.value contém um desses valores (case-insensitive). Vazio = sem filtro. */
+  allowedSources?: string[];
+  /** Filtro de etapa: só importa leads cuja stage contém um desses valores (case-insensitive). Vazio = sem filtro. */
+  allowedStages?: string[];
+}

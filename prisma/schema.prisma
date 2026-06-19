@@ -365,6 +365,7 @@ enum CrmTipo {
   CVCRM
   RDSTATION_CRM
   KOMMO
+  EXACT_SPOTTER
 }
 
 model CrmConfig {

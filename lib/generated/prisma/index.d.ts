@@ -116,7 +116,8 @@ export namespace $Enums {
   export const CrmTipo: {
   CVCRM: 'CVCRM',
   RDSTATION_CRM: 'RDSTATION_CRM',
-  KOMMO: 'KOMMO'
+  KOMMO: 'KOMMO',
+  EXACT_SPOTTER: 'EXACT_SPOTTER'
 };
 
 export type CrmTipo = (typeof CrmTipo)[keyof typeof CrmTipo]

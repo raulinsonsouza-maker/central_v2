@@ -38,6 +38,10 @@ export async function GET(
     safeCredenciais.conversaoOriginalFilter = creds.conversaoOriginalFilter;
   if (Array.isArray(creds.conversaoUltimoFilter))
     safeCredenciais.conversaoUltimoFilter = creds.conversaoUltimoFilter;
+  if (Array.isArray(creds.allowedSources))
+    safeCredenciais.allowedSources = creds.allowedSources;
+  if (Array.isArray(creds.allowedStages))
+    safeCredenciais.allowedStages = creds.allowedStages;
 
   return NextResponse.json({
     id: config.id,
@@ -76,7 +80,7 @@ export async function PUT(
     return NextResponse.json({ deleted: deleted.count });
   }
 
-  const validTypes = ["CVCRM", "RDSTATION_CRM", "KOMMO"];
+  const validTypes = ["CVCRM", "RDSTATION_CRM", "KOMMO", "EXACT_SPOTTER"];
   if (!validTypes.includes(body.tipo)) {
     return NextResponse.json({ error: "Tipo CRM inválido" }, { status: 400 });
   }
@@ -107,13 +111,13 @@ export async function PUT(
     where: { clienteId: id },
     create: {
       clienteId: id,
-      tipo: body.tipo as "CVCRM" | "RDSTATION_CRM" | "KOMMO",
+      tipo: body.tipo as "CVCRM" | "RDSTATION_CRM" | "KOMMO" | "EXACT_SPOTTER",
       dominio: body.dominio ?? null,
       credenciais: credenciais as Prisma.InputJsonValue,
       ativo: body.ativo ?? true,
     },
     update: {
-      tipo: body.tipo as "CVCRM" | "RDSTATION_CRM" | "KOMMO",
+      tipo: body.tipo as "CVCRM" | "RDSTATION_CRM" | "KOMMO" | "EXACT_SPOTTER",
       dominio: body.dominio ?? null,
       credenciais: credenciais as Prisma.InputJsonValue,
       ativo: body.ativo ?? true,

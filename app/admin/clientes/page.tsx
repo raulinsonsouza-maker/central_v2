@@ -575,6 +575,7 @@ const CRM_TIPOS = [
   { value: "CVCRM", label: "CV CRM" },
   { value: "RDSTATION_CRM", label: "RD Station CRM" },
   { value: "KOMMO", label: "Kommo" },
+  { value: "EXACT_SPOTTER", label: "Exact Spotter" },
 ];
 
 function CrmConfigSection({
@@ -597,6 +598,9 @@ function CrmConfigSection({
   const [rdClientId, setRdClientId] = useState("");
   const [rdClientSecret, setRdClientSecret] = useState("");
   const [rdConnected, setRdConnected] = useState(false);
+  const [spotterToken, setSpotterToken] = useState("");
+  const [spotterAllowedSources, setSpotterAllowedSources] = useState("");
+  const [spotterAllowedStages, setSpotterAllowedStages] = useState("");
   const [ativo, setAtivo] = useState(true);
   const [loading, setLoading] = useState(false);
   const [testLoading, setTestLoading] = useState(false);
@@ -644,6 +648,13 @@ function CrmConfigSection({
           setRdConnected(!!creds.connected);
           if (creds.clientSecret) setRdClientSecret("••••••••");
         }
+        if (data.tipo === "EXACT_SPOTTER") {
+          if (creds.token) setSpotterToken("••••••••");
+          if (Array.isArray(creds.allowedSources) && creds.allowedSources.length > 0)
+            setSpotterAllowedSources((creds.allowedSources as string[]).join(", "));
+          if (Array.isArray(creds.allowedStages) && creds.allowedStages.length > 0)
+            setSpotterAllowedStages((creds.allowedStages as string[]).join(", "));
+        }
       })
       .catch(() => {});
   }, [clienteId, adminToken, initialLoaded]);
@@ -670,6 +681,13 @@ function CrmConfigSection({
           credenciais.clientSecret = rdClientSecret.trim();
       } else if (tipo === "KOMMO") {
         credenciais.token = token.trim();
+      } else if (tipo === "EXACT_SPOTTER") {
+        const parseList = (s: string) =>
+          s.split(/[\n,]/).map((t) => t.trim()).filter(Boolean);
+        if (spotterToken && !spotterToken.startsWith("•"))
+          credenciais.token = spotterToken.trim();
+        credenciais.allowedSources = parseList(spotterAllowedSources);
+        credenciais.allowedStages = parseList(spotterAllowedStages);
       }
       const res = await fetch(`/api/admin/clientes/${clienteId}/crm`, {
         method: "PUT",
@@ -707,6 +725,9 @@ function CrmConfigSection({
         credenciais.token = token.trim();
       } else if (tipo === "KOMMO") {
         credenciais.token = token.trim();
+      } else if (tipo === "EXACT_SPOTTER") {
+        if (spotterToken && !spotterToken.startsWith("•"))
+          credenciais.token = spotterToken.trim();
       }
       const res = await fetch(`/api/admin/clientes/${clienteId}/crm?action=test`, {
         method: "POST",
@@ -744,6 +765,9 @@ function CrmConfigSection({
       setRdClientId("");
       setRdClientSecret("");
       setRdConnected(false);
+      setSpotterToken("");
+      setSpotterAllowedSources("");
+      setSpotterAllowedStages("");
       setStatusMsg({ ok: true, msg: "Integração CRM removida." });
     } catch (e) {
       setStatusMsg({ ok: false, msg: e instanceof Error ? e.message : "Erro ao remover" });
@@ -1007,6 +1031,67 @@ function CrmConfigSection({
               placeholder="••••••••••••••••"
               className={inputClass}
             />
+          </div>
+        </>
+      )}
+
+      {tipo === "EXACT_SPOTTER" && (
+        <>
+          <div className="rounded-lg bg-[var(--muted)]/30 px-3 py-2 text-[11px] text-[var(--muted-foreground)] space-y-0.5">
+            <p>Token gerado em <strong>CONFIGURAÇÕES → INTEGRAÇÕES</strong> no Exact Spotter.</p>
+            <p className="text-[10px] opacity-70">O token é enviado no header <code className="font-mono">token_exact</code> em cada requisição.</p>
+          </div>
+          <div className="space-y-1">
+            <label className="text-xs font-medium text-[var(--muted-foreground)]">Token de API</label>
+            <input
+              type="password"
+              value={spotterToken}
+              onChange={(e) => setSpotterToken(e.target.value)}
+              placeholder="••••••••••••••••"
+              className={inputClass}
+            />
+          </div>
+          <div className="space-y-3 rounded-lg border border-[var(--border)] bg-[var(--background)]/40 p-3">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
+              Filtros de origem{" "}
+              <span className="font-normal normal-case tracking-normal text-[var(--muted-foreground)]/70">
+                — deixe vazio para importar todos os leads. Separe por vírgula.
+              </span>
+            </p>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-[var(--muted-foreground)]">
+                Origens permitidas{" "}
+                <span className="font-normal text-[var(--muted-foreground)]/70">(filtra pelo campo &quot;source&quot; do lead — ex.: Meta Ads, Google Ads)</span>
+              </label>
+              <input
+                type="text"
+                value={spotterAllowedSources}
+                onChange={(e) => setSpotterAllowedSources(e.target.value)}
+                placeholder="Ex.: Meta, Google, Facebook"
+                className={inputClass}
+              />
+              {spotterAllowedSources.trim() && (
+                <p className="text-[10px] text-[var(--muted-foreground)]/70">
+                  Origens ativas:{" "}
+                  {spotterAllowedSources.split(/[\n,]/).map((t) => t.trim()).filter(Boolean).map((t) => (
+                    <code key={t} className="mr-1 rounded bg-[var(--muted)]/60 px-1 py-0.5 font-mono">{t}</code>
+                  ))}
+                </p>
+              )}
+            </div>
+            <div className="space-y-1">
+              <label className="text-xs font-medium text-[var(--muted-foreground)]">
+                Etapas permitidas{" "}
+                <span className="font-normal text-[var(--muted-foreground)]/70">(filtra pelo campo &quot;stage&quot; — ex.: Entrada, Qualificados)</span>
+              </label>
+              <input
+                type="text"
+                value={spotterAllowedStages}
+                onChange={(e) => setSpotterAllowedStages(e.target.value)}
+                placeholder="Ex.: Entrada, Qualificados, Agendados (vazio = todos)"
+                className={inputClass}
+              />
+            </div>
           </div>
         </>
       )}
