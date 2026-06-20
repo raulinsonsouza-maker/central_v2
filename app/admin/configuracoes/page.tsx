@@ -1,9 +1,9 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, Bell, CheckCircle2, FileSpreadsheet, KeyRound, RefreshCw, Shield, Upload } from "lucide-react";
+import { AlertTriangle, Bell, CheckCircle2, Globe, KeyRound, Plus, RefreshCw, Shield, Wifi } from "lucide-react";
 
 function getHeaders(token?: string, includeJson = false): HeadersInit {
   const headers: HeadersInit = {};
@@ -88,16 +88,16 @@ async function updateIntegrationsConfigApi(
   };
 }
 
-type ImportResult = {
-  ok: boolean;
-  source: "upload" | "sheets";
-  total: number;
-  created: number;
-  updated: number;
-  failed: number;
-  errors?: string[];
-  colunasDetectadas?: string[];
-};
+interface ConexaoItem {
+  id: string;
+  nome: string;
+  plataforma: "META" | "GOOGLE_ADS";
+  ativo: boolean;
+  contasCount: number;
+  hasMetaAccessToken: boolean;
+  hasGoogleClientId: boolean;
+  hasGoogleRefreshToken: boolean;
+}
 
 export default function AdminIntegrationsConfigPage() {
   const queryClient = useQueryClient();
@@ -124,13 +124,6 @@ export default function AdminIntegrationsConfigPage() {
   const [testAlertLoading, setTestAlertLoading] = useState(false);
   const [testAlertResult, setTestAlertResult] = useState<{ ok: boolean; message: string } | null>(null);
 
-  // CSV Import state
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [importResult, setImportResult] = useState<ImportResult | null>(null);
-  const [importError, setImportError] = useState("");
-  const [importLoading, setImportLoading] = useState(false);
-  const [sheetsUrl, setSheetsUrl] = useState("");
 
   const {
     data,
@@ -201,52 +194,16 @@ export default function AdminIntegrationsConfigPage() {
     }
   }
 
-  async function handleImportFile() {
-    if (!selectedFile) return;
-    setImportLoading(true);
-    setImportError("");
-    setImportResult(null);
-    try {
-      const fd = new FormData();
-      fd.append("file", selectedFile);
-      const res = await fetch("/api/admin/import-leads-csv", {
-        method: "POST",
-        headers: { "x-admin-token": adminToken },
-        body: fd,
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || res.statusText);
-      setImportResult(json as ImportResult);
-      setSelectedFile(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
-    } catch (e) {
-      setImportError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setImportLoading(false);
-    }
-  }
-
-  async function handleSyncSheets() {
-    setImportLoading(true);
-    setImportError("");
-    setImportResult(null);
-    try {
-      const body: Record<string, string> = {};
-      if (sheetsUrl.trim()) body.sheetsUrl = sheetsUrl.trim();
-      const res = await fetch("/api/admin/import-leads-csv", {
-        method: "POST",
-        headers: { "x-admin-token": adminToken, "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || res.statusText);
-      setImportResult(json as ImportResult);
-    } catch (e) {
-      setImportError(e instanceof Error ? e.message : String(e));
-    } finally {
-      setImportLoading(false);
-    }
-  }
+  const { data: conexoes = [] } = useQuery<ConexaoItem[]>({
+    queryKey: ["admin-conexoes-mini", adminToken],
+    queryFn: async () => {
+      const r = await fetch("/api/admin/conexoes", { headers: getHeaders(adminToken) });
+      if (!r.ok) return [];
+      return r.json();
+    },
+    enabled: !!adminToken && !unauthorized,
+    staleTime: 60_000,
+  });
 
   if (!adminToken || unauthorized) {
     return (
@@ -438,6 +395,78 @@ export default function AdminIntegrationsConfigPage() {
             </div>
           </CardContent>
         </Card>
+      </section>
+
+      {/* ── Conexões BM / MCC ── */}
+      <section className="space-y-4">
+        <div className="flex items-start justify-between gap-4 flex-wrap">
+          <div>
+            <h2 className="text-lg font-bold tracking-tight text-[var(--foreground)]">Conexões de Integração</h2>
+            <p className="text-sm text-[var(--muted-foreground)]">
+              BMs (Meta) e MCCs (Google Ads) com credenciais próprias. Clientes sem vínculo usam as credenciais globais acima.
+            </p>
+          </div>
+          <a
+            href="/admin/conexoes"
+            className="flex shrink-0 items-center gap-1.5 rounded-xl bg-[var(--primary)] px-3 py-2 text-xs font-semibold text-white hover:opacity-90 transition-opacity"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            Nova conexão
+          </a>
+        </div>
+
+        {conexoes.length === 0 ? (
+          <div className="flex items-center gap-3 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--card)] px-4 py-4">
+            <Wifi className="h-4 w-4 shrink-0 text-[var(--muted-foreground)]/50" />
+            <p className="text-sm text-[var(--muted-foreground)]">
+              Nenhuma conexão cadastrada — todos os clientes usam as credenciais globais.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-3 sm:grid-cols-2">
+            {conexoes.map((c) => {
+              const ok =
+                c.plataforma === "META"
+                  ? c.hasMetaAccessToken
+                  : c.hasGoogleClientId && c.hasGoogleRefreshToken;
+              return (
+                <div
+                  key={c.id}
+                  className="flex items-center gap-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] px-4 py-3"
+                >
+                  <Globe className="h-4 w-4 shrink-0 text-[var(--muted-foreground)]" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="truncate text-sm font-semibold text-[var(--foreground)]">{c.nome}</span>
+                      <span
+                        className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                          c.plataforma === "META"
+                            ? "bg-blue-500/10 text-blue-500"
+                            : "bg-green-500/10 text-green-600"
+                        }`}
+                      >
+                        {c.plataforma === "META" ? "Meta" : "Google Ads"}
+                      </span>
+                      {!c.ativo && (
+                        <span className="text-[10px] text-[var(--muted-foreground)]/60">Inativa</span>
+                      )}
+                    </div>
+                    <p className="mt-0.5 flex items-center gap-1 text-[11px] text-[var(--muted-foreground)]">
+                      {ok ? (
+                        <CheckCircle2 className="h-3 w-3 text-green-500" />
+                      ) : (
+                        <AlertTriangle className="h-3 w-3 text-amber-500" />
+                      )}
+                      {ok ? "Credenciais configuradas" : "Credenciais incompletas"}
+                      <span className="text-[var(--muted-foreground)]/40">·</span>
+                      <span>{c.contasCount} conta{c.contasCount !== 1 ? "s" : ""}</span>
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       {/* ── Alertas automáticos ── */}
@@ -701,165 +730,6 @@ export default function AdminIntegrationsConfigPage() {
         </button>
       </section>
 
-      {/* ── Importação de Leads (CSV) ── */}
-      <section className="space-y-3">
-        <h2 className="text-lg font-bold tracking-tight text-[var(--foreground)]">
-          Importação de Leads — Inout
-        </h2>
-        <p className="text-sm text-[var(--muted-foreground)]">
-          Faça o upload de um arquivo CSV exportado da planilha de leads, ou sincronize diretamente
-          da planilha do Google Sheets. Novos leads são criados; existentes são atualizados.
-        </p>
-      </section>
-
-      <Card className="rounded-2xl border-[var(--border)]">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-base">
-            <FileSpreadsheet className="h-4 w-4 text-[var(--primary)]" />
-            Upload de arquivo CSV
-          </CardTitle>
-          <p className="mt-1 text-xs text-[var(--muted-foreground)]">
-            Selecione o arquivo <code className="rounded bg-white/5 px-1 py-0.5">.csv</code> exportado da planilha de leads da InOut.
-          </p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {/* Drop zone / file selector */}
-          <div
-            onClick={() => fileInputRef.current?.click()}
-            className="group flex cursor-pointer flex-col items-center justify-center gap-3 rounded-2xl border-2 border-dashed border-[var(--border)] bg-white/[0.02] px-6 py-10 transition-colors hover:border-[var(--primary)]/40 hover:bg-[var(--primary)]/5"
-          >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--primary)]/10 text-[var(--primary)] transition-transform group-hover:scale-105">
-              <Upload className="h-6 w-6" />
-            </div>
-            {selectedFile ? (
-              <div className="text-center">
-                <p className="text-sm font-semibold text-[var(--foreground)]">{selectedFile.name}</p>
-                <p className="text-xs text-[var(--muted-foreground)]">
-                  {(selectedFile.size / 1024).toFixed(1)} KB · Clique para trocar
-                </p>
-              </div>
-            ) : (
-              <div className="text-center">
-                <p className="text-sm font-medium text-[var(--foreground)]">Clique para selecionar o arquivo</p>
-                <p className="text-xs text-[var(--muted-foreground)]">ou arraste e solte aqui · CSV</p>
-              </div>
-            )}
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept=".csv,text/csv"
-              className="hidden"
-              onChange={(e) => {
-                const f = e.target.files?.[0];
-                if (f) { setSelectedFile(f); setImportResult(null); setImportError(""); }
-              }}
-            />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              disabled={!selectedFile || importLoading}
-              onClick={handleImportFile}
-              className="flex items-center gap-2 rounded-xl bg-[var(--primary)] px-5 py-2.5 text-sm font-semibold text-[var(--primary-foreground)] transition hover:opacity-90 disabled:opacity-40"
-            >
-              {importLoading && !selectedFile ? null : importLoading ? (
-                <RefreshCw className="h-4 w-4 animate-spin" />
-              ) : (
-                <Upload className="h-4 w-4" />
-              )}
-              {importLoading ? "Importando..." : "Importar CSV"}
-            </button>
-          </div>
-
-          {/* Google Sheets URL + sync */}
-          <div className="rounded-2xl border border-[var(--border)] bg-white/[0.02] p-4 space-y-3">
-            <div>
-              <label className="mb-1.5 block text-xs font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">
-                URL do Google Sheets
-              </label>
-              <input
-                type="url"
-                value={sheetsUrl}
-                onChange={(e) => setSheetsUrl(e.target.value)}
-                placeholder="https://docs.google.com/spreadsheets/d/..."
-                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none"
-              />
-              <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
-                Cole o link de compartilhamento da planilha. URLs normais (/edit, /view) são convertidas automaticamente.
-                Se deixar em branco, usa a planilha padrão da Inout.
-              </p>
-            </div>
-            <button
-              disabled={importLoading}
-              onClick={handleSyncSheets}
-              className="flex items-center gap-2 rounded-xl border border-[var(--border)] bg-white/[0.03] px-5 py-2.5 text-sm font-semibold text-[var(--foreground)] transition hover:bg-white/[0.06] disabled:opacity-40"
-            >
-              {importLoading ? (
-                <RefreshCw className="h-4 w-4 animate-spin" />
-              ) : (
-                <RefreshCw className="h-4 w-4" />
-              )}
-              Sincronizar Google Sheets
-            </button>
-          </div>
-
-          {/* Error */}
-          {importError && (
-            <div className="flex items-center gap-3 rounded-xl border border-red-500/30 bg-red-500/5 px-4 py-3 text-sm">
-              <AlertTriangle className="h-4 w-4 shrink-0 text-red-400" />
-              <span className="text-red-400">{importError}</span>
-            </div>
-          )}
-
-          {/* Result */}
-          {importResult && (
-            <div className="space-y-3 rounded-2xl border border-[var(--border)] bg-white/[0.02] p-5">
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                <span className="text-sm font-semibold text-[var(--foreground)]">
-                  Importação concluída
-                  <span className="ml-2 text-xs font-normal text-[var(--muted-foreground)]">
-                    via {importResult.source === "upload" ? "arquivo enviado" : "Google Sheets"}
-                  </span>
-                </span>
-              </div>
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                {[
-                  { label: "Total", value: importResult.total, color: "text-[var(--foreground)]" },
-                  { label: "Criados", value: importResult.created, color: "text-emerald-400" },
-                  { label: "Atualizados", value: importResult.updated, color: "text-cyan-400" },
-                  { label: "Falhas", value: importResult.failed, color: importResult.failed > 0 ? "text-red-400" : "text-[var(--muted-foreground)]" },
-                ].map((s) => (
-                  <div key={s.label} className="rounded-xl border border-[var(--border)] bg-white/[0.03] px-4 py-3 text-center">
-                    <p className={`text-2xl font-black ${s.color}`}>{s.value}</p>
-                    <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--muted-foreground)]">{s.label}</p>
-                  </div>
-                ))}
-              </div>
-              {importResult.failed > 0 && importResult.total > 0 && importResult.failed === importResult.total && importResult.colunasDetectadas && (
-                <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-3">
-                  <p className="text-xs font-semibold text-amber-400">Todos os leads falharam — verifique se as colunas do CSV estão corretas.</p>
-                  <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">Colunas detectadas no arquivo:</p>
-                  <p className="mt-1 font-mono text-[10px] text-amber-300 break-all">{importResult.colunasDetectadas.join(", ")}</p>
-                  <p className="mt-2 text-[11px] text-[var(--muted-foreground)]">Colunas obrigatórias: <span className="font-mono text-amber-300">id, created_time</span></p>
-                </div>
-              )}
-              {importResult.errors && importResult.errors.length > 0 && (
-                <details className="rounded-xl border border-red-500/20 bg-red-500/5 p-3">
-                  <summary className="cursor-pointer text-xs font-semibold text-red-400">
-                    {importResult.errors.length} erro(s) detalhados
-                  </summary>
-                  <ul className="mt-2 space-y-1">
-                    {importResult.errors.map((e, i) => (
-                      <li key={i} className="font-mono text-[10px] text-red-300">{e}</li>
-                    ))}
-                  </ul>
-                </details>
-              )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
     </main>
   );
 }
