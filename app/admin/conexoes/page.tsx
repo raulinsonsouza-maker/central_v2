@@ -1,8 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Plus, Pencil, Trash2, CheckCircle2, AlertCircle, Wifi, Globe, X } from "lucide-react";
+import {
+  Plus, Pencil, Trash2, CheckCircle2, AlertCircle, Wifi, Globe, X,
+  FlaskConical, Loader2, ArrowLeft,
+} from "lucide-react";
 
 interface Conexao {
   id: string;
@@ -15,6 +18,11 @@ interface Conexao {
   hasGoogleRefreshToken: boolean;
   googleLoginCustomerId: string | null;
   createdAt: string;
+}
+
+interface TestResult {
+  ok: boolean;
+  detail: string;
 }
 
 const inputClass =
@@ -41,9 +49,28 @@ export default function ConexoesPage() {
       return r.json();
     },
     retry: (_, err) => !(err instanceof Error && err.message === "Unauthorized"),
+    enabled: !!adminToken,
   });
 
   const [modal, setModal] = useState<"new" | { id: string } | null>(null);
+  const [testResults, setTestResults] = useState<Record<string, { loading: boolean; result?: TestResult }>>({});
+
+  const handleTest = useCallback(async (id: string) => {
+    setTestResults((prev) => ({ ...prev, [id]: { loading: true } }));
+    try {
+      const r = await fetch(`/api/admin/conexoes/${id}/test`, {
+        method: "POST",
+        headers: getHeaders(adminToken),
+      });
+      const data: TestResult = await r.json();
+      setTestResults((prev) => ({ ...prev, [id]: { loading: false, result: data } }));
+    } catch {
+      setTestResults((prev) => ({
+        ...prev,
+        [id]: { loading: false, result: { ok: false, detail: "Falha de rede ao testar" } },
+      }));
+    }
+  }, [adminToken]);
 
   const deleteMut = useMutation({
     mutationFn: async (id: string) => {
@@ -58,6 +85,9 @@ export default function ConexoesPage() {
 
   const isUnauthorized = error instanceof Error && error.message === "Unauthorized";
 
+  const credentialStatusOk = (c: Conexao) =>
+    c.plataforma === "META" ? c.hasMetaAccessToken : c.hasGoogleClientId && c.hasGoogleRefreshToken;
+
   return (
     <div className="mx-auto max-w-4xl space-y-8 px-4 py-8">
       <div className="flex items-start justify-between gap-4 flex-wrap">
@@ -71,16 +101,25 @@ export default function ConexoesPage() {
             </p>
           </div>
         </div>
-        <button
-          onClick={() => setModal("new")}
-          className="flex items-center gap-2 rounded-xl bg-[var(--primary)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
-        >
-          <Plus className="h-4 w-4" />
-          Nova conexão
-        </button>
+        <div className="flex items-center gap-2">
+          <a
+            href="/admin/clientes"
+            className="flex items-center gap-1.5 rounded-xl border border-[var(--border)] bg-[var(--card)] px-3 py-2 text-xs font-medium text-[var(--muted-foreground)] transition hover:text-[var(--foreground)]"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Clientes
+          </a>
+          <button
+            onClick={() => setModal("new")}
+            className="flex items-center gap-2 rounded-xl bg-[var(--primary)] px-4 py-2 text-sm font-semibold text-white hover:opacity-90 transition-opacity"
+          >
+            <Plus className="h-4 w-4" />
+            Nova conexão
+          </button>
+        </div>
       </div>
 
-      {(isUnauthorized || !adminToken) && (
+      {(!adminToken || isUnauthorized) && (
         <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-5 space-y-3">
           <p className="text-sm font-medium text-[var(--foreground)]">Token de administrador</p>
           <div className="flex gap-2">
@@ -105,7 +144,10 @@ export default function ConexoesPage() {
 
       {adminToken && !isUnauthorized && (
         isLoading ? (
-          <div className="text-sm text-[var(--muted-foreground)]">Carregando…</div>
+          <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)]">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Carregando…
+          </div>
         ) : conexoes.length === 0 ? (
           <div className="rounded-2xl border border-dashed border-[var(--border)] bg-[var(--card)] p-10 text-center">
             <Wifi className="mx-auto mb-3 h-8 w-8 text-[var(--muted-foreground)]/50" />
@@ -116,83 +158,132 @@ export default function ConexoesPage() {
           </div>
         ) : (
           <div className="space-y-3">
-            {conexoes.map((c) => (
-              <div
-                key={c.id}
-                className="group flex items-center gap-4 rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 transition-all hover:border-[color-mix(in_srgb,var(--primary)_25%,var(--border))]"
-              >
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--muted)]/40">
-                  <Globe className="h-5 w-5 text-[var(--muted-foreground)]" />
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="font-semibold text-[var(--foreground)]">{c.nome}</span>
-                    <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
-                        c.plataforma === "META"
-                          ? "bg-blue-500/10 text-blue-500"
-                          : "bg-green-500/10 text-green-600"
-                      }`}
-                    >
-                      {c.plataforma === "META" ? "Meta" : "Google Ads"}
-                    </span>
-                    {!c.ativo && (
-                      <span className="rounded-full bg-[var(--muted)]/50 px-2 py-0.5 text-[10px] text-[var(--muted-foreground)]">
-                        Inativa
-                      </span>
-                    )}
-                  </div>
-                  <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[var(--muted-foreground)]">
-                    {c.plataforma === "META" ? (
-                      <span className="flex items-center gap-1">
-                        {c.hasMetaAccessToken ? (
-                          <CheckCircle2 className="h-3 w-3 text-green-500" />
-                        ) : (
-                          <AlertCircle className="h-3 w-3 text-amber-500" />
-                        )}
-                        Token Meta {c.hasMetaAccessToken ? "configurado" : "ausente"}
-                      </span>
-                    ) : (
-                      <>
-                        <span className="flex items-center gap-1">
-                          {c.hasGoogleRefreshToken ? (
-                            <CheckCircle2 className="h-3 w-3 text-green-500" />
-                          ) : (
-                            <AlertCircle className="h-3 w-3 text-amber-500" />
-                          )}
-                          OAuth {c.hasGoogleRefreshToken ? "configurado" : "ausente"}
+            {conexoes.map((c) => {
+              const test = testResults[c.id];
+              const credOk = credentialStatusOk(c);
+              return (
+                <div
+                  key={c.id}
+                  className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 transition-all hover:border-[color-mix(in_srgb,var(--primary)_20%,var(--border))]"
+                >
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--muted)]/40">
+                      <Globe className="h-5 w-5 text-[var(--muted-foreground)]" />
+                    </div>
+
+                    <div className="min-w-0 flex-1 space-y-1.5">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-semibold text-[var(--foreground)]">{c.nome}</span>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide ${
+                            c.plataforma === "META"
+                              ? "bg-blue-500/10 text-blue-500"
+                              : "bg-green-500/10 text-green-600"
+                          }`}
+                        >
+                          {c.plataforma === "META" ? "Meta" : "Google Ads"}
                         </span>
-                        {c.googleLoginCustomerId && (
-                          <span>MCC: {c.googleLoginCustomerId}</span>
+                        {!c.ativo && (
+                          <span className="rounded-full bg-[var(--muted)]/50 px-2 py-0.5 text-[10px] text-[var(--muted-foreground)]">
+                            Inativa
+                          </span>
                         )}
-                      </>
-                    )}
-                    <span className="text-[var(--muted-foreground)]/50">·</span>
-                    <span>{c.contasCount} conta{c.contasCount !== 1 ? "s" : ""} vinculada{c.contasCount !== 1 ? "s" : ""}</span>
+                      </div>
+
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-[var(--muted-foreground)]">
+                        {c.plataforma === "META" ? (
+                          <span className="flex items-center gap-1">
+                            {c.hasMetaAccessToken ? (
+                              <CheckCircle2 className="h-3 w-3 text-green-500" />
+                            ) : (
+                              <AlertCircle className="h-3 w-3 text-amber-500" />
+                            )}
+                            Token {c.hasMetaAccessToken ? "configurado" : "ausente"}
+                          </span>
+                        ) : (
+                          <>
+                            <span className="flex items-center gap-1">
+                              {c.hasGoogleClientId ? (
+                                <CheckCircle2 className="h-3 w-3 text-green-500" />
+                              ) : (
+                                <AlertCircle className="h-3 w-3 text-amber-500" />
+                              )}
+                              Client ID {c.hasGoogleClientId ? "ok" : "ausente"}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              {c.hasGoogleRefreshToken ? (
+                                <CheckCircle2 className="h-3 w-3 text-green-500" />
+                              ) : (
+                                <AlertCircle className="h-3 w-3 text-amber-500" />
+                              )}
+                              Refresh Token {c.hasGoogleRefreshToken ? "ok" : "ausente"}
+                            </span>
+                            {c.googleLoginCustomerId && (
+                              <span>MCC: {c.googleLoginCustomerId}</span>
+                            )}
+                          </>
+                        )}
+                        <span className="text-[var(--muted-foreground)]/40">·</span>
+                        <span>{c.contasCount} conta{c.contasCount !== 1 ? "s" : ""} vinculada{c.contasCount !== 1 ? "s" : ""}</span>
+                      </div>
+
+                      {test?.result && (
+                        <div
+                          className={`mt-2 flex items-start gap-1.5 rounded-lg px-3 py-2 text-xs ${
+                            test.result.ok
+                              ? "bg-green-500/10 text-green-600"
+                              : "bg-red-500/10 text-red-500"
+                          }`}
+                        >
+                          {test.result.ok ? (
+                            <CheckCircle2 className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                          ) : (
+                            <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+                          )}
+                          <span>{test.result.detail}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex shrink-0 items-center gap-2">
+                      <button
+                        onClick={() => handleTest(c.id)}
+                        disabled={test?.loading || !credOk}
+                        title={credOk ? "Testar conexão na API" : "Preencha as credenciais antes de testar"}
+                        className="flex items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-1.5 text-xs font-medium text-[var(--muted-foreground)] transition hover:border-[var(--primary)]/40 hover:text-[var(--primary)] disabled:cursor-not-allowed disabled:opacity-40"
+                      >
+                        {test?.loading ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <FlaskConical className="h-3.5 w-3.5" />
+                        )}
+                        {test?.loading ? "Testando…" : "Testar"}
+                      </button>
+                      <button
+                        onClick={() => setModal({ id: c.id })}
+                        className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+                        title="Editar"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (c.contasCount > 0) {
+                            alert(`Esta conexão está vinculada a ${c.contasCount} conta(s). Desvincule-as primeiro em cada cliente.`);
+                            return;
+                          }
+                          if (confirm(`Remover conexão "${c.nome}"?`)) deleteMut.mutate(c.id);
+                        }}
+                        className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-2 text-[var(--muted-foreground)] hover:text-red-500 transition-colors"
+                        title="Remover"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div className="flex shrink-0 items-center gap-2 opacity-0 transition-opacity group-hover:opacity-100">
-                  <button
-                    onClick={() => setModal({ id: c.id })}
-                    className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-2 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
-                  >
-                    <Pencil className="h-3.5 w-3.5" />
-                  </button>
-                  <button
-                    onClick={() => {
-                      if (c.contasCount > 0) {
-                        alert(`Esta conexão está vinculada a ${c.contasCount} conta(s). Desvincule-as primeiro em cada cliente.`);
-                        return;
-                      }
-                      if (confirm(`Remover conexão "${c.nome}"?`)) deleteMut.mutate(c.id);
-                    }}
-                    className="rounded-lg border border-[var(--border)] bg-[var(--background)] p-2 text-[var(--muted-foreground)] hover:text-red-500 transition-colors"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )
       )}
@@ -214,11 +305,7 @@ export default function ConexoesPage() {
 }
 
 function ConexaoModal({
-  mode,
-  id,
-  token,
-  onClose,
-  onSaved,
+  mode, id, token, onClose, onSaved,
 }: {
   mode: "new" | "edit";
   id?: string;
@@ -370,9 +457,12 @@ function ConexaoModal({
                 type="password"
                 value={metaToken}
                 onChange={(e) => setMetaToken(e.target.value)}
-                placeholder="••••••••••••••••"
+                placeholder="Cole o token aqui para atualizar"
                 className={inputClass}
               />
+              <p className="text-[11px] text-[var(--muted-foreground)]/70">
+                Gere um token de longa duração (Sistema) no Business Manager → Configurações → Usuários do sistema.
+              </p>
             </div>
           ) : (
             <div className="space-y-3 rounded-lg border border-[var(--border)] bg-[var(--background)]/40 p-3">
@@ -391,7 +481,7 @@ function ConexaoModal({
                     type="password"
                     value={val}
                     onChange={(e) => set(e.target.value)}
-                    placeholder="••••••••••••••••"
+                    placeholder="Cole aqui para atualizar"
                     className={inputClass}
                   />
                 </div>
@@ -408,6 +498,9 @@ function ConexaoModal({
                   placeholder="Ex.: 123-456-7890"
                   className={inputClass}
                 />
+                <p className="text-[11px] text-[var(--muted-foreground)]/70">
+                  ID do MCC (conta mãe). Necessário quando o acesso é feito via conta gerenciadora.
+                </p>
               </div>
             </div>
           )}
