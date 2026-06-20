@@ -76,6 +76,7 @@ interface ConexaoOpcao {
   nome: string;
   plataforma: "META" | "GOOGLE_ADS";
   ativo: boolean;
+  googleLoginCustomerId?: string | null;
 }
 
 function getHeaders(token?: string, includeJson = false): HeadersInit {
@@ -388,31 +389,112 @@ function ClienteForm({
               <input value={nome} onChange={(e) => setNome(e.target.value)} className={inputClass} />
             </FormField>
 
+            {/* ── Google Ads ── */}
+            <div className="space-y-3 rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Google Ads</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField label="ID da conta Google Ads" hint="Pode colar com ou sem hífens.">
+                  <input
+                    value={googleAdsAccountId}
+                    onChange={(e) => setGoogleAdsAccountId(e.target.value)}
+                    placeholder="299-043-1301"
+                    className={inputClass}
+                  />
+                </FormField>
+                <FormField
+                  label="MCC (gerenciadora)"
+                  hint={
+                    conexoesGoogle.length > 0
+                      ? "Selecione de qual MCC cadastrado esta conta é gerenciada."
+                      : "Ex.: 3830547260 — ID numérico da conta MCC."
+                  }
+                >
+                  {conexoesGoogle.length > 0 ? (
+                    <select
+                      value={conexaoGoogleId}
+                      onChange={(e) => {
+                        const id = e.target.value;
+                        setConexaoGoogleId(id);
+                        if (id) {
+                          const conn = conexoesGoogle.find((c) => c.id === id);
+                          if (conn?.googleLoginCustomerId) {
+                            setGoogleAdsLoginCustomerId(conn.googleLoginCustomerId);
+                          }
+                        } else {
+                          setGoogleAdsLoginCustomerId("");
+                        }
+                      }}
+                      className={inputClass}
+                    >
+                      <option value="">(credenciais globais)</option>
+                      {conexoesGoogle.map((c) => (
+                        <option key={c.id} value={c.id}>
+                          {c.nome}{c.googleLoginCustomerId ? ` — MCC ${c.googleLoginCustomerId}` : ""}
+                        </option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      value={googleAdsLoginCustomerId}
+                      onChange={(e) => setGoogleAdsLoginCustomerId(e.target.value)}
+                      placeholder="3830547260"
+                      className={inputClass}
+                    />
+                  )}
+                  {conexaoGoogleId && googleAdsLoginCustomerId && (
+                    <p className="mt-1 text-[11px] text-[var(--muted-foreground)]">
+                      MCC: <span className="font-mono text-[var(--primary)]">{googleAdsLoginCustomerId}</span>
+                    </p>
+                  )}
+                </FormField>
+              </div>
+            </div>
+
+            {/* ── Meta Ads ── */}
+            <div className="space-y-3 rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">Meta Ads</p>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <FormField label="ID da conta Meta Ads" hint="Pode colar com ou sem act_.">
+                  <input
+                    value={metaAdsAccountId}
+                    onChange={(e) => setMetaAdsAccountId(e.target.value)}
+                    placeholder="320901911416777"
+                    className={inputClass}
+                  />
+                </FormField>
+                <FormField
+                  label="BM (Business Manager)"
+                  hint={
+                    conexoesMeta.length > 0
+                      ? "Selecione de qual BM cadastrada esta conta é gerenciada."
+                      : "Nenhuma BM cadastrada — usando credenciais globais."
+                  }
+                >
+                  {conexoesMeta.length > 0 ? (
+                    <select
+                      value={conexaoMetaId}
+                      onChange={(e) => setConexaoMetaId(e.target.value)}
+                      className={inputClass}
+                    >
+                      <option value="">(credenciais globais)</option>
+                      {conexoesMeta.map((c) => (
+                        <option key={c.id} value={c.id}>{c.nome}</option>
+                      ))}
+                    </select>
+                  ) : (
+                    <input
+                      value=""
+                      readOnly
+                      placeholder="Nenhuma BM cadastrada"
+                      className={`${inputClass} cursor-not-allowed opacity-50`}
+                    />
+                  )}
+                </FormField>
+              </div>
+            </div>
+
+            {/* ── Analytics ── */}
             <div className="grid gap-4 sm:grid-cols-2">
-              <FormField label="ID conta Google Ads" hint="Pode colar com ou sem hífens.">
-                <input
-                  value={googleAdsAccountId}
-                  onChange={(e) => setGoogleAdsAccountId(e.target.value)}
-                  placeholder="299-043-1301"
-                  className={inputClass}
-                />
-              </FormField>
-              <FormField label="MCC Google (login-customer-id)" hint="Ex.: 3830547260 ou 4896650578">
-                <input
-                  value={googleAdsLoginCustomerId}
-                  onChange={(e) => setGoogleAdsLoginCustomerId(e.target.value)}
-                  placeholder="3830547260"
-                  className={inputClass}
-                />
-              </FormField>
-              <FormField label="ID conta Meta Ads" hint="Pode colar com ou sem act_.">
-                <input
-                  value={metaAdsAccountId}
-                  onChange={(e) => setMetaAdsAccountId(e.target.value)}
-                  placeholder="320901911416777"
-                  className={inputClass}
-                />
-              </FormField>
               <FormField label="GA4 Property ID" hint="ID numérico da propriedade GA4 (Admin > Propriedade).">
                 <input
                   value={ga4PropertyId}
@@ -422,39 +504,6 @@ function ClienteForm({
                 />
               </FormField>
             </div>
-
-            {(conexoesMeta.length > 0 || conexoesGoogle.length > 0) && (
-              <div className="space-y-3 rounded-xl border border-[var(--border)] bg-[var(--muted)]/20 p-4">
-                <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-[var(--muted-foreground)]">
-                  Conexão de credenciais{" "}
-                  <span className="font-normal normal-case tracking-normal text-[var(--muted-foreground)]/70">
-                    — vazio = usa credenciais globais (Inout Principal)
-                  </span>
-                </p>
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {conexoesMeta.length > 0 && (
-                    <FormField label="Conexão Meta" hint="Token/BM específico para este cliente.">
-                      <select value={conexaoMetaId} onChange={(e) => setConexaoMetaId(e.target.value)} className={inputClass}>
-                        <option value="">(credenciais globais)</option>
-                        {conexoesMeta.map((c) => (
-                          <option key={c.id} value={c.id}>{c.nome}</option>
-                        ))}
-                      </select>
-                    </FormField>
-                  )}
-                  {conexoesGoogle.length > 0 && (
-                    <FormField label="Conexão Google Ads" hint="OAuth/MCC específico para este cliente.">
-                      <select value={conexaoGoogleId} onChange={(e) => setConexaoGoogleId(e.target.value)} className={inputClass}>
-                        <option value="">(credenciais globais)</option>
-                        {conexoesGoogle.map((c) => (
-                          <option key={c.id} value={c.id}>{c.nome}</option>
-                        ))}
-                      </select>
-                    </FormField>
-                  )}
-                </div>
-              </div>
-            )}
 
             <div className="grid gap-4 sm:grid-cols-2">
               <FormField label="Logo do cliente">
