@@ -25,6 +25,7 @@ interface FunilData {
   etapas: EtapaFunil[];
 }
 
+// ── Modelo Construtora / Incorporadora ───────────────────────────────────────
 type MacroGrupo = "Leads" | "Atendimento" | "Visitas" | "Reservas" | "Vendas" | "Perdidos";
 const MACRO_ORDER: MacroGrupo[] = ["Leads", "Atendimento", "Visitas", "Reservas", "Vendas", "Perdidos"];
 
@@ -54,6 +55,42 @@ function getMacroGrupo(etapa: string): MacroGrupo {
   return "Leads";
 }
 
+// ── Modelo Agência de Marketing ───────────────────────────────────────────────
+type MacroGrupoAgencia = "Prospecção" | "Conexão" | "Qualificação" | "Oportunidade" | "Fechamentos" | "Perdidos";
+const MACRO_ORDER_AGENCIA: MacroGrupoAgencia[] = ["Prospecção", "Conexão", "Qualificação", "Oportunidade", "Fechamentos", "Perdidos"];
+
+const MACRO_COLORS_AGENCIA: Record<MacroGrupoAgencia, string> = {
+  Prospecção:  "#6b7280",
+  Conexão:     "#3b82f6",
+  Qualificação:"#f59e0b",
+  Oportunidade:"#a855f7",
+  Fechamentos: "#10b981",
+  Perdidos:    "#ef4444",
+};
+
+function getMacroGrupoAgencia(etapa: string): MacroGrupoAgencia {
+  const e = etapa.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  if (
+    e.includes("descartado") || e.includes("perdido") || e.includes("cancelado") ||
+    e.includes("sem interesse") || e.includes("invalido") || e.includes("duplicado") ||
+    e.includes("inativo")
+  ) return "Perdidos";
+  if (e.includes("vendido") || e.includes("venda") || e.includes("contrato") || e.includes("assinado") || e.includes("cliente")) return "Fechamentos";
+  if (
+    e.includes("reuniao") || e.includes("proposta") || e.includes("oportunidade") ||
+    e.includes("opps") || e.includes("negociac")
+  ) return "Oportunidade";
+  if (
+    e.includes("agendado") || e.includes("agendamento") || e.includes("qualificac") ||
+    e.includes("pre-qualif") || e.includes("sql")
+  ) return "Qualificação";
+  if (
+    e.includes("tentativa") || e.includes("conectado") || e.includes("ativado") ||
+    e.includes("conexao")
+  ) return "Conexão";
+  return "Prospecção";
+}
+
 function fmtValor(v: number): string {
   if (v >= 1_000_000) return `R$ ${(v / 1_000_000).toFixed(1).replace(".", ",")}M`;
   if (v >= 1_000) return `R$ ${Math.round(v / 1_000)}k`;
@@ -67,11 +104,13 @@ export function FunilCrmSection({
   dateRange,
   leadFilter,
   onFilter,
+  perfilPanel,
 }: {
   clienteId: string;
   dateRange: { from: string; to: string };
   leadFilter?: LeadFilter;
   onFilter?: (f: LeadFilter) => void;
+  perfilPanel?: string | null;
 }) {
   const filterQs = leadFilter
     ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
@@ -101,13 +140,23 @@ export function FunilCrmSection({
 
   const etapas = data.etapas ?? [];
   const totalLeads = data.totalLeads;
+  const isAgencia = perfilPanel === "agencia";
 
-  const grouped = MACRO_ORDER.map((grupo) => {
-    const grupoEtapas = etapas.filter((e) => getMacroGrupo(e.etapa) === grupo);
-    const count = grupoEtapas.reduce((s, e) => s + e.count, 0);
-    const valor = grupoEtapas.reduce((s, e) => s + e.valor, 0);
-    return { grupo, etapas: grupoEtapas, count, valor };
-  }).filter((g) => g.etapas.length > 0);
+  const grouped = isAgencia
+    ? MACRO_ORDER_AGENCIA.map((grupo) => {
+        const grupoEtapas = etapas.filter((e) => getMacroGrupoAgencia(e.etapa) === grupo);
+        const count = grupoEtapas.reduce((s, e) => s + e.count, 0);
+        const valor = grupoEtapas.reduce((s, e) => s + e.valor, 0);
+        return { grupo, etapas: grupoEtapas, count, valor };
+      }).filter((g) => g.etapas.length > 0)
+    : MACRO_ORDER.map((grupo) => {
+        const grupoEtapas = etapas.filter((e) => getMacroGrupo(e.etapa) === grupo);
+        const count = grupoEtapas.reduce((s, e) => s + e.count, 0);
+        const valor = grupoEtapas.reduce((s, e) => s + e.valor, 0);
+        return { grupo, etapas: grupoEtapas, count, valor };
+      }).filter((g) => g.etapas.length > 0);
+
+  const macroColors: Record<string, string> = isAgencia ? MACRO_COLORS_AGENCIA : MACRO_COLORS;
 
   const taxaFechamento = totalLeads > 0
     ? ((data.totalGanhos / totalLeads) * 100).toFixed(1)
@@ -176,7 +225,7 @@ export function FunilCrmSection({
                     cy={cy}
                     r={r}
                     fill="none"
-                    stroke={MACRO_COLORS[s.grupo as MacroGrupo]}
+                    stroke={macroColors[s.grupo]}
                     strokeWidth={12}
                     strokeDasharray={`${s.dash} ${circumference - s.dash}`}
                     strokeDashoffset={-s.offset + circumference * 0.25}
@@ -198,14 +247,14 @@ export function FunilCrmSection({
                     <div className="flex items-center gap-1.5">
                       <span
                         className="h-2 w-2 rounded-full"
-                        style={{ background: MACRO_COLORS[s.grupo as MacroGrupo] }}
+                        style={{ background: macroColors[s.grupo] }}
                       />
                       <span className="text-[11px] font-semibold text-[var(--foreground)]">{s.grupo}</span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span
                         className="text-[11px] font-bold tabular-nums"
-                        style={{ color: MACRO_COLORS[s.grupo as MacroGrupo] }}
+                        style={{ color: macroColors[s.grupo] }}
                       >
                         {s.count.toLocaleString("pt-BR")}
                       </span>
@@ -222,7 +271,7 @@ export function FunilCrmSection({
                       className="h-full rounded-full"
                       style={{
                         width: `${s.pct}%`,
-                        background: MACRO_COLORS[s.grupo as MacroGrupo],
+                        background: macroColors[s.grupo],
                       }}
                     />
                   </div>
@@ -236,7 +285,7 @@ export function FunilCrmSection({
         {grouped.length > 0 && (
           <div className="space-y-4">
             {grouped.map((grupo) => {
-              const color = MACRO_COLORS[grupo.grupo];
+              const color = macroColors[grupo.grupo];
               const pctGrupo = totalLeads > 0 ? (grupo.count / totalLeads) * 100 : 0;
               const maxInGroup = Math.max(...grupo.etapas.map((e) => e.count), 1);
               return (

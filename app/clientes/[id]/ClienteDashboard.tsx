@@ -1302,6 +1302,7 @@ function formatPercentage(value: number) {
             from: dateFilter.dataInicio ?? new Date(new Date().getFullYear(), 0, 1).toISOString().slice(0, 10),
             to: dateFilter.dataFim ?? new Date().toISOString().slice(0, 10),
           }}
+          perfilPanel={cliente?.perfilPanel}
         />
       )}
 

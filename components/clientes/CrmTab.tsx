@@ -925,10 +925,12 @@ function MetaHierarquiaSection({
   data,
   activeFilter,
   onFilter,
+  isAgencia,
 }: {
   data: AtribuicaoData;
   activeFilter: LeadFilter;
   onFilter: (f: LeadFilter) => void;
+  isAgencia?: boolean;
 }) {
   const campanhas = data.porMetaHierarquia ?? [];
   const [openCamp, setOpenCamp] = React.useState<Set<string>>(new Set());
@@ -967,7 +969,7 @@ function MetaHierarquiaSection({
       {totalGanhos > 0 && (
         <div className="flex flex-wrap gap-2">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5">
-            <span className="text-xs font-semibold text-emerald-400">{totalGanhos} vendas</span>
+            <span className="text-xs font-semibold text-emerald-400">{totalGanhos} {isAgencia ? "fechamento" : "venda"}{totalGanhos !== 1 ? "s" : ""}</span>
             {totalValor > 0 && <span className="text-xs text-emerald-400/60">· {formatCurrencyBR(totalValor)}</span>}
           </div>
         </div>
@@ -977,7 +979,10 @@ function MetaHierarquiaSection({
         <table className="min-w-[860px] w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-              {["Campanha / Conjunto / Anúncio", "Leads", "Visitas", "Atend.", "Vendas", "Valor", "Invest.", "CPL", "Conv%"].map((h, i) => (
+              {(isAgencia
+                ? ["Campanha / Conjunto / Anúncio", "Leads", "Atend.", "Fechamentos", "Valor", "Invest.", "CPL", "Conv%"]
+                : ["Campanha / Conjunto / Anúncio", "Leads", "Visitas", "Atend.", "Vendas", "Valor", "Invest.", "CPL", "Conv%"]
+              ).map((h, i) => (
                 <th key={h} className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)] ${i === 0 ? "text-left" : "text-right"}`}>
                   {h}
                 </th>
@@ -1017,7 +1022,7 @@ function MetaHierarquiaSection({
                       </div>
                     </td>
                     <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.leads} cls="text-[var(--foreground)]" /></td>
-                    <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.visitou} cls="text-amber-400" dash /></td>
+                    {!isAgencia && <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.visitou} cls="text-amber-400" dash /></td>}
                     <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.andamento} cls="text-blue-400" dash /></td>
                     <td className="px-4 py-2.5 text-right"><MetaHierStat value={camp.ganhos} cls="text-emerald-400" dash /></td>
                     <td className="px-4 py-2.5 text-right tabular-nums text-[var(--muted-foreground)]">{camp.valor > 0 ? formatCurrencyBR(camp.valor) : <span className="opacity-25">—</span>}</td>
@@ -1057,7 +1062,7 @@ function MetaHierarquiaSection({
                             </div>
                           </td>
                           <td className="px-4 py-2 text-right"><MetaHierStat value={as.leads} cls="text-[var(--foreground)]" /></td>
-                          <td className="px-4 py-2 text-right"><MetaHierStat value={as.visitou} cls="text-amber-400" dash /></td>
+                          {!isAgencia && <td className="px-4 py-2 text-right"><MetaHierStat value={as.visitou} cls="text-amber-400" dash /></td>}
                           <td className="px-4 py-2 text-right"><MetaHierStat value={as.andamento} cls="text-blue-400" dash /></td>
                           <td className="px-4 py-2 text-right"><MetaHierStat value={as.ganhos} cls="text-emerald-400" dash /></td>
                           <td className="px-4 py-2 text-right tabular-nums text-[var(--muted-foreground)]">{as.valor > 0 ? formatCurrencyBR(as.valor) : <span className="opacity-25">—</span>}</td>
@@ -1098,7 +1103,7 @@ function MetaHierarquiaSection({
                                 </div>
                               </td>
                               <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.leads} cls="text-[var(--foreground)]" /></td>
-                              <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.visitou} cls="text-amber-400" dash /></td>
+                              {!isAgencia && <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.visitou} cls="text-amber-400" dash /></td>}
                               <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.andamento} cls="text-blue-400" dash /></td>
                               <td className="px-4 py-1.5 text-right"><MetaHierStat value={ad.ganhos} cls="text-emerald-400" dash /></td>
                               <td className="px-4 py-1.5 text-right tabular-nums text-[var(--muted-foreground)]">{ad.valor > 0 ? formatCurrencyBR(ad.valor) : <span className="opacity-25">—</span>}</td>
@@ -1135,10 +1140,12 @@ function GoogleUtmHierarquiaSection({
   data,
   activeFilter,
   onFilter,
+  isAgencia,
 }: {
   data: AtribuicaoData;
   activeFilter: LeadFilter;
   onFilter: (f: LeadFilter) => void;
+  isAgencia?: boolean;
 }) {
   const campanhas = data.porGoogleUtmHier ?? [];
   if (campanhas.length === 0) return null;
@@ -1161,7 +1168,7 @@ function GoogleUtmHierarquiaSection({
       {totalGanhos > 0 && (
         <div className="flex flex-wrap gap-2">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/5 px-3 py-1.5">
-            <span className="text-xs font-semibold text-emerald-400">{totalGanhos} {totalGanhos === 1 ? "venda" : "vendas"}</span>
+            <span className="text-xs font-semibold text-emerald-400">{totalGanhos} {isAgencia ? (totalGanhos === 1 ? "fechamento" : "fechamentos") : (totalGanhos === 1 ? "venda" : "vendas")}</span>
             {totalValor > 0 && <span className="text-xs text-emerald-400/60">· {formatCurrencyBR(totalValor)}</span>}
           </div>
           <div className="inline-flex items-center gap-1.5 rounded-full border border-blue-500/20 bg-blue-500/5 px-3 py-1.5">
@@ -1174,7 +1181,10 @@ function GoogleUtmHierarquiaSection({
         <table className="min-w-[620px] w-full text-sm">
           <thead>
             <tr className="border-b border-[var(--border)] bg-[var(--muted)]/30">
-              {["Campanha UTM", "Leads", "Visitas", "Atend.", "Vendas", "Valor", "Conv%"].map((h, i) => (
+              {(isAgencia
+                ? ["Campanha UTM", "Leads", "Atend.", "Fechamentos", "Valor", "Conv%"]
+                : ["Campanha UTM", "Leads", "Visitas", "Atend.", "Vendas", "Valor", "Conv%"]
+              ).map((h, i) => (
                 <th key={h} className={`px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-[var(--muted-foreground)] ${i === 0 ? "text-left" : "text-right"}`}>
                   {h}
                 </th>
@@ -1205,11 +1215,13 @@ function GoogleUtmHierarquiaSection({
                   <td className="px-4 py-2.5 text-right">
                     <span className="tabular-nums font-semibold text-[var(--foreground)]">{camp.leads.toLocaleString("pt-BR")}</span>
                   </td>
-                  <td className="px-4 py-2.5 text-right">
-                    {camp.visitou > 0
-                      ? <span className="tabular-nums font-semibold text-amber-400">{camp.visitou.toLocaleString("pt-BR")}</span>
-                      : <span className="opacity-25 text-[var(--muted-foreground)]">—</span>}
-                  </td>
+                  {!isAgencia && (
+                    <td className="px-4 py-2.5 text-right">
+                      {camp.visitou > 0
+                        ? <span className="tabular-nums font-semibold text-amber-400">{camp.visitou.toLocaleString("pt-BR")}</span>
+                        : <span className="opacity-25 text-[var(--muted-foreground)]">—</span>}
+                    </td>
+                  )}
                   <td className="px-4 py-2.5 text-right">
                     {camp.andamento > 0
                       ? <span className="tabular-nums font-semibold text-blue-400">{camp.andamento.toLocaleString("pt-BR")}</span>
@@ -1375,11 +1387,13 @@ function AtribuicaoSection({
   dateRange,
   activeFilter,
   onFilter,
+  isAgencia,
 }: {
   clienteId: string;
   dateRange: { from: string; to: string };
   activeFilter: LeadFilter;
   onFilter: (f: LeadFilter) => void;
+  isAgencia?: boolean;
 }) {
   const [convSearch, setConvSearch] = React.useState("");
   const [reconversoesOpen, setReconversoesOpen] = React.useState(false);
@@ -1499,13 +1513,17 @@ function AtribuicaoSection({
                           </div>
 
                           {/* ── Funil clicável ── */}
-                          <div className="mt-5 grid grid-cols-4 gap-1 border-t border-[var(--border)]/50 pt-4 text-center">
-                            {([
+                          <div className={`mt-5 grid gap-1 border-t border-[var(--border)]/50 pt-4 text-center ${isAgencia ? "grid-cols-3" : "grid-cols-4"}`}>
+                            {(isAgencia ? [
+                              { key: "leads",       label: "Leads",       val: c.leads,     cls: "text-[var(--foreground)]", dash: false },
+                              { key: "atendimento", label: "Atend.",       val: c.andamento, cls: "text-blue-400",            dash: true  },
+                              { key: "vendas",      label: "Fechamentos",  val: c.ganhos,    cls: "text-emerald-400",         dash: true  },
+                            ] : [
                               { key: "leads",       label: "Leads",  val: c.leads,     cls: "text-[var(--foreground)]", dash: false },
                               { key: "atendimento", label: "Atend.", val: c.andamento, cls: "text-blue-400",            dash: true  },
                               { key: "visitas",     label: "Visitas",val: c.visitou,   cls: "text-amber-400",           dash: true  },
                               { key: "vendas",      label: "Vendas", val: c.ganhos,    cls: "text-emerald-400",         dash: true  },
-                            ] as const).map((s) => {
+                            ]).map((s) => {
                               const stageActive = activeFilter?.type === "funil" && activeFilter.value === `${c.canal}|${s.key}`;
                               return (
                                 <button
@@ -1542,7 +1560,7 @@ function AtribuicaoSection({
                               {c.ganhos > 0 && (
                                 <span className="flex items-center gap-1">
                                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400/70" />
-                                  {c.ganhos} venda{c.ganhos !== 1 ? "s" : ""} ({ganhosPct.toFixed(0)}%)
+                                  {c.ganhos} {isAgencia ? "fechamento" : "venda"}{c.ganhos !== 1 ? "s" : ""} ({ganhosPct.toFixed(0)}%)
                                 </span>
                               )}
                               {c.andamento > 0 && (
@@ -1748,7 +1766,7 @@ function AtribuicaoSection({
       {/* Meta hierarchy (campanha → conjunto → anúncio) via dadosMarketing */}
       {!isLoading && data?.configured && (
         (data.porMetaHierarquia?.length ?? 0) > 0
-          ? <MetaHierarquiaSection data={data} activeFilter={activeFilter} onFilter={onFilter} />
+          ? <MetaHierarquiaSection data={data} activeFilter={activeFilter} onFilter={onFilter} isAgencia={isAgencia} />
           : (
             <div className="space-y-3">
               <div className="flex items-start gap-3">
@@ -1768,7 +1786,7 @@ function AtribuicaoSection({
 
       {/* Google UTM hierarchy (campanha UTM → leads) via dadosMarketing.utmCampaign */}
       {!isLoading && data?.configured && (data.porGoogleUtmHier?.length ?? 0) > 0 && (
-        <GoogleUtmHierarquiaSection data={data} activeFilter={activeFilter} onFilter={onFilter} />
+        <GoogleUtmHierarquiaSection data={data} activeFilter={activeFilter} onFilter={onFilter} isAgencia={isAgencia} />
       )}
 
       {reconversoesOpen && (data.reconversoesMeta?.length ?? 0) > 0 && (
@@ -1794,9 +1812,11 @@ function AtribuicaoSection({
 export function CrmTab({
   clienteId,
   dateRange,
+  perfilPanel,
 }: {
   clienteId: string;
   dateRange: { from: string; to: string };
+  perfilPanel?: string | null;
 }) {
   const [page, setPage] = React.useState(1);
   const PAGE_SIZE = 15;
@@ -1846,6 +1866,8 @@ export function CrmTab({
     },
   });
 
+  const isAgencia = perfilPanel === "agencia";
+
   const leads = leadsData?.leads ?? [];
   const total = leadsData?.total ?? 0;
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -1893,7 +1915,7 @@ export function CrmTab({
       )}
 
       {/* Funil */}
-      <FunilCrmSection clienteId={clienteId} dateRange={dateRange} leadFilter={leadFilter} onFilter={setLeadFilter} />
+      <FunilCrmSection clienteId={clienteId} dateRange={dateRange} leadFilter={leadFilter} onFilter={setLeadFilter} perfilPanel={perfilPanel} />
 
       {/* Análise de Origem */}
       <AtribuicaoSection
@@ -1901,6 +1923,7 @@ export function CrmTab({
         dateRange={dateRange}
         activeFilter={leadFilter}
         onFilter={setLeadFilter}
+        isAgencia={isAgencia}
       />
 
       {/* Negociações */}
