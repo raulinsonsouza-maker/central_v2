@@ -465,13 +465,41 @@ function DSection({ title, children }: { title: string; children: React.ReactNod
   );
 }
 
-function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () => void }) {
+interface FormAnswer { label: string; value: string; }
+
+function LeadDetailDrawer({
+  lead, onClose, clienteId, isAgencia,
+}: {
+  lead: Lead | null;
+  onClose: () => void;
+  clienteId: string;
+  isAgencia: boolean;
+}) {
   React.useEffect(() => {
     if (!lead) return;
     const h = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
     window.addEventListener("keydown", h);
     return () => window.removeEventListener("keydown", h);
   }, [lead, onClose]);
+
+  const [formAnswers, setFormAnswers] = React.useState<FormAnswer[]>([]);
+  const [formName, setFormName] = React.useState<string | null>(null);
+  const [formLoading, setFormLoading] = React.useState(false);
+
+  React.useEffect(() => {
+    setFormAnswers([]);
+    setFormName(null);
+    if (!isAgencia || !lead?.telefone) return;
+    setFormLoading(true);
+    fetch(`/api/clientes/${clienteId}/crm/form-answers?phone=${encodeURIComponent(lead.telefone)}`)
+      .then((r) => r.json())
+      .then((data) => {
+        setFormAnswers(data.answers ?? []);
+        setFormName(data.formName ?? null);
+      })
+      .catch(() => {})
+      .finally(() => setFormLoading(false));
+  }, [lead?.id, isAgencia, clienteId, lead?.telefone]);
 
   const cv = lead?.dadosCv ?? null;
   const rawTagsField = cv?.tags;
@@ -696,6 +724,39 @@ function LeadDetailDrawer({ lead, onClose }: { lead: Lead | null; onClose: () =>
                       </div>
                     )}
                   </div>
+                </div>
+              </>
+            )}
+
+            {/* Respostas do Formulário (agência — match por telefone com MetaLeadIndividual) */}
+            {isAgencia && (formLoading || formAnswers.length > 0) && (
+              <>
+                <div className="h-px bg-[var(--border)]" />
+                <div className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--primary)]">
+                      Respostas do Formulário
+                    </p>
+                    {formName && (
+                      <span className="truncate rounded-full bg-[var(--muted)] px-2 py-0.5 text-[10px] text-[var(--muted-foreground)]">
+                        {formName}
+                      </span>
+                    )}
+                  </div>
+                  {formLoading ? (
+                    <div className="flex items-center gap-2 text-[12px] text-[var(--muted-foreground)]">
+                      <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-[var(--primary)] border-t-transparent" />
+                      Carregando respostas…
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-2 gap-x-5 gap-y-3">
+                      {formAnswers.map((a) => (
+                        <div key={a.label} className={a.value.length > 40 ? "col-span-2" : ""}>
+                          <DField label={a.label} value={a.value} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </>
             )}
@@ -2116,7 +2177,7 @@ export function CrmTab({
       </div>
 
       {/* Lead Drawer */}
-      <LeadDetailDrawer lead={selectedLead} onClose={() => setSelectedLead(null)} />
+      <LeadDetailDrawer lead={selectedLead} onClose={() => setSelectedLead(null)} clienteId={clienteId} isAgencia={isAgencia} />
     </div>
   );
 }
