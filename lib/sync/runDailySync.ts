@@ -12,6 +12,7 @@ import { syncMetaTodosClientes } from "@/lib/sync/metaApiSync";
 import { syncGoogleAdsTodosClientes } from "@/lib/sync/googleAdsApiSync";
 import { syncAnalyticsTodosClientes } from "@/lib/sync/analyticsApiSync";
 import { syncCrmTodosClientes } from "@/lib/sync/crmSync";
+import { syncInstagramTodosClientes } from "@/lib/sync/syncInstagram";
 import { runDailyAlerts } from "@/lib/alerts/sendAlerts";
 
 type SyncResult = { clienteId: string; error?: string };
@@ -24,6 +25,7 @@ export interface StageResult {
 
 export interface DailySyncSummary {
   meta: StageResult;
+  instagram: StageResult;
   google: StageResult;
   ga4: StageResult;
   alertas: { ok: boolean; saldosBaixos: number; anomalias: number; error?: string };
@@ -111,11 +113,12 @@ export async function runDailySync(options?: {
 
   // Sequencial (não paralelo) para evitar estourar rate limits das APIs.
   const meta = await runStage("Meta Ads", () => syncMetaTodosClientes(opts));
+  const instagram = await runStage("Instagram", () => syncInstagramTodosClientes());
   const google = await runStage("Google Ads", () => syncGoogleAdsTodosClientes(opts));
   const ga4 = await runStage("Google Analytics", () => syncAnalyticsTodosClientes(opts));
   await runStage("CRM", () => syncCrmTodosClientes());
 
-  let fatalCount = [meta, google, ga4].filter((r) => r.fatal).length;
+  let fatalCount = [meta, instagram, google, ga4].filter((r) => r.fatal).length;
 
   // Alertas rodam por último, após os dados estarem atualizados.
   console.log(`[${ts()}] ▶️  Alertas de gestão: iniciando...`);
@@ -141,10 +144,11 @@ export async function runDailySync(options?: {
   console.log("============================================================");
   console.log(`[${ts()}] 📊 RESUMO`);
   console.log(`   Meta Ads:         ${meta.ok} ok / ${meta.erros} erros${meta.fatal ? " (FATAL)" : ""}`);
+  console.log(`   Instagram:        ${instagram.ok} ok / ${instagram.erros} erros${instagram.fatal ? " (FATAL)" : ""}`);
   console.log(`   Google Ads:       ${google.ok} ok / ${google.erros} erros${google.fatal ? " (FATAL)" : ""}`);
   console.log(`   Google Analytics: ${ga4.ok} ok / ${ga4.erros} erros${ga4.fatal ? " (FATAL)" : ""}`);
   console.log(`   Tempo total:      ${fmtDuration(durationMs)}`);
   console.log("============================================================");
 
-  return { meta, google, ga4, alertas, fatalCount, durationMs };
+  return { meta, instagram, google, ga4, alertas, fatalCount, durationMs };
 }

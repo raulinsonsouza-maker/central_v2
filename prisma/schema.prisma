@@ -42,6 +42,7 @@ model Cliente {
   leadsCrm                   LeadCrm[]
   rdMarketingConfig          RdMarketingConfig?
   pautasReuniao              PautaReuniao[]
+  instagramInsightsMensais   InstagramInsightMensal[]
 }
 
 model Conta {
@@ -441,4 +442,22 @@ model RdMarketingConfig {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   cliente      Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+}
+
+model InstagramInsightMensal {
+  id               String   @id @default(cuid())
+  clienteId        String
+  ano              Int
+  mes              Int
+  alcance          Int      @default(0)
+  engajamento      Int      @default(0)
+  novosSeguidores  Int      @default(0)
+  followersTotal   Int      @default(0)
+  syncedAt         DateTime @default(now())
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  cliente          Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteId, ano, mes])
+  @@index([clienteId, ano, mes])
 }

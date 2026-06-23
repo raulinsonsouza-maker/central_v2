@@ -113,6 +113,11 @@ export type LeadCrm = $Result.DefaultSelection<Prisma.$LeadCrmPayload>
  * 
  */
 export type RdMarketingConfig = $Result.DefaultSelection<Prisma.$RdMarketingConfigPayload>
+/**
+ * Model InstagramInsightMensal
+ * 
+ */
+export type InstagramInsightMensal = $Result.DefaultSelection<Prisma.$InstagramInsightMensalPayload>
 
 /**
  * Enums
@@ -450,6 +455,16 @@ export class PrismaClient<
     * ```
     */
   get rdMarketingConfig(): Prisma.RdMarketingConfigDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.instagramInsightMensal`: Exposes CRUD operations for the **InstagramInsightMensal** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more InstagramInsightMensals
+    * const instagramInsightMensals = await prisma.instagramInsightMensal.findMany()
+    * ```
+    */
+  get instagramInsightMensal(): Prisma.InstagramInsightMensalDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -910,7 +925,8 @@ export namespace Prisma {
     MetaLeadIndividual: 'MetaLeadIndividual',
     CrmConfig: 'CrmConfig',
     LeadCrm: 'LeadCrm',
-    RdMarketingConfig: 'RdMarketingConfig'
+    RdMarketingConfig: 'RdMarketingConfig',
+    InstagramInsightMensal: 'InstagramInsightMensal'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -929,7 +945,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "conta" | "conexaoIntegracao" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm" | "rdMarketingConfig"
+      modelProps: "cliente" | "conta" | "conexaoIntegracao" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm" | "rdMarketingConfig" | "instagramInsightMensal"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2413,6 +2429,80 @@ export namespace Prisma {
           }
         }
       }
+      InstagramInsightMensal: {
+        payload: Prisma.$InstagramInsightMensalPayload<ExtArgs>
+        fields: Prisma.InstagramInsightMensalFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.InstagramInsightMensalFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.InstagramInsightMensalFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>
+          }
+          findFirst: {
+            args: Prisma.InstagramInsightMensalFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.InstagramInsightMensalFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>
+          }
+          findMany: {
+            args: Prisma.InstagramInsightMensalFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>[]
+          }
+          create: {
+            args: Prisma.InstagramInsightMensalCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>
+          }
+          createMany: {
+            args: Prisma.InstagramInsightMensalCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.InstagramInsightMensalCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>[]
+          }
+          delete: {
+            args: Prisma.InstagramInsightMensalDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>
+          }
+          update: {
+            args: Prisma.InstagramInsightMensalUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>
+          }
+          deleteMany: {
+            args: Prisma.InstagramInsightMensalDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.InstagramInsightMensalUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.InstagramInsightMensalUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>[]
+          }
+          upsert: {
+            args: Prisma.InstagramInsightMensalUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$InstagramInsightMensalPayload>
+          }
+          aggregate: {
+            args: Prisma.InstagramInsightMensalAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateInstagramInsightMensal>
+          }
+          groupBy: {
+            args: Prisma.InstagramInsightMensalGroupByArgs<ExtArgs>
+            result: $Utils.Optional<InstagramInsightMensalGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.InstagramInsightMensalCountArgs<ExtArgs>
+            result: $Utils.Optional<InstagramInsightMensalCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2529,6 +2619,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigOmit
     leadCrm?: LeadCrmOmit
     rdMarketingConfig?: RdMarketingConfigOmit
+    instagramInsightMensal?: InstagramInsightMensalOmit
   }
 
   /* Types for Logging */
@@ -2622,6 +2713,7 @@ export namespace Prisma {
     metaLeadsIndividuais: number
     leadsCrm: number
     pautasReuniao: number
+    instagramInsightsMensais: number
   }
 
   export type ClienteCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -2638,6 +2730,7 @@ export namespace Prisma {
     metaLeadsIndividuais?: boolean | ClienteCountOutputTypeCountMetaLeadsIndividuaisArgs
     leadsCrm?: boolean | ClienteCountOutputTypeCountLeadsCrmArgs
     pautasReuniao?: boolean | ClienteCountOutputTypeCountPautasReuniaoArgs
+    instagramInsightsMensais?: boolean | ClienteCountOutputTypeCountInstagramInsightsMensaisArgs
   }
 
   // Custom InputTypes
@@ -2740,6 +2833,13 @@ export namespace Prisma {
    */
   export type ClienteCountOutputTypeCountPautasReuniaoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: PautaReuniaoWhereInput
+  }
+
+  /**
+   * ClienteCountOutputType without action
+   */
+  export type ClienteCountOutputTypeCountInstagramInsightsMensaisArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InstagramInsightMensalWhereInput
   }
 
 
@@ -3201,6 +3301,7 @@ export namespace Prisma {
     leadsCrm?: boolean | Cliente$leadsCrmArgs<ExtArgs>
     rdMarketingConfig?: boolean | Cliente$rdMarketingConfigArgs<ExtArgs>
     pautasReuniao?: boolean | Cliente$pautasReuniaoArgs<ExtArgs>
+    instagramInsightsMensais?: boolean | Cliente$instagramInsightsMensaisArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["cliente"]>
 
@@ -3284,6 +3385,7 @@ export namespace Prisma {
     leadsCrm?: boolean | Cliente$leadsCrmArgs<ExtArgs>
     rdMarketingConfig?: boolean | Cliente$rdMarketingConfigArgs<ExtArgs>
     pautasReuniao?: boolean | Cliente$pautasReuniaoArgs<ExtArgs>
+    instagramInsightsMensais?: boolean | Cliente$instagramInsightsMensaisArgs<ExtArgs>
     _count?: boolean | ClienteCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type ClienteIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -3307,6 +3409,7 @@ export namespace Prisma {
       leadsCrm: Prisma.$LeadCrmPayload<ExtArgs>[]
       rdMarketingConfig: Prisma.$RdMarketingConfigPayload<ExtArgs> | null
       pautasReuniao: Prisma.$PautaReuniaoPayload<ExtArgs>[]
+      instagramInsightsMensais: Prisma.$InstagramInsightMensalPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3736,6 +3839,7 @@ export namespace Prisma {
     leadsCrm<T extends Cliente$leadsCrmArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$leadsCrmArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$LeadCrmPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     rdMarketingConfig<T extends Cliente$rdMarketingConfigArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$rdMarketingConfigArgs<ExtArgs>>): Prisma__RdMarketingConfigClient<$Result.GetResult<Prisma.$RdMarketingConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     pautasReuniao<T extends Cliente$pautasReuniaoArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$pautasReuniaoArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PautaReuniaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    instagramInsightsMensais<T extends Cliente$instagramInsightsMensaisArgs<ExtArgs> = {}>(args?: Subset<T, Cliente$instagramInsightsMensaisArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4518,6 +4622,30 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: PautaReuniaoScalarFieldEnum | PautaReuniaoScalarFieldEnum[]
+  }
+
+  /**
+   * Cliente.instagramInsightsMensais
+   */
+  export type Cliente$instagramInsightsMensaisArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    where?: InstagramInsightMensalWhereInput
+    orderBy?: InstagramInsightMensalOrderByWithRelationInput | InstagramInsightMensalOrderByWithRelationInput[]
+    cursor?: InstagramInsightMensalWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: InstagramInsightMensalScalarFieldEnum | InstagramInsightMensalScalarFieldEnum[]
   }
 
   /**
@@ -27572,6 +27700,1196 @@ export namespace Prisma {
 
 
   /**
+   * Model InstagramInsightMensal
+   */
+
+  export type AggregateInstagramInsightMensal = {
+    _count: InstagramInsightMensalCountAggregateOutputType | null
+    _avg: InstagramInsightMensalAvgAggregateOutputType | null
+    _sum: InstagramInsightMensalSumAggregateOutputType | null
+    _min: InstagramInsightMensalMinAggregateOutputType | null
+    _max: InstagramInsightMensalMaxAggregateOutputType | null
+  }
+
+  export type InstagramInsightMensalAvgAggregateOutputType = {
+    ano: number | null
+    mes: number | null
+    alcance: number | null
+    engajamento: number | null
+    novosSeguidores: number | null
+    followersTotal: number | null
+  }
+
+  export type InstagramInsightMensalSumAggregateOutputType = {
+    ano: number | null
+    mes: number | null
+    alcance: number | null
+    engajamento: number | null
+    novosSeguidores: number | null
+    followersTotal: number | null
+  }
+
+  export type InstagramInsightMensalMinAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    ano: number | null
+    mes: number | null
+    alcance: number | null
+    engajamento: number | null
+    novosSeguidores: number | null
+    followersTotal: number | null
+    syncedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InstagramInsightMensalMaxAggregateOutputType = {
+    id: string | null
+    clienteId: string | null
+    ano: number | null
+    mes: number | null
+    alcance: number | null
+    engajamento: number | null
+    novosSeguidores: number | null
+    followersTotal: number | null
+    syncedAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type InstagramInsightMensalCountAggregateOutputType = {
+    id: number
+    clienteId: number
+    ano: number
+    mes: number
+    alcance: number
+    engajamento: number
+    novosSeguidores: number
+    followersTotal: number
+    syncedAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type InstagramInsightMensalAvgAggregateInputType = {
+    ano?: true
+    mes?: true
+    alcance?: true
+    engajamento?: true
+    novosSeguidores?: true
+    followersTotal?: true
+  }
+
+  export type InstagramInsightMensalSumAggregateInputType = {
+    ano?: true
+    mes?: true
+    alcance?: true
+    engajamento?: true
+    novosSeguidores?: true
+    followersTotal?: true
+  }
+
+  export type InstagramInsightMensalMinAggregateInputType = {
+    id?: true
+    clienteId?: true
+    ano?: true
+    mes?: true
+    alcance?: true
+    engajamento?: true
+    novosSeguidores?: true
+    followersTotal?: true
+    syncedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InstagramInsightMensalMaxAggregateInputType = {
+    id?: true
+    clienteId?: true
+    ano?: true
+    mes?: true
+    alcance?: true
+    engajamento?: true
+    novosSeguidores?: true
+    followersTotal?: true
+    syncedAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type InstagramInsightMensalCountAggregateInputType = {
+    id?: true
+    clienteId?: true
+    ano?: true
+    mes?: true
+    alcance?: true
+    engajamento?: true
+    novosSeguidores?: true
+    followersTotal?: true
+    syncedAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type InstagramInsightMensalAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InstagramInsightMensal to aggregate.
+     */
+    where?: InstagramInsightMensalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InstagramInsightMensals to fetch.
+     */
+    orderBy?: InstagramInsightMensalOrderByWithRelationInput | InstagramInsightMensalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: InstagramInsightMensalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InstagramInsightMensals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InstagramInsightMensals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned InstagramInsightMensals
+    **/
+    _count?: true | InstagramInsightMensalCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: InstagramInsightMensalAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: InstagramInsightMensalSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: InstagramInsightMensalMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: InstagramInsightMensalMaxAggregateInputType
+  }
+
+  export type GetInstagramInsightMensalAggregateType<T extends InstagramInsightMensalAggregateArgs> = {
+        [P in keyof T & keyof AggregateInstagramInsightMensal]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateInstagramInsightMensal[P]>
+      : GetScalarType<T[P], AggregateInstagramInsightMensal[P]>
+  }
+
+
+
+
+  export type InstagramInsightMensalGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: InstagramInsightMensalWhereInput
+    orderBy?: InstagramInsightMensalOrderByWithAggregationInput | InstagramInsightMensalOrderByWithAggregationInput[]
+    by: InstagramInsightMensalScalarFieldEnum[] | InstagramInsightMensalScalarFieldEnum
+    having?: InstagramInsightMensalScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: InstagramInsightMensalCountAggregateInputType | true
+    _avg?: InstagramInsightMensalAvgAggregateInputType
+    _sum?: InstagramInsightMensalSumAggregateInputType
+    _min?: InstagramInsightMensalMinAggregateInputType
+    _max?: InstagramInsightMensalMaxAggregateInputType
+  }
+
+  export type InstagramInsightMensalGroupByOutputType = {
+    id: string
+    clienteId: string
+    ano: number
+    mes: number
+    alcance: number
+    engajamento: number
+    novosSeguidores: number
+    followersTotal: number
+    syncedAt: Date
+    createdAt: Date
+    updatedAt: Date
+    _count: InstagramInsightMensalCountAggregateOutputType | null
+    _avg: InstagramInsightMensalAvgAggregateOutputType | null
+    _sum: InstagramInsightMensalSumAggregateOutputType | null
+    _min: InstagramInsightMensalMinAggregateOutputType | null
+    _max: InstagramInsightMensalMaxAggregateOutputType | null
+  }
+
+  type GetInstagramInsightMensalGroupByPayload<T extends InstagramInsightMensalGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<InstagramInsightMensalGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof InstagramInsightMensalGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], InstagramInsightMensalGroupByOutputType[P]>
+            : GetScalarType<T[P], InstagramInsightMensalGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type InstagramInsightMensalSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    ano?: boolean
+    mes?: boolean
+    alcance?: boolean
+    engajamento?: boolean
+    novosSeguidores?: boolean
+    followersTotal?: boolean
+    syncedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["instagramInsightMensal"]>
+
+  export type InstagramInsightMensalSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    ano?: boolean
+    mes?: boolean
+    alcance?: boolean
+    engajamento?: boolean
+    novosSeguidores?: boolean
+    followersTotal?: boolean
+    syncedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["instagramInsightMensal"]>
+
+  export type InstagramInsightMensalSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clienteId?: boolean
+    ano?: boolean
+    mes?: boolean
+    alcance?: boolean
+    engajamento?: boolean
+    novosSeguidores?: boolean
+    followersTotal?: boolean
+    syncedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["instagramInsightMensal"]>
+
+  export type InstagramInsightMensalSelectScalar = {
+    id?: boolean
+    clienteId?: boolean
+    ano?: boolean
+    mes?: boolean
+    alcance?: boolean
+    engajamento?: boolean
+    novosSeguidores?: boolean
+    followersTotal?: boolean
+    syncedAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type InstagramInsightMensalOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clienteId" | "ano" | "mes" | "alcance" | "engajamento" | "novosSeguidores" | "followersTotal" | "syncedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["instagramInsightMensal"]>
+  export type InstagramInsightMensalInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type InstagramInsightMensalIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+  export type InstagramInsightMensalIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    cliente?: boolean | ClienteDefaultArgs<ExtArgs>
+  }
+
+  export type $InstagramInsightMensalPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "InstagramInsightMensal"
+    objects: {
+      cliente: Prisma.$ClientePayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      clienteId: string
+      ano: number
+      mes: number
+      alcance: number
+      engajamento: number
+      novosSeguidores: number
+      followersTotal: number
+      syncedAt: Date
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["instagramInsightMensal"]>
+    composites: {}
+  }
+
+  type InstagramInsightMensalGetPayload<S extends boolean | null | undefined | InstagramInsightMensalDefaultArgs> = $Result.GetResult<Prisma.$InstagramInsightMensalPayload, S>
+
+  type InstagramInsightMensalCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<InstagramInsightMensalFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: InstagramInsightMensalCountAggregateInputType | true
+    }
+
+  export interface InstagramInsightMensalDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['InstagramInsightMensal'], meta: { name: 'InstagramInsightMensal' } }
+    /**
+     * Find zero or one InstagramInsightMensal that matches the filter.
+     * @param {InstagramInsightMensalFindUniqueArgs} args - Arguments to find a InstagramInsightMensal
+     * @example
+     * // Get one InstagramInsightMensal
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends InstagramInsightMensalFindUniqueArgs>(args: SelectSubset<T, InstagramInsightMensalFindUniqueArgs<ExtArgs>>): Prisma__InstagramInsightMensalClient<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one InstagramInsightMensal that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {InstagramInsightMensalFindUniqueOrThrowArgs} args - Arguments to find a InstagramInsightMensal
+     * @example
+     * // Get one InstagramInsightMensal
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends InstagramInsightMensalFindUniqueOrThrowArgs>(args: SelectSubset<T, InstagramInsightMensalFindUniqueOrThrowArgs<ExtArgs>>): Prisma__InstagramInsightMensalClient<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InstagramInsightMensal that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstagramInsightMensalFindFirstArgs} args - Arguments to find a InstagramInsightMensal
+     * @example
+     * // Get one InstagramInsightMensal
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends InstagramInsightMensalFindFirstArgs>(args?: SelectSubset<T, InstagramInsightMensalFindFirstArgs<ExtArgs>>): Prisma__InstagramInsightMensalClient<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first InstagramInsightMensal that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstagramInsightMensalFindFirstOrThrowArgs} args - Arguments to find a InstagramInsightMensal
+     * @example
+     * // Get one InstagramInsightMensal
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends InstagramInsightMensalFindFirstOrThrowArgs>(args?: SelectSubset<T, InstagramInsightMensalFindFirstOrThrowArgs<ExtArgs>>): Prisma__InstagramInsightMensalClient<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more InstagramInsightMensals that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstagramInsightMensalFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all InstagramInsightMensals
+     * const instagramInsightMensals = await prisma.instagramInsightMensal.findMany()
+     * 
+     * // Get first 10 InstagramInsightMensals
+     * const instagramInsightMensals = await prisma.instagramInsightMensal.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const instagramInsightMensalWithIdOnly = await prisma.instagramInsightMensal.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends InstagramInsightMensalFindManyArgs>(args?: SelectSubset<T, InstagramInsightMensalFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a InstagramInsightMensal.
+     * @param {InstagramInsightMensalCreateArgs} args - Arguments to create a InstagramInsightMensal.
+     * @example
+     * // Create one InstagramInsightMensal
+     * const InstagramInsightMensal = await prisma.instagramInsightMensal.create({
+     *   data: {
+     *     // ... data to create a InstagramInsightMensal
+     *   }
+     * })
+     * 
+     */
+    create<T extends InstagramInsightMensalCreateArgs>(args: SelectSubset<T, InstagramInsightMensalCreateArgs<ExtArgs>>): Prisma__InstagramInsightMensalClient<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many InstagramInsightMensals.
+     * @param {InstagramInsightMensalCreateManyArgs} args - Arguments to create many InstagramInsightMensals.
+     * @example
+     * // Create many InstagramInsightMensals
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends InstagramInsightMensalCreateManyArgs>(args?: SelectSubset<T, InstagramInsightMensalCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many InstagramInsightMensals and returns the data saved in the database.
+     * @param {InstagramInsightMensalCreateManyAndReturnArgs} args - Arguments to create many InstagramInsightMensals.
+     * @example
+     * // Create many InstagramInsightMensals
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many InstagramInsightMensals and only return the `id`
+     * const instagramInsightMensalWithIdOnly = await prisma.instagramInsightMensal.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends InstagramInsightMensalCreateManyAndReturnArgs>(args?: SelectSubset<T, InstagramInsightMensalCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a InstagramInsightMensal.
+     * @param {InstagramInsightMensalDeleteArgs} args - Arguments to delete one InstagramInsightMensal.
+     * @example
+     * // Delete one InstagramInsightMensal
+     * const InstagramInsightMensal = await prisma.instagramInsightMensal.delete({
+     *   where: {
+     *     // ... filter to delete one InstagramInsightMensal
+     *   }
+     * })
+     * 
+     */
+    delete<T extends InstagramInsightMensalDeleteArgs>(args: SelectSubset<T, InstagramInsightMensalDeleteArgs<ExtArgs>>): Prisma__InstagramInsightMensalClient<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one InstagramInsightMensal.
+     * @param {InstagramInsightMensalUpdateArgs} args - Arguments to update one InstagramInsightMensal.
+     * @example
+     * // Update one InstagramInsightMensal
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends InstagramInsightMensalUpdateArgs>(args: SelectSubset<T, InstagramInsightMensalUpdateArgs<ExtArgs>>): Prisma__InstagramInsightMensalClient<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more InstagramInsightMensals.
+     * @param {InstagramInsightMensalDeleteManyArgs} args - Arguments to filter InstagramInsightMensals to delete.
+     * @example
+     * // Delete a few InstagramInsightMensals
+     * const { count } = await prisma.instagramInsightMensal.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends InstagramInsightMensalDeleteManyArgs>(args?: SelectSubset<T, InstagramInsightMensalDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InstagramInsightMensals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstagramInsightMensalUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many InstagramInsightMensals
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends InstagramInsightMensalUpdateManyArgs>(args: SelectSubset<T, InstagramInsightMensalUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more InstagramInsightMensals and returns the data updated in the database.
+     * @param {InstagramInsightMensalUpdateManyAndReturnArgs} args - Arguments to update many InstagramInsightMensals.
+     * @example
+     * // Update many InstagramInsightMensals
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more InstagramInsightMensals and only return the `id`
+     * const instagramInsightMensalWithIdOnly = await prisma.instagramInsightMensal.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends InstagramInsightMensalUpdateManyAndReturnArgs>(args: SelectSubset<T, InstagramInsightMensalUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one InstagramInsightMensal.
+     * @param {InstagramInsightMensalUpsertArgs} args - Arguments to update or create a InstagramInsightMensal.
+     * @example
+     * // Update or create a InstagramInsightMensal
+     * const instagramInsightMensal = await prisma.instagramInsightMensal.upsert({
+     *   create: {
+     *     // ... data to create a InstagramInsightMensal
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the InstagramInsightMensal we want to update
+     *   }
+     * })
+     */
+    upsert<T extends InstagramInsightMensalUpsertArgs>(args: SelectSubset<T, InstagramInsightMensalUpsertArgs<ExtArgs>>): Prisma__InstagramInsightMensalClient<$Result.GetResult<Prisma.$InstagramInsightMensalPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of InstagramInsightMensals.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstagramInsightMensalCountArgs} args - Arguments to filter InstagramInsightMensals to count.
+     * @example
+     * // Count the number of InstagramInsightMensals
+     * const count = await prisma.instagramInsightMensal.count({
+     *   where: {
+     *     // ... the filter for the InstagramInsightMensals we want to count
+     *   }
+     * })
+    **/
+    count<T extends InstagramInsightMensalCountArgs>(
+      args?: Subset<T, InstagramInsightMensalCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], InstagramInsightMensalCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a InstagramInsightMensal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstagramInsightMensalAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends InstagramInsightMensalAggregateArgs>(args: Subset<T, InstagramInsightMensalAggregateArgs>): Prisma.PrismaPromise<GetInstagramInsightMensalAggregateType<T>>
+
+    /**
+     * Group by InstagramInsightMensal.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {InstagramInsightMensalGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends InstagramInsightMensalGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: InstagramInsightMensalGroupByArgs['orderBy'] }
+        : { orderBy?: InstagramInsightMensalGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, InstagramInsightMensalGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetInstagramInsightMensalGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the InstagramInsightMensal model
+   */
+  readonly fields: InstagramInsightMensalFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for InstagramInsightMensal.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__InstagramInsightMensalClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    cliente<T extends ClienteDefaultArgs<ExtArgs> = {}>(args?: Subset<T, ClienteDefaultArgs<ExtArgs>>): Prisma__ClienteClient<$Result.GetResult<Prisma.$ClientePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the InstagramInsightMensal model
+   */
+  interface InstagramInsightMensalFieldRefs {
+    readonly id: FieldRef<"InstagramInsightMensal", 'String'>
+    readonly clienteId: FieldRef<"InstagramInsightMensal", 'String'>
+    readonly ano: FieldRef<"InstagramInsightMensal", 'Int'>
+    readonly mes: FieldRef<"InstagramInsightMensal", 'Int'>
+    readonly alcance: FieldRef<"InstagramInsightMensal", 'Int'>
+    readonly engajamento: FieldRef<"InstagramInsightMensal", 'Int'>
+    readonly novosSeguidores: FieldRef<"InstagramInsightMensal", 'Int'>
+    readonly followersTotal: FieldRef<"InstagramInsightMensal", 'Int'>
+    readonly syncedAt: FieldRef<"InstagramInsightMensal", 'DateTime'>
+    readonly createdAt: FieldRef<"InstagramInsightMensal", 'DateTime'>
+    readonly updatedAt: FieldRef<"InstagramInsightMensal", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * InstagramInsightMensal findUnique
+   */
+  export type InstagramInsightMensalFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * Filter, which InstagramInsightMensal to fetch.
+     */
+    where: InstagramInsightMensalWhereUniqueInput
+  }
+
+  /**
+   * InstagramInsightMensal findUniqueOrThrow
+   */
+  export type InstagramInsightMensalFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * Filter, which InstagramInsightMensal to fetch.
+     */
+    where: InstagramInsightMensalWhereUniqueInput
+  }
+
+  /**
+   * InstagramInsightMensal findFirst
+   */
+  export type InstagramInsightMensalFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * Filter, which InstagramInsightMensal to fetch.
+     */
+    where?: InstagramInsightMensalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InstagramInsightMensals to fetch.
+     */
+    orderBy?: InstagramInsightMensalOrderByWithRelationInput | InstagramInsightMensalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InstagramInsightMensals.
+     */
+    cursor?: InstagramInsightMensalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InstagramInsightMensals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InstagramInsightMensals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InstagramInsightMensals.
+     */
+    distinct?: InstagramInsightMensalScalarFieldEnum | InstagramInsightMensalScalarFieldEnum[]
+  }
+
+  /**
+   * InstagramInsightMensal findFirstOrThrow
+   */
+  export type InstagramInsightMensalFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * Filter, which InstagramInsightMensal to fetch.
+     */
+    where?: InstagramInsightMensalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InstagramInsightMensals to fetch.
+     */
+    orderBy?: InstagramInsightMensalOrderByWithRelationInput | InstagramInsightMensalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for InstagramInsightMensals.
+     */
+    cursor?: InstagramInsightMensalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InstagramInsightMensals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InstagramInsightMensals.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of InstagramInsightMensals.
+     */
+    distinct?: InstagramInsightMensalScalarFieldEnum | InstagramInsightMensalScalarFieldEnum[]
+  }
+
+  /**
+   * InstagramInsightMensal findMany
+   */
+  export type InstagramInsightMensalFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * Filter, which InstagramInsightMensals to fetch.
+     */
+    where?: InstagramInsightMensalWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of InstagramInsightMensals to fetch.
+     */
+    orderBy?: InstagramInsightMensalOrderByWithRelationInput | InstagramInsightMensalOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing InstagramInsightMensals.
+     */
+    cursor?: InstagramInsightMensalWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` InstagramInsightMensals from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` InstagramInsightMensals.
+     */
+    skip?: number
+    distinct?: InstagramInsightMensalScalarFieldEnum | InstagramInsightMensalScalarFieldEnum[]
+  }
+
+  /**
+   * InstagramInsightMensal create
+   */
+  export type InstagramInsightMensalCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * The data needed to create a InstagramInsightMensal.
+     */
+    data: XOR<InstagramInsightMensalCreateInput, InstagramInsightMensalUncheckedCreateInput>
+  }
+
+  /**
+   * InstagramInsightMensal createMany
+   */
+  export type InstagramInsightMensalCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many InstagramInsightMensals.
+     */
+    data: InstagramInsightMensalCreateManyInput | InstagramInsightMensalCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * InstagramInsightMensal createManyAndReturn
+   */
+  export type InstagramInsightMensalCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * The data used to create many InstagramInsightMensals.
+     */
+    data: InstagramInsightMensalCreateManyInput | InstagramInsightMensalCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InstagramInsightMensal update
+   */
+  export type InstagramInsightMensalUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * The data needed to update a InstagramInsightMensal.
+     */
+    data: XOR<InstagramInsightMensalUpdateInput, InstagramInsightMensalUncheckedUpdateInput>
+    /**
+     * Choose, which InstagramInsightMensal to update.
+     */
+    where: InstagramInsightMensalWhereUniqueInput
+  }
+
+  /**
+   * InstagramInsightMensal updateMany
+   */
+  export type InstagramInsightMensalUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update InstagramInsightMensals.
+     */
+    data: XOR<InstagramInsightMensalUpdateManyMutationInput, InstagramInsightMensalUncheckedUpdateManyInput>
+    /**
+     * Filter which InstagramInsightMensals to update
+     */
+    where?: InstagramInsightMensalWhereInput
+    /**
+     * Limit how many InstagramInsightMensals to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * InstagramInsightMensal updateManyAndReturn
+   */
+  export type InstagramInsightMensalUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * The data used to update InstagramInsightMensals.
+     */
+    data: XOR<InstagramInsightMensalUpdateManyMutationInput, InstagramInsightMensalUncheckedUpdateManyInput>
+    /**
+     * Filter which InstagramInsightMensals to update
+     */
+    where?: InstagramInsightMensalWhereInput
+    /**
+     * Limit how many InstagramInsightMensals to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * InstagramInsightMensal upsert
+   */
+  export type InstagramInsightMensalUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * The filter to search for the InstagramInsightMensal to update in case it exists.
+     */
+    where: InstagramInsightMensalWhereUniqueInput
+    /**
+     * In case the InstagramInsightMensal found by the `where` argument doesn't exist, create a new InstagramInsightMensal with this data.
+     */
+    create: XOR<InstagramInsightMensalCreateInput, InstagramInsightMensalUncheckedCreateInput>
+    /**
+     * In case the InstagramInsightMensal was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<InstagramInsightMensalUpdateInput, InstagramInsightMensalUncheckedUpdateInput>
+  }
+
+  /**
+   * InstagramInsightMensal delete
+   */
+  export type InstagramInsightMensalDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+    /**
+     * Filter which InstagramInsightMensal to delete.
+     */
+    where: InstagramInsightMensalWhereUniqueInput
+  }
+
+  /**
+   * InstagramInsightMensal deleteMany
+   */
+  export type InstagramInsightMensalDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which InstagramInsightMensals to delete
+     */
+    where?: InstagramInsightMensalWhereInput
+    /**
+     * Limit how many InstagramInsightMensals to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * InstagramInsightMensal without action
+   */
+  export type InstagramInsightMensalDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the InstagramInsightMensal
+     */
+    select?: InstagramInsightMensalSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the InstagramInsightMensal
+     */
+    omit?: InstagramInsightMensalOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: InstagramInsightMensalInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -27985,6 +29303,23 @@ export namespace Prisma {
   export type RdMarketingConfigScalarFieldEnum = (typeof RdMarketingConfigScalarFieldEnum)[keyof typeof RdMarketingConfigScalarFieldEnum]
 
 
+  export const InstagramInsightMensalScalarFieldEnum: {
+    id: 'id',
+    clienteId: 'clienteId',
+    ano: 'ano',
+    mes: 'mes',
+    alcance: 'alcance',
+    engajamento: 'engajamento',
+    novosSeguidores: 'novosSeguidores',
+    followersTotal: 'followersTotal',
+    syncedAt: 'syncedAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type InstagramInsightMensalScalarFieldEnum = (typeof InstagramInsightMensalScalarFieldEnum)[keyof typeof InstagramInsightMensalScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -28197,6 +29532,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmListRelationFilter
     rdMarketingConfig?: XOR<RdMarketingConfigNullableScalarRelationFilter, RdMarketingConfigWhereInput> | null
     pautasReuniao?: PautaReuniaoListRelationFilter
+    instagramInsightsMensais?: InstagramInsightMensalListRelationFilter
   }
 
   export type ClienteOrderByWithRelationInput = {
@@ -28233,6 +29569,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmOrderByRelationAggregateInput
     rdMarketingConfig?: RdMarketingConfigOrderByWithRelationInput
     pautasReuniao?: PautaReuniaoOrderByRelationAggregateInput
+    instagramInsightsMensais?: InstagramInsightMensalOrderByRelationAggregateInput
   }
 
   export type ClienteWhereUniqueInput = Prisma.AtLeast<{
@@ -28272,6 +29609,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmListRelationFilter
     rdMarketingConfig?: XOR<RdMarketingConfigNullableScalarRelationFilter, RdMarketingConfigWhereInput> | null
     pautasReuniao?: PautaReuniaoListRelationFilter
+    instagramInsightsMensais?: InstagramInsightMensalListRelationFilter
   }, "id" | "slug" | "portalToken">
 
   export type ClienteOrderByWithAggregationInput = {
@@ -30267,6 +31605,94 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"RdMarketingConfig"> | Date | string
   }
 
+  export type InstagramInsightMensalWhereInput = {
+    AND?: InstagramInsightMensalWhereInput | InstagramInsightMensalWhereInput[]
+    OR?: InstagramInsightMensalWhereInput[]
+    NOT?: InstagramInsightMensalWhereInput | InstagramInsightMensalWhereInput[]
+    id?: StringFilter<"InstagramInsightMensal"> | string
+    clienteId?: StringFilter<"InstagramInsightMensal"> | string
+    ano?: IntFilter<"InstagramInsightMensal"> | number
+    mes?: IntFilter<"InstagramInsightMensal"> | number
+    alcance?: IntFilter<"InstagramInsightMensal"> | number
+    engajamento?: IntFilter<"InstagramInsightMensal"> | number
+    novosSeguidores?: IntFilter<"InstagramInsightMensal"> | number
+    followersTotal?: IntFilter<"InstagramInsightMensal"> | number
+    syncedAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+    createdAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+    updatedAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+  }
+
+  export type InstagramInsightMensalOrderByWithRelationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    ano?: SortOrder
+    mes?: SortOrder
+    alcance?: SortOrder
+    engajamento?: SortOrder
+    novosSeguidores?: SortOrder
+    followersTotal?: SortOrder
+    syncedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    cliente?: ClienteOrderByWithRelationInput
+  }
+
+  export type InstagramInsightMensalWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    clienteId_ano_mes?: InstagramInsightMensalClienteIdAnoMesCompoundUniqueInput
+    AND?: InstagramInsightMensalWhereInput | InstagramInsightMensalWhereInput[]
+    OR?: InstagramInsightMensalWhereInput[]
+    NOT?: InstagramInsightMensalWhereInput | InstagramInsightMensalWhereInput[]
+    clienteId?: StringFilter<"InstagramInsightMensal"> | string
+    ano?: IntFilter<"InstagramInsightMensal"> | number
+    mes?: IntFilter<"InstagramInsightMensal"> | number
+    alcance?: IntFilter<"InstagramInsightMensal"> | number
+    engajamento?: IntFilter<"InstagramInsightMensal"> | number
+    novosSeguidores?: IntFilter<"InstagramInsightMensal"> | number
+    followersTotal?: IntFilter<"InstagramInsightMensal"> | number
+    syncedAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+    createdAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+    updatedAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+    cliente?: XOR<ClienteScalarRelationFilter, ClienteWhereInput>
+  }, "id" | "clienteId_ano_mes">
+
+  export type InstagramInsightMensalOrderByWithAggregationInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    ano?: SortOrder
+    mes?: SortOrder
+    alcance?: SortOrder
+    engajamento?: SortOrder
+    novosSeguidores?: SortOrder
+    followersTotal?: SortOrder
+    syncedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: InstagramInsightMensalCountOrderByAggregateInput
+    _avg?: InstagramInsightMensalAvgOrderByAggregateInput
+    _max?: InstagramInsightMensalMaxOrderByAggregateInput
+    _min?: InstagramInsightMensalMinOrderByAggregateInput
+    _sum?: InstagramInsightMensalSumOrderByAggregateInput
+  }
+
+  export type InstagramInsightMensalScalarWhereWithAggregatesInput = {
+    AND?: InstagramInsightMensalScalarWhereWithAggregatesInput | InstagramInsightMensalScalarWhereWithAggregatesInput[]
+    OR?: InstagramInsightMensalScalarWhereWithAggregatesInput[]
+    NOT?: InstagramInsightMensalScalarWhereWithAggregatesInput | InstagramInsightMensalScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"InstagramInsightMensal"> | string
+    clienteId?: StringWithAggregatesFilter<"InstagramInsightMensal"> | string
+    ano?: IntWithAggregatesFilter<"InstagramInsightMensal"> | number
+    mes?: IntWithAggregatesFilter<"InstagramInsightMensal"> | number
+    alcance?: IntWithAggregatesFilter<"InstagramInsightMensal"> | number
+    engajamento?: IntWithAggregatesFilter<"InstagramInsightMensal"> | number
+    novosSeguidores?: IntWithAggregatesFilter<"InstagramInsightMensal"> | number
+    followersTotal?: IntWithAggregatesFilter<"InstagramInsightMensal"> | number
+    syncedAt?: DateTimeWithAggregatesFilter<"InstagramInsightMensal"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"InstagramInsightMensal"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"InstagramInsightMensal"> | Date | string
+  }
+
   export type ClienteCreateInput = {
     id?: string
     nome: string
@@ -30301,6 +31727,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateInput = {
@@ -30337,6 +31764,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUpdateInput = {
@@ -30373,6 +31801,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateInput = {
@@ -30409,6 +31838,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateManyInput = {
@@ -32713,6 +34143,103 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type InstagramInsightMensalCreateInput = {
+    id?: string
+    ano: number
+    mes: number
+    alcance?: number
+    engajamento?: number
+    novosSeguidores?: number
+    followersTotal?: number
+    syncedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    cliente: ClienteCreateNestedOneWithoutInstagramInsightsMensaisInput
+  }
+
+  export type InstagramInsightMensalUncheckedCreateInput = {
+    id?: string
+    clienteId: string
+    ano: number
+    mes: number
+    alcance?: number
+    engajamento?: number
+    novosSeguidores?: number
+    followersTotal?: number
+    syncedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InstagramInsightMensalUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ano?: IntFieldUpdateOperationsInput | number
+    mes?: IntFieldUpdateOperationsInput | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    engajamento?: IntFieldUpdateOperationsInput | number
+    novosSeguidores?: IntFieldUpdateOperationsInput | number
+    followersTotal?: IntFieldUpdateOperationsInput | number
+    syncedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    cliente?: ClienteUpdateOneRequiredWithoutInstagramInsightsMensaisNestedInput
+  }
+
+  export type InstagramInsightMensalUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    ano?: IntFieldUpdateOperationsInput | number
+    mes?: IntFieldUpdateOperationsInput | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    engajamento?: IntFieldUpdateOperationsInput | number
+    novosSeguidores?: IntFieldUpdateOperationsInput | number
+    followersTotal?: IntFieldUpdateOperationsInput | number
+    syncedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstagramInsightMensalCreateManyInput = {
+    id?: string
+    clienteId: string
+    ano: number
+    mes: number
+    alcance?: number
+    engajamento?: number
+    novosSeguidores?: number
+    followersTotal?: number
+    syncedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InstagramInsightMensalUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ano?: IntFieldUpdateOperationsInput | number
+    mes?: IntFieldUpdateOperationsInput | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    engajamento?: IntFieldUpdateOperationsInput | number
+    novosSeguidores?: IntFieldUpdateOperationsInput | number
+    followersTotal?: IntFieldUpdateOperationsInput | number
+    syncedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstagramInsightMensalUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clienteId?: StringFieldUpdateOperationsInput | string
+    ano?: IntFieldUpdateOperationsInput | number
+    mes?: IntFieldUpdateOperationsInput | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    engajamento?: IntFieldUpdateOperationsInput | number
+    novosSeguidores?: IntFieldUpdateOperationsInput | number
+    followersTotal?: IntFieldUpdateOperationsInput | number
+    syncedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -32880,6 +34407,12 @@ export namespace Prisma {
     none?: PautaReuniaoWhereInput
   }
 
+  export type InstagramInsightMensalListRelationFilter = {
+    every?: InstagramInsightMensalWhereInput
+    some?: InstagramInsightMensalWhereInput
+    none?: InstagramInsightMensalWhereInput
+  }
+
   export type SortOrderInput = {
     sort: SortOrder
     nulls?: NullsOrder
@@ -32934,6 +34467,10 @@ export namespace Prisma {
   }
 
   export type PautaReuniaoOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type InstagramInsightMensalOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -34579,6 +36116,72 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
+  export type InstagramInsightMensalClienteIdAnoMesCompoundUniqueInput = {
+    clienteId: string
+    ano: number
+    mes: number
+  }
+
+  export type InstagramInsightMensalCountOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    ano?: SortOrder
+    mes?: SortOrder
+    alcance?: SortOrder
+    engajamento?: SortOrder
+    novosSeguidores?: SortOrder
+    followersTotal?: SortOrder
+    syncedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InstagramInsightMensalAvgOrderByAggregateInput = {
+    ano?: SortOrder
+    mes?: SortOrder
+    alcance?: SortOrder
+    engajamento?: SortOrder
+    novosSeguidores?: SortOrder
+    followersTotal?: SortOrder
+  }
+
+  export type InstagramInsightMensalMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    ano?: SortOrder
+    mes?: SortOrder
+    alcance?: SortOrder
+    engajamento?: SortOrder
+    novosSeguidores?: SortOrder
+    followersTotal?: SortOrder
+    syncedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InstagramInsightMensalMinOrderByAggregateInput = {
+    id?: SortOrder
+    clienteId?: SortOrder
+    ano?: SortOrder
+    mes?: SortOrder
+    alcance?: SortOrder
+    engajamento?: SortOrder
+    novosSeguidores?: SortOrder
+    followersTotal?: SortOrder
+    syncedAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type InstagramInsightMensalSumOrderByAggregateInput = {
+    ano?: SortOrder
+    mes?: SortOrder
+    alcance?: SortOrder
+    engajamento?: SortOrder
+    novosSeguidores?: SortOrder
+    followersTotal?: SortOrder
+  }
+
   export type AgregadoMidiaMensalCreateNestedManyWithoutClienteInput = {
     create?: XOR<AgregadoMidiaMensalCreateWithoutClienteInput, AgregadoMidiaMensalUncheckedCreateWithoutClienteInput> | AgregadoMidiaMensalCreateWithoutClienteInput[] | AgregadoMidiaMensalUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: AgregadoMidiaMensalCreateOrConnectWithoutClienteInput | AgregadoMidiaMensalCreateOrConnectWithoutClienteInput[]
@@ -34682,6 +36285,13 @@ export namespace Prisma {
     connect?: PautaReuniaoWhereUniqueInput | PautaReuniaoWhereUniqueInput[]
   }
 
+  export type InstagramInsightMensalCreateNestedManyWithoutClienteInput = {
+    create?: XOR<InstagramInsightMensalCreateWithoutClienteInput, InstagramInsightMensalUncheckedCreateWithoutClienteInput> | InstagramInsightMensalCreateWithoutClienteInput[] | InstagramInsightMensalUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: InstagramInsightMensalCreateOrConnectWithoutClienteInput | InstagramInsightMensalCreateOrConnectWithoutClienteInput[]
+    createMany?: InstagramInsightMensalCreateManyClienteInputEnvelope
+    connect?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+  }
+
   export type AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput = {
     create?: XOR<AgregadoMidiaMensalCreateWithoutClienteInput, AgregadoMidiaMensalUncheckedCreateWithoutClienteInput> | AgregadoMidiaMensalCreateWithoutClienteInput[] | AgregadoMidiaMensalUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: AgregadoMidiaMensalCreateOrConnectWithoutClienteInput | AgregadoMidiaMensalCreateOrConnectWithoutClienteInput[]
@@ -34783,6 +36393,13 @@ export namespace Prisma {
     connectOrCreate?: PautaReuniaoCreateOrConnectWithoutClienteInput | PautaReuniaoCreateOrConnectWithoutClienteInput[]
     createMany?: PautaReuniaoCreateManyClienteInputEnvelope
     connect?: PautaReuniaoWhereUniqueInput | PautaReuniaoWhereUniqueInput[]
+  }
+
+  export type InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput = {
+    create?: XOR<InstagramInsightMensalCreateWithoutClienteInput, InstagramInsightMensalUncheckedCreateWithoutClienteInput> | InstagramInsightMensalCreateWithoutClienteInput[] | InstagramInsightMensalUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: InstagramInsightMensalCreateOrConnectWithoutClienteInput | InstagramInsightMensalCreateOrConnectWithoutClienteInput[]
+    createMany?: InstagramInsightMensalCreateManyClienteInputEnvelope
+    connect?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -35023,6 +36640,20 @@ export namespace Prisma {
     deleteMany?: PautaReuniaoScalarWhereInput | PautaReuniaoScalarWhereInput[]
   }
 
+  export type InstagramInsightMensalUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<InstagramInsightMensalCreateWithoutClienteInput, InstagramInsightMensalUncheckedCreateWithoutClienteInput> | InstagramInsightMensalCreateWithoutClienteInput[] | InstagramInsightMensalUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: InstagramInsightMensalCreateOrConnectWithoutClienteInput | InstagramInsightMensalCreateOrConnectWithoutClienteInput[]
+    upsert?: InstagramInsightMensalUpsertWithWhereUniqueWithoutClienteInput | InstagramInsightMensalUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: InstagramInsightMensalCreateManyClienteInputEnvelope
+    set?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+    disconnect?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+    delete?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+    connect?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+    update?: InstagramInsightMensalUpdateWithWhereUniqueWithoutClienteInput | InstagramInsightMensalUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: InstagramInsightMensalUpdateManyWithWhereWithoutClienteInput | InstagramInsightMensalUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: InstagramInsightMensalScalarWhereInput | InstagramInsightMensalScalarWhereInput[]
+  }
+
   export type AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput = {
     create?: XOR<AgregadoMidiaMensalCreateWithoutClienteInput, AgregadoMidiaMensalUncheckedCreateWithoutClienteInput> | AgregadoMidiaMensalCreateWithoutClienteInput[] | AgregadoMidiaMensalUncheckedCreateWithoutClienteInput[]
     connectOrCreate?: AgregadoMidiaMensalCreateOrConnectWithoutClienteInput | AgregadoMidiaMensalCreateOrConnectWithoutClienteInput[]
@@ -35223,6 +36854,20 @@ export namespace Prisma {
     update?: PautaReuniaoUpdateWithWhereUniqueWithoutClienteInput | PautaReuniaoUpdateWithWhereUniqueWithoutClienteInput[]
     updateMany?: PautaReuniaoUpdateManyWithWhereWithoutClienteInput | PautaReuniaoUpdateManyWithWhereWithoutClienteInput[]
     deleteMany?: PautaReuniaoScalarWhereInput | PautaReuniaoScalarWhereInput[]
+  }
+
+  export type InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput = {
+    create?: XOR<InstagramInsightMensalCreateWithoutClienteInput, InstagramInsightMensalUncheckedCreateWithoutClienteInput> | InstagramInsightMensalCreateWithoutClienteInput[] | InstagramInsightMensalUncheckedCreateWithoutClienteInput[]
+    connectOrCreate?: InstagramInsightMensalCreateOrConnectWithoutClienteInput | InstagramInsightMensalCreateOrConnectWithoutClienteInput[]
+    upsert?: InstagramInsightMensalUpsertWithWhereUniqueWithoutClienteInput | InstagramInsightMensalUpsertWithWhereUniqueWithoutClienteInput[]
+    createMany?: InstagramInsightMensalCreateManyClienteInputEnvelope
+    set?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+    disconnect?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+    delete?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+    connect?: InstagramInsightMensalWhereUniqueInput | InstagramInsightMensalWhereUniqueInput[]
+    update?: InstagramInsightMensalUpdateWithWhereUniqueWithoutClienteInput | InstagramInsightMensalUpdateWithWhereUniqueWithoutClienteInput[]
+    updateMany?: InstagramInsightMensalUpdateManyWithWhereWithoutClienteInput | InstagramInsightMensalUpdateManyWithWhereWithoutClienteInput[]
+    deleteMany?: InstagramInsightMensalScalarWhereInput | InstagramInsightMensalScalarWhereInput[]
   }
 
   export type ClienteCreateNestedOneWithoutContasInput = {
@@ -35873,6 +37518,20 @@ export namespace Prisma {
     upsert?: ClienteUpsertWithoutRdMarketingConfigInput
     connect?: ClienteWhereUniqueInput
     update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutRdMarketingConfigInput, ClienteUpdateWithoutRdMarketingConfigInput>, ClienteUncheckedUpdateWithoutRdMarketingConfigInput>
+  }
+
+  export type ClienteCreateNestedOneWithoutInstagramInsightsMensaisInput = {
+    create?: XOR<ClienteCreateWithoutInstagramInsightsMensaisInput, ClienteUncheckedCreateWithoutInstagramInsightsMensaisInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutInstagramInsightsMensaisInput
+    connect?: ClienteWhereUniqueInput
+  }
+
+  export type ClienteUpdateOneRequiredWithoutInstagramInsightsMensaisNestedInput = {
+    create?: XOR<ClienteCreateWithoutInstagramInsightsMensaisInput, ClienteUncheckedCreateWithoutInstagramInsightsMensaisInput>
+    connectOrCreate?: ClienteCreateOrConnectWithoutInstagramInsightsMensaisInput
+    upsert?: ClienteUpsertWithoutInstagramInsightsMensaisInput
+    connect?: ClienteWhereUniqueInput
+    update?: XOR<XOR<ClienteUpdateToOneWithWhereWithoutInstagramInsightsMensaisInput, ClienteUpdateWithoutInstagramInsightsMensaisInput>, ClienteUncheckedUpdateWithoutInstagramInsightsMensaisInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -36924,6 +38583,42 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type InstagramInsightMensalCreateWithoutClienteInput = {
+    id?: string
+    ano: number
+    mes: number
+    alcance?: number
+    engajamento?: number
+    novosSeguidores?: number
+    followersTotal?: number
+    syncedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InstagramInsightMensalUncheckedCreateWithoutClienteInput = {
+    id?: string
+    ano: number
+    mes: number
+    alcance?: number
+    engajamento?: number
+    novosSeguidores?: number
+    followersTotal?: number
+    syncedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type InstagramInsightMensalCreateOrConnectWithoutClienteInput = {
+    where: InstagramInsightMensalWhereUniqueInput
+    create: XOR<InstagramInsightMensalCreateWithoutClienteInput, InstagramInsightMensalUncheckedCreateWithoutClienteInput>
+  }
+
+  export type InstagramInsightMensalCreateManyClienteInputEnvelope = {
+    data: InstagramInsightMensalCreateManyClienteInput | InstagramInsightMensalCreateManyClienteInput[]
+    skipDuplicates?: boolean
+  }
+
   export type AgregadoMidiaMensalUpsertWithWhereUniqueWithoutClienteInput = {
     where: AgregadoMidiaMensalWhereUniqueInput
     update: XOR<AgregadoMidiaMensalUpdateWithoutClienteInput, AgregadoMidiaMensalUncheckedUpdateWithoutClienteInput>
@@ -37496,6 +39191,39 @@ export namespace Prisma {
     prioridade?: StringFilter<"PautaReuniao"> | string
   }
 
+  export type InstagramInsightMensalUpsertWithWhereUniqueWithoutClienteInput = {
+    where: InstagramInsightMensalWhereUniqueInput
+    update: XOR<InstagramInsightMensalUpdateWithoutClienteInput, InstagramInsightMensalUncheckedUpdateWithoutClienteInput>
+    create: XOR<InstagramInsightMensalCreateWithoutClienteInput, InstagramInsightMensalUncheckedCreateWithoutClienteInput>
+  }
+
+  export type InstagramInsightMensalUpdateWithWhereUniqueWithoutClienteInput = {
+    where: InstagramInsightMensalWhereUniqueInput
+    data: XOR<InstagramInsightMensalUpdateWithoutClienteInput, InstagramInsightMensalUncheckedUpdateWithoutClienteInput>
+  }
+
+  export type InstagramInsightMensalUpdateManyWithWhereWithoutClienteInput = {
+    where: InstagramInsightMensalScalarWhereInput
+    data: XOR<InstagramInsightMensalUpdateManyMutationInput, InstagramInsightMensalUncheckedUpdateManyWithoutClienteInput>
+  }
+
+  export type InstagramInsightMensalScalarWhereInput = {
+    AND?: InstagramInsightMensalScalarWhereInput | InstagramInsightMensalScalarWhereInput[]
+    OR?: InstagramInsightMensalScalarWhereInput[]
+    NOT?: InstagramInsightMensalScalarWhereInput | InstagramInsightMensalScalarWhereInput[]
+    id?: StringFilter<"InstagramInsightMensal"> | string
+    clienteId?: StringFilter<"InstagramInsightMensal"> | string
+    ano?: IntFilter<"InstagramInsightMensal"> | number
+    mes?: IntFilter<"InstagramInsightMensal"> | number
+    alcance?: IntFilter<"InstagramInsightMensal"> | number
+    engajamento?: IntFilter<"InstagramInsightMensal"> | number
+    novosSeguidores?: IntFilter<"InstagramInsightMensal"> | number
+    followersTotal?: IntFilter<"InstagramInsightMensal"> | number
+    syncedAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+    createdAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+    updatedAt?: DateTimeFilter<"InstagramInsightMensal"> | Date | string
+  }
+
   export type ClienteCreateWithoutContasInput = {
     id?: string
     nome: string
@@ -37529,6 +39257,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutContasInput = {
@@ -37564,6 +39293,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutContasInput = {
@@ -37946,6 +39676,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutContasInput = {
@@ -37981,6 +39712,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ConexaoIntegracaoUpsertWithoutContasInput = {
@@ -38195,6 +39927,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutFatosMidiaInput = {
@@ -38230,6 +39963,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutFatosMidiaInput = {
@@ -38318,6 +40052,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutFatosMidiaInput = {
@@ -38353,6 +40088,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ContaUpsertWithoutFatosMidiaInput = {
@@ -38431,6 +40167,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutAgregadosSemanalInput = {
@@ -38466,6 +40203,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutAgregadosSemanalInput = {
@@ -38517,6 +40255,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutAgregadosSemanalInput = {
@@ -38552,6 +40291,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateWithoutAgregadosMensalInput = {
@@ -38587,6 +40327,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutAgregadosMensalInput = {
@@ -38622,6 +40363,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutAgregadosMensalInput = {
@@ -38673,6 +40415,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutAgregadosMensalInput = {
@@ -38708,6 +40451,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateWithoutMetasInput = {
@@ -38743,6 +40487,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutMetasInput = {
@@ -38778,6 +40523,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutMetasInput = {
@@ -38829,6 +40575,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutMetasInput = {
@@ -38864,6 +40611,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateWithoutPautasReuniaoInput = {
@@ -38899,6 +40647,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutPautasReuniaoInput = {
@@ -38934,6 +40683,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutPautasReuniaoInput = {
@@ -38985,6 +40735,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutPautasReuniaoInput = {
@@ -39020,6 +40771,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateWithoutGoogleAdsCriativosInput = {
@@ -39055,6 +40807,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutGoogleAdsCriativosInput = {
@@ -39090,6 +40843,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutGoogleAdsCriativosInput = {
@@ -39178,6 +40932,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutGoogleAdsCriativosInput = {
@@ -39213,6 +40968,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ContaUpsertWithoutGoogleAdsCriativosInput = {
@@ -39291,6 +41047,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutGoogleAdsCampanhasInput = {
@@ -39326,6 +41083,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutGoogleAdsCampanhasInput = {
@@ -39414,6 +41172,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutGoogleAdsCampanhasInput = {
@@ -39449,6 +41208,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ContaUpsertWithoutGoogleAdsCampanhasInput = {
@@ -39527,6 +41287,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutMetaAdsCriativosInput = {
@@ -39562,6 +41323,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutMetaAdsCriativosInput = {
@@ -39650,6 +41412,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutMetaAdsCriativosInput = {
@@ -39685,6 +41448,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ContaUpsertWithoutMetaAdsCriativosInput = {
@@ -39763,6 +41527,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutFatosAnalyticsDiarioInput = {
@@ -39798,6 +41563,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutFatosAnalyticsDiarioInput = {
@@ -39886,6 +41652,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutFatosAnalyticsDiarioInput = {
@@ -39921,6 +41688,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ContaUpsertWithoutFatosAnalyticsDiarioInput = {
@@ -39999,6 +41767,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutFatosAnalyticsPorCanalInput = {
@@ -40034,6 +41803,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutFatosAnalyticsPorCanalInput = {
@@ -40085,6 +41855,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutFatosAnalyticsPorCanalInput = {
@@ -40120,6 +41891,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateWithoutMetaLeadsIndividuaisInput = {
@@ -40155,6 +41927,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutMetaLeadsIndividuaisInput = {
@@ -40190,6 +41963,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutMetaLeadsIndividuaisInput = {
@@ -40241,6 +42015,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutMetaLeadsIndividuaisInput = {
@@ -40276,6 +42051,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteCreateWithoutCrmConfigInput = {
@@ -40311,6 +42087,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutCrmConfigInput = {
@@ -40346,6 +42123,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutCrmConfigInput = {
@@ -40455,6 +42233,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutCrmConfigInput = {
@@ -40490,6 +42269,7 @@ export namespace Prisma {
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type LeadCrmUpsertWithWhereUniqueWithoutCrmConfigInput = {
@@ -40541,6 +42321,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutLeadsCrmInput = {
@@ -40576,6 +42357,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutLeadsCrmInput = {
@@ -40656,6 +42438,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutLeadsCrmInput = {
@@ -40691,6 +42474,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
   }
 
   export type CrmConfigUpsertWithoutLeadsInput = {
@@ -40761,6 +42545,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteUncheckedCreateWithoutRdMarketingConfigInput = {
@@ -40796,6 +42581,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
     leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
     pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedCreateNestedManyWithoutClienteInput
   }
 
   export type ClienteCreateOrConnectWithoutRdMarketingConfigInput = {
@@ -40847,6 +42633,7 @@ export namespace Prisma {
     crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUpdateManyWithoutClienteNestedInput
   }
 
   export type ClienteUncheckedUpdateWithoutRdMarketingConfigInput = {
@@ -40881,6 +42668,167 @@ export namespace Prisma {
     metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
     crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
     leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
+    instagramInsightsMensais?: InstagramInsightMensalUncheckedUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteCreateWithoutInstagramInsightsMensaisInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    squad?: number | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    ultimoSyncAt?: Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
+    contas?: ContaCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoCreateNestedManyWithoutClienteInput
+    metas?: MetaCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigCreateNestedOneWithoutClienteInput
+    pautasReuniao?: PautaReuniaoCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteUncheckedCreateWithoutInstagramInsightsMensaisInput = {
+    id?: string
+    nome: string
+    slug: string
+    logoUrl?: string | null
+    ativo?: boolean
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    segmento?: string | null
+    orcamentoMidiaGoogleMensal?: Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: Decimal | DecimalJsLike | number | string | null
+    gestor?: string | null
+    squad?: number | null
+    formaPagamentoMeta?: string | null
+    formaPagamentoGoogle?: string | null
+    portalToken?: string | null
+    leadScoringEnabled?: boolean
+    perfilPanel?: string | null
+    ultimoSyncAt?: Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
+    contas?: ContaUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedCreateNestedManyWithoutClienteInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedCreateNestedManyWithoutClienteInput
+    fatosMidia?: FatoMidiaDiarioUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedCreateNestedManyWithoutClienteInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metas?: MetaUncheckedCreateNestedManyWithoutClienteInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedCreateNestedManyWithoutClienteInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedCreateNestedManyWithoutClienteInput
+    crmConfig?: CrmConfigUncheckedCreateNestedOneWithoutClienteInput
+    leadsCrm?: LeadCrmUncheckedCreateNestedManyWithoutClienteInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedCreateNestedOneWithoutClienteInput
+    pautasReuniao?: PautaReuniaoUncheckedCreateNestedManyWithoutClienteInput
+  }
+
+  export type ClienteCreateOrConnectWithoutInstagramInsightsMensaisInput = {
+    where: ClienteWhereUniqueInput
+    create: XOR<ClienteCreateWithoutInstagramInsightsMensaisInput, ClienteUncheckedCreateWithoutInstagramInsightsMensaisInput>
+  }
+
+  export type ClienteUpsertWithoutInstagramInsightsMensaisInput = {
+    update: XOR<ClienteUpdateWithoutInstagramInsightsMensaisInput, ClienteUncheckedUpdateWithoutInstagramInsightsMensaisInput>
+    create: XOR<ClienteCreateWithoutInstagramInsightsMensaisInput, ClienteUncheckedCreateWithoutInstagramInsightsMensaisInput>
+    where?: ClienteWhereInput
+  }
+
+  export type ClienteUpdateToOneWithWhereWithoutInstagramInsightsMensaisInput = {
+    where?: ClienteWhereInput
+    data: XOR<ClienteUpdateWithoutInstagramInsightsMensaisInput, ClienteUncheckedUpdateWithoutInstagramInsightsMensaisInput>
+  }
+
+  export type ClienteUpdateWithoutInstagramInsightsMensaisInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
+    contas?: ContaUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUpdateManyWithoutClienteNestedInput
+    metas?: MetaUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUpdateOneWithoutClienteNestedInput
+    pautasReuniao?: PautaReuniaoUpdateManyWithoutClienteNestedInput
+  }
+
+  export type ClienteUncheckedUpdateWithoutInstagramInsightsMensaisInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    logoUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    ativo?: BoolFieldUpdateOperationsInput | boolean
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    segmento?: NullableStringFieldUpdateOperationsInput | string | null
+    orcamentoMidiaGoogleMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    orcamentoMidiaMetaMensal?: NullableDecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string | null
+    gestor?: NullableStringFieldUpdateOperationsInput | string | null
+    squad?: NullableIntFieldUpdateOperationsInput | number | null
+    formaPagamentoMeta?: NullableStringFieldUpdateOperationsInput | string | null
+    formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
+    portalToken?: NullableStringFieldUpdateOperationsInput | string | null
+    leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
+    ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
+    agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
+    contas?: ContaUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsDiario?: FatoAnalyticsDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    fatosAnalyticsPorCanal?: FatoAnalyticsPorCanalUncheckedUpdateManyWithoutClienteNestedInput
+    fatosMidia?: FatoMidiaDiarioUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCampanhas?: GoogleAdsCampanhaUncheckedUpdateManyWithoutClienteNestedInput
+    googleAdsCriativos?: GoogleAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metas?: MetaUncheckedUpdateManyWithoutClienteNestedInput
+    metaAdsCriativos?: MetaAdsCriativoUncheckedUpdateManyWithoutClienteNestedInput
+    metaLeadsIndividuais?: MetaLeadIndividualUncheckedUpdateManyWithoutClienteNestedInput
+    crmConfig?: CrmConfigUncheckedUpdateOneWithoutClienteNestedInput
+    leadsCrm?: LeadCrmUncheckedUpdateManyWithoutClienteNestedInput
+    rdMarketingConfig?: RdMarketingConfigUncheckedUpdateOneWithoutClienteNestedInput
     pautasReuniao?: PautaReuniaoUncheckedUpdateManyWithoutClienteNestedInput
   }
 
@@ -41130,6 +43078,19 @@ export namespace Prisma {
     updatedAt?: Date | string
     dataFim?: Date | string | null
     prioridade?: string
+  }
+
+  export type InstagramInsightMensalCreateManyClienteInput = {
+    id?: string
+    ano: number
+    mes: number
+    alcance?: number
+    engajamento?: number
+    novosSeguidores?: number
+    followersTotal?: number
+    syncedAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
   }
 
   export type AgregadoMidiaMensalUpdateWithoutClienteInput = {
@@ -41884,6 +43845,45 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     dataFim?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     prioridade?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type InstagramInsightMensalUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ano?: IntFieldUpdateOperationsInput | number
+    mes?: IntFieldUpdateOperationsInput | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    engajamento?: IntFieldUpdateOperationsInput | number
+    novosSeguidores?: IntFieldUpdateOperationsInput | number
+    followersTotal?: IntFieldUpdateOperationsInput | number
+    syncedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstagramInsightMensalUncheckedUpdateWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ano?: IntFieldUpdateOperationsInput | number
+    mes?: IntFieldUpdateOperationsInput | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    engajamento?: IntFieldUpdateOperationsInput | number
+    novosSeguidores?: IntFieldUpdateOperationsInput | number
+    followersTotal?: IntFieldUpdateOperationsInput | number
+    syncedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type InstagramInsightMensalUncheckedUpdateManyWithoutClienteInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    ano?: IntFieldUpdateOperationsInput | number
+    mes?: IntFieldUpdateOperationsInput | number
+    alcance?: IntFieldUpdateOperationsInput | number
+    engajamento?: IntFieldUpdateOperationsInput | number
+    novosSeguidores?: IntFieldUpdateOperationsInput | number
+    followersTotal?: IntFieldUpdateOperationsInput | number
+    syncedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type FatoAnalyticsDiarioCreateManyContaInput = {
