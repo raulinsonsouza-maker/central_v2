@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { resolveMetaCredentials } from "@/lib/config/resolveIntegracao";
+import { discoverInstagramId } from "@/lib/sync/discoverInstagramId";
 
 const GRAPH = "https://graph.facebook.com/v19.0";
 
@@ -47,11 +48,7 @@ export async function GET(
   const dataInicio = sp.get("dataInicio");
   const dataFim = sp.get("dataFim");
 
-  const igConta = await prisma.conta.findFirst({
-    where: { clienteId, plataforma: "INSTAGRAM" },
-  });
-
-  const igId: string | null = igConta?.accountIdPlataforma ?? null;
+  const igId = await discoverInstagramId(clienteId);
 
   if (!igId) {
     return NextResponse.json({ configured: false });

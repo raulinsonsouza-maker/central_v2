@@ -7,6 +7,7 @@
  */
 import { prisma } from "@/lib/db";
 import { resolveMetaCredentials } from "@/lib/config/resolveIntegracao";
+import { discoverInstagramId } from "@/lib/sync/discoverInstagramId";
 
 const GRAPH = "https://graph.facebook.com/v19.0";
 
@@ -41,15 +42,11 @@ async function igGet(
 export async function syncInstagramCliente(
   clienteId: string,
 ): Promise<InstagramSyncResult> {
-  const igConta = await prisma.conta.findFirst({
-    where: { clienteId, plataforma: "INSTAGRAM" },
-  });
-
-  if (!igConta?.accountIdPlataforma) {
+  const igId = await discoverInstagramId(clienteId);
+  if (!igId) {
     return { clienteId, error: "Sem conta Instagram configurada" };
   }
 
-  const igId = igConta.accountIdPlataforma;
   const creds = await resolveMetaCredentials(clienteId);
   if (!creds?.token) {
     return { clienteId, error: "Sem credenciais Meta configuradas" };
