@@ -47,32 +47,11 @@ export async function GET(
   const dataInicio = sp.get("dataInicio");
   const dataFim = sp.get("dataFim");
 
-  // 1. Try manually configured Instagram Business Account ID
   const igConta = await prisma.conta.findFirst({
     where: { clienteId, plataforma: "INSTAGRAM" },
   });
 
-  let igId: string | null = igConta?.accountIdPlataforma ?? null;
-
-  // 2. Auto-discover from Meta Ads account if not configured manually
-  if (!igId) {
-    const metaConta = await prisma.conta.findFirst({
-      where: { clienteId, plataforma: "META" },
-    });
-    if (metaConta?.accountIdPlataforma) {
-      const creds = await resolveMetaCredentials(clienteId);
-      if (creds?.token) {
-        try {
-          const adAccountId = `act_${metaConta.accountIdPlataforma}`;
-          const actorData = await igGet(adAccountId, creds.token, { fields: "instagram_actors" });
-          const actors: Array<{ id: string }> = actorData.instagram_actors?.data ?? [];
-          if (actors.length > 0) igId = actors[0].id;
-        } catch {
-          // auto-discovery failed — will return not-configured below
-        }
-      }
-    }
-  }
+  const igId: string | null = igConta?.accountIdPlataforma ?? null;
 
   if (!igId) {
     return NextResponse.json({ configured: false });
