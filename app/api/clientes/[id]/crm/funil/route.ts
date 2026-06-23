@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { getCrmFilters, buildTagFilterWhere, buildJsonStringFilterWhere } from "@/lib/crm/tagFilter";
-import { buildLeadFilterWhere } from "@/lib/crm/canalFilter";
+import { buildLeadFilterWhere, buildPaidMediaWhere } from "@/lib/crm/canalFilter";
 import type { Prisma } from "@/lib/generated/prisma";
 
 export async function GET(
@@ -15,6 +15,7 @@ export async function GET(
   const toParam = url.searchParams.get("to");
   const filterType  = url.searchParams.get("filterType");
   const filterValue = url.searchParams.get("filterValue");
+  const paidOnly = url.searchParams.get("paidOnly") === "1";
 
   const now = new Date();
   const defaultFrom = new Date(now.getFullYear(), 0, 1);
@@ -37,6 +38,7 @@ export async function GET(
   const leadFilterWhere = buildLeadFilterWhere(filterType, filterValue);
 
   const andClauses: Prisma.LeadCrmWhereInput[] = [
+    ...(paidOnly ? [buildPaidMediaWhere()] : []),
     ...(tagFilter.length > 0 ? [buildTagFilterWhere(tagFilter)] : []),
     ...(conversaoOriginalFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoOriginal", conversaoOriginalFilter)] : []),
     ...(conversaoUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoUltimo", conversaoUltimoFilter)] : []),

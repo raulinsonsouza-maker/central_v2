@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import type { Prisma } from "@/lib/generated/prisma";
 import { getCrmFilters, buildTagFilterWhere, buildJsonStringFilterWhere } from "@/lib/crm/tagFilter";
-import { buildLeadFilterWhere } from "@/lib/crm/canalFilter";
+import { buildLeadFilterWhere, buildPaidMediaWhere } from "@/lib/crm/canalFilter";
 
 export async function GET(
   request: NextRequest,
@@ -17,6 +17,7 @@ export async function GET(
 
   const filterType  = url.searchParams.get("filterType");
   const filterValue = url.searchParams.get("filterValue");
+  const paidOnly = url.searchParams.get("paidOnly") === "1";
   const filterCondition = buildLeadFilterWhere(filterType, filterValue);
 
   // Support both ?from=YYYY-MM-DD&to=YYYY-MM-DD and legacy ?period= param
@@ -48,6 +49,7 @@ export async function GET(
   const { tagFilter, conversaoOriginalFilter, conversaoUltimoFilter, midiaFilter, origemOriginalFilter, origemUltimoFilter } = crmFilters;
 
   const andClauses: Prisma.LeadCrmWhereInput[] = [
+    ...(paidOnly ? [buildPaidMediaWhere()] : []),
     ...(tagFilter.length > 0 ? [buildTagFilterWhere(tagFilter)] : []),
     ...(conversaoOriginalFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoOriginal", conversaoOriginalFilter)] : []),
     ...(conversaoUltimoFilter.length > 0 ? [buildJsonStringFilterWhere("conversaoUltimo", conversaoUltimoFilter)] : []),

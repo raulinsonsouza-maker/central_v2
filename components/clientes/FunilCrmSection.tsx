@@ -112,15 +112,17 @@ export function FunilCrmSection({
   onFilter?: (f: LeadFilter) => void;
   perfilPanel?: string | null;
 }) {
+  const isAgencia = perfilPanel === "agencia";
   const filterQs = leadFilter
     ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
     : "";
+  const paidOnlyQs = isAgencia ? "&paidOnly=1" : "";
 
   const { data, isLoading } = useQuery<FunilData>({
-    queryKey: ["crm-funil", clienteId, dateRange.from, dateRange.to, leadFilter?.type, leadFilter?.value],
+    queryKey: ["crm-funil", clienteId, dateRange.from, dateRange.to, leadFilter?.type, leadFilter?.value, isAgencia],
     queryFn: () =>
       fetch(
-        `/api/clientes/${clienteId}/crm/funil?from=${dateRange.from}&to=${dateRange.to}${filterQs}`
+        `/api/clientes/${clienteId}/crm/funil?from=${dateRange.from}&to=${dateRange.to}${filterQs}${paidOnlyQs}`
       ).then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -140,7 +142,6 @@ export function FunilCrmSection({
 
   const etapas = data.etapas ?? [];
   const totalLeads = data.totalLeads;
-  const isAgencia = perfilPanel === "agencia";
 
   const grouped = isAgencia
     ? MACRO_ORDER_AGENCIA.map((grupo) => {

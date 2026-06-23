@@ -103,6 +103,15 @@ export function buildCanalFonteOR(canal: string): Prisma.LeadCrmWhereInput[] {
 }
 
 /**
+ * Filters to only Meta + Google leads (paid media).
+ * Used for agency-profile clients where only paid acquisition is relevant.
+ */
+export function buildPaidMediaWhere(): Prisma.LeadCrmWhereInput {
+  const or = [...buildMidiaOR("META"), ...buildMidiaOR("GOOGLE")];
+  return or.length > 0 ? { OR: or } : {};
+}
+
+/**
  * Builds a Prisma WHERE fragment that isolates leads belonging to `canal`.
  * Special case: "OUTRO" means "does not match any known canal pattern".
  */

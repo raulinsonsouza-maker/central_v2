@@ -1464,10 +1464,12 @@ function AtribuicaoSection({
     ? `&filterType=${encodeURIComponent(activeFilter.type)}&filterValue=${encodeURIComponent(activeFilter.value)}`
     : "";
 
+  const paidOnlyQs = isAgencia ? "&paidOnly=1" : "";
+
   const { data, isLoading } = useQuery<AtribuicaoData>({
-    queryKey: ["crm-atribuicao", clienteId, dateRange.from, dateRange.to, activeFilter?.type, activeFilter?.value],
+    queryKey: ["crm-atribuicao", clienteId, dateRange.from, dateRange.to, activeFilter?.type, activeFilter?.value, isAgencia],
     queryFn: () =>
-      fetch(`/api/clientes/${clienteId}/crm/atribuicao?from=${dateRange.from}&to=${dateRange.to}${filterQs}`)
+      fetch(`/api/clientes/${clienteId}/crm/atribuicao?from=${dateRange.from}&to=${dateRange.to}${filterQs}${paidOnlyQs}`)
         .then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
@@ -1902,11 +1904,13 @@ export function CrmTab({
     ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
     : "";
 
+  const leadsPaidOnlyQs = isAgencia ? "&paidOnly=1" : "";
+
   const { data: leadsData, isLoading: leadsLoading } = useQuery<LeadsApiResponse>({
-    queryKey: ["crm-leads", clienteId, dateRange.from, dateRange.to, page, PAGE_SIZE, debouncedSearch, leadFilter?.type, leadFilter?.value],
+    queryKey: ["crm-leads", clienteId, dateRange.from, dateRange.to, page, PAGE_SIZE, debouncedSearch, leadFilter?.type, leadFilter?.value, isAgencia],
     queryFn: () =>
       fetch(
-        `/api/clientes/${clienteId}/crm/leads?from=${dateRange.from}&to=${dateRange.to}&page=${page}&pageSize=${PAGE_SIZE}&search=${encodeURIComponent(debouncedSearch)}${filterQs}`
+        `/api/clientes/${clienteId}/crm/leads?from=${dateRange.from}&to=${dateRange.to}&page=${page}&pageSize=${PAGE_SIZE}&search=${encodeURIComponent(debouncedSearch)}${filterQs}${leadsPaidOnlyQs}`
       ).then((r) => r.json()),
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
