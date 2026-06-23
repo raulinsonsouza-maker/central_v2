@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { Prisma } from "@/lib/generated/prisma";
 
 export const dynamic = "force-dynamic";
 
@@ -51,7 +52,7 @@ export async function GET(
     where: {
       clienteId: id,
       telefone: { not: null },
-      rawFieldData: { not: null },
+      rawFieldData: { not: Prisma.DbNull },
     },
     select: {
       metaLeadId: true,

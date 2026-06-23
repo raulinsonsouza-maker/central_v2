@@ -568,7 +568,7 @@ function sortConjuntos(arr: Conjunto[], col: ConjuntoSortCol, dir: SortDir): Con
   });
 }
 
-function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId, clienteId }: { conjuntos: Conjunto[]; onSelect: (id: string) => void; parentCampType?: CampType | null; mqlByAdsetId?: Map<string, number>; clienteId: string }) {
+function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId, clienteId, dateFilter }: { conjuntos: Conjunto[]; onSelect: (id: string) => void; parentCampType?: CampType | null; mqlByAdsetId?: Map<string, number>; clienteId: string; dateFilter?: DateFilter }) {
   const [sortCol, setSortCol] = React.useState<ConjuntoSortCol>("spend");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
   const [detailAdset, setDetailAdset] = React.useState<{ id: string; name: string } | null>(null);
@@ -718,6 +718,8 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId, cli
           adsetName={detailAdset.name}
           clienteId={clienteId}
           onClose={() => setDetailAdset(null)}
+          dateFrom={dateFilter?.dataInicio}
+          dateTo={dateFilter?.dataFim}
         />
       )}
     </div>
@@ -1320,7 +1322,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral", mqlByCa
           </div>
         ) : (
           <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-            <ConjuntosTable conjuntos={conjuntos} onSelect={setSelectedConjunto} parentCampType={parentCampType} mqlByAdsetId={mqlByAdsetId} clienteId={clienteId} />
+            <ConjuntosTable conjuntos={conjuntos} onSelect={setSelectedConjunto} parentCampType={parentCampType} mqlByAdsetId={mqlByAdsetId} clienteId={clienteId} dateFilter={dateFilter} />
           </div>
         )
       )}
