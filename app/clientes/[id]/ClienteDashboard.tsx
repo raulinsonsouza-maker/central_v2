@@ -913,9 +913,9 @@ function formatPercentage(value: number) {
               "geral",
               "meta",
               "google",
-              ...(cliente?.leadScoringEnabled ? ["lead-scoring"] : []),
+              ...(!portalMode && cliente?.leadScoringEnabled ? ["lead-scoring"] : []),
               ...(isMiguelImoveis(cliente) ? ["imoveis"] : []),
-              ...(!portalMode && hasCrm ? ["crm"] : []),
+              ...(hasCrm ? ["crm"] : []),
             ] as const).map((c) => (
               <button
                 key={c}
@@ -942,7 +942,7 @@ function formatPercentage(value: number) {
         {/* Linha 1: Saldo chip (esquerda) + Filtro de data (direita) */}
         <div className="flex items-center gap-2">
           {/* Saldo chip — só em Meta/Google */}
-          {canal !== "geral" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && subView !== "lead-scoring" && (() => {
+          {!portalMode && canal !== "geral" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && subView !== "lead-scoring" && (() => {
             const saldo = canal === "meta" ? saldoMeta : saldoGoogle;
             const plataforma = canal === "meta" ? "META" : "Google";
             const value = saldo?.saldo;
