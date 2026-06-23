@@ -5,6 +5,7 @@ import { upsertMetaAdsCriativo } from "@/lib/repositories/metaAdsCriativosReposi
 import { findAllClientes } from "@/lib/repositories/clientesRepository";
 import { prisma } from "@/lib/db";
 import { resolveMetaCredentials } from "@/lib/config/resolveIntegracao";
+import { getIntegrationsConfig } from "@/lib/config/integrations";
 import { isFlorien } from "@/lib/clientProfiles";
 
 const DEFAULT_DATE_FROM = "2026-01-01";
