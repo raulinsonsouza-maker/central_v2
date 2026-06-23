@@ -8,8 +8,7 @@ import { DefaultPanel } from "@/components/clientes/DefaultPanel";
 import { GoogleKeywordsPanel } from "@/components/clientes/GoogleKeywordsPanel";
 import { AnalyticsGA4Section } from "@/components/clientes/AnalyticsGA4Section";
 import { ImoveisPanel } from "@/components/clientes/ImoveisPanel";
-import { LeadScoringPanel } from "@/components/clientes/LeadScoringPanel";
-import { ImobLeadScoringPanel } from "@/components/clientes/ImobLeadScoringPanel";
+
 import { CrmTab } from "@/components/clientes/CrmTab";
 import { SocialMediaPanel } from "@/components/clientes/SocialMediaPanel";
 import { HotelFazendaSaoJoaoPanel } from "@/components/clientes/HotelFazendaSaoJoaoPanel";
@@ -355,8 +354,8 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle?: string }
 let dailyGlobalSyncFired = false;
 
 export function ClienteDashboard({ id, portalMode = false }: { id: string; portalMode?: boolean }) {
-  const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring" | "crm">("geral");
-  const [subView, setSubView] = React.useState<"dados" | "criativos" | "lead-scoring" | "social-media">("dados");
+  const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "crm">("geral");
+  const [subView, setSubView] = React.useState<"dados" | "criativos" | "social-media">("dados");
   const [saldoVisible, setSaldoVisible] = React.useState(false);
   const [presetPeriodo, setPresetPeriodo] = React.useState<PresetPeriodo>("mesAtual");
   const [chartAgrupamento, setChartAgrupamento] = React.useState<"diario" | "semanal" | "mensal">("semanal");
@@ -595,10 +594,10 @@ export function ClienteDashboard({ id, portalMode = false }: { id: string; porta
   });
   const hasCrm = crmFunil?.configured === true;
 
-  const isHotelPanel = isHotelFazendaSaoJoao(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
-  const isTertuliaPanel = isTertulia(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
-  const isVarellaPanel = isVarellaMotos(cliente) && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
-  const isMiguelImoveisPanel = isMiguelImoveis(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm";
+  const isHotelPanel = isHotelFazendaSaoJoao(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "crm";
+  const isTertuliaPanel = isTertulia(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "crm";
+  const isVarellaPanel = isVarellaMotos(cliente) && canal !== "imoveis" && canal !== "crm";
+  const isMiguelImoveisPanel = isMiguelImoveis(cliente) && canal !== "google" && canal !== "imoveis" && canal !== "crm";
   const isMiguelGooglePanel = isMiguelImoveis(cliente) && canal === "google";
   const isMiguelPanel = isDrFernandoGuena(cliente) && canal !== "google";
   const isClinicaESpaPanel = isClinicaESpa(cliente) && !isImobClient(cliente) && canal !== "google";
@@ -914,7 +913,6 @@ function formatPercentage(value: number) {
               "geral",
               "meta",
               "google",
-              ...(!portalMode && cliente?.leadScoringEnabled ? ["lead-scoring"] : []),
               ...(isMiguelImoveis(cliente) ? ["imoveis"] : []),
               ...(hasCrm ? ["crm"] : []),
             ] as const).map((c) => (
@@ -943,7 +941,7 @@ function formatPercentage(value: number) {
         {/* Linha 1: Saldo chip (esquerda) + Filtro de data (direita) */}
         <div className="flex items-center gap-2">
           {/* Saldo chip — só em Meta/Google */}
-          {!portalMode && canal !== "geral" && canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && subView !== "lead-scoring" && (() => {
+          {!portalMode && canal !== "geral" && canal !== "imoveis" && canal !== "crm" && (() => {
             const saldo = canal === "meta" ? saldoMeta : saldoGoogle;
             const plataforma = canal === "meta" ? "META" : "Google";
             const value = saldo?.saldo;
@@ -1053,9 +1051,7 @@ function formatPercentage(value: number) {
         {(canal === "meta" || canal === "google") && (
           <div className="flex items-center gap-1 self-end rounded-xl border border-[var(--border)] bg-[var(--card)] p-1">
             {(
-              canal === "meta" && isImobClient(cliente)
-                ? (["dados", "criativos", "social-media", "lead-scoring"] as const)
-                : canal === "meta"
+              canal === "meta"
                   ? (["dados", "criativos", "social-media"] as const)
                   : (["dados", "criativos"] as const)
             ).map((view) => (
@@ -1285,22 +1281,6 @@ function formatPercentage(value: number) {
         <ImoveisPanel clienteId={id} dateFilter={dateFilter} />
       )}
 
-      {/* ── Lead Scoring panel (Meta Lead Gen forms) ── */}
-      {canal === "lead-scoring" && (
-        <LeadScoringPanel clienteId={id} dateFilter={dateFilter} />
-      )}
-
-      {/* ── Imob Lead Scoring — clientes imob (subView dentro do Meta) ── */}
-      {canal === "meta" && subView === "lead-scoring" && isImobClient(cliente) && (
-        <ImobLeadScoringPanel
-          clienteId={id}
-          dateFilter={dateFilter}
-          clienteNome={cliente?.nome ?? ""}
-          midia={midia}
-          chartAgrupamento={chartAgrupamento}
-          onAgrupamentoChange={isLongPeriod ? undefined : (ag: "diario" | "semanal") => setChartAgrupamento(ag)}
-        />
-      )}
 
       {/* ── CRM tab ── */}
       {canal === "crm" && id && (
@@ -1315,7 +1295,7 @@ function formatPercentage(value: number) {
       )}
 
       {/* ── Default panel (KPIs, chart, weekly table, financial) ── */}
-      {canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && (canal === "geral" || subView === "dados") && !isSpecialPanel && resumo && (
+      {canal !== "imoveis" && canal !== "crm" && (canal === "geral" || subView === "dados") && !isSpecialPanel && resumo && (
         <DefaultPanel
           resumo={
             isMiguelImoveisPanel
@@ -1408,7 +1388,7 @@ function formatPercentage(value: number) {
       )}
 
       {/* ── Financial tracking (Plano x Real) ── */}
-      {canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && (canal === "geral" || subView === "dados") && financeiro && financeiro.meses && (
+      {canal !== "imoveis" && canal !== "crm" && (canal === "geral" || subView === "dados") && financeiro && financeiro.meses && (
         <Card className="overflow-hidden rounded-2xl border-[var(--border)]">
           <CardHeader>
             <div className="flex flex-wrap items-start justify-between gap-4">
@@ -1570,7 +1550,7 @@ function formatPercentage(value: number) {
       )}
 
       {/* ── Comportamento GA4 (todos os painéis quando configurado) ── */}
-      {canal !== "imoveis" && canal !== "lead-scoring" && canal !== "crm" && (canal === "geral" || subView === "dados") && analytics?.hasAnalytics && (
+      {canal !== "imoveis" && canal !== "crm" && (canal === "geral" || subView === "dados") && analytics?.hasAnalytics && (
         <AnalyticsGA4Section data={analytics} />
       )}
 
