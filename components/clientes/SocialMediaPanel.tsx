@@ -46,7 +46,7 @@ interface SocialMediaData {
 
 interface Props {
   clienteId: string;
-  dateFilter: { dataInicio: string | null; dataFim: string | null };
+  dateFilter: { dataInicio?: string | null; dataFim?: string | null };
 }
 
 function fmt(n: number) {

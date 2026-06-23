@@ -165,7 +165,7 @@ function FormField({
 const inputClass =
   "w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-4 py-2.5 text-sm transition-colors focus:border-[var(--primary)]/40 focus:outline-none";
 
-function getConta(cliente: ClienteAdmin, plataforma: "GOOGLE_ADS" | "META" | "GOOGLE_ANALYTICS") {
+function getConta(cliente: ClienteAdmin, plataforma: "GOOGLE_ADS" | "META" | "GOOGLE_ANALYTICS" | "INSTAGRAM") {
   return cliente.contas.find((conta) => conta.plataforma === plataforma);
 }
 
