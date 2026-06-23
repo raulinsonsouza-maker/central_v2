@@ -1052,7 +1052,9 @@ function formatPercentage(value: number) {
           <div className="flex items-center gap-1 self-end rounded-xl border border-[var(--border)] bg-[var(--card)] p-1">
             {(
               canal === "meta"
-                  ? (["dados", "criativos", "social-media"] as const)
+                  ? (cliente?.socialMediaAtivo
+                      ? (["dados", "criativos", "social-media"] as const)
+                      : (["dados", "criativos"] as const))
                   : (["dados", "criativos"] as const)
             ).map((view) => (
               <button

@@ -3017,6 +3017,7 @@ export namespace Prisma {
     formaPagamentoGoogle: string | null
     portalToken: string | null
     leadScoringEnabled: boolean | null
+    socialMediaAtivo: boolean | null
     perfilPanel: string | null
     ultimoSyncAt: Date | null
   }
@@ -3038,6 +3039,7 @@ export namespace Prisma {
     formaPagamentoGoogle: string | null
     portalToken: string | null
     leadScoringEnabled: boolean | null
+    socialMediaAtivo: boolean | null
     perfilPanel: string | null
     ultimoSyncAt: Date | null
   }
@@ -3059,6 +3061,7 @@ export namespace Prisma {
     formaPagamentoGoogle: number
     portalToken: number
     leadScoringEnabled: number
+    socialMediaAtivo: number
     perfilPanel: number
     ultimoSyncAt: number
     _all: number
@@ -3094,6 +3097,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: true
     portalToken?: true
     leadScoringEnabled?: true
+    socialMediaAtivo?: true
     perfilPanel?: true
     ultimoSyncAt?: true
   }
@@ -3115,6 +3119,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: true
     portalToken?: true
     leadScoringEnabled?: true
+    socialMediaAtivo?: true
     perfilPanel?: true
     ultimoSyncAt?: true
   }
@@ -3136,6 +3141,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: true
     portalToken?: true
     leadScoringEnabled?: true
+    socialMediaAtivo?: true
     perfilPanel?: true
     ultimoSyncAt?: true
     _all?: true
@@ -3244,6 +3250,7 @@ export namespace Prisma {
     formaPagamentoGoogle: string | null
     portalToken: string | null
     leadScoringEnabled: boolean
+    socialMediaAtivo: boolean
     perfilPanel: string | null
     ultimoSyncAt: Date | null
     _count: ClienteCountAggregateOutputType | null
@@ -3284,6 +3291,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: boolean
     ultimoSyncAt?: boolean
     agregadosMensal?: boolean | Cliente$agregadosMensalArgs<ExtArgs>
@@ -3322,6 +3330,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: boolean
     ultimoSyncAt?: boolean
   }, ExtArgs["result"]["cliente"]>
@@ -3343,6 +3352,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: boolean
     ultimoSyncAt?: boolean
   }, ExtArgs["result"]["cliente"]>
@@ -3364,11 +3374,12 @@ export namespace Prisma {
     formaPagamentoGoogle?: boolean
     portalToken?: boolean
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: boolean
     ultimoSyncAt?: boolean
   }
 
-  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "slug" | "logoUrl" | "ativo" | "createdAt" | "updatedAt" | "segmento" | "orcamentoMidiaGoogleMensal" | "orcamentoMidiaMetaMensal" | "gestor" | "squad" | "formaPagamentoMeta" | "formaPagamentoGoogle" | "portalToken" | "leadScoringEnabled" | "perfilPanel" | "ultimoSyncAt", ExtArgs["result"]["cliente"]>
+  export type ClienteOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "nome" | "slug" | "logoUrl" | "ativo" | "createdAt" | "updatedAt" | "segmento" | "orcamentoMidiaGoogleMensal" | "orcamentoMidiaMetaMensal" | "gestor" | "squad" | "formaPagamentoMeta" | "formaPagamentoGoogle" | "portalToken" | "leadScoringEnabled" | "socialMediaAtivo" | "perfilPanel" | "ultimoSyncAt", ExtArgs["result"]["cliente"]>
   export type ClienteInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     agregadosMensal?: boolean | Cliente$agregadosMensalArgs<ExtArgs>
     agregadosSemanal?: boolean | Cliente$agregadosSemanalArgs<ExtArgs>
@@ -3428,6 +3439,7 @@ export namespace Prisma {
       formaPagamentoGoogle: string | null
       portalToken: string | null
       leadScoringEnabled: boolean
+      socialMediaAtivo: boolean
       perfilPanel: string | null
       ultimoSyncAt: Date | null
     }, ExtArgs["result"]["cliente"]>
@@ -3885,6 +3897,7 @@ export namespace Prisma {
     readonly formaPagamentoGoogle: FieldRef<"Cliente", 'String'>
     readonly portalToken: FieldRef<"Cliente", 'String'>
     readonly leadScoringEnabled: FieldRef<"Cliente", 'Boolean'>
+    readonly socialMediaAtivo: FieldRef<"Cliente", 'Boolean'>
     readonly perfilPanel: FieldRef<"Cliente", 'String'>
     readonly ultimoSyncAt: FieldRef<"Cliente", 'DateTime'>
   }
@@ -28920,6 +28933,7 @@ export namespace Prisma {
     formaPagamentoGoogle: 'formaPagamentoGoogle',
     portalToken: 'portalToken',
     leadScoringEnabled: 'leadScoringEnabled',
+    socialMediaAtivo: 'socialMediaAtivo',
     perfilPanel: 'perfilPanel',
     ultimoSyncAt: 'ultimoSyncAt'
   };
@@ -29515,6 +29529,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: StringNullableFilter<"Cliente"> | string | null
     portalToken?: StringNullableFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolFilter<"Cliente"> | boolean
+    socialMediaAtivo?: BoolFilter<"Cliente"> | boolean
     perfilPanel?: StringNullableFilter<"Cliente"> | string | null
     ultimoSyncAt?: DateTimeNullableFilter<"Cliente"> | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalListRelationFilter
@@ -29552,6 +29567,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: SortOrderInput | SortOrder
     portalToken?: SortOrderInput | SortOrder
     leadScoringEnabled?: SortOrder
+    socialMediaAtivo?: SortOrder
     perfilPanel?: SortOrderInput | SortOrder
     ultimoSyncAt?: SortOrderInput | SortOrder
     agregadosMensal?: AgregadoMidiaMensalOrderByRelationAggregateInput
@@ -29592,6 +29608,7 @@ export namespace Prisma {
     formaPagamentoMeta?: StringNullableFilter<"Cliente"> | string | null
     formaPagamentoGoogle?: StringNullableFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolFilter<"Cliente"> | boolean
+    socialMediaAtivo?: BoolFilter<"Cliente"> | boolean
     perfilPanel?: StringNullableFilter<"Cliente"> | string | null
     ultimoSyncAt?: DateTimeNullableFilter<"Cliente"> | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalListRelationFilter
@@ -29629,6 +29646,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: SortOrderInput | SortOrder
     portalToken?: SortOrderInput | SortOrder
     leadScoringEnabled?: SortOrder
+    socialMediaAtivo?: SortOrder
     perfilPanel?: SortOrderInput | SortOrder
     ultimoSyncAt?: SortOrderInput | SortOrder
     _count?: ClienteCountOrderByAggregateInput
@@ -29658,6 +29676,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     portalToken?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     leadScoringEnabled?: BoolWithAggregatesFilter<"Cliente"> | boolean
+    socialMediaAtivo?: BoolWithAggregatesFilter<"Cliente"> | boolean
     perfilPanel?: StringNullableWithAggregatesFilter<"Cliente"> | string | null
     ultimoSyncAt?: DateTimeNullableWithAggregatesFilter<"Cliente"> | Date | string | null
   }
@@ -31710,6 +31729,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -31747,6 +31767,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -31784,6 +31805,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -31821,6 +31843,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -31858,6 +31881,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
   }
@@ -31879,6 +31903,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -31900,6 +31925,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
@@ -34491,6 +34517,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
+    socialMediaAtivo?: SortOrder
     perfilPanel?: SortOrder
     ultimoSyncAt?: SortOrder
   }
@@ -34518,6 +34545,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
+    socialMediaAtivo?: SortOrder
     perfilPanel?: SortOrder
     ultimoSyncAt?: SortOrder
   }
@@ -34539,6 +34567,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: SortOrder
     portalToken?: SortOrder
     leadScoringEnabled?: SortOrder
+    socialMediaAtivo?: SortOrder
     perfilPanel?: SortOrder
     ultimoSyncAt?: SortOrder
   }
@@ -39241,6 +39270,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -39277,6 +39307,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -39660,6 +39691,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -39696,6 +39728,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -39911,6 +39944,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -39947,6 +39981,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -40036,6 +40071,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -40072,6 +40108,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -40151,6 +40188,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -40187,6 +40225,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -40239,6 +40278,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -40275,6 +40315,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -40311,6 +40352,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosSemanal?: AgregadoMidiaSemanalCreateNestedManyWithoutClienteInput
@@ -40347,6 +40389,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedCreateNestedManyWithoutClienteInput
@@ -40399,6 +40442,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosSemanal?: AgregadoMidiaSemanalUpdateManyWithoutClienteNestedInput
@@ -40435,6 +40479,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosSemanal?: AgregadoMidiaSemanalUncheckedUpdateManyWithoutClienteNestedInput
@@ -40471,6 +40516,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -40507,6 +40553,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -40559,6 +40606,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -40595,6 +40643,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -40631,6 +40680,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -40667,6 +40717,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -40719,6 +40770,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -40755,6 +40807,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -40791,6 +40844,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -40827,6 +40881,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -40916,6 +40971,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -40952,6 +41008,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -41031,6 +41088,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -41067,6 +41125,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -41156,6 +41215,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -41192,6 +41252,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -41271,6 +41332,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -41307,6 +41369,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -41396,6 +41459,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -41432,6 +41496,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -41511,6 +41576,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -41547,6 +41613,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -41636,6 +41703,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -41672,6 +41740,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -41751,6 +41820,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -41787,6 +41857,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -41839,6 +41910,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -41875,6 +41947,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -41911,6 +41984,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -41947,6 +42021,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -41999,6 +42074,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -42035,6 +42111,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -42071,6 +42148,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -42107,6 +42185,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -42217,6 +42296,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -42253,6 +42333,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -42305,6 +42386,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -42341,6 +42423,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -42422,6 +42505,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -42458,6 +42542,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -42529,6 +42614,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -42565,6 +42651,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -42617,6 +42704,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -42653,6 +42741,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput
@@ -42689,6 +42778,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalCreateNestedManyWithoutClienteInput
@@ -42725,6 +42815,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: string | null
     portalToken?: string | null
     leadScoringEnabled?: boolean
+    socialMediaAtivo?: boolean
     perfilPanel?: string | null
     ultimoSyncAt?: Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedCreateNestedManyWithoutClienteInput
@@ -42777,6 +42868,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUpdateManyWithoutClienteNestedInput
@@ -42813,6 +42905,7 @@ export namespace Prisma {
     formaPagamentoGoogle?: NullableStringFieldUpdateOperationsInput | string | null
     portalToken?: NullableStringFieldUpdateOperationsInput | string | null
     leadScoringEnabled?: BoolFieldUpdateOperationsInput | boolean
+    socialMediaAtivo?: BoolFieldUpdateOperationsInput | boolean
     perfilPanel?: NullableStringFieldUpdateOperationsInput | string | null
     ultimoSyncAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     agregadosMensal?: AgregadoMidiaMensalUncheckedUpdateManyWithoutClienteNestedInput

@@ -44,6 +44,7 @@ interface ClienteAdmin {
   orcamentoMidiaMetaMensal?: number | null;
   portalToken?: string | null;
   leadScoringEnabled?: boolean;
+  socialMediaAtivo?: boolean;
   perfilPanel?: string | null;
   squad?: number | null;
   ultimoSyncAt?: string | null;
@@ -68,6 +69,7 @@ interface ClientePayload {
   conexaoMetaId?: string | null;
   conexaoGoogleId?: string | null;
   leadScoringEnabled?: boolean;
+  socialMediaAtivo?: boolean;
   perfilPanel?: string | null;
   squad?: number | null;
 }
@@ -362,6 +364,9 @@ function ClienteForm({
   const [leadScoringEnabled, setLeadScoringEnabled] = useState(
     initialValues.leadScoringEnabled ?? false
   );
+  const [socialMediaAtivo, setSocialMediaAtivo] = useState(
+    initialValues.socialMediaAtivo ?? false
+  );
   const [perfilPanel, setPerfilPanel] = useState(initialValues.perfilPanel ?? "");
   const [squad, setSquad] = useState<string>(
     initialValues.squad != null ? String(initialValues.squad) : ""
@@ -616,6 +621,15 @@ function ClienteForm({
                 />
                 <span className="text-sm text-[var(--foreground)]">Lead Scoring ativado</span>
               </label>
+              <label className="flex cursor-pointer items-center gap-2.5">
+                <input
+                  type="checkbox"
+                  checked={socialMediaAtivo}
+                  onChange={(e) => setSocialMediaAtivo(e.target.checked)}
+                  className="h-4 w-4 rounded border-[var(--border)] accent-[var(--primary)]"
+                />
+                <span className="text-sm text-[var(--foreground)]">Social Media ativado</span>
+              </label>
             </div>
 
             {clienteId && (
@@ -665,6 +679,7 @@ function ClienteForm({
                     syncAfterCreate: syncAfterSave,
                     syncNow: syncAfterSave,
                     leadScoringEnabled,
+                    socialMediaAtivo,
                     perfilPanel: perfilPanel || null,
                     squad: squad ? Number(squad) : null,
                   })
@@ -2223,6 +2238,7 @@ export default function AdminClientesPage() {
             orcamentoMidiaGoogleMensal: editing.orcamentoMidiaGoogleMensal ?? null,
             orcamentoMidiaMetaMensal: editing.orcamentoMidiaMetaMensal ?? null,
             leadScoringEnabled: editing.leadScoringEnabled ?? false,
+            socialMediaAtivo: editing.socialMediaAtivo ?? false,
             perfilPanel: editing.perfilPanel ?? null,
             squad: editing.squad ?? null,
           }}

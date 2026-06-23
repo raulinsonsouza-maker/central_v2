@@ -51,6 +51,7 @@ export async function POST(request: NextRequest) {
     conexaoMetaId?: string | null;
     conexaoGoogleId?: string | null;
     leadScoringEnabled?: boolean;
+    socialMediaAtivo?: boolean;
     perfilPanel?: string | null;
     squad?: number | null;
   };
@@ -78,6 +79,7 @@ export async function POST(request: NextRequest) {
       orcamentoMidiaGoogleMensal: body.orcamentoMidiaGoogleMensal ?? null,
       orcamentoMidiaMetaMensal: body.orcamentoMidiaMetaMensal ?? null,
       leadScoringEnabled: body.leadScoringEnabled ?? false,
+      socialMediaAtivo: body.socialMediaAtivo ?? false,
       perfilPanel: body.perfilPanel?.trim() || null,
       squad: body.squad === 1 || body.squad === 2 || body.squad === 3 ? body.squad : null,
     });

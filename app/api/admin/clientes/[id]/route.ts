@@ -43,6 +43,7 @@ export async function PATCH(
     conexaoMetaId?: string | null;
     conexaoGoogleId?: string | null;
     leadScoringEnabled?: boolean;
+    socialMediaAtivo?: boolean;
     perfilPanel?: string | null;
     squad?: number | null;
   };
@@ -69,6 +70,7 @@ export async function PATCH(
     orcamentoMidiaGoogleMensal?: number | null;
     orcamentoMidiaMetaMensal?: number | null;
     leadScoringEnabled?: boolean;
+    socialMediaAtivo?: boolean;
   };
   const orcamentoMidiaGoogleMensal =
     body.orcamentoMidiaGoogleMensal !== undefined
@@ -82,6 +84,10 @@ export async function PATCH(
     body.leadScoringEnabled !== undefined
       ? body.leadScoringEnabled
       : clienteComOrcamento.leadScoringEnabled ?? false;
+  const socialMediaAtivo =
+    body.socialMediaAtivo !== undefined
+      ? body.socialMediaAtivo
+      : clienteComOrcamento.socialMediaAtivo ?? false;
   const clienteComPerfil = cliente as typeof cliente & { perfilPanel?: string | null };
   const perfilPanel =
     body.perfilPanel !== undefined
@@ -105,6 +111,7 @@ export async function PATCH(
         orcamentoMidiaGoogleMensal,
         orcamentoMidiaMetaMensal,
         leadScoringEnabled,
+        socialMediaAtivo,
         perfilPanel,
         squad,
       },

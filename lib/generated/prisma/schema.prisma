@@ -25,6 +25,7 @@ model Cliente {
   formaPagamentoGoogle       String?
   portalToken                String?                  @unique @default(dbgenerated("(gen_random_uuid())::text"))
   leadScoringEnabled         Boolean                  @default(false)
+  socialMediaAtivo           Boolean                  @default(false)
   perfilPanel                String?
   ultimoSyncAt               DateTime?
   agregadosMensal            AgregadoMidiaMensal[]
