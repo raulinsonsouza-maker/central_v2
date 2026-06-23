@@ -246,6 +246,7 @@ export async function GET(
   let leadsComEstado = 0;
   let leadsComConversao = 0;
   let metaLeadsConfirmados = 0;
+  let visitasCount = 0;
 
   for (const lead of leads) {
     const cv = parseDadosCv(lead.dadosCv);
@@ -266,6 +267,7 @@ export async function GET(
     const rating = lead.rating ?? null;
     const etapaLower = norm(lead.etapa ?? "");
     const visitou = etapaLower.includes("visit");
+    if (visitou) visitasCount++;
 
     // possibilidadeVenda 1-5 (manual broker assessment)
     const pv = parsePv(cv?.possibilidadeVenda);
@@ -765,6 +767,7 @@ export async function GET(
     reconversoesGoogle,
     leadsComEstado, leadsComConversao,
     porTags, totalComTags: leadsComTags, alertaLeads,
+    visitasCount, vendasCount: totalGanhos,
     ultimoSyncAt: config.ultimoSyncAt,
   });
 }

@@ -8,7 +8,9 @@ import {
   RefreshCw, Inbox, Search, X,
   ChevronLeft, ChevronRight, ChevronDown,
   BarChart3, MapPin, Layers, Filter, Eye,
+  Wallet, TrendingUp, Home, CheckCircle,
 } from "lucide-react";
+import { isMiranteIncorporadora } from "@/lib/clientProfiles";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -284,6 +286,8 @@ interface AtribuicaoData {
   porTags: TagRow[];
   totalComTags: number;
   alertaLeads: number;
+  visitasCount?: number;
+  vendasCount?: number;
   ultimoSyncAt?: string | null;
 }
 
@@ -1449,12 +1453,14 @@ function AtribuicaoSection({
   activeFilter,
   onFilter,
   isAgencia,
+  isMirante,
 }: {
   clienteId: string;
   dateRange: { from: string; to: string };
   activeFilter: LeadFilter;
   onFilter: (f: LeadFilter) => void;
   isAgencia?: boolean;
+  isMirante?: boolean;
 }) {
   const [convSearch, setConvSearch] = React.useState("");
   const [reconversoesOpen, setReconversoesOpen] = React.useState(false);
@@ -1488,6 +1494,68 @@ function AtribuicaoSection({
 
   return (
     <div className="space-y-5">
+      {/* ── Custo por Etapa Física (Mirante only) ── */}
+      {isMirante && (() => {
+        const investTotal = (data.investMeta ?? 0) + (data.investGoogle ?? 0);
+        const visitas = data.visitasCount ?? 0;
+        const vendas = data.vendasCount ?? 0;
+        const custoVisita = visitas > 0 && investTotal > 0 ? investTotal / visitas : null;
+        const custoVenda = vendas > 0 && investTotal > 0 ? investTotal / vendas : null;
+        return (
+          <div className="space-y-3">
+            <div className="flex items-start gap-3">
+              <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
+              <div>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[var(--primary)]">CRM · Investimento</p>
+                <h2 className="text-xl font-extrabold tracking-tight text-[var(--foreground)]">Custo por Etapa Física</h2>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+              <div className="group relative overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] p-4 transition-all hover:border-[color-mix(in_srgb,var(--primary)_20%,var(--border))]">
+                <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[var(--primary)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.05]" />
+                <div className="mb-2 flex items-center gap-2">
+                  <Home className="h-4 w-4 text-[var(--muted-foreground)]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Visitas</span>
+                </div>
+                <p className="text-2xl font-extrabold tabular-nums text-[var(--foreground)]">{visitas}</p>
+                <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">negociações com visita</p>
+              </div>
+              <div className="group relative overflow-hidden rounded-2xl border border-emerald-500/20 bg-emerald-500/5 p-4 transition-all hover:border-emerald-500/40">
+                <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-emerald-500 opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
+                <div className="mb-2 flex items-center gap-2">
+                  <CheckCircle className="h-4 w-4 text-emerald-400" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-400">Vendas</span>
+                </div>
+                <p className="text-2xl font-extrabold tabular-nums text-emerald-400">{vendas}</p>
+                <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">negócios ganhos</p>
+              </div>
+              <div className="group relative overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--primary)_25%,var(--border))] bg-[var(--card)] p-4 transition-all hover:border-[color-mix(in_srgb,var(--primary)_40%,var(--border))]">
+                <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[var(--primary)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
+                <div className="mb-2 flex items-center gap-2">
+                  <Wallet className="h-4 w-4 text-[var(--primary)]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Custo / Visita</span>
+                </div>
+                <p className="text-2xl font-extrabold tabular-nums text-[var(--foreground)]">
+                  {custoVisita != null ? formatCurrencyBR(Math.round(custoVisita)) : "—"}
+                </p>
+                <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">investimento ÷ visitas</p>
+              </div>
+              <div className="group relative overflow-hidden rounded-2xl border border-[color-mix(in_srgb,var(--primary)_25%,var(--border))] bg-[var(--card)] p-4 transition-all hover:border-[color-mix(in_srgb,var(--primary)_40%,var(--border))]">
+                <div className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full bg-[var(--primary)] opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-[0.07]" />
+                <div className="mb-2 flex items-center gap-2">
+                  <TrendingUp className="h-4 w-4 text-[var(--primary)]" />
+                  <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-[var(--muted-foreground)]">Custo / Venda</span>
+                </div>
+                <p className="text-2xl font-extrabold tabular-nums text-[var(--foreground)]">
+                  {custoVenda != null ? formatCurrencyBR(Math.round(custoVenda)) : "—"}
+                </p>
+                <p className="mt-0.5 text-xs text-[var(--muted-foreground)]">investimento ÷ vendas</p>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Header */}
       <div className="flex items-start gap-3">
         <div className="mt-1 h-8 w-1 shrink-0 rounded-full bg-[var(--primary)]" />
@@ -1901,6 +1969,7 @@ export function CrmTab({
   }, [dateRange.from, dateRange.to, debouncedSearch, leadFilter?.type, leadFilter?.value]);
 
   const isAgencia = perfilPanel === "agencia";
+  const isMirante = isMiranteIncorporadora({ perfilPanel });
 
   const filterQs = leadFilter
     ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
@@ -1989,6 +2058,7 @@ export function CrmTab({
         activeFilter={leadFilter}
         onFilter={setLeadFilter}
         isAgencia={isAgencia}
+        isMirante={isMirante}
       />
 
       {/* Negociações */}
