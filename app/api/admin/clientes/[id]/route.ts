@@ -5,6 +5,7 @@ import {
   PLATAFORMA_GOOGLE_ADS,
   PLATAFORMA_META,
   PLATAFORMA_GOOGLE_ANALYTICS,
+  PLATAFORMA_INSTAGRAM,
   upsertContaPlataforma,
 } from "@/lib/repositories/contasRepository";
 import { findClienteById } from "@/lib/repositories/clientesRepository";
@@ -37,6 +38,7 @@ export async function PATCH(
     googleAdsAccountId?: string | null;
     googleAdsLoginCustomerId?: string | null;
     metaAdsAccountId?: string | null;
+    instagramBusinessAccountId?: string | null;
     ga4PropertyId?: string | null;
     conexaoMetaId?: string | null;
     conexaoGoogleId?: string | null;
@@ -141,6 +143,16 @@ export async function PATCH(
       plataforma: PLATAFORMA_GOOGLE_ANALYTICS,
       accountIdPlataforma:
         body.ga4PropertyId !== undefined ? body.ga4PropertyId : currentAnalyticsConta?.accountIdPlataforma,
+      nomeConta: nome,
+    });
+    const currentInstagramConta = cliente.contas.find((conta) => conta.plataforma === PLATAFORMA_INSTAGRAM);
+    await upsertContaPlataforma({
+      clienteId: id,
+      plataforma: PLATAFORMA_INSTAGRAM,
+      accountIdPlataforma:
+        body.instagramBusinessAccountId !== undefined
+          ? body.instagramBusinessAccountId
+          : currentInstagramConta?.accountIdPlataforma,
       nomeConta: nome,
     });
 

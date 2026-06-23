@@ -4,6 +4,7 @@ import {
   PLATAFORMA_GOOGLE_ADS,
   PLATAFORMA_META,
   PLATAFORMA_GOOGLE_ANALYTICS,
+  PLATAFORMA_INSTAGRAM,
   upsertContaPlataforma,
 } from "@/lib/repositories/contasRepository";
 import { slugify } from "@/lib/admin/slugify";
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest) {
     googleAdsAccountId?: string | null;
     googleAdsLoginCustomerId?: string | null;
     metaAdsAccountId?: string | null;
+    instagramBusinessAccountId?: string | null;
     ga4PropertyId?: string | null;
     conexaoMetaId?: string | null;
     conexaoGoogleId?: string | null;
@@ -99,6 +101,12 @@ export async function POST(request: NextRequest) {
       clienteId: cliente.id,
       plataforma: PLATAFORMA_GOOGLE_ANALYTICS,
       accountIdPlataforma: body.ga4PropertyId,
+      nomeConta: nome,
+    });
+    await upsertContaPlataforma({
+      clienteId: cliente.id,
+      plataforma: PLATAFORMA_INSTAGRAM,
+      accountIdPlataforma: body.instagramBusinessAccountId ?? null,
       nomeConta: nome,
     });
 

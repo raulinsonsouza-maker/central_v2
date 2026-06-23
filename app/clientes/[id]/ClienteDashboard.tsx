@@ -11,6 +11,7 @@ import { ImoveisPanel } from "@/components/clientes/ImoveisPanel";
 import { LeadScoringPanel } from "@/components/clientes/LeadScoringPanel";
 import { ImobLeadScoringPanel } from "@/components/clientes/ImobLeadScoringPanel";
 import { CrmTab } from "@/components/clientes/CrmTab";
+import { SocialMediaPanel } from "@/components/clientes/SocialMediaPanel";
 import { HotelFazendaSaoJoaoPanel } from "@/components/clientes/HotelFazendaSaoJoaoPanel";
 import { TertuliaPanel } from "@/components/clientes/TertuliaPanel";
 import { VarellaMotosPanel } from "@/components/clientes/VarellaMotosPanel";
@@ -355,7 +356,7 @@ let dailyGlobalSyncFired = false;
 
 export function ClienteDashboard({ id, portalMode = false }: { id: string; portalMode?: boolean }) {
   const [canal, setCanal] = React.useState<"geral" | "meta" | "google" | "imoveis" | "lead-scoring" | "crm">("geral");
-  const [subView, setSubView] = React.useState<"dados" | "criativos" | "lead-scoring">("dados");
+  const [subView, setSubView] = React.useState<"dados" | "criativos" | "lead-scoring" | "social-media">("dados");
   const [saldoVisible, setSaldoVisible] = React.useState(false);
   const [presetPeriodo, setPresetPeriodo] = React.useState<PresetPeriodo>("mesAtual");
   const [chartAgrupamento, setChartAgrupamento] = React.useState<"diario" | "semanal" | "mensal">("semanal");
@@ -1053,8 +1054,10 @@ function formatPercentage(value: number) {
           <div className="flex items-center gap-1 self-end rounded-xl border border-[var(--border)] bg-[var(--card)] p-1">
             {(
               canal === "meta" && isImobClient(cliente)
-                ? (["dados", "criativos", "lead-scoring"] as const)
-                : (["dados", "criativos"] as const)
+                ? (["dados", "criativos", "social-media", "lead-scoring"] as const)
+                : canal === "meta"
+                  ? (["dados", "criativos", "social-media"] as const)
+                  : (["dados", "criativos"] as const)
             ).map((view) => (
               <button
                 key={view}
@@ -1065,7 +1068,7 @@ function formatPercentage(value: number) {
                     : "text-[var(--muted-foreground)] hover:bg-[var(--muted)]/60 hover:text-[var(--foreground)]"
                 }`}
               >
-                {view === "dados" ? "Análise" : view === "criativos" ? "Criativos" : "Lead Scoring"}
+                {view === "dados" ? "Análise" : view === "criativos" ? "Criativos" : view === "social-media" ? "Social Media" : "Lead Scoring"}
               </button>
             ))}
           </div>
@@ -1254,6 +1257,11 @@ function formatPercentage(value: number) {
             </div>
           )}
         </div>
+      )}
+
+      {/* ── Social Media (Instagram Orgânico — sub-tab do Meta) ── */}
+      {canal === "meta" && subView === "social-media" && id && (
+        <SocialMediaPanel clienteId={id} dateFilter={dateFilter} />
       )}
 
       {/* ── Google Ads: Keywords (Criativos tab) ── */}

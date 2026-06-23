@@ -63,6 +63,7 @@ interface ClientePayload {
   googleAdsAccountId?: string | null;
   googleAdsLoginCustomerId?: string | null;
   metaAdsAccountId?: string | null;
+  instagramBusinessAccountId?: string | null;
   ga4PropertyId?: string | null;
   conexaoMetaId?: string | null;
   conexaoGoogleId?: string | null;
@@ -333,6 +334,7 @@ function ClienteForm({
     initialValues.googleAdsLoginCustomerId ?? ""
   );
   const [metaAdsAccountId, setMetaAdsAccountId] = useState(initialValues.metaAdsAccountId ?? "");
+  const [instagramAccountId, setInstagramAccountId] = useState(initialValues.instagramBusinessAccountId ?? "");
   const [conexaoMetaId, setConexaoMetaId] = useState(initialValues.conexaoMetaId ?? "");
   const [conexaoGoogleId, setConexaoGoogleId] = useState(initialValues.conexaoGoogleId ?? "");
 
@@ -491,6 +493,14 @@ function ClienteForm({
                   )}
                 </FormField>
               </div>
+              <FormField label="Instagram Business Account ID" hint="ID numérico da conta Instagram Business vinculada à página do Facebook. Ex: 17841400000000000.">
+                <input
+                  value={instagramAccountId}
+                  onChange={(e) => setInstagramAccountId(e.target.value)}
+                  placeholder="17841400000000000"
+                  className={inputClass}
+                />
+              </FormField>
             </div>
 
             {/* ── Analytics ── */}
@@ -648,6 +658,7 @@ function ClienteForm({
                     googleAdsAccountId: googleAdsAccountId.trim() || null,
                     googleAdsLoginCustomerId: googleAdsLoginCustomerId.trim() || null,
                     metaAdsAccountId: metaAdsAccountId.trim() || null,
+                    instagramBusinessAccountId: instagramAccountId.trim() || null,
                     ga4PropertyId: ga4PropertyId.trim() || null,
                     conexaoMetaId: conexaoMetaId || null,
                     conexaoGoogleId: conexaoGoogleId || null,
@@ -2205,6 +2216,7 @@ export default function AdminClientesPage() {
             googleAdsLoginCustomerId:
               getConta(editing, "GOOGLE_ADS")?.googleAdsLoginCustomerId ?? null,
             metaAdsAccountId: getConta(editing, "META")?.accountIdPlataforma ?? null,
+            instagramBusinessAccountId: getConta(editing, "INSTAGRAM")?.accountIdPlataforma ?? null,
             ga4PropertyId: getConta(editing, "GOOGLE_ANALYTICS")?.accountIdPlataforma ?? null,
             conexaoMetaId: getConta(editing, "META")?.conexaoIntegracaoId ?? null,
             conexaoGoogleId: getConta(editing, "GOOGLE_ADS")?.conexaoIntegracaoId ?? null,

@@ -3,6 +3,7 @@ import { prisma } from "@/lib/db";
 export const PLATAFORMA_GOOGLE_ADS = "GOOGLE_ADS";
 export const PLATAFORMA_META = "META";
 export const PLATAFORMA_GOOGLE_ANALYTICS = "GOOGLE_ANALYTICS";
+export const PLATAFORMA_INSTAGRAM = "INSTAGRAM";
 
 export function normalizeGoogleAdsAccountId(value?: string | null): string | null {
   const normalized = String(value ?? "").replace(/\D/g, "");
