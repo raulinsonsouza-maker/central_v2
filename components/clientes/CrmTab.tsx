@@ -1900,6 +1900,8 @@ export function CrmTab({
     setPage(1);
   }, [dateRange.from, dateRange.to, debouncedSearch, leadFilter?.type, leadFilter?.value]);
 
+  const isAgencia = perfilPanel === "agencia";
+
   const filterQs = leadFilter
     ? `&filterType=${encodeURIComponent(leadFilter.type)}&filterValue=${encodeURIComponent(leadFilter.value)}`
     : "";
@@ -1930,8 +1932,6 @@ export function CrmTab({
       queryClient.invalidateQueries({ queryKey: ["crm-atribuicao", clienteId] });
     },
   });
-
-  const isAgencia = perfilPanel === "agencia";
 
   const leads = leadsData?.leads ?? [];
   const total = leadsData?.total ?? 0;
