@@ -99,49 +99,39 @@ export async function GET(
     const token = creds.token;
 
     try {
-      const [profileRaw, insightsRaw, followsRaw] = await Promise.all([
-        igGet(`${igId}`, token, { fields: "followers_count,name" }),
-        igGet(`${igId}/insights`, token, {
-          metric: "reach,total_interactions",
-          period: "month",
-          since: String(toUnix(since12)),
-          until: String(toUnix(now)),
-        }),
-        igGet(`${igId}/insights`, token, {
-          metric: "new_follows",
-          period: "month",
-          since: String(toUnix(since12)),
-          until: String(toUnix(now)),
-        }),
-      ]);
+      const profileRaw = await igGet(`${igId}`, token, { fields: "followers_count,name" });
+      followersTotal = (profileRaw.followers_count as number) ?? 0;
 
-      followersTotal = profileRaw.followers_count ?? 0;
-
-      const reachArr = (insightsRaw.data?.find((d: { name: string }) => d.name === "reach")?.values ?? []) as Array<{ value: number; end_time: string }>;
-      const interArr = (insightsRaw.data?.find((d: { name: string }) => d.name === "total_interactions")?.values ?? []) as Array<{ value: number; end_time: string }>;
-      const followsArr = (followsRaw.data?.find((d: { name: string }) => d.name === "new_follows")?.values ?? []) as Array<{ value: number; end_time: string }>;
+      // Instagram Insights API v19+ constraints:
+      // • since→until ≤30 days → use 28-day windows per month
+      // • reach: period=day, values[] (sum)
+      // • total_interactions: period=day + metric_type=total_value → data[0].total_value.value
+      // • follower_count: period=day, values[] (sum, only last ~30 days)
+      type DailyValue = { value: number; end_time: string };
+      type TotalValueEntry = { total_value?: { value: number } };
 
       const monthMap = new Map<string, { mes: string; label: string; alcance: number; engajamento: number; novosSeguidores: number }>();
-      for (const r of reachArr) {
-        const { ano, mes } = endTimeToYearMonth(r.end_time);
+
+      for (let i = 11; i >= 0; i--) {
+        const since = new Date(now.getFullYear(), now.getMonth() - i, 1);
+        const until = new Date(since.getTime() + 28 * 24 * 60 * 60 * 1000);
+        const s = String(toUnix(since));
+        const u = String(toUnix(until));
+        const ano = since.getFullYear();
+        const mes = since.getMonth() + 1;
         const k = monthKey(ano, mes);
-        const entry = monthMap.get(k) ?? { mes: k, label: monthLabel(ano, mes), alcance: 0, engajamento: 0, novosSeguidores: 0 };
-        entry.alcance = r.value;
-        monthMap.set(k, entry);
-      }
-      for (const r of interArr) {
-        const { ano, mes } = endTimeToYearMonth(r.end_time);
-        const k = monthKey(ano, mes);
-        const entry = monthMap.get(k) ?? { mes: k, label: monthLabel(ano, mes), alcance: 0, engajamento: 0, novosSeguidores: 0 };
-        entry.engajamento = r.value;
-        monthMap.set(k, entry);
-      }
-      for (const r of followsArr) {
-        const { ano, mes } = endTimeToYearMonth(r.end_time);
-        const k = monthKey(ano, mes);
-        const entry = monthMap.get(k) ?? { mes: k, label: monthLabel(ano, mes), alcance: 0, engajamento: 0, novosSeguidores: 0 };
-        entry.novosSeguidores = r.value;
-        monthMap.set(k, entry);
+
+        const [r1, r2, r3] = await Promise.all([
+          igGet(`${igId}/insights`, token, { metric: "reach", period: "day", since: s, until: u }).catch(() => ({ data: [] })),
+          igGet(`${igId}/insights`, token, { metric: "total_interactions", period: "day", since: s, until: u, metric_type: "total_value" }).catch(() => ({ data: [] })),
+          igGet(`${igId}/insights`, token, { metric: "follower_count", period: "day", since: s, until: u }).catch(() => ({ data: [] })),
+        ]);
+
+        const alcance = ((r1.data as Array<{ values?: DailyValue[] }>)?.[0]?.values ?? []).reduce((s, v) => s + (v.value ?? 0), 0);
+        const engajamento = ((r2.data as TotalValueEntry[])?.[0]?.total_value?.value) ?? 0;
+        const novosSeguidores = ((r3.data as Array<{ values?: DailyValue[] }>)?.[0]?.values ?? []).reduce((s, v) => s + (v.value ?? 0), 0);
+
+        monthMap.set(k, { mes: k, label: monthLabel(ano, mes), alcance, engajamento, novosSeguidores });
       }
       monthly = [...monthMap.values()].sort((a, b) => a.mes.localeCompare(b.mes));
     } catch (e: unknown) {

@@ -55,41 +55,17 @@ export async function syncInstagramCliente(
 
   try {
     const now = new Date();
-    const since13 = new Date(now);
-    since13.setMonth(since13.getMonth() - 13);
-    since13.setDate(1);
-    since13.setHours(0, 0, 0, 0);
 
-    const [profileRaw, insightsRaw, followsRaw] = await Promise.all([
-      igGet(igId, token, { fields: "followers_count,name" }),
-      igGet(`${igId}/insights`, token, {
-        metric: "reach,total_interactions",
-        period: "month",
-        since: String(toUnix(since13)),
-        until: String(toUnix(now)),
-      }),
-      igGet(`${igId}/insights`, token, {
-        metric: "new_follows",
-        period: "month",
-        since: String(toUnix(since13)),
-        until: String(toUnix(now)),
-      }),
-    ]);
-
+    // Profile (followers total)
+    const profileRaw = await igGet(igId, token, { fields: "followers_count,name" });
     const followersTotal = (profileRaw.followers_count as number) ?? 0;
 
-    type InsightValue = { value: number; end_time: string };
-    type InsightSeries = { name: string; values?: InsightValue[] };
-
-    const insightsData = (insightsRaw.data as InsightSeries[]) ?? [];
-    const followsData = (followsRaw.data as InsightSeries[]) ?? [];
-
-    const reachArr =
-      (insightsData.find((d) => d.name === "reach")?.values ?? []);
-    const interArr =
-      (insightsData.find((d) => d.name === "total_interactions")?.values ?? []);
-    const followsArr =
-      (followsData.find((d) => d.name === "new_follows")?.values ?? []);
+    // Instagram Insights API constraints (v19+):
+    // • since→until window must be ≤30 days → we use 28-day windows
+    // • reach: period=day, values[] array (daily values to sum)
+    // • total_interactions: period=day + metric_type=total_value → data[0].total_value.value
+    // • follower_count: period=day, values[] (daily new followers to sum); only last 30 days
+    // • new_follows / month period removed from API
 
     type MonthBucket = {
       ano: number;
@@ -101,31 +77,51 @@ export async function syncInstagramCliente(
 
     const monthMap = new Map<string, MonthBucket>();
 
-    function endTimeToYearMonth(endTime: string): { ano: number; mes: number; key: string } {
-      const d = new Date(endTime);
-      d.setDate(d.getDate() - 1);
-      const ano = d.getFullYear();
-      const mes = d.getMonth() + 1;
-      return { ano, mes, key: `${ano}-${String(mes).padStart(2, "0")}` };
-    }
+    for (let i = 12; i >= 0; i--) {
+      const since = new Date(now.getFullYear(), now.getMonth() - i, 1);
+      // 28-day window — always ≤30 days regardless of month length
+      const until = new Date(since.getTime() + 28 * 24 * 60 * 60 * 1000);
+      const s = String(toUnix(since));
+      const u = String(toUnix(until));
+      const ano = since.getFullYear();
+      const mes = since.getMonth() + 1;
+      const key = `${ano}-${String(mes).padStart(2, "0")}`;
 
-    for (const r of reachArr) {
-      const { ano, mes, key } = endTimeToYearMonth(r.end_time);
-      const entry = monthMap.get(key) ?? { ano, mes, alcance: 0, engajamento: 0, novosSeguidores: 0 };
-      entry.alcance = r.value;
-      monthMap.set(key, entry);
-    }
-    for (const r of interArr) {
-      const { ano, mes, key } = endTimeToYearMonth(r.end_time);
-      const entry = monthMap.get(key) ?? { ano, mes, alcance: 0, engajamento: 0, novosSeguidores: 0 };
-      entry.engajamento = r.value;
-      monthMap.set(key, entry);
-    }
-    for (const r of followsArr) {
-      const { ano, mes, key } = endTimeToYearMonth(r.end_time);
-      const entry = monthMap.get(key) ?? { ano, mes, alcance: 0, engajamento: 0, novosSeguidores: 0 };
-      entry.novosSeguidores = r.value;
-      monthMap.set(key, entry);
+      const [r1, r2, r3] = await Promise.all([
+        igGet(`${igId}/insights`, token, {
+          metric: "reach",
+          period: "day",
+          since: s,
+          until: u,
+        }).catch(() => ({ data: [] })),
+        igGet(`${igId}/insights`, token, {
+          metric: "total_interactions",
+          period: "day",
+          since: s,
+          until: u,
+          metric_type: "total_value",
+        }).catch(() => ({ data: [] })),
+        // follower_count only supported for last ~30 days; older months silently return empty
+        igGet(`${igId}/insights`, token, {
+          metric: "follower_count",
+          period: "day",
+          since: s,
+          until: u,
+        }).catch(() => ({ data: [] })),
+      ]);
+
+      type DailyValue = { value: number; end_time: string };
+      type TotalValueEntry = { total_value?: { value: number } };
+
+      const reachValues = (r1.data as Array<{ values?: DailyValue[] }>)?.[0]?.values ?? [];
+      const alcance = reachValues.reduce((sum, v) => sum + (v.value ?? 0), 0);
+
+      const engajamento = ((r2.data as TotalValueEntry[])?.[0]?.total_value?.value) ?? 0;
+
+      const followValues = (r3.data as Array<{ values?: DailyValue[] }>)?.[0]?.values ?? [];
+      const novosSeguidores = followValues.reduce((sum, v) => sum + (v.value ?? 0), 0);
+
+      monthMap.set(key, { ano, mes, alcance, engajamento, novosSeguidores });
     }
 
     const syncedAt = new Date();
