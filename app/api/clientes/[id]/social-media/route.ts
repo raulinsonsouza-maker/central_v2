@@ -56,27 +56,41 @@ export async function GET(
 
   // --- Monthly insights: try DB first ---
   const now = new Date();
+
+  // Determine date range: use caller-supplied dates or default to last 12 months
+  const rangeStart = dataInicio
+    ? new Date(dataInicio + "T00:00:00")
+    : (() => { const d = new Date(now); d.setMonth(d.getMonth() - 12); d.setDate(1); d.setHours(0, 0, 0, 0); return d; })();
+  const rangeEnd = dataFim ? new Date(dataFim + "T23:59:59") : now;
+
+  const startKey = `${rangeStart.getFullYear()}-${String(rangeStart.getMonth() + 1).padStart(2, "0")}`;
+  const endKey   = `${rangeEnd.getFullYear()}-${String(rangeEnd.getMonth() + 1).padStart(2, "0")}`;
+
+  // Fetch all stored months for this client and filter in-memory (rows are small, ≤ ~30)
+  const allDbInsights = await prisma.instagramInsightMensal.findMany({
+    where: { clienteId },
+    orderBy: [{ ano: "asc" }, { mes: "asc" }],
+  });
+
+  const dbInsights = allDbInsights.filter((row) => {
+    const k = `${row.ano}-${String(row.mes).padStart(2, "0")}`;
+    return k >= startKey && k <= endKey;
+  });
+
+  // Also keep since12 for the live-fetch fallback window (always last 12 months from now)
   const since12 = new Date(now);
   since12.setMonth(since12.getMonth() - 12);
   since12.setDate(1);
   since12.setHours(0, 0, 0, 0);
 
-  const dbInsights = await prisma.instagramInsightMensal.findMany({
-    where: {
-      clienteId,
-      OR: [
-        { ano: { gt: since12.getFullYear() } },
-        { ano: since12.getFullYear(), mes: { gte: since12.getMonth() + 1 } },
-      ],
-    },
-    orderBy: [{ ano: "asc" }, { mes: "asc" }],
-  });
-
   // Build monthly array from DB rows (prefer DB if we have at least 3 months of data)
   let monthly: Array<{ mes: string; label: string; alcance: number; engajamento: number; novosSeguidores: number }> = [];
   let followersTotal = 0;
 
-  if (dbInsights.length >= 3) {
+  // Use DB data if we have any rows when the user provided explicit dates,
+  // or at least 3 months for the default "last 12 months" view.
+  const dbThreshold = dataInicio || dataFim ? 1 : 3;
+  if (dbInsights.length >= dbThreshold) {
     monthly = dbInsights.map((row) => ({
       mes: monthKey(row.ano, row.mes),
       label: monthLabel(row.ano, row.mes),
@@ -239,9 +253,14 @@ export async function GET(
     }
   }
 
+  // Build a human-readable period label
+  const fmtDate = (d: Date) =>
+    d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).replace(".", "");
+  const periodoLabel = `${fmtDate(rangeStart)} a ${fmtDate(rangeEnd)}`;
+
   const result = {
     configured: true,
-    source: dbInsights.length >= 3 ? "db" : "live",
+    source: dbInsights.length >= dbThreshold ? "db" : "live",
     profile: {
       nome: profileNome,
       followersTotal,
@@ -252,6 +271,7 @@ export async function GET(
       novosSeguidores: novosSeguidoresTotal,
       taxaEngajamento: Math.round(taxaEngajamento * 100) / 100,
     },
+    periodoLabel,
     monthly,
     topPosts,
   };

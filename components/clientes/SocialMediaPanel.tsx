@@ -16,6 +16,7 @@ import { Users, Heart, Eye, TrendingUp, Instagram, ImageIcon } from "lucide-reac
 interface SocialMediaData {
   configured: boolean;
   error?: string;
+  periodoLabel?: string;
   profile?: { nome: string; followersTotal: number };
   period?: {
     alcanceTotal: number;
@@ -212,7 +213,7 @@ export function SocialMediaPanel({ clienteId, dateFilter }: Props) {
     );
   }
 
-  const { profile, period, monthly, topPosts } = data;
+  const { profile, period, monthly, topPosts, periodoLabel } = data;
 
   return (
     <div className="space-y-10">
@@ -228,7 +229,7 @@ export function SocialMediaPanel({ clienteId, dateFilter }: Props) {
           icon={<TrendingUp className="h-4 w-4" />}
           label="Novos seguidores"
           value={fmt(period?.novosSeguidores ?? 0)}
-          sub="No período (12 meses)"
+          sub={periodoLabel ? `No período` : "No período (12 meses)"}
         />
         <KpiCard
           icon={<Heart className="h-4 w-4" />}
@@ -240,7 +241,7 @@ export function SocialMediaPanel({ clienteId, dateFilter }: Props) {
           icon={<Eye className="h-4 w-4" />}
           label="Alcance total"
           value={fmt(period?.alcanceTotal ?? 0)}
-          sub="Últimos 12 meses"
+          sub={periodoLabel ?? "Últimos 12 meses"}
         />
       </div>
 
