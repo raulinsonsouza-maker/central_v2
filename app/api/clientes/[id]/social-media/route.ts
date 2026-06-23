@@ -10,7 +10,13 @@ interface CacheEntry {
   ts: number;
 }
 const postCache = new Map<string, CacheEntry>();
-const POST_CACHE_TTL = 60 * 60 * 1000; // 1h — top posts still fetched live
+const POST_CACHE_TTL = 60 * 60 * 1000; // 1h
+
+const demoCache = new Map<string, CacheEntry>();
+const DEMO_CACHE_TTL = 24 * 60 * 60 * 1000; // 24h — demographics change slowly
+
+const weeklyCache = new Map<string, CacheEntry>();
+const WEEKLY_CACHE_TTL = 60 * 60 * 1000; // 1h
 
 function toUnix(date: Date): number {
   return Math.floor(date.getTime() / 1000);
@@ -23,12 +29,6 @@ function monthLabel(ano: number, mes: number): string {
 
 function monthKey(ano: number, mes: number): string {
   return `${ano}-${String(mes).padStart(2, "0")}`;
-}
-
-function endTimeToYearMonth(endTime: string): { ano: number; mes: number } {
-  const d = new Date(endTime);
-  d.setDate(d.getDate() - 1);
-  return { ano: d.getFullYear(), mes: d.getMonth() + 1 };
 }
 
 async function igGet(path: string, token: string, params: Record<string, string> = {}) {
@@ -47,6 +47,7 @@ export async function GET(
   const sp = new URL(req.url).searchParams;
   const dataInicio = sp.get("dataInicio");
   const dataFim = sp.get("dataFim");
+  const granularity = sp.get("granularity") ?? "mensal"; // "mensal" | "semanal"
 
   const igId = await discoverInstagramId(clienteId);
 
@@ -54,10 +55,8 @@ export async function GET(
     return NextResponse.json({ configured: false });
   }
 
-  // --- Monthly insights: try DB first ---
+  // --- Date range ---
   const now = new Date();
-
-  // Determine date range: use caller-supplied dates or default to last 12 months
   const rangeStart = dataInicio
     ? new Date(dataInicio + "T00:00:00")
     : (() => { const d = new Date(now); d.setMonth(d.getMonth() - 12); d.setDate(1); d.setHours(0, 0, 0, 0); return d; })();
@@ -66,7 +65,7 @@ export async function GET(
   const startKey = `${rangeStart.getFullYear()}-${String(rangeStart.getMonth() + 1).padStart(2, "0")}`;
   const endKey   = `${rangeEnd.getFullYear()}-${String(rangeEnd.getMonth() + 1).padStart(2, "0")}`;
 
-  // Fetch all stored months for this client and filter in-memory (rows are small, ≤ ~30)
+  // --- Monthly insights from DB (always computed) ---
   const allDbInsights = await prisma.instagramInsightMensal.findMany({
     where: { clienteId },
     orderBy: [{ ano: "asc" }, { mes: "asc" }],
@@ -77,18 +76,15 @@ export async function GET(
     return k >= startKey && k <= endKey;
   });
 
-  // Also keep since12 for the live-fetch fallback window (always last 12 months from now)
   const since12 = new Date(now);
   since12.setMonth(since12.getMonth() - 12);
   since12.setDate(1);
   since12.setHours(0, 0, 0, 0);
 
-  // Build monthly array from DB rows (prefer DB if we have at least 3 months of data)
-  let monthly: Array<{ mes: string; label: string; alcance: number; engajamento: number; novosSeguidores: number }> = [];
+  type MonthRow = { mes: string; label: string; alcance: number; engajamento: number; novosSeguidores: number; followersTotal: number };
+  let monthly: MonthRow[] = [];
   let followersTotal = 0;
 
-  // Use DB data if we have any rows when the user provided explicit dates,
-  // or at least 3 months for the default "last 12 months" view.
   const dbThreshold = dataInicio || dataFim ? 1 : 3;
   if (dbInsights.length >= dbThreshold) {
     monthly = dbInsights.map((row) => ({
@@ -97,12 +93,12 @@ export async function GET(
       alcance: row.alcance,
       engajamento: row.engajamento,
       novosSeguidores: row.novosSeguidores,
+      followersTotal: row.followersTotal,
     }));
-    // Use the latest snapshot for followers count
     const latest = dbInsights[dbInsights.length - 1];
     followersTotal = latest.followersTotal;
   } else {
-    // Fallback: fetch monthly insights live from the Graph API
+    // Live fallback
     const creds = await resolveMetaCredentials(clienteId);
     if (!creds?.token) {
       return NextResponse.json(
@@ -111,20 +107,13 @@ export async function GET(
       );
     }
     const token = creds.token;
-
     try {
       const profileRaw = await igGet(`${igId}`, token, { fields: "followers_count,name" });
       followersTotal = (profileRaw.followers_count as number) ?? 0;
 
-      // Instagram Insights API v19+ constraints:
-      // • since→until ≤30 days → use 28-day windows per month
-      // • reach: period=day, values[] (sum)
-      // • total_interactions: period=day + metric_type=total_value → data[0].total_value.value
-      // • follower_count: period=day, values[] (sum, only last ~30 days)
       type DailyValue = { value: number; end_time: string };
       type TotalValueEntry = { total_value?: { value: number } };
-
-      const monthMap = new Map<string, { mes: string; label: string; alcance: number; engajamento: number; novosSeguidores: number }>();
+      const monthMap = new Map<string, MonthRow>();
 
       for (let i = 11; i >= 0; i--) {
         const since = new Date(now.getFullYear(), now.getMonth() - i, 1);
@@ -144,8 +133,7 @@ export async function GET(
         const alcance = ((r1.data as Array<{ values?: DailyValue[] }>)?.[0]?.values ?? []).reduce((s, v) => s + (v.value ?? 0), 0);
         const engajamento = ((r2.data as TotalValueEntry[])?.[0]?.total_value?.value) ?? 0;
         const novosSeguidores = ((r3.data as Array<{ values?: DailyValue[] }>)?.[0]?.values ?? []).reduce((s, v) => s + (v.value ?? 0), 0);
-
-        monthMap.set(k, { mes: k, label: monthLabel(ano, mes), alcance, engajamento, novosSeguidores });
+        monthMap.set(k, { mes: k, label: monthLabel(ano, mes), alcance, engajamento, novosSeguidores, followersTotal: 0 });
       }
       monthly = [...monthMap.values()].sort((a, b) => a.mes.localeCompare(b.mes));
     } catch (e: unknown) {
@@ -154,24 +142,113 @@ export async function GET(
     }
   }
 
-  // For followers total when served from DB: try to get fresh count from DB profile snapshot,
-  // but if it's zero fall back to last known.
   const alcanceTotal = monthly.reduce((s, m) => s + m.alcance, 0);
   const engajamentoTotal = monthly.reduce((s, m) => s + m.engajamento, 0);
   const novosSeguidoresTotal = monthly.reduce((s, m) => s + m.novosSeguidores, 0);
   const taxaEngajamento = alcanceTotal > 0 ? (engajamentoTotal / alcanceTotal) * 100 : 0;
 
-  // --- Top posts: still fetched live (parameterized by date range, not cacheable in DB easily) ---
+  // --- Weekly data (semanal granularity) — live fetch ---
+  type WeekRow = { label: string; semana: string; gains: number; followersTotal: number };
+  let weeklyData: WeekRow[] | null = null;
+
+  if (granularity === "semanal") {
+    const weeklyCacheKey = `${clienteId}|${startKey}|${endKey}`;
+    const cachedWeekly = weeklyCache.get(weeklyCacheKey);
+
+    if (cachedWeekly && Date.now() - cachedWeekly.ts < WEEKLY_CACHE_TTL) {
+      weeklyData = cachedWeekly.data as WeekRow[];
+    } else {
+      const creds = await resolveMetaCredentials(clienteId);
+      if (creds?.token) {
+        try {
+          // Only fetch up to 90 days back
+          const daysDiff = Math.ceil((rangeEnd.getTime() - rangeStart.getTime()) / (1000 * 60 * 60 * 24));
+          const effectiveStart = daysDiff > 90
+            ? new Date(rangeEnd.getTime() - 90 * 24 * 60 * 60 * 1000)
+            : rangeStart;
+          effectiveStart.setHours(0, 0, 0, 0);
+
+          // Get base followers from DB (most recent snapshot before rangeStart)
+          const baseSnapshot = allDbInsights.filter((r) => {
+            const k = `${r.ano}-${String(r.mes).padStart(2, "0")}`;
+            return k < startKey;
+          }).pop();
+          let baseFol = baseSnapshot?.followersTotal ?? followersTotal;
+
+          // Fetch daily gains in 28-day windows
+          type DayGain = { date: string; gain: number };
+          const dailyGains: DayGain[] = [];
+          let cursor = new Date(effectiveStart);
+
+          while (cursor < rangeEnd) {
+            const until = new Date(Math.min(cursor.getTime() + 28 * 24 * 60 * 60 * 1000, rangeEnd.getTime()));
+            const raw = await igGet(`${igId}/insights`, creds.token, {
+              metric: "follower_count",
+              period: "day",
+              since: String(toUnix(cursor)),
+              until: String(toUnix(until)),
+            }).catch(() => ({ data: [] }));
+
+            const values = (raw?.data as Array<{ values?: Array<{ value: number; end_time: string }> }>)?.[0]?.values ?? [];
+            for (const v of values) {
+              const date = v.end_time.slice(0, 10);
+              if (date >= effectiveStart.toISOString().slice(0, 10)) {
+                dailyGains.push({ date, gain: v.value ?? 0 });
+              }
+            }
+            cursor = until;
+          }
+
+          // Aggregate into calendar weeks (Mon–Sun)
+          const weekMap = new Map<string, { gains: number; endDate: string }>();
+          let runningTotal = baseFol;
+
+          for (const day of dailyGains.sort((a, b) => a.date.localeCompare(b.date))) {
+            runningTotal += day.gain;
+            const d = new Date(day.date + "T12:00:00");
+            const dow = d.getDay();
+            const monday = new Date(d);
+            monday.setDate(d.getDate() - (dow === 0 ? 6 : dow - 1));
+            const wk = monday.toISOString().slice(0, 10);
+            const ex = weekMap.get(wk) ?? { gains: 0, endDate: day.date };
+            weekMap.set(wk, { gains: ex.gains + day.gain, endDate: day.date });
+          }
+
+          // Build week rows with cumulative followers
+          runningTotal = baseFol;
+          weeklyData = [...weekMap.entries()]
+            .sort(([a], [b]) => a.localeCompare(b))
+            .map(([wk, v]) => {
+              runningTotal += v.gains;
+              const d = new Date(wk + "T12:00:00");
+              const label = `${String(d.getDate()).padStart(2, "0")}/${String(d.getMonth() + 1).padStart(2, "0")}`;
+              return { semana: wk, label, gains: v.gains, followersTotal: runningTotal };
+            });
+
+          weeklyCache.set(weeklyCacheKey, { data: weeklyData, ts: Date.now() });
+        } catch {
+          weeklyData = null;
+        }
+      }
+    }
+  }
+
+  // --- Top posts: top 10 by REACH, fetched live ---
   const mediaStart = dataInicio ?? since12.toISOString().slice(0, 10);
   const mediaEnd = dataFim ?? now.toISOString().slice(0, 10);
   const postCacheKey = `${clienteId}|${mediaStart}|${mediaEnd}`;
   const cachedPosts = postCache.get(postCacheKey);
 
-  let topPosts: unknown[] = [];
+  type PostRow = {
+    id: string; caption: string; thumbnailUrl: string | null; mediaUrl: string | null;
+    mediaType: string; timestamp: string; alcance: number; curtidas: number;
+    comentarios: number; salvos: number; compartilhamentos: number; taxaEngajamento: number;
+  };
+  let topPosts: PostRow[] = [];
   let profileNome = "";
 
   if (cachedPosts && Date.now() - cachedPosts.ts < POST_CACHE_TTL) {
-    const cached = cachedPosts.data as { topPosts: unknown[]; nome: string };
+    const cached = cachedPosts.data as { topPosts: PostRow[]; nome: string };
     topPosts = cached.topPosts;
     profileNome = cached.nome;
   } else {
@@ -193,14 +270,9 @@ export async function GET(
         }
 
         const allMedia = (mediaRaw.data ?? []) as Array<{
-          id: string;
-          caption?: string;
-          media_type: string;
-          media_url?: string;
-          thumbnail_url?: string;
-          timestamp: string;
-          like_count: number;
-          comments_count: number;
+          id: string; caption?: string; media_type: string;
+          media_url?: string; thumbnail_url?: string; timestamp: string;
+          like_count: number; comments_count: number;
         }>;
 
         const filtered = allMedia.filter((m) => {
@@ -208,23 +280,25 @@ export async function GET(
           return t >= mediaStart && t <= mediaEnd;
         });
 
-        const top20 = filtered
-          .sort((a, b) => (b.like_count + b.comments_count) - (a.like_count + a.comments_count))
-          .slice(0, 20);
-
+        // Fetch reach for all candidates to sort by alcance
+        const candidates = filtered.slice(0, 30); // limit API calls
         const insightResults = await Promise.allSettled(
-          top20.map((m) => igGet(`${m.id}/insights`, token, { metric: "reach,saved,shares" })),
+          candidates.map((m) => igGet(`${m.id}/insights`, token, { metric: "reach,saved,shares" })),
         );
 
-        topPosts = top20.map((m, i) => {
+        const withReach = candidates.map((m, i) => {
           const insightData = insightResults[i].status === "fulfilled"
             ? (insightResults[i] as PromiseFulfilledResult<{ data?: Array<{ name: string; values?: Array<{ value: number }> }> }>).value.data ?? []
             : [];
           const getMetric = (name: string) =>
             insightData.find((d: { name: string }) => d.name === name)?.values?.[0]?.value ?? 0;
-          const alcance = getMetric("reach");
-          const salvos = getMetric("saved");
-          const compartilhamentos = getMetric("shares");
+          return { m, alcance: getMetric("reach"), salvos: getMetric("saved"), compartilhamentos: getMetric("shares") };
+        });
+
+        // Sort by ALCANCE (reach) — top 10
+        const top10 = withReach.sort((a, b) => b.alcance - a.alcance).slice(0, 10);
+
+        topPosts = top10.map(({ m, alcance, salvos, compartilhamentos }) => {
           const curtidas = m.like_count;
           const comentarios = m.comments_count;
           const totalInteracoes = curtidas + comentarios + salvos + compartilhamentos;
@@ -234,6 +308,8 @@ export async function GET(
             id: m.id,
             caption: m.caption ?? "",
             thumbnailUrl: thumbnailUrl ?? null,
+            mediaUrl: m.media_url ?? null,
+            mediaType: m.media_type,
             timestamp: m.timestamp,
             alcance,
             curtidas,
@@ -244,37 +320,85 @@ export async function GET(
           };
         });
 
-        (topPosts as Array<{ taxaEngajamento: number }>).sort((a, b) => b.taxaEngajamento - a.taxaEngajamento);
-
         postCache.set(postCacheKey, { data: { topPosts, nome: profileNome }, ts: Date.now() });
       } catch {
-        // Top posts unavailable — return monthly data from DB without posts
+        // Top posts unavailable
       }
     }
   }
 
-  // Build a human-readable period label
+  // Curtidas + Comentários totals from top posts
+  const curtidasTotal = topPosts.reduce((s, p) => s + p.curtidas, 0);
+  const comentariosTotal = topPosts.reduce((s, p) => s + p.comentarios, 0);
+
+  // --- Demographics: audience_gender_age + audience_city ---
+  type Demographics = {
+    genero: { F: number; M: number; U: number };
+    faixaEtaria: Record<string, number>;
+    cidades: Array<{ cidade: string; seguidores: number }>;
+  };
+  let demographics: Demographics | null = null;
+
+  const demoCacheKey = clienteId;
+  const cachedDemo = demoCache.get(demoCacheKey);
+  if (cachedDemo && Date.now() - cachedDemo.ts < DEMO_CACHE_TTL) {
+    demographics = cachedDemo.data as Demographics;
+  } else {
+    const creds = await resolveMetaCredentials(clienteId);
+    if (creds?.token) {
+      try {
+        const [genderAgeRaw, cityRaw] = await Promise.all([
+          igGet(`${igId}/insights`, creds.token, { metric: "audience_gender_age", period: "lifetime" }).catch(() => null),
+          igGet(`${igId}/insights`, creds.token, { metric: "audience_city", period: "lifetime" }).catch(() => null),
+        ]);
+
+        if (genderAgeRaw) {
+          const genderAgeValue = (genderAgeRaw?.data as Array<{ values?: Array<{ value: Record<string, number> }> }>)?.[0]?.values?.[0]?.value ?? {};
+          const genero = { F: 0, M: 0, U: 0 };
+          const faixaEtaria: Record<string, number> = {};
+
+          for (const [key, count] of Object.entries(genderAgeValue)) {
+            const [gender, age] = key.split(".");
+            if (gender in genero) genero[gender as keyof typeof genero] += count;
+            faixaEtaria[age] = (faixaEtaria[age] ?? 0) + count;
+          }
+
+          const cityValue = (cityRaw?.data as Array<{ values?: Array<{ value: Record<string, number> }> }>)?.[0]?.values?.[0]?.value ?? {};
+          const cidades = Object.entries(cityValue)
+            .sort(([, a], [, b]) => b - a)
+            .slice(0, 10)
+            .map(([cidade, seguidores]) => ({ cidade, seguidores }));
+
+          demographics = { genero, faixaEtaria, cidades };
+          demoCache.set(demoCacheKey, { data: demographics, ts: Date.now() });
+        }
+      } catch {
+        // Demographics unavailable — not critical
+      }
+    }
+  }
+
+  // Period label
   const fmtDate = (d: Date) =>
     d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short", year: "numeric" }).replace(".", "");
   const periodoLabel = `${fmtDate(rangeStart)} a ${fmtDate(rangeEnd)}`;
 
-  const result = {
+  return NextResponse.json({
     configured: true,
     source: dbInsights.length >= dbThreshold ? "db" : "live",
-    profile: {
-      nome: profileNome,
-      followersTotal,
-    },
+    profile: { nome: profileNome, followersTotal },
     period: {
       alcanceTotal,
       engajamentoTotal,
       novosSeguidores: novosSeguidoresTotal,
       taxaEngajamento: Math.round(taxaEngajamento * 100) / 100,
+      curtidasTotal,
+      comentariosTotal,
     },
     periodoLabel,
     monthly,
+    weeklyData,
     topPosts,
-  };
-
-  return NextResponse.json(result);
+    demographics,
+  });
 }
