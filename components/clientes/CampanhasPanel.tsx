@@ -2,7 +2,8 @@
 
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronRight, ArrowLeft, BarChart3, Play, Target, Eye, ChevronUp, ChevronDown, ChevronsUpDown } from "lucide-react";
+import { ChevronRight, ArrowLeft, BarChart3, Play, Target, Eye, ChevronUp, ChevronDown, ChevronsUpDown, Info } from "lucide-react";
+import { AdsetDetailModal } from "@/components/clientes/AdsetDetailModal";
 import { upgradeFbCdnImageUrl } from "@/lib/utils";
 
 type DateFilter = {
@@ -567,9 +568,10 @@ function sortConjuntos(arr: Conjunto[], col: ConjuntoSortCol, dir: SortDir): Con
   });
 }
 
-function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId }: { conjuntos: Conjunto[]; onSelect: (id: string) => void; parentCampType?: CampType | null; mqlByAdsetId?: Map<string, number> }) {
+function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId, clienteId }: { conjuntos: Conjunto[]; onSelect: (id: string) => void; parentCampType?: CampType | null; mqlByAdsetId?: Map<string, number>; clienteId: string }) {
   const [sortCol, setSortCol] = React.useState<ConjuntoSortCol>("spend");
   const [sortDir, setSortDir] = React.useState<SortDir>("desc");
+  const [detailAdset, setDetailAdset] = React.useState<{ id: string; name: string } | null>(null);
 
   function handleSort(col: string) {
     const c = col as ConjuntoSortCol;
@@ -693,14 +695,31 @@ function ConjuntosTable({ conjuntos, onSelect, parentCampType, mqlByAdsetId }: {
                   </td>
                 )}
                 <td className={`px-4 py-4 text-right tabular-nums text-[13px] text-[var(--muted-foreground)] ${bg}`}>{c.adCount}</td>
-                <td className={`rounded-r-2xl px-3 py-4 ${bg}`}>
-                  <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-[var(--primary)] transition-colors ml-auto" />
+                <td className={`rounded-r-2xl px-2 py-4 ${bg}`}>
+                  <div className="flex items-center gap-0.5 justify-end">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); setDetailAdset({ id: c.adsetId, name: c.adsetName }); }}
+                      title="Ver detalhes do conjunto (público, orçamento, período)"
+                      className="p-1.5 rounded-lg text-white/20 hover:text-[var(--primary)] hover:bg-[var(--primary)]/10 transition-all"
+                    >
+                      <Info className="w-3.5 h-3.5" />
+                    </button>
+                    <ChevronRight className="w-3.5 h-3.5 text-white/15 group-hover:text-[var(--primary)] transition-colors" />
+                  </div>
                 </td>
               </tr>
             );
           })}
         </tbody>
       </table>
+      {detailAdset && (
+        <AdsetDetailModal
+          adsetId={detailAdset.id}
+          adsetName={detailAdset.name}
+          clienteId={clienteId}
+          onClose={() => setDetailAdset(null)}
+        />
+      )}
     </div>
   );
 }
@@ -1301,7 +1320,7 @@ export function CampanhasPanel({ clienteId, dateFilter, canal = "geral", mqlByCa
           </div>
         ) : (
           <div className="px-3 pb-5 pt-4 sm:px-5 sm:pb-6">
-            <ConjuntosTable conjuntos={conjuntos} onSelect={setSelectedConjunto} parentCampType={parentCampType} mqlByAdsetId={mqlByAdsetId} />
+            <ConjuntosTable conjuntos={conjuntos} onSelect={setSelectedConjunto} parentCampType={parentCampType} mqlByAdsetId={mqlByAdsetId} clienteId={clienteId} />
           </div>
         )
       )}
