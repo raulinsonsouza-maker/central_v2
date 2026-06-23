@@ -34,6 +34,7 @@ export async function createCliente(data: {
   orcamentoMidiaGoogleMensal?: number | null;
   orcamentoMidiaMetaMensal?: number | null;
   leadScoringEnabled?: boolean;
+  socialMediaAtivo?: boolean;
   perfilPanel?: string | null;
   squad?: number | null;
 }) {
@@ -47,6 +48,7 @@ export async function createCliente(data: {
       orcamentoMidiaGoogleMensal: data.orcamentoMidiaGoogleMensal ?? null,
       orcamentoMidiaMetaMensal: data.orcamentoMidiaMetaMensal ?? null,
       leadScoringEnabled: data.leadScoringEnabled ?? false,
+      socialMediaAtivo: data.socialMediaAtivo ?? false,
       perfilPanel: data.perfilPanel ?? null,
       squad: data.squad ?? null,
       portalToken: randomUUID(),
