@@ -106,9 +106,15 @@ Em **Administração** > **Clientes** você pode:
 
 ## Scripts
 
-- `npm run dev` – servidor de desenvolvimento
+- `npm run dev` – servidor de desenvolvimento (porta **5000**)
 - `npm run build` – build de produção
-- `npm run start` – servidor de produção
+- `npm run start` – servidor de produção (porta **5000**)
 - `npm run db:migrate` – aplicar migrações
 - `npm run db:generate` – gerar Prisma Client
 - `npm run db:studio` – abrir Prisma Studio
+
+## Deploy na VPS (Debian)
+
+Guia completo: [docs/deploy-vps.md](docs/deploy-vps.md)
+
+Repositório: [github.com/raulinsonsouza-maker/central_v2](https://github.com/raulinsonsouza-maker/central_v2)

@@ -2,7 +2,32 @@
 
 Este documento descreve a rotina de sincronização diária que busca os dados de Meta Ads, Google Ads e GA4 na API de cada plataforma e persiste no banco, mantendo os dashboards atualizados todos os dias.
 
-## ⚠️ Importante: este app roda no Replit
+## VPS Debian (produção recomendada)
+
+Na VPS, use **crontab** + `npm run sync:daily` (mesmo job do Replit Scheduled Deployment):
+
+```bash
+# crontab -e
+# 05:00 BRT = 08:00 UTC
+0 8 * * * cd /var/www/central-inout && /usr/bin/npm run sync:daily >> /var/log/central-sync.log 2>&1
+```
+
+Pré-requisitos:
+- `.env` com `DATABASE_URL` válido no diretório do projeto
+- Node/npm no PATH do cron (ajuste `/usr/bin/npm` se necessário: `which npm`)
+
+Execução manual na VPS:
+
+```bash
+cd /var/www/central-inout
+npm run sync:daily
+```
+
+Deploy completo: [deploy-vps.md](./deploy-vps.md).
+
+---
+
+## ⚠️ Legado Replit
 
 A aplicação está publicada no **Replit** (deployment autoscale em `https://central-inout.replit.app`).
 Os Cron Jobs definidos em `vercel.json` **só funcionam quando o deploy é na Vercel** — no Replit eles são ignorados e **nunca disparam**. Por isso a atualização automática precisa ser feita por um **Scheduled Deployment** do Replit (cron nativo da plataforma).
