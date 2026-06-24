@@ -7,6 +7,7 @@ import {
   AlertTriangle,
   Bell,
   CheckCircle2,
+  ImageIcon,
   KeyRound,
   Plus,
   RefreshCw,
@@ -14,6 +15,7 @@ import {
   X,
   Wifi,
 } from "lucide-react";
+import { LogoUploadField } from "@/app/admin/clientes/LogoUploadField";
 
 function getHeaders(token?: string, includeJson = false): HeadersInit {
   const headers: HeadersInit = {};
@@ -56,6 +58,29 @@ async function updateIntegrationsConfigApi(
     method: "PATCH",
     headers: getHeaders(token, true),
     body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText);
+  return data;
+}
+
+async function fetchBrandingConfig(token?: string) {
+  const res = await fetch("/api/admin/config/branding", {
+    headers: getHeaders(token),
+  });
+  if (res.status === 401) throw new Error("Unauthorized");
+  if (!res.ok) throw new Error("Falha ao carregar logo do painel");
+  return res.json() as Promise<{
+    panelLogoUrl: string;
+    defaultLogoUrl: string;
+  }>;
+}
+
+async function updateBrandingConfig(panelLogoUrl: string, token?: string) {
+  const res = await fetch("/api/admin/config/branding", {
+    method: "PATCH",
+    headers: getHeaders(token, true),
+    body: JSON.stringify({ panelLogoUrl }),
   });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) throw new Error((data as { error?: string }).error || res.statusText);
@@ -194,6 +219,21 @@ export default function AdminIntegrationsConfigPage() {
     queryKey: ["admin", "config", "integracoes", adminToken],
     queryFn: () => fetchIntegrationsConfig(adminToken || undefined),
     enabled: !!adminToken,
+  });
+
+  const { data: brandingData } = useQuery({
+    queryKey: ["admin", "config", "branding", adminToken],
+    queryFn: () => fetchBrandingConfig(adminToken || undefined),
+    enabled: !!adminToken,
+  });
+
+  const brandingMutation = useMutation({
+    mutationFn: (panelLogoUrl: string) =>
+      updateBrandingConfig(panelLogoUrl, adminToken || undefined),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["panel-branding"] });
+      queryClient.invalidateQueries({ queryKey: ["admin", "config", "branding"] });
+    },
   });
 
   const { data: conexoes = [] } = useQuery<ConexaoItem[]>({
@@ -423,6 +463,38 @@ export default function AdminIntegrationsConfigPage() {
           <span className="text-emerald-400">{formSuccess}</span>
         </div>
       )}
+
+      <Card className="rounded-2xl border-[var(--border)]">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-base">
+            <ImageIcon className="h-4 w-4 text-[var(--primary)]" />
+            Logo do painel
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-3">
+          <p className="text-sm text-[var(--muted-foreground)]">
+            Imagem exibida no topo de todas as páginas (exceto portal do cliente). Use PNG, SVG ou WebP com fundo transparente.
+          </p>
+          <LogoUploadField
+            value={brandingData?.panelLogoUrl ?? ""}
+            onChange={(url) => brandingMutation.mutate(url)}
+            adminToken={adminToken}
+          />
+          {brandingData?.panelLogoUrl ? (
+            <button
+              type="button"
+              onClick={() => brandingMutation.mutate("")}
+              className="text-xs font-semibold text-[var(--muted-foreground)] underline-offset-2 hover:text-[var(--primary)] hover:underline"
+            >
+              Restaurar logo padrão (Inout)
+            </button>
+          ) : (
+            <p className="text-[11px] text-[var(--muted-foreground)]">
+              Nenhum logo personalizado — usando o padrão Inout.
+            </p>
+          )}
+        </CardContent>
+      </Card>
 
       {/* ── Meta Ads ── */}
       <Card className="rounded-2xl border-[var(--border)]">

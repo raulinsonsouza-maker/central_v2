@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "next dev -p 5000 -H 0.0.0.0",
     "build": "next build",
-    "start": "next start -p 5000 -H 0.0.0.0",
+    "start": "next start -H 0.0.0.0",
     "lint": "next lint",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
@@ -18,7 +18,8 @@
     "scripts:import-clientes-contas": "npx tsx scripts/import-clientes-contas.ts",
     "scripts:merge-duplicados-meta": "npx tsx scripts/merge-duplicados-meta.ts",
     "scripts:analise-clientes": "npx tsx scripts/analise-clientes-dados.ts",
-    "sync:daily": "tsx scripts/daily-sync.ts"
+    "sync:daily": "tsx scripts/daily-sync.ts",
+    "deploy:vps": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/deploy-to-vps.ps1"
   },
   "dependencies": {
     "@google-analytics/data": "^5.2.1",

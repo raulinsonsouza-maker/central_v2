@@ -4,23 +4,56 @@ Este documento descreve a rotina de sincronização diária que busca os dados d
 
 ## VPS Debian (produção recomendada)
 
-Na VPS, use **crontab** + `npm run sync:daily` (mesmo job do Replit Scheduled Deployment):
+Na VPS (`hub.prospectads.com.br`), use **crontab** + script [`scripts/cron-sync-vps.sh`](../scripts/cron-sync-vps.sh).
+
+### Configurar (uma vez)
 
 ```bash
-# crontab -e
-# 05:00 BRT = 08:00 UTC
-0 8 * * * cd /var/www/central-inout && /usr/bin/npm run sync:daily >> /var/log/central-sync.log 2>&1
+cd /var/www/central-inout
+chmod +x scripts/cron-sync-vps.sh
+
+# Teste manual (ver log em tempo real)
+./scripts/cron-sync-vps.sh
+tail -50 /var/log/central-sync.log
+
+# Agendar 05:00 BRT (08:00 UTC) — adiciona linha, não apaga as existentes
+crontab -e
 ```
 
-Pré-requisitos:
-- `.env` com `DATABASE_URL` válido no diretório do projeto
-- Node/npm no PATH do cron (ajuste `/usr/bin/npm` se necessário: `which npm`)
+Linha para colar no crontab:
 
-Execução manual na VPS:
+```cron
+0 8 * * * /var/www/central-inout/scripts/cron-sync-vps.sh
+```
+
+Conferir:
+
+```bash
+crontab -l | grep central-inout
+```
+
+### Pré-requisitos
+
+- `.env` com `DATABASE_URL` válido em `/var/www/central-inout`
+- Credenciais Meta / Google Ads / GA4 no banco (**Admin → Integrações**) ou no `.env`
+- **Token Meta:** renovar quando expirar (sync da Meta para de atualizar)
+
+### Logs
+
+```bash
+tail -f /var/log/central-sync.log
+```
+
+O job imprime resumo `📊 RESUMO` no fim quando conclui. Exit 0 = ok (mesmo com erros pontuais por cliente).
+
+### Execução manual (sem cron)
 
 ```bash
 cd /var/www/central-inout
 npm run sync:daily
+
+# Re-sync de um período (YYYY-MM-DD)
+npm run sync:daily 2026-01-01 2026-06-24
 ```
 
 Deploy completo: [deploy-vps.md](./deploy-vps.md).

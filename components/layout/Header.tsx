@@ -3,7 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useQuery } from "@tanstack/react-query";
 import { KeyRound, LayoutDashboard, Settings } from "lucide-react";
+import { DEFAULT_PANEL_LOGO } from "@/lib/config/branding-constants";
+
+async function fetchPanelBranding() {
+  const res = await fetch("/api/config/branding");
+  if (!res.ok) throw new Error("Falha ao carregar branding");
+  return res.json() as Promise<{ logoUrl: string }>;
+}
 
 export function Header() {
   const pathname = usePathname();
@@ -11,6 +19,14 @@ export function Header() {
   const isAdminConfig = pathname.startsWith("/admin/configuracoes");
   const isGestao = pathname.startsWith("/gestao");
   const isPortal = pathname.startsWith("/portal");
+
+  const { data: branding } = useQuery({
+    queryKey: ["panel-branding"],
+    queryFn: fetchPanelBranding,
+    staleTime: 60_000,
+  });
+
+  const logoUrl = branding?.logoUrl ?? DEFAULT_PANEL_LOGO;
 
   if (isPortal) return null;
 
@@ -26,11 +42,13 @@ export function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         <Link href="/" className="inline-flex items-center">
           <Image
-            src="/Images/cropped-logo-inout-branco-1.webp"
-            alt="Inout"
+            src={logoUrl}
+            alt="Logo do painel"
             width={120}
             height={38}
-            className="h-8 w-auto object-contain"
+            className="h-8 w-auto max-w-[160px] object-contain"
+            unoptimized
+            priority
           />
         </Link>
 

@@ -1,7 +1,9 @@
 # Copie para /etc/nginx/sites-available/central-inout
 # ln -s /etc/nginx/sites-available/central-inout /etc/nginx/sites-enabled/
-# sudo nginx -t && sudo systemctl reload nginx
+# sudo nginx -t && sudo systemctl reload nginx   # reload, NÃO restart
 # sudo certbot --nginx -d seu-dominio.com.br
+#
+# Não altere configs de outros sites. Ajuste a porta abaixo se PORT no .env ≠ 5000.
 
 upstream central_inout {
     server 127.0.0.1:5000;
