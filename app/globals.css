@@ -27,6 +27,10 @@
 }
 
 @layer base {
+  .font-display {
+    font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+  }
+
   body {
     @apply bg-[var(--background)] text-[var(--foreground)] antialiased;
   }

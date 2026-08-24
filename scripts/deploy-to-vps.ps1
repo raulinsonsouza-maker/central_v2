@@ -1,10 +1,10 @@
-# Deploy rápido: build no PC → envia .next → reinicia PM2 na VPS.
+# Deploy rapido: build no PC -> envia .next -> reinicia PM2 na VPS.
 # Uso (PowerShell, na raiz do projeto):
 #   npm run deploy:vps
 #   npm run deploy:vps -- -SkipBuild
 #   npm run deploy:vps -- -GitPull -Migrate
 #
-# Pré-requisito: SSH sem senha (chave) para root@VPS_HOST
+# Pre-requisito: SSH sem senha (chave) para root@VPS_HOST
 # Config: deploy/vps.local.env (copie de deploy/vps.env.example)
 
 param(
@@ -51,7 +51,7 @@ if (-not $VpsHost -or -not $VpsUser -or -not $VpsPath) {
 }
 
 $Remote = "${VpsUser}@${VpsHost}"
-Write-Host "==> Deploy para $Remote:$VpsPath"
+Write-Host "==> Deploy para ${Remote}:${VpsPath}"
 
 if ($GitPull) {
   Write-Host "==> git pull na VPS"
@@ -62,20 +62,23 @@ if (-not $SkipBuild) {
   Write-Host "==> npm run build (local)"
   npm run build
   if (-not (Test-Path ".next")) {
-    Write-Error "Build falhou: pasta .next não encontrada"
+    Write-Error "Build falhou: pasta .next nao encontrada"
   }
 }
 
-Write-Host "==> Enviando .next para a VPS (pode levar 1-3 min)"
+Write-Host "==> Enviando .next para a VPS (pode levar varios minutos)"
 ssh $Remote "rm -rf '$VpsPath/.next'"
 scp -r ".next" "${Remote}:${VpsPath}/"
 
 if ($Migrate) {
-  Write-Host "==> prisma migrate deploy na VPS"
-  ssh $Remote "cd '$VpsPath' && npx prisma migrate deploy"
+  Write-Host "==> Enviando package.json, middleware.ts e prisma"
+  scp "package.json" "package-lock.json" "middleware.ts" "${Remote}:${VpsPath}/"
+  scp -r "prisma" "${Remote}:${VpsPath}/"
+  Write-Host "==> npm ci + prisma migrate deploy na VPS"
+  ssh $Remote "cd '$VpsPath' && npm ci && npx prisma generate && npx prisma migrate deploy"
 }
 
 Write-Host "==> pm2 restart $Pm2App"
 ssh $Remote "pm2 restart '$Pm2App' --update-env && pm2 save"
 
-Write-Host "==> Deploy concluído — https://hub.prospectads.com.br"
+Write-Host "==> Deploy concluido - https://hub.prospectads.com.br"

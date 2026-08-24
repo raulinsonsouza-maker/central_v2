@@ -1,0 +1,61 @@
+.symbius-theme {
+  --symbius-bg: #07070f;
+  --symbius-surface: #111122;
+  --symbius-surface-hover: #181830;
+  --symbius-border: #252545;
+  --symbius-text: #f4f4ff;
+  --symbius-muted: #9494b8;
+  --symbius-primary: #7c5cff;
+  --symbius-primary-hover: #9078ff;
+  --symbius-accent: #00d4aa;
+  --symbius-gradient: linear-gradient(135deg, #7c5cff 0%, #00d4aa 100%);
+}
+
+.symbius-theme {
+  background: var(--symbius-bg);
+  color: var(--symbius-text);
+  min-height: 100vh;
+}
+
+.symbius-gradient-text {
+  background: var(--symbius-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.symbius-btn-primary {
+  @apply inline-flex items-center justify-center rounded-xl px-6 py-3 font-semibold text-white transition-all;
+  background: var(--symbius-primary);
+}
+.symbius-btn-primary:hover {
+  background: var(--symbius-primary-hover);
+  transform: translateY(-1px);
+}
+
+.symbius-btn-outline {
+  @apply inline-flex items-center justify-center rounded-xl border px-6 py-3 font-semibold transition-all;
+  border-color: var(--symbius-border);
+  color: var(--symbius-text);
+}
+.symbius-btn-outline:hover {
+  border-color: var(--symbius-primary);
+  background: rgba(124, 92, 255, 0.08);
+}
+
+.symbius-card {
+  @apply rounded-2xl border p-6;
+  background: var(--symbius-surface);
+  border-color: var(--symbius-border);
+}
+
+.symbius-input {
+  @apply w-full rounded-xl border px-4 py-3 outline-none transition-colors;
+  background: var(--symbius-bg);
+  border-color: var(--symbius-border);
+  color: var(--symbius-text);
+}
+.symbius-input:focus {
+  border-color: var(--symbius-primary);
+  box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.15);
+}

@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
-import { Header } from "@/components/layout/Header";
+import { LayoutRouter } from "@/components/layout/LayoutRouter";
 
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
 });
 
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-display",
+});
+
 export const metadata: Metadata = {
-  title: "Central de Clientes | Inout",
-  description: "Hub consolidado de performance comercial",
+  title: {
+    default: "Symbius Flow | Automações Instagram",
+    template: "%s | Symbius Flow",
+  },
+  description: "Automatize DMs e comentários no Instagram com fluxos visuais",
 };
 
 export default function RootLayout({
@@ -20,11 +28,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className="dark">
-      <body className={`${inter.variable} font-sans min-h-screen`}>
+    <html lang="pt-BR">
+      <body
+        className={`${inter.variable} ${spaceGrotesk.variable} font-sans min-h-screen antialiased`}
+      >
         <Providers>
-          <Header />
-          <div className="container mx-auto px-4 py-6">{children}</div>
+          <LayoutRouter>{children}</LayoutRouter>
         </Providers>
       </body>
     </html>

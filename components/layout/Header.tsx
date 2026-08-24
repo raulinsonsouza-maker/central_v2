@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { KeyRound, LayoutDashboard, Settings } from "lucide-react";
+import { KeyRound, LayoutDashboard, Settings, Zap } from "lucide-react";
 import { DEFAULT_PANEL_LOGO } from "@/lib/config/branding-constants";
 
 async function fetchPanelBranding() {
@@ -16,6 +16,7 @@ async function fetchPanelBranding() {
 export function Header() {
   const pathname = usePathname();
   const isAdminClientes = pathname.startsWith("/admin/clientes");
+  const isAdminSymbius = pathname.startsWith("/admin/symbius");
   const isAdminConfig = pathname.startsWith("/admin/configuracoes");
   const isGestao = pathname.startsWith("/gestao");
   const isPortal = pathname.startsWith("/portal");
@@ -40,7 +41,7 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full border-b border-[var(--border)]/60 bg-[var(--background)]/96 backdrop-blur-xl">
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
-        <Link href="/" className="inline-flex items-center">
+        <Link href="/clientes" className="inline-flex items-center">
           <Image
             src={logoUrl}
             alt="Logo do painel"
@@ -66,6 +67,13 @@ export function Header() {
             className={iconClass(isAdminClientes)}
           >
             <Settings className="h-5 w-5" />
+          </Link>
+          <Link
+            href="/admin/symbius"
+            title="Symbius Flow (orgs)"
+            className={iconClass(isAdminSymbius)}
+          >
+            <Zap className="h-5 w-5" />
           </Link>
           <Link
             href="/admin/configuracoes"
