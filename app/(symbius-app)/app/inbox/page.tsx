@@ -464,7 +464,9 @@ export default function InboxPage() {
             </div>
 
             <div className="flex-1 space-y-3 overflow-y-auto p-5">
-              {mensagens.map((m) => (
+              {mensagens
+                .filter((m) => Boolean(m.texto?.trim()))
+                .map((m) => (
                 <div
                   key={m.id}
                   className={`flex ${

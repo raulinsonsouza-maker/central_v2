@@ -47,6 +47,9 @@ type WebhookMessaging = {
   };
   postback?: { title?: string; payload?: string };
   referral?: { ref?: string; source?: string };
+  /** Receipts — não são mensagens; não persistir na inbox */
+  read?: { mid?: string };
+  delivery?: { mids?: string[]; watermark?: number };
 };
 
 type WebhookEntry = {
@@ -193,6 +196,13 @@ async function persistInboundMessage(
   isEcho: boolean,
   attachments?: object,
 ) {
+  const hasText = Boolean(texto?.trim());
+  const hasAttachments = Boolean(
+    attachments && Object.keys(attachments as object).length > 0,
+  );
+  // Evita bolhas vazias (ex.: eventos `read` / receipts sem conteúdo)
+  if (!hasText && !hasAttachments) return null;
+
   if (mid) {
     const dup = await prisma.igMensagem.findUnique({ where: { mid } });
     if (dup) return dup;
@@ -1030,6 +1040,10 @@ export async function processWebhookPayload(payload: unknown): Promise<void> {
     });
 
     for (const msg of entry.messaging ?? []) {
+      // Receipts (read/delivery) não são mensagens — geravam bolhas só com data/hora
+      if (msg.read || msg.delivery) continue;
+      if (!msg.message && !msg.postback && !msg.referral) continue;
+
       const isEcho = Boolean(msg.message?.is_echo);
       const igsid = isEcho ? msg.recipient?.id : msg.sender?.id;
       if (!igsid || igsid === igUserId) continue;
@@ -1072,19 +1086,21 @@ export async function processWebhookPayload(payload: unknown): Promise<void> {
       );
       const isStoryReply = Boolean(msg.message?.reply_to?.story);
       const storyId = msg.message?.reply_to?.story?.id ?? "";
+      const attachments = msg.message?.attachments?.length
+        ? { attachments: msg.message.attachments, postback: msg.postback }
+        : msg.postback
+          ? { postback: msg.postback }
+          : undefined;
 
-      await persistInboundMessage(
+      const saved = await persistInboundMessage(
         igAccount.organizationId,
         conversa.id,
         msg.message?.mid,
         texto,
         false,
-        msg.message?.attachments?.length
-          ? { attachments: msg.message.attachments, postback: msg.postback }
-          : msg.postback
-            ? { postback: msg.postback }
-            : undefined,
+        attachments,
       );
+      if (!saved) continue;
 
       await ensureContatoSourceTag(
         contato.id,
