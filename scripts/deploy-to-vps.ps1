@@ -62,7 +62,7 @@ Write-Host "==> Deploy para ${Remote}:${VpsPath} (stack=$StackName)"
 
 if ($GitPull -or -not $SkipBuild) {
   Write-Host "==> git pull + deploy-vps.sh na VPS"
-  & ssh @SshArgs $Remote "cd '$VpsPath' && git pull && chmod +x scripts/deploy-vps.sh && STACK_NAME='$StackName' ./scripts/deploy-vps.sh"
+  & ssh @SshArgs $Remote "cd '$VpsPath' && git fetch origin && git reset --hard origin/main && chmod +x scripts/deploy-vps.sh && STACK_NAME='$StackName' ./scripts/deploy-vps.sh"
 } else {
   Write-Host "==> Apenas restart do stack (SkipBuild)"
   & ssh @SshArgs $Remote "cd '$VpsPath' && set -a && source .env && set +a && docker stack deploy -c deploy/stack.yml '$StackName'"
