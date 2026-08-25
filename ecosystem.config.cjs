@@ -2,18 +2,18 @@
 module.exports = {
   apps: [
     {
-      name: "central-inout",
+      name: "symbius-central",
       cwd: __dirname,
       script: "node_modules/next/dist/bin/next",
-      args: "start -H 0.0.0.0",
+      args: "start -H 0.0.0.0 -p 5010",
       exec_mode: "fork",
       instances: 1,
       env: {
         NODE_ENV: "production",
-        PORT: "5000",
+        PORT: "5010",
       },
       autorestart: true,
-      max_memory_restart: "400M",
+      max_memory_restart: "1G",
       time: true,
     },
   ],

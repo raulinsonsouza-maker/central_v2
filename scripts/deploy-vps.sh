@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Deploy manual na VPS Debian após git pull.
-# Reinicia APENAS o processo PM2 "central-inout" — não mexe em outros serviços.
+# Deploy na VPS Symbius (Docker Swarm + Traefik).
+# Reinicia APENAS o stack "symbius-central" — não mexe em radar/hub/symbius marketing.
 # Uso: ./scripts/deploy-vps.sh
 
 set -euo pipefail
@@ -8,55 +8,43 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-APP_NAME="central-inout"
+STACK_NAME="${STACK_NAME:-symbius-central}"
+IMAGE_TAG="${IMAGE_TAG:-symbius-central:latest}"
 
-echo "==> Deploy em $ROOT"
+echo "==> Deploy Symbius Central/Flow em $ROOT (stack=$STACK_NAME)"
 
 if [ ! -f .env ]; then
-  echo "Erro: arquivo .env não encontrado. Copie de .env.example e configure."
+  echo "Erro: arquivo .env não encontrado."
   exit 1
 fi
 
-# Carrega PORT do .env (default 5000)
-APP_PORT="5000"
-if grep -qE '^PORT=' .env; then
-  APP_PORT="$(grep -E '^PORT=' .env | tail -1 | cut -d= -f2- | tr -d '"'"'"' | tr -d ' ')"
+set -a
+# shellcheck disable=SC1091
+source .env
+set +a
+
+if [ -z "${POSTGRES_PASSWORD:-}" ] || [ -z "${DATABASE_URL:-}" ]; then
+  echo "Erro: POSTGRES_PASSWORD e DATABASE_URL sao obrigatorios no .env"
+  exit 1
 fi
 
-port_in_use() {
-  ss -tln 2>/dev/null | grep -q ":${1} " || netstat -tln 2>/dev/null | grep -q ":${1} "
-}
+echo "==> docker build $IMAGE_TAG"
+export DOCKER_BUILDKIT=1
+docker build -t "$IMAGE_TAG" .
 
-if port_in_use "$APP_PORT"; then
-  if pm2 describe "$APP_NAME" >/dev/null 2>&1; then
-    echo "==> Porta $APP_PORT em uso (provavelmente por $APP_NAME — ok)"
-  else
-    echo "Erro: porta $APP_PORT já está em uso por outro serviço."
-    echo "Defina PORT=<porta_livre> no .env e ajuste o upstream no nginx."
-    exit 1
+echo "==> docker stack deploy $STACK_NAME"
+docker stack deploy -c deploy/stack.yml "$STACK_NAME"
+
+echo "==> Aguardando servicos..."
+for i in 1 2 3 4 5 6 7 8 9 10 11 12; do
+  if docker service ls --format '{{.Name}} {{.Replicas}}' | grep -q "${STACK_NAME}_web 1/1"; then
+    echo "==> web 1/1"
+    break
   fi
-fi
+  sleep 10
+done
 
-echo "==> Instalando dependências"
-npm ci
-
-echo "==> Prisma generate + migrate"
-npx prisma generate
-npx prisma migrate deploy
-
-echo "==> Build Next.js"
-export NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=4096}"
-npm run build
-
-echo "==> Reiniciando apenas PM2: $APP_NAME (porta $APP_PORT)"
-export PORT="$APP_PORT"
-if pm2 describe "$APP_NAME" >/dev/null 2>&1; then
-  pm2 restart "$APP_NAME" --update-env
-else
-  pm2 start ecosystem.config.cjs
-fi
-
-pm2 save
-
-echo "==> Deploy concluído (outros processos PM2/docker/nginx não foram alterados)"
-pm2 status "$APP_NAME"
+docker service ls | grep "$STACK_NAME" || true
+echo "==> Deploy concluido (outros stacks intocados)"
+echo "    Flow:    https://flow.symbius.com.br"
+echo "    Central: https://central.symbius.com.br"

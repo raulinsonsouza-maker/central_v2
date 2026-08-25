@@ -1,20 +1,18 @@
-# Deploy rapido: build no PC -> envia .next -> reinicia PM2 na VPS.
-# Uso (PowerShell, na raiz do projeto):
+# Deploy para VPS Symbius (5.75.172.83) via SSH key + git pull + docker stack.
+# Uso:
 #   npm run deploy:vps
 #   npm run deploy:vps -- -SkipBuild
-#   npm run deploy:vps -- -GitPull -Migrate
 #
-# Pre-requisito: SSH sem senha (chave) para root@VPS_HOST
 # Config: deploy/vps.local.env (copie de deploy/vps.env.example)
 
 param(
   [switch]$SkipBuild,
   [switch]$GitPull,
-  [switch]$Migrate,
   [string]$VpsHost,
   [string]$VpsUser,
   [string]$VpsPath,
-  [string]$Pm2App = "central-inout"
+  [string]$SshKey,
+  [string]$StackName = "symbius-central"
 )
 
 $ErrorActionPreference = "Stop"
@@ -44,41 +42,32 @@ if (-not $cfg.Count) {
 if (-not $VpsHost) { $VpsHost = $cfg["VPS_HOST"] }
 if (-not $VpsUser) { $VpsUser = $cfg["VPS_USER"] }
 if (-not $VpsPath) { $VpsPath = $cfg["VPS_PATH"] }
-if ($cfg["PM2_APP"]) { $Pm2App = $cfg["PM2_APP"] }
+if (-not $SshKey) {
+  $SshKey = $cfg["SSH_KEY"]
+  if ($SshKey) {
+    $SshKey = [Environment]::ExpandEnvironmentVariables($SshKey)
+  }
+}
+if ($cfg["STACK_NAME"]) { $StackName = $cfg["STACK_NAME"] }
+if (-not $SshKey) { $SshKey = Join-Path $env:USERPROFILE ".ssh\id_ed25519" }
 
 if (-not $VpsHost -or -not $VpsUser -or -not $VpsPath) {
   Write-Error "Configure deploy/vps.local.env (copie de deploy/vps.env.example)"
 }
 
 $Remote = "${VpsUser}@${VpsHost}"
-Write-Host "==> Deploy para ${Remote}:${VpsPath}"
+$SshArgs = @("-i", $SshKey, "-o", "StrictHostKeyChecking=accept-new")
 
-if ($GitPull) {
-  Write-Host "==> git pull na VPS"
-  ssh $Remote "cd '$VpsPath' && git pull"
+Write-Host "==> Deploy para ${Remote}:${VpsPath} (stack=$StackName)"
+
+if ($GitPull -or -not $SkipBuild) {
+  Write-Host "==> git pull + deploy-vps.sh na VPS"
+  & ssh @SshArgs $Remote "cd '$VpsPath' && git pull && chmod +x scripts/deploy-vps.sh && STACK_NAME='$StackName' ./scripts/deploy-vps.sh"
+} else {
+  Write-Host "==> Apenas restart do stack (SkipBuild)"
+  & ssh @SshArgs $Remote "cd '$VpsPath' && set -a && source .env && set +a && docker stack deploy -c deploy/stack.yml '$StackName'"
 }
 
-if (-not $SkipBuild) {
-  Write-Host "==> npm run build (local)"
-  npm run build
-  if (-not (Test-Path ".next")) {
-    Write-Error "Build falhou: pasta .next nao encontrada"
-  }
-}
-
-Write-Host "==> Enviando .next para a VPS (pode levar varios minutos)"
-ssh $Remote "rm -rf '$VpsPath/.next'"
-scp -r ".next" "${Remote}:${VpsPath}/"
-
-if ($Migrate) {
-  Write-Host "==> Enviando package.json, middleware.ts e prisma"
-  scp "package.json" "package-lock.json" "middleware.ts" "${Remote}:${VpsPath}/"
-  scp -r "prisma" "${Remote}:${VpsPath}/"
-  Write-Host "==> npm ci + prisma migrate deploy na VPS"
-  ssh $Remote "cd '$VpsPath' && npm ci && npx prisma generate && npx prisma migrate deploy"
-}
-
-Write-Host "==> pm2 restart $Pm2App"
-ssh $Remote "pm2 restart '$Pm2App' --update-env && pm2 save"
-
-Write-Host "==> Deploy concluido - https://hub.prospectads.com.br"
+Write-Host "==> Deploy concluido"
+Write-Host "    Flow:    https://flow.symbius.com.br"
+Write-Host "    Central: https://central.symbius.com.br"
