@@ -1,92 +1,130 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import {
   CheckCircle2,
   ChevronRight,
-  Facebook,
   Instagram,
   Loader2,
   MessageCircle,
 } from "lucide-react";
+import { SYMBIUS_META_OAUTH_MESSAGE } from "@/lib/instagram/metaOAuth";
+import { openMetaOAuthPopup } from "@/lib/instagram/openMetaOAuthPopup";
 
-type PageOption = {
-  pageId: string;
-  pageName: string;
-  igUserId: string | null;
-  pictureUrl?: string;
+type ConnectedAccount = {
+  id: string;
+  igUsername?: string | null;
+  igProfilePictureUrl?: string | null;
+  messagesEnabled?: boolean;
 };
 
 const STEPS = [
-  "Entrar com Meta",
-  "Escolher Page",
-  "Confirmar IG",
-  "Ativar mensagens",
-  "Conectado",
+  "Entrar com Instagram",
+  "Conta vinculada",
+  "Mensagens",
+  "Pronto",
 ];
 
 function ConnectWizard() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const error = searchParams.get("error");
+  const errorParam = searchParams.get("error");
   const stepParam = Number(searchParams.get("step") ?? "1");
-  const [step, setStep] = useState(stepParam);
-  const [pages, setPages] = useState<PageOption[]>([]);
-  const [selectedPage, setSelectedPage] = useState<PageOption | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [connected, setConnected] = useState<{
-    igUsername?: string | null;
-    messagesEnabled?: boolean;
-  } | null>(null);
+  const [step, setStep] = useState(stepParam >= 5 ? 4 : Math.min(stepParam, 4));
+  const [oauthLoading, setOauthLoading] = useState(false);
+  const [oauthError, setOauthError] = useState<string | null>(errorParam);
+  const [account, setAccount] = useState<ConnectedAccount | null>(null);
 
-  const loadPages = useCallback(async () => {
+  const loadAccount = useCallback(async () => {
     const res = await fetch("/api/symbius/connect/pages");
     const data = await res.json();
-    setPages(data.pages ?? []);
+    const first = (data.accounts as ConnectedAccount[] | undefined)?.[0];
+    if (first) setAccount(first);
+    return first ?? null;
   }, []);
 
   useEffect(() => {
-    if (step >= 2) loadPages();
-  }, [step, loadPages]);
+    if (stepParam >= 5) {
+      setStep(4);
+      void loadAccount();
+    } else if (stepParam >= 2) {
+      setStep(Math.min(stepParam, 4));
+      void loadAccount();
+    }
+  }, [stepParam, loadAccount]);
 
   useEffect(() => {
-    if (stepParam >= 2) setStep(stepParam);
-  }, [stepParam]);
+    if (errorParam) {
+      setOauthError(errorParam);
+      // limpa ?error= da URL pra não reaparecer no refresh
+      const url = new URL(window.location.href);
+      url.searchParams.delete("error");
+      window.history.replaceState({}, "", url.pathname + url.search);
+    }
+  }, [errorParam]);
 
-  async function connectPage(page: PageOption) {
-    setLoading(true);
-    setSelectedPage(page);
-    setStep(3);
-    const res = await fetch("/api/symbius/connect/pages", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ pageId: page.pageId }),
-    });
-    const data = await res.json();
-    setLoading(false);
-    if (!res.ok) {
-      alert(data.error ?? "Erro ao conectar");
-      setStep(2);
+  useEffect(() => {
+    function onMessage(event: MessageEvent) {
+      if (event.origin !== window.location.origin) return;
+      const data = event.data as {
+        type?: string;
+        ok?: boolean;
+        error?: string | null;
+        step?: string;
+      };
+      if (data?.type !== SYMBIUS_META_OAUTH_MESSAGE) return;
+
+      setOauthLoading(false);
+      if (data.error) {
+        setOauthError(data.error);
+        return;
+      }
+      if (data.ok) {
+        setOauthError(null);
+        setStep(2);
+        void (async () => {
+          const acc = await loadAccount();
+          setStep(3);
+          setTimeout(() => setStep(4), 600);
+          if (acc) setAccount(acc);
+        })();
+      }
+    }
+
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, [loadAccount]);
+
+  function startMetaOAuth() {
+    setOauthError(null);
+    setOauthLoading(true);
+    const popup = openMetaOAuthPopup("/api/symbius/auth/meta/start?popup=1");
+    if (!popup) {
+      setOauthLoading(false);
+      window.location.href = "/api/symbius/auth/meta/start";
       return;
     }
-    setConnected(data.account);
-    setStep(4);
-    setTimeout(() => setStep(5), 800);
+
+    const timer = window.setInterval(() => {
+      if (popup.closed) {
+        window.clearInterval(timer);
+        setOauthLoading(false);
+      }
+    }, 500);
   }
 
   return (
     <div className="p-6 md:p-10">
       <h1 className="text-2xl font-bold">Conectar Instagram</h1>
       <p className="mt-1 text-[var(--symbius-muted)]">
-        Vincule sua conta Professional em poucos passos
+        Autorize sua conta Professional via Instagram Login
       </p>
 
-      {error && (
+      {oauthError && (
         <div className="mt-4 rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-sm text-red-300">
-          {error}
+          {oauthError}
         </div>
       )}
 
@@ -116,105 +154,72 @@ function ConnectWizard() {
       <div className="symbius-card mt-8 max-w-2xl">
         {step === 1 && (
           <div className="text-center">
-            <Facebook className="mx-auto h-12 w-12 text-[#1877F2]" />
-            <h2 className="mt-4 text-lg font-semibold">Continuar com Meta</h2>
+            <Instagram className="mx-auto h-12 w-12 text-pink-500" />
+            <h2 className="mt-4 text-lg font-semibold">
+              Faltam apenas algumas etapas
+            </h2>
             <p className="mt-2 text-sm text-[var(--symbius-muted)]">
-              Você precisa ser admin da Página do Facebook vinculada ao seu
-              Instagram Professional.
+              Você será redirecionado para o Instagram. Conceda as permissões e
+              sua conta Professional será vinculada ao Symbius Flow — sem
+              precisar de Página do Facebook.
             </p>
-            <a
-              href="/api/symbius/auth/meta/start"
-              className="symbius-btn-primary mt-8 inline-flex gap-2"
+            <button
+              type="button"
+              onClick={startMetaOAuth}
+              disabled={oauthLoading}
+              className="symbius-btn-primary mt-8 inline-flex gap-2 disabled:opacity-60"
             >
-              <Facebook className="h-4 w-4" />
-              Continuar com Facebook
-            </a>
-          </div>
-        )}
-
-        {step === 2 && (
-          <div>
-            <h2 className="font-semibold">Escolha sua Página</h2>
-            <p className="mt-1 text-sm text-[var(--symbius-muted)]">
-              Só aparecem Pages com Instagram vinculado
-            </p>
-            <div className="mt-6 grid gap-3">
-              {pages.length === 0 && (
-                <p className="text-sm text-[var(--symbius-muted)]">
-                  Nenhuma Page encontrada.{" "}
-                  <Link href="/api/symbius/auth/meta/start" className="text-[var(--symbius-primary)]">
-                    Tentar novamente
-                  </Link>
-                </p>
+              {oauthLoading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Instagram className="h-4 w-4" />
               )}
-              {pages.map((p) => (
-                <button
-                  key={p.pageId}
-                  type="button"
-                  disabled={loading}
-                  onClick={() => connectPage(p)}
-                  className="flex items-center gap-4 rounded-xl border border-[var(--symbius-border)] p-4 text-left transition-colors hover:border-[var(--symbius-primary)] hover:bg-[var(--symbius-surface-hover)]"
-                >
-                  {p.pictureUrl ? (
-                    <Image
-                      src={p.pictureUrl}
-                      alt=""
-                      width={48}
-                      height={48}
-                      className="rounded-full"
-                      unoptimized
-                    />
-                  ) : (
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-[var(--symbius-primary)]/20">
-                      <Instagram className="h-6 w-6" />
-                    </div>
-                  )}
-                  <div className="flex-1">
-                    <p className="font-medium">{p.pageName}</p>
-                    <p className="text-xs text-[var(--symbius-muted)]">Page vinculada</p>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-[var(--symbius-muted)]" />
-                </button>
-              ))}
-            </div>
+              {oauthLoading ? "Aguardando Instagram…" : "Conectar Instagram"}
+            </button>
           </div>
         )}
 
-        {(step === 3 || step === 4) && selectedPage && (
+        {(step === 2 || step === 3) && (
           <div className="text-center">
-            {loading ? (
+            {step === 2 && !account ? (
               <Loader2 className="mx-auto h-10 w-10 animate-spin text-[var(--symbius-primary)]" />
             ) : (
               <>
-                <Instagram className="mx-auto h-12 w-12 text-pink-500" />
+                {account?.igProfilePictureUrl ? (
+                  <Image
+                    src={account.igProfilePictureUrl}
+                    alt=""
+                    width={64}
+                    height={64}
+                    className="mx-auto rounded-full"
+                    unoptimized
+                  />
+                ) : (
+                  <Instagram className="mx-auto h-12 w-12 text-pink-500" />
+                )}
                 <h2 className="mt-4 text-lg font-semibold">
-                  @{connected?.igUsername ?? "instagram"}
+                  @{account?.igUsername ?? "instagram"}
                 </h2>
                 <p className="mt-2 text-sm text-[var(--symbius-muted)]">
-                  Esta conta receberá automações
+                  Conta Professional vinculada
                 </p>
-                {step === 4 && (
+                {step === 3 && (
                   <ul className="mt-6 space-y-2 text-left text-sm">
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4 text-[var(--symbius-accent)]" />
-                      Conta Professional
+                      Instagram Login autorizado
                     </li>
                     <li className="flex items-center gap-2">
                       <CheckCircle2 className="h-4 w-4 text-[var(--symbius-accent)]" />
-                      Page vinculada
+                      Webhooks inscritos
                     </li>
                     <li className="flex items-center gap-2">
-                      {connected?.messagesEnabled ? (
+                      {account?.messagesEnabled !== false ? (
                         <CheckCircle2 className="h-4 w-4 text-[var(--symbius-accent)]" />
                       ) : (
                         <MessageCircle className="h-4 w-4 text-amber-400" />
                       )}
-                      Acesso a mensagens{" "}
-                      {!connected?.messagesEnabled && (
-                        <span className="text-amber-400">
-                          — ative em Configurações → Mensagens no Instagram
-                        </span>
-                      )}
+                      Acesso a mensagens
                     </li>
                   </ul>
                 )}
@@ -223,21 +228,42 @@ function ConnectWizard() {
           </div>
         )}
 
-        {step === 5 && (
+        {step === 4 && (
           <div className="text-center">
             <CheckCircle2 className="mx-auto h-16 w-16 text-[var(--symbius-accent)]" />
             <h2 className="mt-4 text-xl font-bold">Conectado com sucesso!</h2>
             <p className="mt-2 text-sm text-[var(--symbius-muted)]">
-              Sua conta está pronta para automações
+              {account?.igUsername
+                ? `@${account.igUsername} está pronta para automações`
+                : "Sua conta está pronta para automações"}
             </p>
-            <button
-              type="button"
-              onClick={() => router.push("/app/flows/new")}
-              className="symbius-btn-primary mt-8 inline-flex gap-2"
-            >
-              Criar meu primeiro fluxo
-              <ChevronRight className="h-4 w-4" />
-            </button>
+            {account?.igProfilePictureUrl && (
+              <Image
+                src={account.igProfilePictureUrl}
+                alt=""
+                width={72}
+                height={72}
+                className="mx-auto mt-4 rounded-full"
+                unoptimized
+              />
+            )}
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <button
+                type="button"
+                onClick={() => router.push("/app/settings")}
+                className="symbius-btn-outline inline-flex gap-2"
+              >
+                Ver perfil em Configurações
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/app/flows/new")}
+                className="symbius-btn-primary inline-flex gap-2"
+              >
+                Criar meu primeiro fluxo
+                <ChevronRight className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         )}
       </div>

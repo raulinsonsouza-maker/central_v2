@@ -1,153 +1,491 @@
-const GRAPH = "https://graph.facebook.com/v21.0";
+const IG_GRAPH = "https://graph.instagram.com/v21.0";
+const IG_API = "https://api.instagram.com";
 
-export function getSymbiusMetaConfig() {
+export function getSymbiusIgConfig() {
   const appId =
-    process.env.SYMBIUS_META_APP_ID ?? process.env.META_APP_ID ?? "";
+    process.env.SYMBIUS_IG_APP_ID ??
+    process.env.SYMBIUS_META_APP_ID ??
+    process.env.META_APP_ID ??
+    "";
   const appSecret =
-    process.env.SYMBIUS_META_APP_SECRET ?? process.env.META_APP_SECRET ?? "";
+    process.env.SYMBIUS_IG_APP_SECRET ??
+    process.env.SYMBIUS_META_APP_SECRET ??
+    process.env.META_APP_SECRET ??
+    "";
   const verifyToken =
     process.env.SYMBIUS_META_WEBHOOK_VERIFY_TOKEN ??
     process.env.META_WEBHOOK_VERIFY_TOKEN ??
     "symbius-webhook-verify";
 
-  return { appId, appSecret, verifyToken, graphBase: GRAPH };
+  return { appId, appSecret, verifyToken, graphBase: IG_GRAPH };
+}
+
+/** @deprecated Prefer getSymbiusIgConfig — kept for webhook route imports */
+export function getSymbiusMetaConfig() {
+  return getSymbiusIgConfig();
 }
 
 export function getSymbiusAppUrl(): string {
-  if (process.env.SYMBIUS_APP_URL) return process.env.SYMBIUS_APP_URL.replace(/\/$/, "");
-  if (process.env.REPLIT_DEV_DOMAIN) return `https://${process.env.REPLIT_DEV_DOMAIN}`;
+  if (process.env.SYMBIUS_APP_URL)
+    return process.env.SYMBIUS_APP_URL.replace(/\/$/, "");
+  if (process.env.REPLIT_DEV_DOMAIN)
+    return `https://${process.env.REPLIT_DEV_DOMAIN}`;
   if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, "");
   return "http://localhost:5000";
 }
 
 export const META_OAUTH_SCOPES = [
-  "pages_show_list",
-  "pages_read_engagement",
-  "pages_manage_metadata",
-  "instagram_basic",
-  "instagram_manage_messages",
-  "instagram_manage_comments",
-  "business_management",
+  "instagram_business_basic",
+  "instagram_business_manage_messages",
+  "instagram_business_manage_comments",
 ].join(",");
 
-export interface MetaPageOption {
-  pageId: string;
-  pageName: string;
-  pageAccessToken: string;
-  igUserId: string | null;
-  pictureUrl?: string;
-}
+export const SYMBIUS_META_OAUTH_MESSAGE = "symbius-meta-oauth";
 
-export interface MetaIgProfile {
-  id: string;
+export interface IgConnectedProfile {
+  igUserId: string;
   username?: string;
-  profile_picture_url?: string;
-  followers_count?: number;
+  name?: string;
+  accountType?: string;
+  profilePictureUrl?: string;
+  followersCount?: number;
 }
 
-export async function metaGraphGet<T>(
+export async function igGraphGet<T>(
   path: string,
   token: string,
   params: Record<string, string> = {},
 ): Promise<T> {
-  const sp = new URLSearchParams({ access_token: token, ...params });
-  const res = await fetch(`${GRAPH}/${path}?${sp}`);
+  const sp = new URLSearchParams(params);
+  const qs = sp.toString();
+  const url = `${IG_GRAPH}/${path}${qs ? `?${qs}` : ""}`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
   const json = (await res.json()) as T & { error?: { message: string } };
-  if (!res.ok || (json as { error?: { message: string } }).error) {
-    throw new Error(
-      (json as { error?: { message: string } }).error?.message ?? `HTTP ${res.status}`,
-    );
+  if (!res.ok || json.error) {
+    throw new Error(json.error?.message ?? `HTTP ${res.status}`);
   }
   return json;
 }
 
-export async function fetchUserPages(userToken: string): Promise<MetaPageOption[]> {
-  const data = await metaGraphGet<{
-    data: Array<{
-      id: string;
-      name: string;
-      access_token: string;
-      instagram_business_account?: { id: string };
-      picture?: { data?: { url?: string } };
-    }>;
-  }>("me/accounts", userToken, {
-    fields: "id,name,access_token,instagram_business_account,picture",
-    limit: "100",
-  });
-
-  return (data.data ?? []).map((p) => ({
-    pageId: p.id,
-    pageName: p.name,
-    pageAccessToken: p.access_token,
-    igUserId: p.instagram_business_account?.id ?? null,
-    pictureUrl: p.picture?.data?.url,
-  }));
+export function buildMetaOAuthUrl(state: string): string {
+  const { appId } = getSymbiusIgConfig();
+  const redirectUri = `${getSymbiusAppUrl()}/api/symbius/auth/meta/callback`;
+  const url = new URL("https://www.instagram.com/oauth/authorize");
+  url.searchParams.set("client_id", appId);
+  url.searchParams.set("redirect_uri", redirectUri);
+  url.searchParams.set("state", state);
+  url.searchParams.set("scope", META_OAUTH_SCOPES);
+  url.searchParams.set("response_type", "code");
+  url.searchParams.set("enable_fb_login", "0");
+  // Não enviar force_reauth — usuários já autorizados não devem ver tela completa de permissões
+  url.searchParams.set("force_reauth", "0");
+  return url.toString();
 }
 
-export async function fetchIgProfile(
-  igUserId: string,
-  pageToken: string,
-): Promise<MetaIgProfile> {
-  return metaGraphGet<MetaIgProfile>(igUserId, pageToken, {
-    fields: "username,profile_picture_url,followers_count",
-  });
+export function normalizeOAuthCode(code: string): string {
+  return code.replace(/#_+$/, "");
 }
 
-export async function subscribePageWebhooks(
-  pageId: string,
-  pageToken: string,
-): Promise<void> {
-  const sp = new URLSearchParams({
-    subscribed_fields:
-      "messages,messaging_postbacks,messaging_referrals,message_echoes,comments",
-    access_token: pageToken,
-  });
-  const res = await fetch(`${GRAPH}/${pageId}/subscribed_apps?${sp}`, {
+export function normalizeScopes(
+  permissions: string | string[] | undefined | null,
+  fallback = META_OAUTH_SCOPES,
+): string {
+  if (Array.isArray(permissions)) {
+    const joined = permissions.map((s) => String(s).trim()).filter(Boolean).join(",");
+    return joined || fallback;
+  }
+  if (typeof permissions === "string" && permissions.trim()) {
+    return permissions.trim();
+  }
+  return fallback;
+}
+
+export async function exchangeCodeForShortLivedToken(code: string): Promise<{
+  accessToken: string;
+  userId?: string;
+  permissions?: string;
+}> {
+  const { appId, appSecret } = getSymbiusIgConfig();
+  const redirectUri = `${getSymbiusAppUrl()}/api/symbius/auth/meta/callback`;
+  const form = new FormData();
+  form.set("client_id", appId);
+  form.set("client_secret", appSecret);
+  form.set("grant_type", "authorization_code");
+  form.set("redirect_uri", redirectUri);
+  form.set("code", normalizeOAuthCode(code));
+
+  const res = await fetch(`${IG_API}/oauth/access_token`, {
     method: "POST",
+    body: form,
   });
-  const json = (await res.json()) as { success?: boolean; error?: { message: string } };
+  const json = (await res.json()) as {
+    access_token?: string;
+    user_id?: string | number;
+    permissions?: string | string[];
+    data?: Array<{
+      access_token?: string;
+      user_id?: string | number;
+      permissions?: string | string[];
+    }>;
+    error_message?: string;
+    error?: { message: string };
+  };
+
+  console.info(
+    "[instagram] short-lived exchange",
+    res.status,
+    json.error_message ?? json.error?.message ?? "ok",
+    "user_id=",
+    json.user_id ?? json.data?.[0]?.user_id ?? "",
+  );
+
+  const row = json.data?.[0];
+  const accessToken = json.access_token ?? row?.access_token;
+  if (!accessToken) {
+    throw new Error(
+      json.error_message ?? json.error?.message ?? "Token exchange failed",
+    );
+  }
+
+  return {
+    accessToken,
+    userId: String(json.user_id ?? row?.user_id ?? ""),
+    permissions: normalizeScopes(
+      json.permissions ?? row?.permissions,
+      META_OAUTH_SCOPES,
+    ),
+  };
+}
+
+export async function exchangeForLongLivedToken(
+  shortLivedToken: string,
+): Promise<{ accessToken: string; expiresIn: number }> {
+  const { appSecret } = getSymbiusIgConfig();
+  const body = new URLSearchParams({
+    grant_type: "ig_exchange_token",
+    client_secret: appSecret,
+    access_token: shortLivedToken,
+  });
+  const res = await fetch(`${IG_GRAPH}/access_token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+  const json = (await res.json()) as {
+    access_token?: string;
+    expires_in?: number;
+    error?: { message: string };
+  };
+  if (!json.access_token) {
+    throw new Error(json.error?.message ?? "Long-lived token exchange failed");
+  }
+  return {
+    accessToken: json.access_token,
+    expiresIn: json.expires_in ?? 60 * 24 * 60 * 60,
+  };
+}
+
+export async function refreshIgLongLivedToken(
+  longLivedToken: string,
+): Promise<{ accessToken: string; expiresIn: number }> {
+  const body = new URLSearchParams({
+    grant_type: "ig_refresh_token",
+    access_token: longLivedToken,
+  });
+  const res = await fetch(`${IG_GRAPH}/refresh_access_token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body,
+  });
+  const json = (await res.json()) as {
+    access_token?: string;
+    expires_in?: number;
+    error?: { message: string };
+  };
+  if (!json.access_token) {
+    throw new Error(json.error?.message ?? "Token refresh failed");
+  }
+  return {
+    accessToken: json.access_token,
+    expiresIn: json.expires_in ?? 60 * 24 * 60 * 60,
+  };
+}
+
+/** @deprecated use exchangeCodeForShortLivedToken + exchangeForLongLivedToken */
+export async function exchangeCodeForToken(code: string): Promise<string> {
+  const short = await exchangeCodeForShortLivedToken(code);
+  const long = await exchangeForLongLivedToken(short.accessToken);
+  return long.accessToken;
+}
+
+export async function fetchIgMeProfile(
+  accessToken: string,
+  fallbackUserId?: string,
+): Promise<IgConnectedProfile> {
+  try {
+    const data = await igGraphGet<{
+      user_id?: string;
+      id?: string;
+      username?: string;
+      name?: string;
+      account_type?: string;
+      profile_picture_url?: string;
+      followers_count?: number;
+      data?: Array<{
+        user_id?: string;
+        username?: string;
+        name?: string;
+        account_type?: string;
+        profile_picture_url?: string;
+        followers_count?: number;
+      }>;
+    }>("me", accessToken, {
+      fields:
+        "user_id,username,name,account_type,profile_picture_url,followers_count",
+    });
+
+    const row = data.data?.[0] ?? data;
+    const igUserId = String(
+      row.user_id ?? data.user_id ?? data.id ?? fallbackUserId ?? "",
+    );
+    if (!igUserId) {
+      throw new Error("Não foi possível obter o Instagram User ID");
+    }
+
+    return {
+      igUserId,
+      username: row.username ?? data.username,
+      name: row.name ?? data.name,
+      accountType: row.account_type ?? data.account_type,
+      profilePictureUrl: row.profile_picture_url ?? data.profile_picture_url,
+      followersCount: row.followers_count ?? data.followers_count,
+    };
+  } catch (e) {
+    if (fallbackUserId) {
+      console.warn(
+        "[instagram] /me failed, using oauth user_id:",
+        e instanceof Error ? e.message : e,
+      );
+      return { igUserId: fallbackUserId };
+    }
+    throw e;
+  }
+}
+
+export async function subscribeIgWebhooks(
+  igUserId: string,
+  accessToken: string,
+): Promise<void> {
+  const res = await fetch(`${IG_GRAPH}/${igUserId}/subscribed_apps`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+    body: new URLSearchParams({
+      subscribed_fields:
+        "messages,messaging_postbacks,messaging_referral,comments",
+    }),
+  });
+  const json = (await res.json()) as {
+    success?: boolean;
+    error?: { message: string };
+  };
   if (!res.ok || json.error || json.success === false) {
     throw new Error(json.error?.message ?? "Falha ao assinar webhooks");
   }
 }
 
 export async function verifyMessagingAccess(
-  igUserId: string,
-  pageToken: string,
+  _igUserId: string,
+  _accessToken: string,
 ): Promise<boolean> {
-  try {
-    await metaGraphGet(`${igUserId}/conversations`, pageToken, { limit: "1" });
-    return true;
-  } catch {
-    return false;
+  return true;
+}
+
+export type IgMediaItem = {
+  id: string;
+  caption?: string;
+  media_type?: string;
+  media_url?: string;
+  thumbnail_url?: string;
+  permalink?: string;
+  timestamp?: string;
+};
+
+const MEDIA_FIELDS =
+  "id,caption,media_type,media_url,thumbnail_url,permalink,timestamp";
+
+function friendlyMediaError(raw: string): string {
+  const lower = raw.toLowerCase();
+  if (
+    lower.includes("unsupported request") ||
+    lower.includes("method type") ||
+    lower.includes("permission") ||
+    lower.includes("oauth") ||
+    lower.includes("access token") ||
+    lower.includes("(#100)")
+  ) {
+    return "Não foi possível carregar as publicações. Reconecte o Instagram em Configurações (Atualizar permissões) ou use “qualquer publicação”.";
   }
+  if (lower.includes("rate limit") || lower.includes("throttl")) {
+    return "Limite da API do Instagram atingido. Tente novamente em alguns minutos.";
+  }
+  return "Não foi possível listar publicações agora. Use “qualquer publicação” ou reconecte o Instagram.";
 }
 
-export function buildMetaOAuthUrl(state: string): string {
-  const { appId } = getSymbiusMetaConfig();
-  const redirectUri = `${getSymbiusAppUrl()}/api/symbius/auth/meta/callback`;
-  const url = new URL("https://www.facebook.com/v21.0/dialog/oauth");
-  url.searchParams.set("client_id", appId);
-  url.searchParams.set("redirect_uri", redirectUri);
-  url.searchParams.set("state", state);
-  url.searchParams.set("scope", META_OAUTH_SCOPES);
-  url.searchParams.set("response_type", "code");
-  return url.toString();
-}
+async function igMediaGet(
+  path: string,
+  accessToken: string,
+  params: Record<string, string> = {},
+): Promise<{ data?: IgMediaItem[]; error?: string }> {
+  const url = new URL(`${IG_GRAPH}/${path.replace(/^\//, "")}`);
+  for (const [k, v] of Object.entries(params)) {
+    url.searchParams.set(k, v);
+  }
+  // Instagram Login: access_token na query (Bearer costuma falhar em /media)
+  url.searchParams.set("access_token", accessToken);
 
-export async function exchangeCodeForToken(code: string): Promise<string> {
-  const { appId, appSecret } = getSymbiusMetaConfig();
-  const redirectUri = `${getSymbiusAppUrl()}/api/symbius/auth/meta/callback`;
-  const sp = new URLSearchParams({
-    client_id: appId,
-    client_secret: appSecret,
-    redirect_uri: redirectUri,
-    code,
+  const res = await fetch(url.toString(), {
+    method: "GET",
+    cache: "no-store",
   });
-  const res = await fetch(`${GRAPH}/oauth/access_token?${sp}`);
-  const json = (await res.json()) as { access_token?: string; error?: { message: string } };
-  if (!json.access_token) {
-    throw new Error(json.error?.message ?? "Token exchange failed");
+  const json = (await res.json()) as {
+    data?: IgMediaItem[];
+    error?: { message?: string };
+  };
+  if (!res.ok || json.error) {
+    return { error: json.error?.message ?? `HTTP ${res.status}` };
   }
-  return json.access_token;
+  return { data: json.data ?? [] };
+}
+
+/**
+ * Lista mídia do Instagram Login.
+ * Resolve o `user_id` profissional via /me (não o app-scoped id) e tenta
+ * /{ig-user-id}/media e /me/media.
+ */
+export async function fetchIgUserMedia(params: {
+  accessToken: string;
+  storedIgUserId?: string | null;
+  limit?: number;
+}): Promise<{
+  media: IgMediaItem[];
+  igUserId: string | null;
+  warning?: string;
+  rawError?: string;
+}> {
+  const limit = String(params.limit ?? 24);
+  let resolvedId = (params.storedIgUserId ?? "").trim() || null;
+
+  try {
+    const meUrl = new URL(`${IG_GRAPH}/me`);
+    meUrl.searchParams.set("fields", "user_id,username");
+    meUrl.searchParams.set("access_token", params.accessToken);
+    const meRes = await fetch(meUrl.toString(), {
+      method: "GET",
+      cache: "no-store",
+    });
+    const me = (await meRes.json()) as {
+      user_id?: string;
+      id?: string;
+      error?: { message?: string };
+    };
+    if (!me.error) {
+      const fromMe = String(me.user_id ?? "").trim();
+      if (fromMe) resolvedId = fromMe;
+    } else {
+      console.warn("[instagram] /me for media id failed:", me.error.message);
+    }
+  } catch (e) {
+    console.warn(
+      "[instagram] /me for media id failed:",
+      e instanceof Error ? e.message : e,
+    );
+  }
+
+  const attempts: Array<{ label: string; path: string }> = [];
+  if (resolvedId) {
+    attempts.push({ label: "user_media", path: `${resolvedId}/media` });
+  }
+  attempts.push({ label: "me_media", path: "me/media" });
+  if (
+    params.storedIgUserId &&
+    params.storedIgUserId.trim() &&
+    params.storedIgUserId.trim() !== resolvedId
+  ) {
+    attempts.push({
+      label: "stored_media",
+      path: `${params.storedIgUserId.trim()}/media`,
+    });
+  }
+
+  let lastError = "";
+  for (const attempt of attempts) {
+    const result = await igMediaGet(attempt.path, params.accessToken, {
+      fields: MEDIA_FIELDS,
+      limit,
+    });
+    if (!result.error) {
+      return {
+        media: result.data ?? [],
+        igUserId: resolvedId,
+      };
+    }
+    lastError = result.error;
+    console.warn(`[instagram] ${attempt.label} failed:`, result.error);
+  }
+
+  return {
+    media: [],
+    igUserId: resolvedId,
+    warning: friendlyMediaError(lastError || "unknown"),
+    rawError: lastError || undefined,
+  };
+}
+
+export async function completeInstagramLogin(code: string): Promise<{
+  accessToken: string;
+  expiresAt: Date;
+  profile: IgConnectedProfile;
+  scopes: string;
+  messagesEnabled: boolean;
+}> {
+  const short = await exchangeCodeForShortLivedToken(code);
+
+  let accessToken = short.accessToken;
+  let expiresIn = 60 * 60;
+  try {
+    const long = await exchangeForLongLivedToken(short.accessToken);
+    accessToken = long.accessToken;
+    expiresIn = long.expiresIn;
+  } catch (e) {
+    console.warn(
+      "[instagram] long-lived exchange failed, using short-lived token:",
+      e instanceof Error ? e.message : e,
+    );
+  }
+
+  const fallbackId = short.userId?.trim() ? short.userId : undefined;
+  const profile = await fetchIgMeProfile(accessToken, fallbackId);
+
+  try {
+    await subscribeIgWebhooks(profile.igUserId, accessToken);
+  } catch (e) {
+    console.warn(
+      "[instagram] webhook subscribe failed:",
+      e instanceof Error ? e.message : e,
+    );
+  }
+
+  return {
+    accessToken,
+    expiresAt: new Date(Date.now() + expiresIn * 1000),
+    profile,
+    scopes: normalizeScopes(short.permissions, META_OAUTH_SCOPES),
+    messagesEnabled: true,
+  };
 }

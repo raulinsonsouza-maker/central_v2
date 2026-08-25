@@ -5,7 +5,10 @@ export async function getOrganizationForSession(session: SymbiusSession) {
   return prisma.organization.findUniqueOrThrow({
     where: { id: session.organizationId },
     include: {
-      igAccounts: { where: { status: "CONNECTED" }, orderBy: { createdAt: "desc" } },
+      igAccounts: {
+        where: { status: { in: ["CONNECTED", "DISABLED"] } },
+        orderBy: { createdAt: "desc" },
+      },
       subscription: true,
       _count: { select: { fluxos: true, members: true } },
     },
@@ -30,12 +33,7 @@ export async function canConnectIgAccount(organizationId: string): Promise<boole
   return org._count.igAccounts < org.maxIgAccounts;
 }
 
-export async function canPublishFluxo(organizationId: string): Promise<boolean> {
-  const org = await prisma.organization.findUniqueOrThrow({
-    where: { id: organizationId },
-  });
-  const published = await prisma.igFluxo.count({
-    where: { organizationId, status: "PUBLISHED" },
-  });
-  return published < org.maxFluxos;
+export async function canPublishFluxo(_organizationId: string): Promise<boolean> {
+  // Planos: liberado até a estrutura de billing existir
+  return true;
 }

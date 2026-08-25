@@ -29,7 +29,7 @@ export default async function OnboardingPage() {
           <div className="flex-1">
             <p className="font-semibold">1. Conectar Instagram</p>
             <p className="mt-1 text-sm text-[var(--symbius-muted)]">
-              Vincule sua conta via Meta
+              Vincule sua conta Professional via Instagram Login
             </p>
             {!hasIg && (
               <Link

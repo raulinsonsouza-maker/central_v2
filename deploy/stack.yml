@@ -48,6 +48,8 @@ services:
       SYMBIUS_APP_URL: ${SYMBIUS_APP_URL:-https://flow.symbius.com.br}
       SYMBIUS_FLOW_HOST: ${SYMBIUS_FLOW_HOST:-flow.symbius.com.br}
       SYMBIUS_CENTRAL_HOST: ${SYMBIUS_CENTRAL_HOST:-central.symbius.com.br}
+      SYMBIUS_IG_APP_ID: ${SYMBIUS_IG_APP_ID:-}
+      SYMBIUS_IG_APP_SECRET: ${SYMBIUS_IG_APP_SECRET:-}
       SYMBIUS_META_APP_ID: ${SYMBIUS_META_APP_ID:-}
       SYMBIUS_META_APP_SECRET: ${SYMBIUS_META_APP_SECRET:-}
       SYMBIUS_META_WEBHOOK_VERIFY_TOKEN: ${SYMBIUS_META_WEBHOOK_VERIFY_TOKEN:-}
@@ -94,6 +96,30 @@ services:
         - traefik.http.routers.symbius-central-hub-http.entrypoints=web
         - traefik.http.routers.symbius-central-hub-http.middlewares=symbius-central-https
         - traefik.http.services.symbius-central-web.loadbalancer.server.port=5010
+
+  scheduler:
+    image: curlimages/curl:8.5.0
+    networks:
+      - internal
+    environment:
+      CRON_SECRET: ${ADMIN_SECRET}
+      CRON_URL: http://web:5010/api/symbius/cron/process-scheduled
+    command:
+      - /bin/sh
+      - -c
+      - |
+        while true; do
+          curl -sf -X POST -H "x-cron-secret: $$CRON_SECRET" "$$CRON_URL" || true
+          sleep 60
+        done
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: on-failure
+        delay: 10s
 
 networks:
   internal:

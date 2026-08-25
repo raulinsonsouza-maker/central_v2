@@ -2,74 +2,149 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useState } from "react";
 import {
-  Inbox,
-  LayoutDashboard,
-  LogOut,
-  MessageSquare,
-  Plug,
+  Atom,
+  BarChart2,
+  CircleHelp,
+  Home,
+  MessageCircle,
+  PanelLeft,
   Settings,
-  Workflow,
+  UserRound,
 } from "lucide-react";
-import { SymbiusLogo } from "./SymbiusLogo";
+import type { SymbiusShellData } from "@/lib/symbius/shellData";
+import { AccountSwitcher } from "@/components/symbius/AccountSwitcher";
 
-const NAV = [
-  { href: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/app/connect", label: "Conectar Instagram", icon: Plug },
-  { href: "/app/inbox", label: "Inbox", icon: Inbox },
-  { href: "/app/flows", label: "Fluxos", icon: Workflow },
-  { href: "/app/contacts", label: "Contatos", icon: MessageSquare },
-  { href: "/app/settings", label: "Configurações", icon: Settings },
-];
+type NavItem = {
+  href: string;
+  label: string;
+  icon: typeof Home;
+  exact?: boolean;
+  badge?: number;
+};
+
+function NavLink({
+  item,
+  active,
+  collapsed,
+}: {
+  item: NavItem;
+  active: boolean;
+  collapsed: boolean;
+}) {
+  const Icon = item.icon;
+  return (
+    <Link
+      href={item.href}
+      title={collapsed ? item.label : undefined}
+      className={`symbius-nav-item ${active ? "symbius-nav-item-active" : ""} ${
+        collapsed ? "symbius-nav-item-collapsed" : ""
+      }`}
+    >
+      <Icon className="symbius-nav-icon" strokeWidth={1.5} />
+      {!collapsed && <span className="symbius-nav-label">{item.label}</span>}
+      {!collapsed && item.badge != null && item.badge > 0 ? (
+        <span className="symbius-nav-badge">{item.badge}</span>
+      ) : null}
+      {collapsed && item.badge != null && item.badge > 0 ? (
+        <span className="symbius-nav-badge-dot" />
+      ) : null}
+    </Link>
+  );
+}
 
 export function SymbiusAppShell({
   children,
-  userName,
+  shell,
 }: {
   children: React.ReactNode;
-  userName: string;
+  shell: SymbiusShellData;
 }) {
   const pathname = usePathname();
+  const [collapsed, setCollapsed] = useState(false);
+
+  const nav: NavItem[] = [
+    { href: "/app", label: "Inicial", icon: Home, exact: true },
+    { href: "/app/contacts", label: "Contatos", icon: UserRound },
+    { href: "/app/flows", label: "Automação", icon: Atom },
+    { href: "/app/inbox", label: "Caixa de Entrada", icon: MessageCircle, badge: shell.inboxUnread },
+    { href: "/app/analytics", label: "Analytics", icon: BarChart2 },
+    { href: "/app/settings", label: "Configurações", icon: Settings },
+  ];
 
   return (
-    <div className="symbius-theme flex min-h-screen">
-      <aside className="hidden w-64 flex-col border-r border-[var(--symbius-border)] bg-[var(--symbius-surface)] md:flex">
-        <div className="border-b border-[var(--symbius-border)] p-4">
-          <SymbiusLogo size="sm" />
+    <div className="symbius-app-shell">
+      <aside
+        className={`symbius-sidebar ${collapsed ? "symbius-sidebar-collapsed" : ""}`}
+      >
+        <div className="symbius-sidebar-header">
+          <Link href="/app" className="symbius-sidebar-logo">
+            {collapsed ? (
+              <span className="symbius-sidebar-logo-mark">S</span>
+            ) : (
+              <span className="symbius-sidebar-logo-word">Symbius</span>
+            )}
+          </Link>
+
+          <AccountSwitcher shell={shell} collapsed={collapsed} />
+
+          {!collapsed && <div className="symbius-header-divider" />}
         </div>
-        <nav className="flex-1 space-y-1 p-3">
-          {NAV.map(({ href, label, icon: Icon, exact }) => {
-            const active = exact ? pathname === href : pathname.startsWith(href);
+
+        <nav className="symbius-sidebar-nav">
+          {nav.map((item) => {
+            const active = item.exact
+              ? pathname === item.href
+              : pathname.startsWith(item.href);
             return (
-              <Link
-                key={href}
-                href={href}
-                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
-                  active
-                    ? "bg-[var(--symbius-primary)]/15 text-white"
-                    : "text-[var(--symbius-muted)] hover:bg-[var(--symbius-surface-hover)] hover:text-white"
-                }`}
-              >
-                <Icon className="h-4 w-4" />
-                {label}
-              </Link>
+              <NavLink
+                key={item.href}
+                item={item}
+                active={active}
+                collapsed={collapsed}
+              />
             );
           })}
         </nav>
-        <div className="border-t border-[var(--symbius-border)] p-4">
-          <p className="truncate text-sm font-medium">{userName}</p>
-          <form action="/api/symbius/auth/logout" method="POST">
-            <button
-              type="submit"
-              className="mt-2 flex items-center gap-2 text-sm text-[var(--symbius-muted)] hover:text-white"
+
+        <div className="symbius-sidebar-bottom">
+          <button
+            type="button"
+            onClick={() => setCollapsed((v) => !v)}
+            className="symbius-sidebar-collapse"
+            aria-label={collapsed ? "Expandir menu" : "Recolher menu"}
+          >
+            <PanelLeft className="h-[18px] w-[18px]" strokeWidth={1.5} />
+          </button>
+
+          <div className="symbius-sidebar-divider" />
+
+          <div className="symbius-sidebar-footer">
+            <Link
+              href="/app/settings"
+              className="symbius-sidebar-footer-link"
+              title={collapsed ? "Meu perfil" : undefined}
             >
-              <LogOut className="h-4 w-4" />
-              Sair
-            </button>
-          </form>
+              <UserRound className="h-5 w-5" strokeWidth={1.5} />
+              {!collapsed && <span>Meu perfil</span>}
+            </Link>
+
+            <a
+              href="https://symbius.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="symbius-sidebar-footer-link"
+              title={collapsed ? "Ajuda" : undefined}
+            >
+              <CircleHelp className="h-5 w-5" strokeWidth={1.5} />
+              {!collapsed && <span>Ajuda</span>}
+            </a>
+          </div>
         </div>
       </aside>
-      <main className="flex-1 overflow-auto">{children}</main>
+
+      <main className="symbius-main">{children}</main>
     </div>
   );
 }

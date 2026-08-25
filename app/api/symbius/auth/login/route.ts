@@ -29,7 +29,21 @@ export async function POST(request: NextRequest) {
     },
   });
 
-  if (!user || !(await verifyPassword(parsed.data.password, user.passwordHash))) {
+  if (!user) {
+    return NextResponse.json({ error: "E-mail ou senha incorretos" }, { status: 401 });
+  }
+
+  if (!user.passwordHash) {
+    return NextResponse.json(
+      {
+        error:
+          "Esta conta entra com Instagram. Use o botão “Entrar com Instagram”.",
+      },
+      { status: 401 },
+    );
+  }
+
+  if (!(await verifyPassword(parsed.data.password, user.passwordHash))) {
     return NextResponse.json({ error: "E-mail ou senha incorretos" }, { status: 401 });
   }
 

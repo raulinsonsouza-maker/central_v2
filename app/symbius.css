@@ -17,6 +17,91 @@
   min-height: 100vh;
 }
 
+/**
+ * Superfície clara (ManyChat-style) dentro do shell escuro.
+ * Redefine tokens + força contraste de tipografia/herança.
+ */
+.symbius-theme .symbius-light {
+  --symbius-bg: #f4f5f7;
+  --symbius-surface: #ffffff;
+  --symbius-surface-hover: #f4f4f5;
+  --symbius-border: #e4e4e7;
+  --symbius-text: #18181b;
+  --symbius-muted: #71717a;
+  --symbius-primary: #2d6cdf;
+  --symbius-primary-hover: #255bbd;
+  --symbius-accent: #0d9488;
+
+  color: #18181b !important;
+  background-color: #f4f5f7;
+}
+
+.symbius-theme .symbius-light :where(h1, h2, h3, h4, h5, h6, p, label, span, li, td, th, small, strong, em) {
+  color: inherit;
+}
+
+.symbius-theme .symbius-light :where(h1, h2, h3, h4, h5, h6) {
+  color: #18181b !important;
+}
+
+.symbius-theme .symbius-light :where(button) {
+  color: inherit;
+}
+
+.symbius-theme .symbius-light .text-ink {
+  color: #18181b !important;
+}
+
+.symbius-theme .symbius-light .text-soft {
+  color: #71717a !important;
+}
+
+.symbius-theme .symbius-light input,
+.symbius-theme .symbius-light textarea,
+.symbius-theme .symbius-light select {
+  color: #18181b;
+  background-color: #ffffff;
+  border-color: #e4e4e7;
+}
+
+.symbius-theme .symbius-light input::placeholder,
+.symbius-theme .symbius-light textarea::placeholder {
+  color: #a1a1aa;
+}
+
+.symbius-theme .symbius-light .symbius-card {
+  background: #ffffff;
+  border-color: #e4e4e7;
+  color: #18181b;
+}
+
+.symbius-theme .symbius-light .symbius-input {
+  background: #ffffff;
+  border-color: #e4e4e7;
+  color: #18181b;
+}
+
+.symbius-theme .symbius-light .symbius-btn-outline {
+  border-color: #d4d4d8;
+  color: #3f3f46;
+  background: #ffffff;
+}
+
+.symbius-theme .symbius-light .symbius-btn-outline:hover {
+  border-color: #2d6cdf;
+  background: rgba(45, 108, 223, 0.06);
+  color: #18181b;
+}
+
+.symbius-theme .symbius-light .symbius-btn-primary {
+  background: #2d6cdf;
+  color: #ffffff;
+}
+
+.symbius-theme .symbius-light .symbius-btn-primary:hover {
+  background: #255bbd;
+}
+
 .symbius-gradient-text {
   background: var(--symbius-gradient);
   -webkit-background-clip: text;
@@ -59,3 +144,313 @@
   border-color: var(--symbius-primary);
   box-shadow: 0 0 0 3px rgba(124, 92, 255, 0.15);
 }
+
+/* —— App shell (ManyChat-style sidebar) —— */
+.symbius-app-shell {
+  display: flex;
+  min-height: 100vh;
+  background: #f0f2f5;
+  color: #1f2937;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+  --symbius-bg: #f0f2f5;
+  --symbius-surface: #ffffff;
+  --symbius-surface-hover: #f4f4f5;
+  --symbius-border: #e5e7eb;
+  --symbius-text: #1f2937;
+  --symbius-muted: #6b7280;
+  --symbius-primary: #0084ff;
+  --symbius-primary-hover: #0073e6;
+  --symbius-accent: #0d9488;
+}
+
+.symbius-sidebar {
+  display: none;
+  width: 260px;
+  flex-shrink: 0;
+  flex-direction: column;
+  border-right: 1px solid #e8e8e8;
+  background: #fafafa;
+  transition: width 0.2s ease;
+}
+
+@media (min-width: 768px) {
+  .symbius-sidebar {
+    display: flex;
+  }
+}
+
+.symbius-sidebar-collapsed {
+  width: 68px;
+}
+
+.symbius-sidebar-header {
+  padding: 22px 20px 16px;
+}
+
+.symbius-sidebar-logo {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.symbius-sidebar-logo-word {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #111827;
+  line-height: 1;
+}
+
+.symbius-sidebar-logo-mark {
+  display: inline-flex;
+  height: 32px;
+  width: 32px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background: #111827;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.symbius-account-block {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  margin-top: 18px;
+  padding: 4px 2px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  text-align: left;
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.12s ease;
+}
+
+.symbius-account-block:hover {
+  background: #efefef;
+}
+
+.symbius-account-block-collapsed {
+  justify-content: center;
+  padding: 4px 0;
+}
+
+.symbius-account-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.symbius-account-avatar {
+  display: flex;
+  height: 40px;
+  width: 40px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 9999px;
+  background: #ececec;
+}
+
+.symbius-account-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 15px;
+  font-weight: 400;
+  color: #374151;
+  line-height: 1.25;
+}
+
+.symbius-account-chevron {
+  height: 18px;
+  width: 18px;
+  flex-shrink: 0;
+  color: #9ca3af;
+}
+
+.symbius-header-divider {
+  height: 1px;
+  margin-top: 16px;
+  background: #e8e8e8;
+}
+
+.symbius-sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 12px;
+  overflow-y: auto;
+}
+
+.symbius-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #4b5563;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease;
+  position: relative;
+}
+
+.symbius-nav-item:hover {
+  background: #efefef;
+  color: #1f2937;
+}
+
+.symbius-nav-item-active {
+  background: #e8e8e8;
+  color: #111827;
+  font-weight: 500;
+}
+
+.symbius-nav-item-collapsed {
+  justify-content: center;
+  padding: 0;
+  width: 44px;
+  margin: 0 auto;
+}
+
+.symbius-nav-icon {
+  height: 22px;
+  width: 22px;
+  flex-shrink: 0;
+  color: #6b7280;
+}
+
+.symbius-nav-item-active .symbius-nav-icon {
+  color: #374151;
+}
+
+.symbius-nav-label {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.symbius-nav-badge {
+  min-width: 22px;
+  height: 22px;
+  padding: 0 7px;
+  border-radius: 9999px;
+  background: #0084ff;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 22px;
+  text-align: center;
+}
+
+.symbius-nav-badge-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  height: 8px;
+  width: 8px;
+  border-radius: 9999px;
+  background: #0084ff;
+}
+
+.symbius-sidebar-bottom {
+  padding: 0 12px 16px;
+}
+
+.symbius-sidebar-collapse {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #9ca3af;
+  cursor: pointer;
+  transition: color 0.12s ease, background 0.12s ease;
+}
+
+.symbius-sidebar-collapse:hover {
+  background: #efefef;
+  color: #6b7280;
+}
+
+.symbius-sidebar-collapsed .symbius-sidebar-collapse {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.symbius-sidebar-divider {
+  height: 1px;
+  margin: 6px 6px 10px;
+  background: #e8e8e8;
+}
+
+.symbius-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.symbius-sidebar-footer-link {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 400;
+  color: #4b5563;
+  text-decoration: none;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.symbius-sidebar-footer-link:hover {
+  background: #efefef;
+  color: #1f2937;
+}
+
+.symbius-sidebar-collapsed .symbius-sidebar-footer-link {
+  justify-content: center;
+  padding: 0;
+  width: 44px;
+  margin: 0 auto;
+}
+
+.symbius-main {
+  flex: 1;
+  min-width: 0;
+  overflow: auto;
+  background: #f0f2f5;
+  color: #1f2937;
+}
+
+.symbius-app-shell .symbius-card {
+  background: #ffffff;
+  border-color: #e4e4e7;
+  color: #18181b;
+}
+
+.symbius-app-shell .symbius-btn-primary {
+  background: #0084ff;
+  color: #ffffff;
+}
+
+.symbius-app-shell .symbius-btn-primary:hover {
+  background: #0073e6;
+}
+

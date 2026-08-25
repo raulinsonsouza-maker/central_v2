@@ -1,4 +1,5 @@
-import { FlowEditor } from "@/components/symbius/FlowEditor";
+import { Suspense } from "react";
+import { FlowEditClient } from "@/components/symbius/FlowEditClient";
 
 export default async function FlowEditPage({
   params,
@@ -6,5 +7,13 @@ export default async function FlowEditPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  return <FlowEditor fluxoId={id} />;
+  return (
+    <Suspense
+      fallback={
+        <div className="p-10 text-[var(--symbius-muted)]">Carregando…</div>
+      }
+    >
+      <FlowEditClient fluxoId={id} />
+    </Suspense>
+  );
 }

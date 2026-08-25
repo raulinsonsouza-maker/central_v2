@@ -479,21 +479,30 @@ model Organization {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
-  members      OrganizationMember[]
-  subscription Subscription?
-  igAccounts   IgAccount[]
-  contatos     IgContato[]
-  conversas    IgConversa[]
-  fluxos       IgFluxo[]
-  execucoes    IgFluxoExecucao[]
-  webhookEvents IgWebhookEvent[]
+  members            OrganizationMember[]
+  subscription       Subscription?
+  igAccounts         IgAccount[]
+  contatos           IgContato[]
+  conversas          IgConversa[]
+  fluxos             IgFluxo[]
+  fluxoPastas        IgFluxoPasta[]
+  execucoes          IgFluxoExecucao[]
+  webhookEvents      IgWebhookEvent[]
+  orgSettings        IgOrgSettings?
+  snippets           IgSnippet[]
+  segmentos          IgSegmento[]
+  conversionEvents   IgConversionEvent[]
+  memberInvites      IgMemberInvite[]
+  scheduledMessages  IgScheduledMessage[]
+  tagDefinitions     IgTagDefinition[]
 }
 
 model User {
   id           String   @id @default(cuid())
   email        String   @unique
-  passwordHash String
+  passwordHash String?
   nome         String
+  igUserId     String?  @unique
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
@@ -501,11 +510,12 @@ model User {
 }
 
 model OrganizationMember {
-  id             String   @id @default(cuid())
+  id             String    @id @default(cuid())
   userId         String
   organizationId String
-  role           String   @default("OWNER")
-  createdAt      DateTime @default(now())
+  role           String    @default("OWNER")
+  pinnedAt       DateTime?
+  createdAt      DateTime  @default(now())
 
   user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
@@ -529,17 +539,20 @@ model Subscription {
 model IgAccount {
   id                  String    @id @default(cuid())
   organizationId      String
-  pageId              String
+  pageId              String?
   pageName            String?
-  pageAccessToken     String
+  accessToken         String
   igUserId            String
   igUsername          String?
   igProfilePictureUrl String?
   followersCount      Int?
+  scopes              String?
   status              String    @default("CONNECTED")
   webhookSubscribedAt DateTime?
   messagesEnabled     Boolean   @default(false)
   tokenExpiresAt      DateTime?
+  defaultReplyText    String?
+  iceBreakers         Json      @default("[]")
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @updatedAt
 
@@ -552,6 +565,113 @@ model IgAccount {
   @@index([igUserId])
 }
 
+model IgOrgSettings {
+  id               String   @id @default(cuid())
+  organizationId   String   @unique
+  apiKey           String?
+  webhookUrl       String?
+  webhookEvents    String[] @default([])
+  googleSheetId    String?
+  googleSheetTab   String?
+  syncCentralCrm   Boolean  @default(false)
+  aiEnabled        Boolean  @default(false)
+  aiKnowledgeBase  String?
+  aiGoals          Json     @default("{}")
+  aiTone           String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+}
+
+model IgSnippet {
+  id             String   @id @default(cuid())
+  organizationId String
+  title          String
+  body           String
+  shortcut       String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
+model IgTagDefinition {
+  id             String   @id @default(cuid())
+  organizationId String
+  nome           String
+  cor            String?
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, nome])
+  @@index([organizationId])
+}
+
+model IgSegmento {
+  id             String   @id @default(cuid())
+  organizationId String
+  nome           String
+  filters        Json     @default("{}")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+}
+
+model IgConversionEvent {
+  id             String   @id @default(cuid())
+  organizationId String
+  contatoId      String?
+  fluxoId        String?
+  tipo           String
+  metadata       Json     @default("{}")
+  createdAt      DateTime @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, createdAt])
+  @@index([tipo])
+}
+
+model IgMemberInvite {
+  id             String    @id @default(cuid())
+  organizationId String
+  email          String
+  role           String    @default("AGENT")
+  token          String    @unique
+  expiresAt      DateTime
+  acceptedAt     DateTime?
+  createdAt      DateTime  @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([token])
+}
+
+model IgScheduledMessage {
+  id             String    @id @default(cuid())
+  organizationId String
+  conversaId     String
+  texto          String
+  scheduledAt    DateTime
+  sentAt         DateTime?
+  sentByUserId   String?
+  error          String?
+  createdAt      DateTime  @default(now())
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([scheduledAt, sentAt])
+  @@index([organizationId])
+}
+
 model IgContato {
   id                String    @id @default(cuid())
   organizationId    String
@@ -560,6 +680,8 @@ model IgContato {
   nome              String?
   username          String?
   tags              String[]  @default([])
+  campos            Json      @default("{}")
+  phone             String?
   botPaused         Boolean   @default(false)
   lastInteractionAt DateTime?
   createdAt         DateTime  @default(now())
@@ -581,6 +703,7 @@ model IgConversa {
   contatoId      String
   status         String    @default("OPEN")
   handoffHuman   Boolean   @default(false)
+  assignedUserId String?
   lastMessageAt  DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
@@ -612,23 +735,40 @@ model IgMensagem {
   @@index([conversaId, createdAt])
 }
 
+model IgFluxoPasta {
+  id             String   @id @default(cuid())
+  organizationId String
+  nome           String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  fluxos       IgFluxo[]
+
+  @@index([organizationId])
+}
+
 model IgFluxo {
   id             String   @id @default(cuid())
   organizationId String
   igAccountId    String?
+  pastaId        String?
   nome           String
   status         String   @default("DRAFT")
   triggerType    String
   triggerConfig  Json     @default("{}")
+  fluxoKind      String   @default("automation")
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
 
   organization Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   igAccount    IgAccount?        @relation(fields: [igAccountId], references: [id], onDelete: SetNull)
+  pasta        IgFluxoPasta?     @relation(fields: [pastaId], references: [id], onDelete: SetNull)
   nos          IgFluxoNo[]
   execucoes    IgFluxoExecucao[]
 
   @@index([organizationId, status])
+  @@index([pastaId])
 }
 
 model IgFluxoNo {
