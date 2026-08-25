@@ -8,6 +8,11 @@ import {
 } from "@/lib/symbius/integrations";
 import { assignConversaRoundRobin } from "@/lib/symbius/inboxAssign";
 import {
+  enrichContatoProfile,
+  ensureContatoSourceTag,
+  persistCommentAsMessage,
+} from "@/lib/symbius/contactPersistence";
+import {
   advanceCommentDmAfterFollowConfirm,
   advanceCommentDmAfterWelcomeClick,
   markNextPostConsumed,
@@ -124,12 +129,13 @@ async function getOrCreateContato(
   igsid: string,
   nome?: string,
   username?: string,
+  accessToken?: string,
 ) {
   const existing = await prisma.igContato.findUnique({
     where: { igAccountId_igsid: { igAccountId, igsid } },
   });
   if (existing) {
-    return prisma.igContato.update({
+    const updated = await prisma.igContato.update({
       where: { id: existing.id },
       data: {
         lastInteractionAt: new Date(),
@@ -137,8 +143,12 @@ async function getOrCreateContato(
         username: username ?? existing.username,
       },
     });
+    if (accessToken && !updated.username) {
+      void enrichContatoProfile(updated.id, igsid, accessToken);
+    }
+    return updated;
   }
-  return prisma.igContato.create({
+  const created = await prisma.igContato.create({
     data: {
       organizationId,
       igAccountId,
@@ -148,6 +158,10 @@ async function getOrCreateContato(
       lastInteractionAt: new Date(),
     },
   });
+  if (accessToken) {
+    void enrichContatoProfile(created.id, igsid, accessToken);
+  }
+  return created;
 }
 
 async function getOrCreateConversa(
@@ -177,6 +191,7 @@ async function persistInboundMessage(
   mid: string | undefined,
   texto: string | undefined,
   isEcho: boolean,
+  attachments?: object,
 ) {
   if (mid) {
     const dup = await prisma.igMensagem.findUnique({ where: { mid } });
@@ -189,6 +204,7 @@ async function persistInboundMessage(
       direction: isEcho ? "OUTBOUND" : "INBOUND",
       mid: mid ?? undefined,
       texto,
+      attachments: attachments as object | undefined,
       isEcho,
     },
   });
@@ -1014,22 +1030,41 @@ export async function processWebhookPayload(payload: unknown): Promise<void> {
     });
 
     for (const msg of entry.messaging ?? []) {
-      const igsid = msg.sender?.id;
-      if (!igsid || igsid === igUserId) continue;
-
       const isEcho = Boolean(msg.message?.is_echo);
-      if (isEcho) continue;
+      const igsid = isEcho ? msg.recipient?.id : msg.sender?.id;
+      if (!igsid || igsid === igUserId) continue;
 
       const contato = await getOrCreateContato(
         igAccount.organizationId,
         igAccount.id,
         igsid,
+        undefined,
+        undefined,
+        igAccount.accessToken,
       );
       const conversa = await getOrCreateConversa(
         igAccount.organizationId,
         igAccount.id,
         contato.id,
       );
+
+      if (isEcho) {
+        const texto = msg.message?.text;
+        if (texto) {
+          await persistInboundMessage(
+            igAccount.organizationId,
+            conversa.id,
+            msg.message?.mid,
+            texto,
+            true,
+          );
+          await prisma.igConversa.update({
+            where: { id: conversa.id },
+            data: { lastMessageAt: new Date() },
+          });
+        }
+        continue;
+      }
 
       const texto = msg.message?.text ?? msg.postback?.title;
       const isStoryMention = Boolean(
@@ -1044,6 +1079,16 @@ export async function processWebhookPayload(payload: unknown): Promise<void> {
         msg.message?.mid,
         texto,
         false,
+        msg.message?.attachments?.length
+          ? { attachments: msg.message.attachments, postback: msg.postback }
+          : msg.postback
+            ? { postback: msg.postback }
+            : undefined,
+      );
+
+      await ensureContatoSourceTag(
+        contato.id,
+        isStoryReply || isStoryMention ? "story" : "dm",
       );
 
       await prisma.igConversa.update({
@@ -1095,7 +1140,18 @@ export async function processWebhookPayload(payload: unknown): Promise<void> {
         fromId,
         undefined,
         change.value.from?.username,
+        igAccount.accessToken,
       );
+
+      await persistCommentAsMessage({
+        organizationId: igAccount.organizationId,
+        igAccountId: igAccount.id,
+        contatoId: contato.id,
+        commentText,
+        commentId: change.value.id,
+        mediaId: change.value.media?.id ?? change.value.live_media?.id,
+        field: change.field === "live_comments" ? "live_comments" : "comments",
+      });
 
       await processAutomationForContato(
         igAccount.organizationId,

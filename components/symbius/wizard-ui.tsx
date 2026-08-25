@@ -1,6 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useState } from "react";
+import { Link2, X } from "lucide-react";
 
 export function WizardLayout({
   form,
@@ -233,5 +235,133 @@ export function ActivateButton({
     >
       {loading ? "Ativando…" : label}
     </button>
+  );
+}
+
+export function WizardLinkButtonEditor({
+  buttonLabel,
+  url,
+  onChange,
+}: {
+  buttonLabel: string;
+  url: string;
+  onChange: (button: string, url: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const [draftButton, setDraftButton] = useState(buttonLabel);
+  const [draftUrl, setDraftUrl] = useState(url);
+
+  function openModal() {
+    setDraftButton(buttonLabel.trim() || "Acessar");
+    setDraftUrl(url);
+    setOpen(true);
+  }
+
+  function closeModal() {
+    setOpen(false);
+  }
+
+  function save() {
+    const nextButton = draftButton.trim() || "Acessar";
+    const nextUrl = draftUrl.trim();
+    if (!nextUrl) {
+      alert("Informe o link");
+      return;
+    }
+    onChange(nextButton, nextUrl);
+    closeModal();
+  }
+
+  const hasLink = Boolean(url.trim());
+
+  return (
+    <>
+      {hasLink ? (
+        <button
+          type="button"
+          onClick={openModal}
+          className="flex w-full items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-zinc-50/80 px-3.5 py-2.5 text-left transition hover:border-zinc-300 hover:bg-zinc-50"
+        >
+          <span className="truncate text-[13px] font-medium text-zinc-800">
+            {buttonLabel.trim() || "Acessar"}
+          </span>
+          <Link2 className="h-4 w-4 shrink-0 text-zinc-400" strokeWidth={1.75} />
+        </button>
+      ) : null}
+
+      <button
+        type="button"
+        onClick={openModal}
+        className="flex w-full items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-white px-3 py-2.5 text-[13px] font-medium text-zinc-600 transition hover:border-[#0084ff]/40 hover:bg-[#f0f7ff] hover:text-[#0084ff]"
+      >
+        + Adicionar um link
+      </button>
+
+      {open ? (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-black/40 p-4"
+          onClick={closeModal}
+        >
+          <div
+            className="w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3 border-b border-zinc-100 px-5 py-4">
+              <h3 className="text-[15px] font-semibold text-zinc-900">
+                Adicionar um link
+              </h3>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="rounded-lg p-1 text-zinc-400 hover:bg-zinc-100 hover:text-zinc-700"
+                aria-label="Fechar"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 px-5 py-4">
+              <div>
+                <WizardFieldLabel>Texto do botão</WizardFieldLabel>
+                <input
+                  value={draftButton}
+                  onChange={(e) => setDraftButton(e.target.value)}
+                  className={wizardInputCls}
+                  placeholder="Adicione legenda ao botão, por exemplo, 'Abrir'"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <WizardFieldLabel>Link</WizardFieldLabel>
+                <input
+                  value={draftUrl}
+                  onChange={(e) => setDraftUrl(e.target.value)}
+                  className={wizardInputCls}
+                  placeholder="https://"
+                  inputMode="url"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 border-t border-zinc-100 px-5 py-4">
+              <button
+                type="button"
+                onClick={closeModal}
+                className="rounded-lg border border-zinc-200 bg-white px-4 py-2 text-[13px] font-medium text-zinc-700 transition hover:bg-zinc-50"
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                onClick={save}
+                className="rounded-lg bg-[#0084ff] px-4 py-2 text-[13px] font-semibold text-white transition hover:bg-[#0073e6]"
+              >
+                Salvar
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+    </>
   );
 }

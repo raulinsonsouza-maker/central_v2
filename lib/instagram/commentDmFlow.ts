@@ -189,6 +189,12 @@ async function userFollowsBusiness(params: FlowStepParams): Promise<boolean | nu
     accessToken: params.igAccount.accessToken,
   });
   if (!status) return null;
+  if (status.username) {
+    await prisma.igContato.update({
+      where: { id: params.contatoId },
+      data: { username: status.username },
+    });
+  }
   return status.follows;
 }
 

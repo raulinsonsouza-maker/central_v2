@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -56,6 +57,8 @@ function initialOf(c: ConversaItem["contato"]) {
 }
 
 export default function InboxPage() {
+  const searchParams = useSearchParams();
+  const conversaFromUrl = searchParams.get("conversa");
   const [conversas, setConversas] = useState<ConversaItem[]>([]);
   const [counts, setCounts] = useState({
     all: 0,
@@ -94,6 +97,12 @@ export default function InboxPage() {
     setLoadingList(true);
     void loadList();
   }, [loadList]);
+
+  useEffect(() => {
+    if (conversaFromUrl) {
+      setSelectedId(conversaFromUrl);
+    }
+  }, [conversaFromUrl]);
 
   useEffect(() => {
     if (!selectedId) {

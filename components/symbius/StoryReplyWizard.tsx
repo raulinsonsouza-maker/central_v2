@@ -8,6 +8,7 @@ import {
   WizardBackButton,
   WizardFieldLabel,
   WizardLayout,
+  WizardLinkButtonEditor,
   WizardSectionTitle,
   WizardTitle,
   wizardInputCls,
@@ -112,13 +113,13 @@ export function StoryReplyWizard({
           <section className="mt-7 space-y-2">
             <RadioOption
               selected={storyFilter === "any"}
-              title="qualquer story"
+              title="Qualquer story"
               onClick={() => setStoryFilter("any")}
             />
             <RadioOption
               selected={storyFilter === "specific"}
               disabled
-              title="um story específico (em breve)"
+              title="Um story específico (em breve)"
             />
           </section>
 
@@ -127,7 +128,7 @@ export function StoryReplyWizard({
             <div className="mt-2.5 space-y-2">
               <RadioOption
                 selected={!anyKeyword}
-                title="palavras ou reações específicas"
+                title="Palavras ou reações específicas"
                 onClick={() => {
                   setAnyKeyword(false);
                   setPreviewTab("dm");
@@ -138,12 +139,12 @@ export function StoryReplyWizard({
                   value={keywords}
                   onChange={(e) => setKeywords(e.target.value)}
                   className={`${wizardInputCls} ml-[30px] w-[calc(100%-30px)]`}
-                  placeholder="preço, link, quero"
+                  placeholder="Preço, link, quero"
                 />
               )}
               <RadioOption
                 selected={anyKeyword}
-                title="qualquer palavra-chave ou reação"
+                title="Qualquer palavra-chave ou reação"
                 onClick={() => setAnyKeyword(true)}
               />
             </div>
@@ -160,17 +161,14 @@ export function StoryReplyWizard({
                 }}
                 className={wizardTextareaCls}
               />
-              <input
-                value={buttonLabel}
-                onChange={(e) => setButtonLabel(e.target.value)}
-                className={wizardInputCls}
-                placeholder="Texto do botão"
-              />
-              <input
-                value={linkUrl}
-                onChange={(e) => setLinkUrl(e.target.value)}
-                className={wizardInputCls}
-                placeholder="Adicionar um link"
+              <WizardLinkButtonEditor
+                buttonLabel={buttonLabel}
+                url={linkUrl}
+                onChange={(button, url) => {
+                  setButtonLabel(button);
+                  setLinkUrl(url);
+                  setPreviewTab("dm");
+                }}
               />
             </div>
           </section>

@@ -1,7 +1,9 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Search, User } from "lucide-react";
+import { useMemo } from "react";
+import { useRouter } from "next/navigation";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export type ContactRow = {
   id: string;
@@ -10,7 +12,12 @@ export type ContactRow = {
   username: string | null;
   tags: string[];
   botPaused: boolean;
+  createdAt: string | null;
   lastInteractionAt: string | null;
+  conversaId?: string | null;
+  lastMessage?: string | null;
+  lastMessageDirection?: string | null;
+  messageCount?: number;
 };
 
 function formatContactTag(tag: string): { label: string; isEmail: boolean } {
@@ -20,142 +27,192 @@ function formatContactTag(tag: string): { label: string; isEmail: boolean } {
   return { label: tag, isEmail: false };
 }
 
+function isSystemTag(tag: string) {
+  return (
+    tag.startsWith("interacao:") ||
+    tag.startsWith("email:") ||
+    tag.startsWith("link_clicked:")
+  );
+}
+
+function sourceLabel(tags: string[]): string | null {
+  if (tags.includes("interacao:comentario")) return "Comentário";
+  if (tags.includes("interacao:live")) return "Live";
+  if (tags.includes("interacao:story")) return "Story";
+  if (tags.includes("interacao:dm")) return "DM";
+  return null;
+}
+
+function relativeTime(iso: string | null | undefined) {
+  if (!iso) return "—";
+  return formatDistanceToNow(new Date(iso), { addSuffix: true, locale: ptBR });
+}
+
+function displayName(c: ContactRow) {
+  return c.nome || (c.username ? `@${c.username}` : "Sem nome");
+}
+
+function avatarInitial(c: ContactRow) {
+  const s = c.nome || c.username || "?";
+  return s.replace("@", "").charAt(0).toUpperCase();
+}
+
 export function ContactsTable({
   contacts,
   selectable = false,
   selected,
   onSelectionChange,
+  total,
 }: {
   contacts: ContactRow[];
   selectable?: boolean;
   selected?: Set<string>;
   onSelectionChange?: (s: Set<string>) => void;
+  total?: number;
 }) {
-  const [q, setQ] = useState("");
-
-  const filtered = useMemo(() => {
-    const needle = q.trim().toLowerCase();
-    if (!needle) return contacts;
-    return contacts.filter((c) => {
-      const hay = [c.username, c.nome, c.igsid, ...c.tags]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
-      return hay.includes(needle);
-    });
-  }, [contacts, q]);
+  const router = useRouter();
+  const countLabel = useMemo(() => {
+    const n = total ?? contacts.length;
+    const sel = selected?.size ?? 0;
+    return `${sel} selecionado(s) do total de ${n}`;
+  }, [contacts.length, selected?.size, total]);
 
   return (
     <div>
-      <div className="relative max-w-md">
-        <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400" />
-        <input
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          className="w-full rounded-xl border border-zinc-200 bg-white py-2.5 pl-10 pr-4 text-sm text-zinc-900 outline-none focus:border-[#2d6cdf] focus:ring-2 focus:ring-[#2d6cdf]/20"
-          placeholder="Buscar por @, nome ou tag"
-        />
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-2 text-sm text-zinc-500">
+        <p>{countLabel}</p>
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
         <table className="w-full text-sm text-zinc-900">
-          <thead className="bg-zinc-50 text-zinc-600">
+          <thead className="border-b border-zinc-100 bg-zinc-50/80 text-zinc-600">
             <tr>
               {selectable && (
-                <th className="px-4 py-3 text-left font-semibold w-10" />
+                <th className="w-10 px-4 py-3 text-left font-semibold" />
               )}
-              <th className="px-4 py-3 text-left font-semibold">Contato</th>
-              <th className="px-4 py-3 text-left font-semibold">Tags</th>
               <th className="px-4 py-3 text-left font-semibold">
-                Última interação
+                Imagem do perfil
+              </th>
+              <th className="px-4 py-3 text-left font-semibold">Nome</th>
+              <th className="px-4 py-3 text-left font-semibold">
+                Última mensagem
               </th>
               <th className="px-4 py-3 text-left font-semibold">Status</th>
+              <th className="px-4 py-3 text-left font-semibold">Inscrito</th>
             </tr>
           </thead>
           <tbody>
-            {filtered.length === 0 ? (
+            {contacts.length === 0 ? (
               <tr>
                 <td
-                  colSpan={selectable ? 5 : 4}
-                  className="px-4 py-8 text-center text-zinc-500"
+                  colSpan={selectable ? 6 : 5}
+                  className="px-4 py-10 text-center text-zinc-500"
                 >
-                  Nenhum contato encontrado
+                  Nenhum contato ainda. Quando alguém interagir com suas
+                  automações, aparecerá aqui automaticamente.
                 </td>
               </tr>
             ) : (
-              filtered.map((c) => (
-                <tr key={c.id} className="border-t border-zinc-100">
-                  {selectable && (
-                    <td className="px-4 py-3">
-                      <input
-                        type="checkbox"
-                        checked={selected?.has(c.id) ?? false}
-                        onChange={(e) => {
-                          if (!onSelectionChange || !selected) return;
-                          const next = new Set(selected);
-                          if (e.target.checked) next.add(c.id);
-                          else next.delete(c.id);
-                          onSelectionChange(next);
-                        }}
-                      />
-                    </td>
-                  )}
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-zinc-100 text-zinc-500">
-                        <User className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <p className="font-medium text-zinc-900">
-                          {c.nome || c.username || "Sem nome"}
-                        </p>
-                        <p className="text-xs text-zinc-500">
-                          {c.username ? `@${c.username}` : c.igsid}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex flex-wrap gap-1">
-                      {c.tags.length === 0 ? (
-                        <span className="text-zinc-400">—</span>
-                      ) : (
-                        c.tags.map((t) => {
-                          const { label, isEmail } = formatContactTag(t);
-                          return (
-                            <span
-                              key={t}
-                              className={`rounded-full px-2 py-0.5 text-xs ${
-                                isEmail
-                                  ? "bg-violet-50 text-violet-700"
-                                  : "bg-sky-50 text-sky-700"
-                              }`}
-                            >
-                              {isEmail ? label : t}
-                            </span>
-                          );
-                        })
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-zinc-600">
-                    {c.lastInteractionAt
-                      ? new Date(c.lastInteractionAt).toLocaleString("pt-BR")
-                      : "—"}
-                  </td>
-                  <td className="px-4 py-3">
-                    {c.botPaused ? (
-                      <span className="rounded-full bg-amber-50 px-2 py-0.5 text-xs font-medium text-amber-700">
-                        Bot pausado
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-medium text-emerald-700">
-                        Ativo
-                      </span>
+              contacts.map((c) => {
+                const userTags = c.tags.filter((t) => !isSystemTag(t));
+                const origin = sourceLabel(c.tags);
+                const rowInner = (
+                  <>
+                    {selectable && (
+                      <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
+                        <input
+                          type="checkbox"
+                          checked={selected?.has(c.id) ?? false}
+                          onChange={(e) => {
+                            if (!onSelectionChange || !selected) return;
+                            const next = new Set(selected);
+                            if (e.target.checked) next.add(c.id);
+                            else next.delete(c.id);
+                            onSelectionChange(next);
+                          }}
+                        />
+                      </td>
                     )}
-                  </td>
-                </tr>
-              ))
+                    <td className="px-4 py-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-sky-100 to-indigo-100 text-sm font-semibold text-indigo-700">
+                        {avatarInitial(c)}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3">
+                      <p className="font-medium text-zinc-900">
+                        {displayName(c)}
+                      </p>
+                      <p className="text-xs text-zinc-500">
+                        {c.username ? `@${c.username}` : c.igsid}
+                      </p>
+                      {(origin || userTags.length > 0) && (
+                        <div className="mt-1.5 flex flex-wrap gap-1">
+                          {origin ? (
+                            <span className="rounded-full bg-violet-50 px-2 py-0.5 text-[10px] font-medium text-violet-700">
+                              {origin}
+                            </span>
+                          ) : null}
+                          {userTags.slice(0, 3).map((t) => {
+                            const { label, isEmail } = formatContactTag(t);
+                            return (
+                              <span
+                                key={t}
+                                className={`rounded-full px-2 py-0.5 text-[10px] ${
+                                  isEmail
+                                    ? "bg-violet-50 text-violet-700"
+                                    : "bg-sky-50 text-sky-700"
+                                }`}
+                              >
+                                {isEmail ? label : t}
+                              </span>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </td>
+                    <td className="max-w-[220px] px-4 py-3 text-zinc-600">
+                      {c.lastMessage ? (
+                        <span className="line-clamp-2 text-xs leading-snug">
+                          {c.lastMessageDirection === "OUTBOUND" ? "Você: " : ""}
+                          {c.lastMessage}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-zinc-400">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3">
+                      {c.botPaused ? (
+                        <span className="rounded-full bg-amber-50 px-2.5 py-0.5 text-xs font-medium text-amber-700">
+                          Bot pausado
+                        </span>
+                      ) : (
+                        <span className="rounded-full bg-emerald-50 px-2.5 py-0.5 text-xs font-medium text-emerald-700">
+                          Inscrito
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-zinc-600">
+                      {relativeTime(c.createdAt ?? c.lastInteractionAt)}
+                    </td>
+                  </>
+                );
+
+                return (
+                  <tr
+                    key={c.id}
+                    className={`border-t border-zinc-100 ${
+                      c.conversaId ? "cursor-pointer transition hover:bg-zinc-50/80" : ""
+                    }`}
+                    onClick={() => {
+                      if (c.conversaId) {
+                        router.push(`/app/inbox?conversa=${c.conversaId}`);
+                      }
+                    }}
+                  >
+                    {rowInner}
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>

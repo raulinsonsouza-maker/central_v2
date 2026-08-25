@@ -45,6 +45,19 @@ export async function GET(request: NextRequest) {
         take: 5,
         select: { id: true, status: true, fluxoId: true },
       },
+      conversas: {
+        orderBy: { lastMessageAt: "desc" },
+        take: 1,
+        select: {
+          id: true,
+          mensagens: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            select: { texto: true, direction: true, createdAt: true },
+          },
+        },
+      },
+      _count: { select: { conversas: true } },
     },
   });
 
@@ -60,18 +73,28 @@ export async function GET(request: NextRequest) {
   }
 
   return NextResponse.json({
-    contatos: rows.map((c) => ({
-      id: c.id,
-      igsid: c.igsid,
-      nome: c.nome,
-      username: c.username,
-      tags: c.tags,
-      campos: c.campos,
-      phone: c.phone,
-      botPaused: c.botPaused,
-      lastInteractionAt: c.lastInteractionAt,
-      execucoesAtivas: c.execucoes,
-    })),
+    contatos: rows.map((c) => {
+      const conv = c.conversas[0];
+      const lastMsg = conv?.mensagens[0];
+      return {
+        id: c.id,
+        igsid: c.igsid,
+        nome: c.nome,
+        username: c.username,
+        tags: c.tags,
+        campos: c.campos,
+        phone: c.phone,
+        botPaused: c.botPaused,
+        createdAt: c.createdAt,
+        lastInteractionAt: c.lastInteractionAt,
+        conversaId: conv?.id ?? null,
+        lastMessage: lastMsg?.texto ?? null,
+        lastMessageDirection: lastMsg?.direction ?? null,
+        messageCount: c._count.conversas,
+        execucoesAtivas: c.execucoes,
+      };
+    }),
+    total: rows.length,
   });
 }
 

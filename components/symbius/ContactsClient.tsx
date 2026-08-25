@@ -9,6 +9,7 @@ type Fluxo = { id: string; nome: string; status: string };
 
 export function ContactsClient({ initialContacts }: { initialContacts: ContactRow[] }) {
   const [contacts, setContacts] = useState(initialContacts);
+  const [total, setTotal] = useState(initialContacts.length);
   const [q, setQ] = useState("");
   const [tagFilter, setTagFilter] = useState("");
   const [tags, setTags] = useState<TagDef[]>([]);
@@ -23,6 +24,7 @@ export function ContactsClient({ initialContacts }: { initialContacts: ContactRo
     const res = await fetch(`/api/symbius/contacts?${sp}`);
     const data = await res.json();
     setContacts(data.contatos ?? []);
+    setTotal(data.total ?? data.contatos?.length ?? 0);
   }, [q, tagFilter]);
 
   useEffect(() => {
@@ -146,6 +148,7 @@ export function ContactsClient({ initialContacts }: { initialContacts: ContactRo
         selectable
         selected={selected}
         onSelectionChange={setSelected}
+        total={total}
       />
     </div>
   );

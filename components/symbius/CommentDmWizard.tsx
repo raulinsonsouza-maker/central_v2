@@ -11,6 +11,7 @@ import {
   WizardBackButton,
   WizardFieldLabel,
   WizardLayout,
+  WizardLinkButtonEditor,
   WizardSectionTitle,
   WizardTitle,
   wizardInputCls,
@@ -299,7 +300,7 @@ export function CommentDmWizard({
           <section className="mt-7 space-y-2">
             <RadioOption
               selected={mediaFilter === "specific"}
-              title="uma publicação ou Reels específico"
+              title="Uma publicação ou Reel específico"
               onClick={() => {
                 setMediaFilter("specific");
                 setPreviewTab("comment");
@@ -327,7 +328,7 @@ export function CommentDmWizard({
 
             <RadioOption
               selected={mediaFilter === "any"}
-              title="qualquer publicação ou Reel"
+              title="Qualquer publicação ou Reel"
               onClick={() => {
                 setMediaFilter("any");
                 setMediaId(null);
@@ -337,7 +338,7 @@ export function CommentDmWizard({
 
             <RadioOption
               selected={mediaFilter === "next"}
-              title="próxima publicação ou Reel"
+              title="Próxima publicação ou Reel"
               onClick={() => {
                 setMediaFilter("next");
                 setMediaId(null);
@@ -358,7 +359,7 @@ export function CommentDmWizard({
             <div className="mt-2.5 space-y-2">
               <RadioOption
                 selected={!anyKeyword}
-                title="uma palavra ou expressão específica"
+                title="Uma palavra ou expressão específica"
                 onClick={() => {
                   setAnyKeyword(false);
                   setPreviewTab("comment");
@@ -395,7 +396,7 @@ export function CommentDmWizard({
 
               <RadioOption
                 selected={anyKeyword}
-                title="qualquer palavra"
+                title="Qualquer palavra"
                 onClick={() => {
                   setAnyKeyword(true);
                   setPreviewTab("comment");
@@ -405,7 +406,7 @@ export function CommentDmWizard({
 
             <div className="mt-2.5">
               <ToggleRow
-                label="interagir com os comentários deles na publicação"
+                label="Interagir com os comentários na publicação"
                 checked={replyToComment}
                 onChange={setReplyToComment}
               />
@@ -419,7 +420,7 @@ export function CommentDmWizard({
                 <div className="px-3.5 py-3">
                   <ToggleRow
                     bare
-                    label="uma mensagem de boas-vindas"
+                    label="Uma mensagem de boas-vindas"
                     checked={welcomeEnabled}
                     onChange={setWelcomeEnabled}
                   />
@@ -451,7 +452,7 @@ export function CommentDmWizard({
                 <div className="px-3.5 py-3">
                   <ToggleRow
                     bare
-                    label="uma DM solicitando que sigam seu perfil antes de receberem o link"
+                    label="Uma DM solicitando que sigam seu perfil antes de receber o link"
                     checked={followEnabled}
                     onChange={(v) => {
                       setFollowEnabled(v);
@@ -486,7 +487,7 @@ export function CommentDmWizard({
                 <div className="px-3.5 py-3">
                   <ToggleRow
                     bare
-                    label="uma DM solicitando o endereço de e-mail"
+                    label="Uma DM solicitando o endereço de e-mail"
                     checked={emailEnabled}
                     onChange={(v) => {
                       setEmailEnabled(v);
@@ -515,7 +516,7 @@ export function CommentDmWizard({
             <div className="mt-2.5 space-y-2">
               <div className="rounded-xl border border-zinc-200 bg-white p-3.5">
                 <p className="mb-2.5 text-[13px] font-medium text-zinc-800">
-                  uma DM contendo um link
+                  Uma DM contendo um link
                 </p>
                 <div className="space-y-2">
                   <textarea
@@ -526,26 +527,15 @@ export function CommentDmWizard({
                     }}
                     className={`${wizardTextareaCls} min-h-[72px]`}
                   />
-                  <input
-                    value={rewardButton}
-                    onChange={(e) => {
-                      setRewardButton(e.target.value);
+                  <WizardLinkButtonEditor
+                    buttonLabel={rewardButton}
+                    url={rewardUrl}
+                    onChange={(button, url) => {
+                      setRewardButton(button);
+                      setRewardUrl(url);
                       setPreviewTab("dm");
                     }}
-                    className={wizardInputCls}
-                    placeholder="Texto do botão"
                   />
-                  <div className="relative">
-                    <input
-                      value={rewardUrl}
-                      onChange={(e) => {
-                        setRewardUrl(e.target.value);
-                        setPreviewTab("dm");
-                      }}
-                      className={wizardInputCls}
-                      placeholder="Adicionar um link"
-                    />
-                  </div>
                 </div>
               </div>
 
@@ -553,7 +543,7 @@ export function CommentDmWizard({
                 <div className="px-3.5 py-3">
                   <ToggleRow
                     bare
-                    label="uma DM de lembrete, caso o link não tenha sido acessado"
+                    label="Uma DM de lembrete, caso o link não tenha sido acessado"
                     checked={reminderEnabled}
                     onChange={(v) => {
                       setReminderEnabled(v);
