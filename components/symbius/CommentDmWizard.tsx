@@ -306,24 +306,22 @@ export function CommentDmWizard({
               }}
             >
               {mediaFilter === "specific" ? (
-                <div className="space-y-2.5 pt-2" onClick={(e) => e.stopPropagation()}>
-                  <IgMediaPicker
-                    media={media}
-                    selectedId={mediaId}
-                    onSelect={(id) => {
-                      setMediaId(id);
-                      setPreviewTab("comment");
-                    }}
-                    loading={loadingMedia}
-                    warning={mediaWarning}
-                    onRetry={reloadMedia}
-                    fallbackIdInput
-                    onFallbackIdChange={(id) => {
-                      setMediaId(id);
-                      setPreviewTab("comment");
-                    }}
-                  />
-                </div>
+                <IgMediaPicker
+                  media={media}
+                  selectedId={mediaId}
+                  onSelect={(id) => {
+                    setMediaId(id);
+                    setPreviewTab("comment");
+                  }}
+                  loading={loadingMedia}
+                  warning={mediaWarning}
+                  onRetry={reloadMedia}
+                  fallbackIdInput
+                  onFallbackIdChange={(id) => {
+                    setMediaId(id);
+                    setPreviewTab("comment");
+                  }}
+                />
               ) : null}
             </RadioOption>
 
@@ -347,7 +345,7 @@ export function CommentDmWizard({
               }}
             >
               {mediaFilter === "next" ? (
-                <p className="pt-2 text-[11px] leading-snug text-zinc-500">
+                <p className="text-[11px] leading-snug text-zinc-500">
                   A automação passa a valer para a próxima publicação ou Reel
                   que você fizer depois de ativar.
                 </p>
@@ -368,7 +366,7 @@ export function CommentDmWizard({
               >
                 {!anyKeyword ? (
                   <div
-                    className="space-y-2 pt-2"
+                    className="mt-2 space-y-2"
                     onClick={(e) => e.stopPropagation()}
                   >
                     <input

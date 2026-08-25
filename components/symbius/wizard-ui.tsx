@@ -12,11 +12,11 @@ export function WizardLayout({
   preview: ReactNode;
 }) {
   return (
-    <div className="symbius-light flex min-h-[calc(100dvh-0px)] flex-col bg-[#eceef2] text-zinc-900 lg:flex-row">
-      <div className="w-full shrink-0 overflow-y-auto border-b border-zinc-200/80 bg-white lg:w-[min(100%,400px)] lg:border-b-0 lg:border-r lg:shadow-[1px_0_0_rgba(0,0,0,0.04)]">
+    <div className="symbius-light symbius-wizard-layout flex h-full min-h-0 flex-col overflow-hidden bg-[#eceef2] text-zinc-900 lg:flex-row">
+      <div className="w-full shrink-0 overflow-y-auto border-b border-zinc-200/80 bg-white lg:h-full lg:max-h-full lg:w-[min(100%,400px)] lg:border-b-0 lg:border-r lg:shadow-[1px_0_0_rgba(0,0,0,0.04)]">
         <div className="px-5 py-5 md:px-6 md:py-6">{form}</div>
       </div>
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-[#eceef2]">
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden bg-[#eceef2] lg:h-full">
         <div className="flex shrink-0 items-center justify-between border-b border-zinc-200/70 bg-[#eceef2] px-5 py-3.5 md:px-8">
           {previewHeader}
         </div>
@@ -85,7 +85,7 @@ export function ProBadge() {
 function RadioDot({ selected }: { selected: boolean }) {
   return (
     <span
-      className={`mt-0.5 flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 transition ${
+      className={`flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full border-2 transition ${
         selected ? "border-[#0084ff]" : "border-zinc-300 bg-white"
       }`}
     >
@@ -125,25 +125,30 @@ export function RadioOption({
         type="button"
         disabled={disabled}
         onClick={onClick}
-        className={`flex w-full items-start gap-3 px-3.5 py-3 text-left ${
+        className={`w-full px-3.5 py-3 text-left ${
           disabled ? "cursor-not-allowed" : "cursor-pointer"
         }`}
       >
-        <RadioDot selected={selected && !disabled} />
-        <span className="min-w-0 flex-1">
-          <span className="flex items-start justify-between gap-2">
-            <span className="text-[13px] font-medium leading-snug text-zinc-800">
-              {title}
+        <span className="flex items-start gap-3">
+          <RadioDot selected={selected && !disabled} />
+          <span className="min-w-0 flex-1">
+            <span className="flex min-h-[18px] items-center justify-between gap-2">
+              <span className="text-[13px] font-medium leading-snug text-zinc-800">
+                {title}
+              </span>
+              {pro ? <ProBadge /> : null}
             </span>
-            {pro ? <ProBadge /> : null}
+            {selected && children ? (
+              <div
+                className="mt-2.5 space-y-2"
+                onClick={(e) => e.stopPropagation()}
+              >
+                {children}
+              </div>
+            ) : null}
           </span>
         </span>
       </button>
-      {children ? (
-        <div className="border-t border-zinc-100/80 px-3.5 pb-3.5 pt-0">
-          <div className="ml-[30px]">{children}</div>
-        </div>
-      ) : null}
     </div>
   );
 }

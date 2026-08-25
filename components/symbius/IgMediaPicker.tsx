@@ -135,7 +135,7 @@ export function IgMediaPicker({
       )}
 
       {recent.length > 0 && (
-        <div className="flex gap-2">
+        <div className="grid grid-cols-4 gap-1.5">
           {recent.map((m) => (
             <button
               key={m.id}
@@ -144,7 +144,7 @@ export function IgMediaPicker({
                 e.stopPropagation();
                 pick(m.id);
               }}
-              className={`h-[72px] w-[72px] shrink-0 overflow-hidden rounded-lg border-2 transition ${
+              className={`aspect-square w-full overflow-hidden rounded-lg border-2 transition ${
                 selectedId === m.id
                   ? "border-[#0084ff] ring-2 ring-[#0084ff]/20"
                   : "border-zinc-200 hover:border-zinc-300"
