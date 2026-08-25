@@ -24,6 +24,9 @@ export function SymbiusMarketingHeader() {
           <Link href="/pricing" className="hidden text-sm text-[var(--symbius-muted)] hover:text-white sm:block">
             Planos
           </Link>
+          <Link href="/privacy" className="hidden text-sm text-[var(--symbius-muted)] hover:text-white md:block">
+            Privacidade
+          </Link>
           <Link href="/login" className="symbius-btn-outline px-4 py-2 text-sm">
             Entrar
           </Link>
