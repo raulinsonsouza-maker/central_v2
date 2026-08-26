@@ -80,14 +80,36 @@ export async function sendInstagramImageMessage(params: {
   imageUrl: string;
   text?: string;
 }): Promise<{ message_id?: string }> {
+  return sendInstagramMediaMessage({
+    ...params,
+    mediaType: "image",
+    mediaUrl: params.imageUrl,
+  });
+}
+
+export async function sendInstagramMediaMessage(params: {
+  igUserId: string;
+  accessToken: string;
+  recipientIgsid: string;
+  mediaType: "image" | "video" | "audio" | "file";
+  mediaUrl: string;
+  text?: string;
+  tag?: "HUMAN_AGENT";
+}): Promise<{ message_id?: string }> {
   const message: Record<string, unknown> = {
     attachment: {
-      type: "image",
-      payload: { url: params.imageUrl, is_reusable: true },
+      type: params.mediaType,
+      payload: { url: params.mediaUrl, is_reusable: true },
     },
   };
-  if (params.text?.trim()) {
-    message.text = params.text;
+
+  const body: Record<string, unknown> = {
+    recipient: { id: params.recipientIgsid },
+    message,
+  };
+  if (params.tag) {
+    body.messaging_type = "MESSAGE_TAG";
+    body.tag = params.tag;
   }
 
   const res = await fetch(`${IG_GRAPH}/${params.igUserId}/messages`, {
@@ -96,18 +118,28 @@ export async function sendInstagramImageMessage(params: {
       Authorization: `Bearer ${params.accessToken}`,
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      recipient: { id: params.recipientIgsid },
-      message,
-    }),
+    body: JSON.stringify(body),
   });
   const json = (await res.json()) as {
     message_id?: string;
     error?: { message: string };
   };
   if (!res.ok || json.error) {
-    throw new Error(json.error?.message ?? `Image send failed ${res.status}`);
+    throw new Error(json.error?.message ?? `Media send failed ${res.status}`);
   }
+
+  // Meta não envia caption junto com attachment em um único payload;
+  // se houver texto, envia em seguida.
+  if (params.text?.trim()) {
+    await sendInstagramMessage({
+      igUserId: params.igUserId,
+      accessToken: params.accessToken,
+      recipientIgsid: params.recipientIgsid,
+      text: params.text,
+      tag: params.tag,
+    });
+  }
+
   return json;
 }
 
@@ -165,15 +197,18 @@ export function looksLikeEmail(text: string): boolean {
 export type IgScopedUserProfile = {
   follows: boolean;
   username?: string;
+  name?: string;
+  profilePic?: string;
 };
 
-/** Verifica se o IGSID segue a conta business (requer interação prévia na DM). */
+/** Perfil do IGSID (requer interação prévia na DM). */
 export async function fetchIgScopedUserFollowStatus(params: {
   igsid: string;
   accessToken: string;
 }): Promise<IgScopedUserProfile | null> {
   const sp = new URLSearchParams({
-    fields: "is_user_follow_business,username",
+    fields:
+      "is_user_follow_business,username,name,profile_pic",
     access_token: params.accessToken,
   });
   const res = await fetch(
@@ -183,11 +218,37 @@ export async function fetchIgScopedUserFollowStatus(params: {
   const json = (await res.json()) as {
     is_user_follow_business?: boolean;
     username?: string;
+    name?: string;
+    profile_pic?: string;
     error?: { message: string };
   };
-  if (!res.ok || json.error) return null;
+  if (!res.ok || json.error) {
+    // Fallback sem profile_pic (alguns apps Instagram Login não expõem)
+    const sp2 = new URLSearchParams({
+      fields: "is_user_follow_business,username,name",
+      access_token: params.accessToken,
+    });
+    const res2 = await fetch(
+      `${IG_GRAPH}/${params.igsid}?${sp2.toString()}`,
+      { method: "GET" },
+    );
+    const json2 = (await res2.json()) as {
+      is_user_follow_business?: boolean;
+      username?: string;
+      name?: string;
+      error?: { message: string };
+    };
+    if (!res2.ok || json2.error) return null;
+    return {
+      follows: Boolean(json2.is_user_follow_business),
+      username: json2.username,
+      name: json2.name,
+    };
+  }
   return {
     follows: Boolean(json.is_user_follow_business),
     username: json.username,
+    name: json.name,
+    profilePic: json.profile_pic,
   };
 }

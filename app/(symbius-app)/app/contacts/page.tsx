@@ -3,6 +3,7 @@ import { getSession } from "@/lib/symbius/auth";
 import { prisma } from "@/lib/db";
 import { getActiveIgAccountId } from "@/lib/symbius/activeIgAccount";
 import { ContactsClient } from "@/components/symbius/ContactsClient";
+import { attachmentPreviewLabel } from "@/lib/instagram/messageAttachments";
 
 export default async function ContactsPage() {
   const session = await getSession();
@@ -26,7 +27,7 @@ export default async function ContactsPage() {
           mensagens: {
             orderBy: { createdAt: "desc" },
             take: 1,
-            select: { texto: true, direction: true },
+            select: { texto: true, direction: true, attachments: true },
           },
         },
       },
@@ -41,6 +42,7 @@ export default async function ContactsPage() {
       igsid: c.igsid,
       nome: c.nome,
       username: c.username,
+      profilePictureUrl: c.profilePictureUrl,
       tags: c.tags,
       botPaused: c.botPaused,
       createdAt: c.createdAt.toISOString(),
@@ -48,7 +50,10 @@ export default async function ContactsPage() {
         ? c.lastInteractionAt.toISOString()
         : null,
       conversaId: conv?.id ?? null,
-      lastMessage: lastMsg?.texto ?? null,
+      lastMessage: attachmentPreviewLabel(
+        lastMsg?.attachments,
+        lastMsg?.texto,
+      ),
       lastMessageDirection: lastMsg?.direction ?? null,
     };
   });

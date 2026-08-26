@@ -43,7 +43,15 @@ type WebhookMessaging = {
     reply_to?: {
       story?: { id?: string; url?: string };
     };
-    attachments?: Array<{ type?: string; payload?: { url?: string } }>;
+    attachments?: Array<{
+      type?: string;
+      payload?: {
+        url?: string;
+        title?: string;
+        reel_video_id?: string | number;
+        ig_post_media_id?: string;
+      };
+    }>;
   };
   postback?: { title?: string; payload?: string };
   referral?: { ref?: string; source?: string };
@@ -146,7 +154,10 @@ async function getOrCreateContato(
         username: username ?? existing.username,
       },
     });
-    if (accessToken && !updated.username) {
+    if (
+      accessToken &&
+      (!updated.username || !updated.profilePictureUrl || !updated.nome)
+    ) {
       void enrichContatoProfile(updated.id, igsid, accessToken);
     }
     return updated;

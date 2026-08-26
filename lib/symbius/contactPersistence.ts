@@ -13,6 +13,10 @@ export async function enrichContatoProfile(
       where: { id: contatoId },
       data: {
         ...(profile.username ? { username: profile.username } : {}),
+        ...(profile.name ? { nome: profile.name } : {}),
+        ...(profile.profilePic
+          ? { profilePictureUrl: profile.profilePic }
+          : {}),
       },
     });
   } catch {

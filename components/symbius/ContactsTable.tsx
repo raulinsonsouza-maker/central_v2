@@ -4,12 +4,14 @@ import { useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { ContactAvatar } from "@/components/symbius/InboxMedia";
 
 export type ContactRow = {
   id: string;
   igsid: string;
   nome: string | null;
   username: string | null;
+  profilePictureUrl?: string | null;
   tags: string[];
   botPaused: boolean;
   createdAt: string | null;
@@ -50,11 +52,6 @@ function relativeTime(iso: string | null | undefined) {
 
 function displayName(c: ContactRow) {
   return c.nome || (c.username ? `@${c.username}` : "Sem nome");
-}
-
-function avatarInitial(c: ContactRow) {
-  const s = c.nome || c.username || "?";
-  return s.replace("@", "").charAt(0).toUpperCase();
 }
 
 export function ContactsTable({
@@ -134,9 +131,11 @@ export function ContactsTable({
                       </td>
                     )}
                     <td className="px-4 py-3">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-sky-100 to-indigo-100 text-sm font-semibold text-indigo-700">
-                        {avatarInitial(c)}
-                      </div>
+                      <ContactAvatar
+                        name={c.nome}
+                        username={c.username}
+                        profilePictureUrl={c.profilePictureUrl}
+                      />
                     </td>
                     <td className="px-4 py-3">
                       <p className="font-medium text-zinc-900">

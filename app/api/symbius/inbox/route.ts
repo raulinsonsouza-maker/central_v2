@@ -4,8 +4,10 @@ import { getSession } from "@/lib/symbius/auth";
 import { getActiveIgAccountId } from "@/lib/symbius/activeIgAccount";
 import {
   isWithin24hWindow,
+  sendInstagramMediaMessage,
   sendInstagramMessage,
 } from "@/lib/instagram/messagingClient";
+import { attachmentPreviewLabel } from "@/lib/instagram/messageAttachments";
 
 export async function GET(request: NextRequest) {
   const session = await getSession();
@@ -14,7 +16,7 @@ export async function GET(request: NextRequest) {
   }
 
   const { searchParams } = request.nextUrl;
-  const status = searchParams.get("status"); // OPEN | CLOSED | all
+  const status = searchParams.get("status");
   const unreadOnly = searchParams.get("unread") === "1";
   const tag = searchParams.get("tag");
   const assignedUserId = searchParams.get("assignedUserId");
@@ -50,12 +52,13 @@ export async function GET(request: NextRequest) {
         id: c.contato.id,
         nome: c.contato.nome,
         username: c.contato.username,
+        profilePictureUrl: c.contato.profilePictureUrl,
         igsid: c.contato.igsid,
         tags: c.contato.tags,
         botPaused: c.contato.botPaused,
         lastInteractionAt: c.contato.lastInteractionAt,
       },
-      lastMessage: last?.texto ?? "",
+      lastMessage: attachmentPreviewLabel(last?.attachments, last?.texto),
       lastDirection: last?.direction ?? null,
       lastMessageAt: c.lastMessageAt,
     };
@@ -98,16 +101,36 @@ export async function POST(request: NextRequest) {
 
   const body = (await request.json()) as {
     conversaId: string;
-    text: string;
+    text?: string;
     scheduledAt?: string;
+    attachment?: {
+      type: "image" | "video" | "audio" | "file";
+      url: string;
+    };
   };
 
+  const text = (body.text ?? "").trim();
+  const attachment = body.attachment;
+
+  if (!text && !attachment?.url) {
+    return NextResponse.json(
+      { error: "Informe texto ou anexo" },
+      { status: 400 },
+    );
+  }
+
   if (body.scheduledAt) {
+    if (!text) {
+      return NextResponse.json(
+        { error: "Agendamento só disponível para texto" },
+        { status: 400 },
+      );
+    }
     const scheduled = await prisma.igScheduledMessage.create({
       data: {
         organizationId: session.organizationId,
         conversaId: body.conversaId,
-        texto: body.text,
+        texto: text,
         scheduledAt: new Date(body.scheduledAt),
         sentByUserId: session.userId,
       },
@@ -139,21 +162,48 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  const sent = await sendInstagramMessage({
-    igUserId: conversa.contato.igAccount.igUserId,
-    accessToken: conversa.contato.igAccount.accessToken,
-    recipientIgsid: conversa.contato.igsid,
-    text: body.text,
-    tag,
-  });
+  let mid: string | undefined;
+  let storedText: string | null = text || null;
+  let storedAttachments: object | undefined;
+
+  if (attachment?.url) {
+    const sent = await sendInstagramMediaMessage({
+      igUserId: conversa.contato.igAccount.igUserId,
+      accessToken: conversa.contato.igAccount.accessToken,
+      recipientIgsid: conversa.contato.igsid,
+      mediaType: attachment.type,
+      mediaUrl: attachment.url,
+      text: text || undefined,
+      tag,
+    });
+    mid = sent.message_id;
+    storedAttachments = {
+      attachments: [
+        {
+          type: attachment.type,
+          payload: { url: attachment.url },
+        },
+      ],
+    };
+  } else {
+    const sent = await sendInstagramMessage({
+      igUserId: conversa.contato.igAccount.igUserId,
+      accessToken: conversa.contato.igAccount.accessToken,
+      recipientIgsid: conversa.contato.igsid,
+      text,
+      tag,
+    });
+    mid = sent.message_id;
+  }
 
   const msg = await prisma.igMensagem.create({
     data: {
       organizationId: session.organizationId,
       conversaId: conversa.id,
       direction: "OUTBOUND",
-      mid: sent.message_id,
-      texto: body.text,
+      mid,
+      texto: storedText,
+      attachments: storedAttachments,
       isEcho: false,
       sentByUserId: session.userId,
       tag: tag ?? null,

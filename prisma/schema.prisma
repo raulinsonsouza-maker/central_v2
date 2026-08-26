@@ -679,6 +679,7 @@ model IgContato {
   igsid             String
   nome              String?
   username          String?
+  profilePictureUrl String?
   tags              String[]  @default([])
   campos            Json      @default("{}")
   phone             String?

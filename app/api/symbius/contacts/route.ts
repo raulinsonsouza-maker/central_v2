@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { isSession, requireApiSession } from "@/lib/symbius/apiHelpers";
 import { getActiveIgAccountId } from "@/lib/symbius/activeIgAccount";
+import { attachmentPreviewLabel } from "@/lib/instagram/messageAttachments";
 
 export async function GET(request: NextRequest) {
   const session = await requireApiSession();
@@ -53,7 +54,7 @@ export async function GET(request: NextRequest) {
           mensagens: {
             orderBy: { createdAt: "desc" },
             take: 1,
-            select: { texto: true, direction: true, createdAt: true },
+            select: { texto: true, direction: true, createdAt: true, attachments: true },
           },
         },
       },
@@ -81,6 +82,7 @@ export async function GET(request: NextRequest) {
         igsid: c.igsid,
         nome: c.nome,
         username: c.username,
+        profilePictureUrl: c.profilePictureUrl,
         tags: c.tags,
         campos: c.campos,
         phone: c.phone,
@@ -88,7 +90,10 @@ export async function GET(request: NextRequest) {
         createdAt: c.createdAt,
         lastInteractionAt: c.lastInteractionAt,
         conversaId: conv?.id ?? null,
-        lastMessage: lastMsg?.texto ?? null,
+        lastMessage: attachmentPreviewLabel(
+          lastMsg?.attachments,
+          lastMsg?.texto,
+        ),
         lastMessageDirection: lastMsg?.direction ?? null,
         messageCount: c._count.conversas,
         execucoesAtivas: c.execucoes,

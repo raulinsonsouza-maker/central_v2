@@ -8,6 +8,7 @@ import { ptBR } from "date-fns/locale";
 import {
   Clock,
   Heart,
+  ImagePlus,
   Inbox,
   MessageSquare,
   PauseCircle,
@@ -16,8 +17,14 @@ import {
   Send,
   Settings,
   User,
+  X,
 } from "lucide-react";
 import { isWithin24hWindow } from "@/lib/instagram/messagingClient";
+import { messageHasVisibleContent } from "@/lib/instagram/messageAttachments";
+import {
+  ContactAvatar,
+  InboxMessageAttachments,
+} from "@/components/symbius/InboxMedia";
 
 type ConversaItem = {
   id: string;
@@ -28,6 +35,7 @@ type ConversaItem = {
     id: string;
     nome: string | null;
     username: string | null;
+    profilePictureUrl?: string | null;
     tags: string[];
     botPaused: boolean;
     lastInteractionAt: string | null;
@@ -40,7 +48,14 @@ type Mensagem = {
   id: string;
   direction: string;
   texto: string | null;
+  attachments?: unknown;
   createdAt: string;
+};
+
+type PendingMedia = {
+  file: File;
+  previewUrl: string;
+  mediaType: "image" | "video" | "audio";
 };
 
 type FolderFilter = "all" | "open" | "unread" | "handoff";
@@ -49,11 +64,6 @@ function displayName(c: ConversaItem["contato"]) {
   if (c.username) return `@${c.username}`;
   if (c.nome) return c.nome;
   return "Contato";
-}
-
-function initialOf(c: ConversaItem["contato"]) {
-  const s = c.username || c.nome || "?";
-  return s.replace("@", "").charAt(0).toUpperCase();
 }
 
 export default function InboxPage() {
@@ -71,6 +81,7 @@ export default function InboxPage() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [reply, setReply] = useState("");
+  const [pendingMedia, setPendingMedia] = useState<PendingMedia | null>(null);
   const [scheduleAt, setScheduleAt] = useState("");
   const [snippets, setSnippets] = useState<Array<{ id: string; title: string; body: string; shortcut?: string }>>([]);
   const [fluxos, setFluxos] = useState<Array<{ id: string; nome: string }>>([]);
@@ -135,31 +146,79 @@ export default function InboxPage() {
   }, []);
 
   async function sendReply() {
-    if (!selectedId || !reply.trim()) return;
+    if (!selectedId) return;
+    if (!reply.trim() && !pendingMedia) return;
     setLoading(true);
-    const res = await fetch("/api/symbius/inbox", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        conversaId: selectedId,
-        text: reply,
-        ...(scheduleAt ? { scheduledAt: new Date(scheduleAt).toISOString() } : {}),
-      }),
-    });
-    setLoading(false);
-    if (res.ok) {
-      setReply("");
-      setScheduleAt("");
-      if (!scheduleAt) {
-        const r = await fetch(`/api/symbius/inbox/${selectedId}`);
-        const d = await r.json();
-        setMensagens(d.conversa?.mensagens ?? []);
+    try {
+      let attachment:
+        | { type: "image" | "video" | "audio" | "file"; url: string }
+        | undefined;
+
+      if (pendingMedia) {
+        const form = new FormData();
+        form.append("file", pendingMedia.file);
+        const up = await fetch("/api/symbius/inbox/upload", {
+          method: "POST",
+          body: form,
+        });
+        const upData = await up.json();
+        if (!up.ok) {
+          alert(upData.error ?? "Falha no upload");
+          return;
+        }
+        attachment = {
+          type: upData.mediaType as "image" | "video" | "audio",
+          url: upData.url as string,
+        };
       }
-      void loadList();
-    } else {
-      const err = await res.json();
-      alert(err.error ?? "Erro ao enviar");
+
+      const res = await fetch("/api/symbius/inbox", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          conversaId: selectedId,
+          text: reply,
+          ...(attachment ? { attachment } : {}),
+          ...(scheduleAt && !attachment
+            ? { scheduledAt: new Date(scheduleAt).toISOString() }
+            : {}),
+        }),
+      });
+      if (res.ok) {
+        setReply("");
+        setScheduleAt("");
+        if (pendingMedia) {
+          URL.revokeObjectURL(pendingMedia.previewUrl);
+          setPendingMedia(null);
+        }
+        if (!scheduleAt || attachment) {
+          const r = await fetch(`/api/symbius/inbox/${selectedId}`);
+          const d = await r.json();
+          setMensagens(d.conversa?.mensagens ?? []);
+        }
+        void loadList();
+      } else {
+        const err = await res.json();
+        alert(err.error ?? "Erro ao enviar");
+      }
+    } finally {
+      setLoading(false);
     }
+  }
+
+  function onPickMedia(file: File | null) {
+    if (!file) return;
+    if (pendingMedia) URL.revokeObjectURL(pendingMedia.previewUrl);
+    const mediaType = file.type.startsWith("video/")
+      ? "video"
+      : file.type.startsWith("audio/")
+        ? "audio"
+        : "image";
+    setPendingMedia({
+      file,
+      previewUrl: URL.createObjectURL(file),
+      mediaType,
+    });
   }
 
   async function patchConversa(patch: {
@@ -343,9 +402,11 @@ export default function InboxPage() {
                   active ? "bg-sky-50" : "hover:bg-zinc-50"
                 }`}
               >
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-pink-400 to-amber-300 text-sm font-bold text-white">
-                  {initialOf(c.contato)}
-                </div>
+                <ContactAvatar
+                  name={c.contato.nome}
+                  username={c.contato.username}
+                  profilePictureUrl={c.contato.profilePictureUrl}
+                />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
                     <p className="truncate text-sm font-semibold text-zinc-900">
@@ -414,9 +475,11 @@ export default function InboxPage() {
               >
                 ←
               </button>
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-pink-400 to-amber-300 text-sm font-bold text-white">
-                {initialOf(selected.contato)}
-              </div>
+              <ContactAvatar
+                name={selected.contato.nome}
+                username={selected.contato.username}
+                profilePictureUrl={selected.contato.profilePictureUrl}
+              />
               <div className="min-w-0 flex-1">
                 <p className="truncate font-semibold">
                   {displayName(selected.contato)}
@@ -465,39 +528,46 @@ export default function InboxPage() {
 
             <div className="flex-1 space-y-3 overflow-y-auto p-5">
               {mensagens
-                .filter((m) => Boolean(m.texto?.trim()))
-                .map((m) => (
-                <div
-                  key={m.id}
-                  className={`flex ${
-                    m.direction === "OUTBOUND" ? "justify-end" : "justify-start"
-                  }`}
-                >
-                  <div
-                    className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                      m.direction === "OUTBOUND"
-                        ? "rounded-br-md bg-[#2d6cdf] text-white"
-                        : "rounded-bl-md bg-white text-zinc-800 shadow-sm"
-                    }`}
-                  >
-                    {m.texto}
-                    <p
-                      className={`mt-1 text-[10px] ${
-                        m.direction === "OUTBOUND"
-                          ? "text-white/70"
-                          : "text-zinc-400"
+                .filter((m) =>
+                  messageHasVisibleContent(m.texto, m.attachments),
+                )
+                .map((m) => {
+                  const outbound = m.direction === "OUTBOUND";
+                  return (
+                    <div
+                      key={m.id}
+                      className={`flex ${
+                        outbound ? "justify-end" : "justify-start"
                       }`}
                     >
-                      {new Date(m.createdAt).toLocaleString("pt-BR", {
-                        hour: "2-digit",
-                        minute: "2-digit",
-                        day: "2-digit",
-                        month: "2-digit",
-                      })}
-                    </p>
-                  </div>
-                </div>
-              ))}
+                      <div
+                        className={`max-w-[75%] rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
+                          outbound
+                            ? "rounded-br-md bg-[#2d6cdf] text-white"
+                            : "rounded-bl-md bg-white text-zinc-800 shadow-sm"
+                        }`}
+                      >
+                        <InboxMessageAttachments
+                          attachments={m.attachments}
+                          outbound={outbound}
+                        />
+                        {m.texto?.trim() ? <p>{m.texto}</p> : null}
+                        <p
+                          className={`mt-1 text-[10px] ${
+                            outbound ? "text-white/70" : "text-zinc-400"
+                          }`}
+                        >
+                          {new Date(m.createdAt).toLocaleString("pt-BR", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            day: "2-digit",
+                            month: "2-digit",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
             </div>
 
             <div className="border-t border-zinc-200 bg-white p-4">
@@ -546,7 +616,58 @@ export default function InboxPage() {
                 onChange={(e) => setScheduleAt(e.target.value)}
                 className="mb-2 w-full rounded-lg border border-zinc-200 px-2 py-1 text-xs"
               />
+              {pendingMedia && (
+                <div className="mb-2 flex items-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 p-2">
+                  {pendingMedia.mediaType === "image" ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={pendingMedia.previewUrl}
+                      alt="Prévia"
+                      className="h-14 w-14 rounded-lg object-cover"
+                    />
+                  ) : pendingMedia.mediaType === "video" ? (
+                    <video
+                      src={pendingMedia.previewUrl}
+                      className="h-14 w-14 rounded-lg object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-14 w-14 items-center justify-center rounded-lg bg-zinc-200 text-xs">
+                      Áudio
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-xs font-medium text-zinc-700">
+                      {pendingMedia.file.name}
+                    </p>
+                    <p className="text-[11px] text-zinc-500">
+                      Será enviado no Direct
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      URL.revokeObjectURL(pendingMedia.previewUrl);
+                      setPendingMedia(null);
+                    }}
+                    className="rounded-lg p-1 text-zinc-500 hover:bg-zinc-200"
+                  >
+                    <X className="h-4 w-4" />
+                  </button>
+                </div>
+              )}
               <div className="flex gap-2">
+                <label className="inline-flex cursor-pointer items-center justify-center rounded-xl border border-zinc-200 px-3 text-zinc-600 hover:bg-zinc-50">
+                  <ImagePlus className="h-5 w-5" />
+                  <input
+                    type="file"
+                    accept="image/*,video/mp4,video/quicktime,audio/mpeg,audio/mp4"
+                    className="hidden"
+                    onChange={(e) => {
+                      onPickMedia(e.target.files?.[0] ?? null);
+                      e.target.value = "";
+                    }}
+                  />
+                </label>
                 <input
                   value={reply}
                   onChange={(e) => {
@@ -573,11 +694,11 @@ export default function InboxPage() {
                 <button
                   type="button"
                   onClick={() => void sendReply()}
-                  disabled={loading || !reply.trim()}
+                  disabled={loading || (!reply.trim() && !pendingMedia)}
                   className="inline-flex items-center gap-2 rounded-xl bg-[#2d6cdf] px-5 py-3 text-sm font-semibold text-white hover:bg-[#255bbd] disabled:opacity-50"
                 >
                   <Send className="h-4 w-4" />
-                  {scheduleAt ? "Agendar" : "Enviar"}
+                  {scheduleAt && !pendingMedia ? "Agendar" : "Enviar"}
                 </button>
               </div>
             </div>

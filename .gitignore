@@ -39,3 +39,7 @@ deploy/vps.local.env
 *.tsbuildinfo
 next-env.d.ts
 
+# uploads temporários da inbox
+/public/inbox-media/
+/public/logos/
+
