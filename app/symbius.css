@@ -18,34 +18,53 @@
 }
 
 /**
- * Superfície clara (ManyChat-style) dentro do shell escuro.
- * Redefine tokens + força contraste de tipografia/herança.
+ * Superfície clara (ManyChat-style).
+ * Também vale sozinha (ex.: FlowEditor fixed) — não depende de .symbius-theme.
+ * Em @layer components para perder para utilities (text-white, etc.).
  */
-.symbius-theme .symbius-light {
-  --symbius-bg: #f4f5f7;
-  --symbius-surface: #ffffff;
-  --symbius-surface-hover: #f4f4f5;
-  --symbius-border: #e4e4e7;
-  --symbius-text: #18181b;
-  --symbius-muted: #71717a;
-  --symbius-primary: #2d6cdf;
-  --symbius-primary-hover: #255bbd;
-  --symbius-accent: #0d9488;
+@layer components {
+  .symbius-light {
+    --symbius-bg: #f4f5f7;
+    --symbius-surface: #ffffff;
+    --symbius-surface-hover: #f4f4f5;
+    --symbius-border: #e4e4e7;
+    --symbius-text: #18181b;
+    --symbius-muted: #52525b;
+    --symbius-primary: #2d6cdf;
+    --symbius-primary-hover: #255bbd;
+    --symbius-accent: #0d9488;
 
+    color: #18181b;
+    background-color: #f4f5f7;
+  }
+
+  /* Anula o globals.css (foreground claro #f0f0f0 em form controls) */
+  .symbius-light :is(input, select, textarea),
+  .symbius-app-shell :is(input, select, textarea) {
+    color: #18181b;
+    background-color: #ffffff;
+    border-color: #e4e4e7;
+  }
+
+  .symbius-light :is(input, textarea)::placeholder,
+  .symbius-app-shell :is(input, textarea)::placeholder {
+    color: #a1a1aa;
+  }
+
+  .symbius-light button,
+  .symbius-app-shell button {
+    color: inherit;
+  }
+
+  .symbius-light :where(h1, h2, h3, h4, h5, h6) {
+    color: #18181b;
+  }
+}
+
+/* Compat: regras antigas sob .symbius-theme .symbius-light */
+.symbius-theme .symbius-light {
   color: #18181b !important;
   background-color: #f4f5f7;
-}
-
-.symbius-theme .symbius-light :where(h1, h2, h3, h4, h5, h6, p, label, span, li, td, th, small, strong, em) {
-  color: inherit;
-}
-
-.symbius-theme .symbius-light :where(h1, h2, h3, h4, h5, h6) {
-  color: #18181b !important;
-}
-
-.symbius-theme .symbius-light :where(button) {
-  color: inherit;
 }
 
 .symbius-theme .symbius-light .text-ink {
@@ -53,20 +72,7 @@
 }
 
 .symbius-theme .symbius-light .text-soft {
-  color: #71717a !important;
-}
-
-.symbius-theme .symbius-light input,
-.symbius-theme .symbius-light textarea,
-.symbius-theme .symbius-light select {
-  color: #18181b;
-  background-color: #ffffff;
-  border-color: #e4e4e7;
-}
-
-.symbius-theme .symbius-light input::placeholder,
-.symbius-theme .symbius-light textarea::placeholder {
-  color: #a1a1aa;
+  color: #52525b !important;
 }
 
 .symbius-theme .symbius-light .symbius-card {
