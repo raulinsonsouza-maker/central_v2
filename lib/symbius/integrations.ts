@@ -63,7 +63,7 @@ export async function appendGoogleSheetRow(
   if (!webhookUrl) return;
 
   try {
-    await fetch(webhookUrl, {
+    const res = await fetch(webhookUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -72,6 +72,9 @@ export async function appendGoogleSheetRow(
         row,
       }),
     });
+    if (!res.ok) {
+      console.warn("[symbius/sheets] HTTP", res.status, await res.text());
+    }
   } catch (e) {
     console.warn("[symbius/sheets]", e);
   }
@@ -106,7 +109,7 @@ export async function syncLeadToCentralCrm(params: {
     "http://localhost:3000";
 
   try {
-    await fetch(`${base}/api/clientes/${org.centralClienteId}/crm/leads`, {
+    const res = await fetch(`${base}/api/clientes/${org.centralClienteId}/crm/leads`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -126,6 +129,13 @@ export async function syncLeadToCentralCrm(params: {
         dadosMarketing: params.dadosMarketing,
       }),
     });
+    if (!res.ok) {
+      console.warn(
+        "[symbius/central-crm] HTTP",
+        res.status,
+        await res.text().catch(() => ""),
+      );
+    }
   } catch (e) {
     console.warn("[symbius/central-crm]", e);
   }

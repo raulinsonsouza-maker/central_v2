@@ -325,13 +325,14 @@ export default function InboxPage() {
   ];
 
   return (
-    <div className="symbius-light flex h-[calc(100vh)] min-h-0 bg-[#f4f5f7] text-zinc-900">
+    <div className="flex h-full min-h-0 flex-col bg-[#f0f2f5] text-zinc-900">
+      <div className="flex min-h-0 flex-1">
       {/* Folders */}
       <aside className="hidden w-56 shrink-0 flex-col border-r border-zinc-200 bg-white md:flex">
         <div className="border-b border-zinc-200 px-4 py-4">
           <h1 className="text-base font-bold">Caixa de Entrada</h1>
         </div>
-        <nav className="flex-1 space-y-0.5 p-2">
+        <nav className="flex-1 space-y-0.5 p-2" aria-label="Pastas">
           {folders.map((f) => (
             <button
               key={f.id}
@@ -374,14 +375,32 @@ export default function InboxPage() {
         </nav>
         <div className="border-t border-zinc-200 p-3">
           <Link
-            href="/app/settings"
+            href="/app/flows/new"
             className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-zinc-600 hover:bg-zinc-50"
           >
-            <Settings className="h-4 w-4" />
-            Configurações
+            Criar automação
           </Link>
         </div>
       </aside>
+
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <div className="flex gap-2 overflow-x-auto border-b border-zinc-200 bg-white px-3 py-2 md:hidden">
+          {folders.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              onClick={() => setFolder(f.id)}
+              className={`shrink-0 rounded-full px-3 py-1.5 text-xs font-medium ${
+                folder === f.id
+                  ? "bg-[#0084ff] text-white"
+                  : "bg-zinc-100 text-zinc-600"
+              }`}
+            >
+              {f.label}
+              {typeof f.count === "number" ? ` (${f.count})` : ""}
+            </button>
+          ))}
+        </div>
 
       {/* Conversation list */}
       <section
@@ -423,9 +442,17 @@ export default function InboxPage() {
             <p className="p-4 text-sm text-zinc-400">Carregando…</p>
           )}
           {!loadingList && conversas.length === 0 && (
-            <p className="p-6 text-center text-sm text-zinc-400">
-              Nenhuma conversa nesta pasta
-            </p>
+            <div className="p-6 text-center">
+              <p className="text-sm text-zinc-400">
+                Nenhuma conversa nesta pasta
+              </p>
+              <Link
+                href="/app/flows/new?template=comment_dm"
+                className="mt-3 inline-flex text-sm font-semibold text-[#0084ff]"
+              >
+                Criar automação
+              </Link>
+            </div>
           )}
           {conversas.map((c) => {
             const active = selectedId === c.id;
@@ -731,7 +758,7 @@ export default function InboxPage() {
                   type="button"
                   onClick={() => void sendReply()}
                   disabled={loading || (!reply.trim() && !pendingMedia)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#2d6cdf] px-5 py-3 text-sm font-semibold text-white hover:bg-[#255bbd] disabled:opacity-50"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0084ff] px-5 py-3 text-sm font-semibold text-white hover:bg-[#0073e6] disabled:opacity-50"
                 >
                   <Send className="h-4 w-4" />
                   {scheduleAt && !pendingMedia ? "Agendar" : "Enviar"}
@@ -741,6 +768,8 @@ export default function InboxPage() {
           </>
         )}
       </section>
+      </div>
+      </div>
     </div>
   );
 }

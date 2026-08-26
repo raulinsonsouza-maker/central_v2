@@ -180,7 +180,6 @@ export default function FlowsPage() {
               onClick={() => setTab("sequences")}
               icon={<GitBranch className="h-4 w-4" />}
               label="Sequências"
-              soon
             />
           </nav>
         </aside>

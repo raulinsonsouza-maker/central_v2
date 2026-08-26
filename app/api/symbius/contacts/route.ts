@@ -41,6 +41,7 @@ export async function GET(request: NextRequest) {
     orderBy: { lastInteractionAt: "desc" },
     take: 500,
     include: {
+      trackingIdentity: { select: { stId: true } },
       execucoes: {
         where: { status: { in: ["RUNNING", "WAITING"] } },
         take: 5,
@@ -65,7 +66,7 @@ export async function GET(request: NextRequest) {
   let rows = contatos;
   if (q) {
     rows = contatos.filter((c) => {
-      const hay = [c.nome, c.username, c.phone, ...c.tags]
+      const hay = [c.nome, c.username, c.phone, c.trackingIdentity?.stId, ...c.tags]
         .filter(Boolean)
         .join(" ")
         .toLowerCase();
@@ -89,6 +90,7 @@ export async function GET(request: NextRequest) {
         botPaused: c.botPaused,
         createdAt: c.createdAt,
         lastInteractionAt: c.lastInteractionAt,
+        stId: c.trackingIdentity?.stId ?? null,
         conversaId: conv?.id ?? null,
         lastMessage: attachmentPreviewLabel(
           lastMsg?.attachments,

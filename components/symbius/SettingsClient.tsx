@@ -44,22 +44,22 @@ type NavItem = {
 
 const NAV: NavItem[] = [
   { id: "geral", label: "Geral", group: "Principal" },
-  { id: "notificacoes", label: "Notificações", group: "Principal", soon: true },
   { id: "membros", label: "Membros da Equipe", group: "Principal" },
   { id: "assinatura", label: "Assinaturas", group: "Cobrança" },
   { id: "inbox-behavior", label: "Comportamento da caixa de entrada", group: "Caixa de Entrada" },
   { id: "instagram", label: "Instagram", group: "Canais" },
-  { id: "tiktok", label: "TikTok", group: "Canais", soon: true },
-  { id: "whatsapp", label: "WhatsApp", group: "Canais", soon: true },
-  { id: "messenger", label: "Messenger", group: "Canais", soon: true },
-  { id: "sms", label: "SMS", group: "Canais", soon: true },
-  { id: "email", label: "E-mail", group: "Canais", soon: true },
-  { id: "telegram", label: "Telegram", group: "Canais", soon: true },
-  { id: "campos", label: "Campos", group: "Automação", soon: true },
   { id: "tags", label: "Tags", group: "Automação" },
-  { id: "api", label: "Interface de Programação de Aplicativos", group: "Extensões", soon: true },
+  { id: "api", label: "API", group: "Extensões" },
   { id: "integracoes", label: "Integrações", group: "Extensões" },
-  { id: "ai", label: "IA (backlog)", group: "Extensões" },
+  { id: "ai", label: "IA (em breve)", group: "Extensões", soon: true },
+  { id: "notificacoes", label: "Notificações", group: "Em breve", soon: true },
+  { id: "tiktok", label: "TikTok", group: "Em breve", soon: true },
+  { id: "whatsapp", label: "WhatsApp", group: "Em breve", soon: true },
+  { id: "messenger", label: "Messenger", group: "Em breve", soon: true },
+  { id: "sms", label: "SMS", group: "Em breve", soon: true },
+  { id: "email", label: "E-mail", group: "Em breve", soon: true },
+  { id: "telegram", label: "Telegram", group: "Em breve", soon: true },
+  { id: "campos", label: "Campos", group: "Em breve", soon: true },
 ];
 
 function SettingRow({
@@ -112,7 +112,7 @@ function Btn({
     variant === "danger"
       ? "border-red-200 text-red-600 hover:bg-red-50"
       : variant === "primary"
-        ? "border-transparent bg-[#2d6cdf] text-white hover:bg-[#255bbd]"
+        ? "border-transparent bg-[#0084ff] text-white hover:bg-[#0073e6]"
         : "border-zinc-300 text-zinc-700 hover:bg-zinc-50";
   const className = `inline-flex items-center justify-center rounded-lg border px-3 py-1.5 text-sm font-medium disabled:opacity-50 ${cls}`;
   if (href) {
@@ -302,16 +302,40 @@ function SettingsInner({ data }: { data: SettingsData }) {
               </h2>
               <SettingRow
                 title="Pausar bot ao responder manualmente"
-                description="Quando um humano responde na Inbox, o bot é pausado para esse contato."
+                description="Ativo: quando um humano responde na Inbox, o bot é pausado automaticamente para esse contato."
               >
-                <Btn>Ativado</Btn>
+                <span className="rounded-lg bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
+                  Ativo
+                </span>
               </SettingRow>
               <SettingRow
                 title="Atribuição automática"
-                description="Distribua conversas entre membros da equipe automaticamente (round-robin)."
+                description="Round-robin entre membros no handoff — já usado nas automações com nó de handoff."
               >
-                <Btn>Ativado</Btn>
+                <span className="rounded-lg bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700">
+                  Ativo no handoff
+                </span>
               </SettingRow>
+            </div>
+          )}
+
+          {section === "api" && (
+            <div className="rounded-2xl border border-zinc-200 bg-white p-6 space-y-3">
+              <h2 className="text-xl font-bold">API pública</h2>
+              <p className="text-sm text-zinc-500">
+                Use a API key em Integrações com os headers{" "}
+                <code className="text-xs">x-api-key</code> e{" "}
+                <code className="text-xs">x-organization-id</code>.
+              </p>
+              <ul className="list-disc pl-5 text-sm text-zinc-700 space-y-1">
+                <li>POST /api/v1/identify</li>
+                <li>POST /api/v1/events</li>
+                <li>POST /api/v1/purchases</li>
+                <li>GET/POST /api/v1/symbius</li>
+              </ul>
+              <Btn href="/app/settings?section=integracoes" variant="primary">
+                Ir para Integrações
+              </Btn>
             </div>
           )}
 
@@ -427,7 +451,7 @@ function SettingsInner({ data }: { data: SettingsData }) {
                   <SettingRow
                     title="API de Conversões da Meta"
                     description="Envie eventos de conversão (cliques, leads) para o Gerenciador de Eventos e otimize anúncios. Nenhum PII além do permitido pela Meta."
-                    warning="Em breve — conexão com Conversions API / dataset."
+                    warning="Configure Pixel e CAPI em Integrações para enviar Lead/Purchase."
                   >
                     <Btn disabled>Conectar</Btn>
                   </SettingRow>
@@ -488,7 +512,6 @@ function SettingsInner({ data }: { data: SettingsData }) {
 
           {[
             "notificacoes",
-            "membros",
             "tiktok",
             "whatsapp",
             "messenger",
@@ -496,15 +519,13 @@ function SettingsInner({ data }: { data: SettingsData }) {
             "email",
             "telegram",
             "campos",
-            "api",
-            "integracoes",
           ].includes(section) && (
             <div className="rounded-2xl border border-zinc-200 bg-white p-10 text-center">
               <Plug className="mx-auto h-10 w-10 text-zinc-300" />
               <h2 className="mt-4 text-xl font-bold">Em breve</h2>
               <p className="mt-2 text-sm text-zinc-500">
-                Esta seção do menu ManyChat será liberada nas próximas
-                iterações.
+                Esta funcionalidade ainda não está disponível. O núcleo
+                Instagram + Attribution já está ativo.
               </p>
               <Btn href="/app/settings?section=instagram">
                 Ir para Instagram

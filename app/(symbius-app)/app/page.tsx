@@ -53,17 +53,17 @@ export default async function SymbiusDashboardPage() {
 
   const quick = [
     {
-      href: "/app/flows/new",
+      href: "/app/flows/new?template=comment_dm",
       title: "Comentário → DM",
       desc: "Keyword no post dispara Direct",
     },
     {
-      href: "/app/flows/new",
+      href: "/app/flows/new?template=keyword_dm",
       title: "Keyword em DM",
       desc: "Resposta automática por palavra-chave",
     },
     {
-      href: "/app/flows/new",
+      href: "/app/flows/new?template=welcome",
       title: "Boas-vindas",
       desc: "Primeira mensagem automática",
     },

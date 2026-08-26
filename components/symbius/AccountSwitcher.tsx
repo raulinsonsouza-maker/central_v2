@@ -73,6 +73,9 @@ export function AccountSwitcher({
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="listbox"
+        aria-label="Trocar conta ou workspace"
         className={`symbius-account-block w-full text-left ${collapsed ? "symbius-account-block-collapsed" : ""}`}
       >
         <span className="symbius-account-avatar-wrap">

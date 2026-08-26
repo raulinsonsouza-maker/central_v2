@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useState, type ReactNode, Suspense } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ArrowLeft,
   Blocks,
@@ -52,7 +52,16 @@ function Badge({
 }
 
 export default function NewFlowPage() {
+  return (
+    <Suspense fallback={<div className="p-10 text-zinc-500">Carregando…</div>}>
+      <NewFlowPageInner />
+    </Suspense>
+  );
+}
+
+function NewFlowPageInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [q, setQ] = useState("");
   const [objective, setObjective] = useState<string>("all");
   const [trigger, setTrigger] = useState<string | null>(null);
@@ -60,6 +69,18 @@ export default function NewFlowPage() {
   const [wizard, setWizard] = useState<WizardMode>(null);
   const [wizardPreset, setWizardPreset] = useState<Partial<CommentDmConfig>>();
   const [showTemplates, setShowTemplates] = useState(false);
+
+  useEffect(() => {
+    const template = searchParams.get("template");
+    if (template === "comment_dm") setWizard("comment_dm");
+    else if (template === "story_dm" || template === "story") setWizard("story_dm");
+    else if (template === "keyword_dm" || template === "keyword") {
+      void createSimple("keyword", "Keyword em DM");
+    } else if (template === "welcome") {
+      void createSimple("welcome", "Boas-vindas");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     const needle = q.trim().toLowerCase();
@@ -173,14 +194,11 @@ export default function NewFlowPage() {
             disabled
             className="group relative flex cursor-not-allowed flex-col items-center rounded-2xl border border-zinc-200 bg-white px-6 py-10 text-center opacity-90 shadow-sm"
           >
-            <span className="absolute right-3 top-3">
-              <Badge tone="used">Mais usado</Badge>
-            </span>
             <span className="absolute left-3 top-3">
               <Badge tone="soon">Em breve</Badge>
             </span>
             <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-100 to-indigo-100">
-              <Sparkles className="h-9 w-9 text-[#2d6cdf]" />
+              <Sparkles className="h-9 w-9 text-[#0084ff]" />
             </div>
             <h2 className="mt-5 text-lg font-bold text-zinc-900">Criar com Symbius IA</h2>
             <p className="mt-2 text-sm leading-relaxed text-zinc-500">

@@ -30,6 +30,10 @@ async function refreshExpiringTokens(): Promise<number> {
       refreshed += 1;
     } catch (e) {
       console.error("[cron] ig token refresh failed", account.id, e);
+      await prisma.igAccount.update({
+        where: { id: account.id },
+        data: { status: "NEEDS_REAUTH" },
+      });
     }
   }
   return refreshed;

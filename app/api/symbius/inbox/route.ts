@@ -231,7 +231,18 @@ export async function POST(request: NextRequest) {
 
   await prisma.igConversa.update({
     where: { id: conversa.id },
-    data: { lastMessageAt: new Date(), lastReadAt: new Date(), status: "OPEN" },
+    data: {
+      lastMessageAt: new Date(),
+      lastReadAt: new Date(),
+      status: "OPEN",
+      handoffHuman: true,
+    },
+  });
+
+  // Pausar bot ao responder humano (promessa das Settings)
+  await prisma.igContato.update({
+    where: { id: conversa.contatoId },
+    data: { botPaused: true },
   });
 
   return NextResponse.json({ message: msg });

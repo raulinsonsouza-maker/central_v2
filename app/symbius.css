@@ -28,8 +28,8 @@
   --symbius-border: #e4e4e7;
   --symbius-text: #18181b;
   --symbius-muted: #52525b;
-  --symbius-primary: #2d6cdf;
-  --symbius-primary-hover: #255bbd;
+  --symbius-primary: #0084ff;
+  --symbius-primary-hover: #0073e6;
   --symbius-accent: #0d9488;
 
   color: #18181b;
@@ -69,18 +69,18 @@
 }
 
 .symbius-theme .symbius-light .symbius-btn-outline:hover {
-  border-color: #2d6cdf;
-  background: rgba(45, 108, 223, 0.06);
+  border-color: #0084ff;
+  background: rgba(0, 132, 255, 0.06);
   color: #18181b;
 }
 
 .symbius-theme .symbius-light .symbius-btn-primary {
-  background: #2d6cdf;
+  background: #0084ff;
   color: #ffffff;
 }
 
 .symbius-theme .symbius-light .symbius-btn-primary:hover {
-  background: #255bbd;
+  background: #0073e6;
 }
 
 .symbius-gradient-text {
@@ -452,5 +452,145 @@
 
 .symbius-app-shell .symbius-btn-primary:hover {
   background: #0073e6;
+}
+
+.symbius-app-body {
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.symbius-reauth-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 1rem;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #fcd34d;
+  flex-shrink: 0;
+}
+
+.symbius-reauth-banner-cta {
+  font-weight: 600;
+  color: #92400e;
+  text-decoration: underline;
+}
+
+.symbius-mobile-topbar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem 0.85rem;
+  background: #fafafa;
+  border-bottom: 1px solid #e8e8e8;
+  flex-shrink: 0;
+}
+
+.symbius-mobile-menu-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  color: #1f2937;
+}
+
+.symbius-mobile-topbar-spacer {
+  margin-left: auto;
+}
+
+.symbius-mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(15, 23, 42, 0.35);
+  border: 0;
+}
+
+.symbius-sidebar-mobile-open {
+  display: flex !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 50;
+  height: 100dvh;
+  box-shadow: 8px 0 24px rgba(0, 0, 0, 0.12);
+}
+
+.symbius-bottom-nav {
+  display: flex;
+  flex-shrink: 0;
+  border-top: 1px solid #e8e8e8;
+  background: #fafafa;
+  padding: 0.35rem 0.25rem calc(0.35rem + env(safe-area-inset-bottom));
+}
+
+.symbius-bottom-nav-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.35rem 0.25rem;
+  font-size: 0.65rem;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.symbius-bottom-nav-item.is-active {
+  color: #0084ff;
+  font-weight: 600;
+}
+
+.symbius-bottom-nav-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 10px;
+  line-height: 16px;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .symbius-mobile-topbar,
+  .symbius-bottom-nav,
+  .symbius-mobile-backdrop {
+    display: none;
+  }
+
+  .symbius-sidebar-mobile-open {
+    position: static;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .symbius-app-shell {
+    padding-bottom: 0;
+  }
+
+  .symbius-main {
+    padding-bottom: 0.5rem;
+  }
+
+  .symbius-sidebar-collapse {
+    display: none;
+  }
 }
 

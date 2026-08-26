@@ -12,6 +12,7 @@ export type SymbiusShellData = {
   igUsername: string | null;
   igProfilePictureUrl: string | null;
   hasIgAccount: boolean;
+  needsReauth: boolean;
   inboxUnread: number;
   workspaces: Array<{
     id: string;
@@ -28,6 +29,7 @@ export type SymbiusShellData = {
     igUsername: string | null;
     igProfilePictureUrl: string | null;
     pageName: string | null;
+    status: string;
   }>;
   activeIgAccountId: string | null;
 };
@@ -64,7 +66,10 @@ export async function getSymbiusShellData(
       select: { plan: true, nome: true },
     }),
     prisma.igAccount.findMany({
-      where: { organizationId: session.organizationId, status: "CONNECTED" },
+      where: {
+        organizationId: session.organizationId,
+        status: { in: ["CONNECTED", "NEEDS_REAUTH"] },
+      },
       orderBy: { createdAt: "desc" },
       select: {
         id: true,
@@ -73,6 +78,7 @@ export async function getSymbiusShellData(
         pageName: true,
         igUsername: true,
         igProfilePictureUrl: true,
+        status: true,
       },
     }),
     prisma.igConversa.findMany({
@@ -138,6 +144,7 @@ export async function getSymbiusShellData(
           pageName: true,
           igUsername: true,
           igProfilePictureUrl: true,
+          status: true,
         },
       });
     } catch {
@@ -203,6 +210,7 @@ export async function getSymbiusShellData(
     igUsername: igAccount?.igUsername ?? null,
     igProfilePictureUrl: igAccount?.igProfilePictureUrl ?? null,
     hasIgAccount: Boolean(igAccount),
+    needsReauth: igAccounts.some((a) => a.status === "NEEDS_REAUTH"),
     inboxUnread,
     workspaces,
     igAccounts: igAccounts.map((a) => ({
@@ -210,6 +218,7 @@ export async function getSymbiusShellData(
       igUsername: a.igUsername,
       igProfilePictureUrl: a.igProfilePictureUrl,
       pageName: a.pageName,
+      status: a.status,
     })),
     activeIgAccountId,
   };

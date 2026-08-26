@@ -322,6 +322,10 @@ async function runFluxoFromNode(
           text || "[mídia]",
           true,
         );
+        await prisma.igConversa.update({
+          where: { id: conversa.id },
+          data: { lastMessageAt: new Date() },
+        });
       }
       break;
     }
@@ -851,6 +855,34 @@ export async function processAutomationForContato(
 
   const text = String(context.text ?? "").trim();
 
+  // Opt-out global (keywords de sistema)
+  if (/^(parar|stop|sair|cancelar|unsubscribe)$/i.test(text)) {
+    const tags = Array.from(new Set([...contato.tags, "opted_out"]));
+    await prisma.igContato.update({
+      where: { id: contatoId },
+      data: { botPaused: true, tags },
+    });
+    await prisma.igFluxoExecucao.updateMany({
+      where: {
+        contatoId,
+        organizationId,
+        status: { in: ["RUNNING", "WAITING"] },
+      },
+      data: { status: "CANCELLED" },
+    });
+    try {
+      await sendInstagramMessage({
+        igUserId: contato.igAccount.igUserId,
+        accessToken: contato.igAccount.accessToken,
+        recipientIgsid: contato.igsid,
+        text: "Pronto! Você não receberá mais mensagens automáticas. Para reativar, fale com um atendente.",
+      });
+    } catch {
+      // ignore send failure on opt-out
+    }
+    return;
+  }
+
   const waitingExec = await prisma.igFluxoExecucao.findFirst({
     where: {
       contatoId,
@@ -891,6 +923,17 @@ export async function processAutomationForContato(
             phone: text,
             username: contato.username ?? undefined,
             nome: contato.nome ?? undefined,
+          });
+          const { appendGoogleSheetRow } = await import(
+            "@/lib/symbius/integrations"
+          );
+          void appendGoogleSheetRow(organizationId, {
+            phone: text.replace(/\D/g, ""),
+            nome: contato.nome ?? "",
+            username: contato.username ?? "",
+            email: "",
+            source: "fluxo_phone",
+            at: new Date().toISOString(),
           });
         }
 
@@ -1060,14 +1103,6 @@ export async function processWebhookPayload(payload: unknown): Promise<void> {
       where: { igUserId, status: "CONNECTED" },
     });
     if (!igAccount) continue;
-
-    await prisma.igWebhookEvent.create({
-      data: {
-        organizationId: igAccount.organizationId,
-        igUserId,
-        payload: body as object,
-      },
-    });
 
     for (const msg of entry.messaging ?? []) {
       // Receipts (read/delivery) não são mensagens — geravam bolhas só com data/hora

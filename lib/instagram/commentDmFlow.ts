@@ -533,11 +533,39 @@ export async function saveContactEmail(
 ): Promise<void> {
   const contato = await prisma.igContato.findUnique({ where: { id: contatoId } });
   if (!contato) return;
+  const normalized = email.trim().toLowerCase();
   const tags = contato.tags.filter((t) => !t.startsWith("email:"));
-  tags.push(`email:${email.trim().toLowerCase()}`);
+  tags.push(`email:${normalized}`);
   await prisma.igContato.update({
     where: { id: contatoId },
     data: { tags },
+  });
+
+  const { recordConversion } = await import("@/lib/symbius/conversions");
+  await recordConversion({
+    organizationId: contato.organizationId,
+    tipo: "email_captured",
+    contatoId,
+    metadata: { email: normalized },
+  });
+
+  const { syncLeadToCentralCrm, appendGoogleSheetRow } = await import(
+    "@/lib/symbius/integrations"
+  );
+  void syncLeadToCentralCrm({
+    organizationId: contato.organizationId,
+    email: normalized,
+    username: contato.username ?? undefined,
+    nome: contato.nome ?? undefined,
+    tags,
+  });
+  void appendGoogleSheetRow(contato.organizationId, {
+    email: normalized,
+    nome: contato.nome ?? "",
+    username: contato.username ?? "",
+    phone: contato.phone ?? "",
+    source: "comment_dm_email",
+    at: new Date().toISOString(),
   });
 }
 

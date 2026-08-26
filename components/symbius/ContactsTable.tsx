@@ -20,6 +20,7 @@ export type ContactRow = {
   lastMessage?: string | null;
   lastMessageDirection?: string | null;
   messageCount?: number;
+  stId?: string | null;
 };
 
 function formatContactTag(tag: string): { label: string; isEmail: boolean } {
@@ -80,7 +81,45 @@ export function ContactsTable({
         <p>{countLabel}</p>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
+      {/* Mobile cards */}
+      <div className="space-y-2 md:hidden">
+        {contacts.length === 0 ? (
+          <p className="rounded-2xl border border-zinc-200 bg-white px-4 py-10 text-center text-sm text-zinc-500">
+            Nenhum contato ainda. Quando alguém interagir com suas automações,
+            aparecerá aqui automaticamente.
+          </p>
+        ) : (
+          contacts.map((c) => (
+            <button
+              key={c.id}
+              type="button"
+              className="flex w-full gap-3 rounded-2xl border border-zinc-200 bg-white p-3 text-left"
+              onClick={() => {
+                if (c.conversaId) router.push(`/app/inbox?conversa=${c.conversaId}`);
+              }}
+            >
+              <ContactAvatar
+                name={c.nome}
+                username={c.username}
+                profilePictureUrl={c.profilePictureUrl}
+              />
+              <div className="min-w-0 flex-1">
+                <p className="truncate font-medium text-zinc-900">
+                  {displayName(c)}
+                </p>
+                <p className="truncate text-xs text-zinc-500">
+                  {c.stId ?? (c.username ? `@${c.username}` : c.igsid)}
+                </p>
+                <p className="mt-1 line-clamp-1 text-xs text-zinc-500">
+                  {c.lastMessage ?? "Sem mensagens"}
+                </p>
+              </div>
+            </button>
+          ))
+        )}
+      </div>
+
+      <div className="hidden overflow-hidden rounded-2xl border border-zinc-200 bg-white md:block">
         <table className="w-full text-sm text-zinc-900">
           <thead className="border-b border-zinc-100 bg-zinc-50/80 text-zinc-600">
             <tr>
@@ -91,6 +130,7 @@ export function ContactsTable({
                 Imagem do perfil
               </th>
               <th className="px-4 py-3 text-left font-semibold">Nome</th>
+              <th className="px-4 py-3 text-left font-semibold">st_id</th>
               <th className="px-4 py-3 text-left font-semibold">
                 Última mensagem
               </th>
@@ -102,7 +142,7 @@ export function ContactsTable({
             {contacts.length === 0 ? (
               <tr>
                 <td
-                  colSpan={selectable ? 6 : 5}
+                  colSpan={selectable ? 7 : 6}
                   className="px-4 py-10 text-center text-zinc-500"
                 >
                   Nenhum contato ainda. Quando alguém interagir com suas
@@ -168,6 +208,9 @@ export function ContactsTable({
                           })}
                         </div>
                       )}
+                    </td>
+                    <td className="px-4 py-3 font-mono text-xs text-zinc-500">
+                      {c.stId ?? "—"}
                     </td>
                     <td className="max-w-[220px] px-4 py-3 text-zinc-600">
                       {c.lastMessage ? (

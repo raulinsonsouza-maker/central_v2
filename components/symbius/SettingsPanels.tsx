@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSymbiusToast } from "@/components/symbius/useSymbiusToast";
 
 export function TagsSettingsPanel() {
   const [tags, setTags] = useState<Array<{ id: string; nome: string }>>([]);
@@ -138,6 +139,7 @@ export function IntegrationsSettingsPanel() {
   const [shopifySecret, setShopifySecret] = useState("");
   const [traySecret, setTraySecret] = useState("");
   const [nuvemshopSecret, setNuvemshopSecret] = useState("");
+  const { show, Toast } = useSymbiusToast();
 
   useEffect(() => {
     void fetch("/api/symbius/integrations")
@@ -149,6 +151,8 @@ export function IntegrationsSettingsPanel() {
         setSnippet(d.trackingSnippet ?? null);
         setMetaPixelId(d.settings?.metaPixelId ?? "");
         setGa4MeasurementId(d.settings?.ga4MeasurementId ?? "");
+        setMetaCapiToken(d.settings?.hasMetaCapiToken ? "••••••••" : "");
+        setGa4ApiSecret(d.settings?.hasGa4ApiSecret ? "••••••••" : "");
         const ec = d.settings?.ecommerceConnectors ?? {};
         setShopifySecret(ec.shopify?.webhookSecret ? "••••••••" : "");
         setTraySecret(ec.tray?.webhookSecret ? "••••••••" : "");
@@ -168,7 +172,7 @@ export function IntegrationsSettingsPanel() {
       ecommerceConnectors.nuvemshop = { webhookSecret: nuvemshopSecret };
     }
 
-    await fetch("/api/symbius/integrations", {
+    const res = await fetch("/api/symbius/integrations", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -176,28 +180,51 @@ export function IntegrationsSettingsPanel() {
         syncCentralCrm,
         googleSheetId,
         metaPixelId: metaPixelId || null,
-        metaCapiToken: metaCapiToken || null,
+        metaCapiToken:
+          metaCapiToken && !metaCapiToken.startsWith("••")
+            ? metaCapiToken
+            : undefined,
         ga4MeasurementId: ga4MeasurementId || null,
-        ga4ApiSecret: ga4ApiSecret || null,
+        ga4ApiSecret:
+          ga4ApiSecret && !ga4ApiSecret.startsWith("••")
+            ? ga4ApiSecret
+            : undefined,
         ...(Object.keys(ecommerceConnectors).length
           ? { ecommerceConnectors }
           : {}),
       }),
     });
-    const refreshed = await fetch("/api/symbius/integrations").then((r) => r.json());
+    if (!res.ok) {
+      show("Falha ao salvar integrações", "error");
+      return;
+    }
+    const refreshed = await fetch("/api/symbius/integrations").then((r) =>
+      r.json(),
+    );
     setSnippet(refreshed.trackingSnippet ?? null);
+    setMetaCapiToken(refreshed.settings?.hasMetaCapiToken ? "••••••••" : "");
+    setGa4ApiSecret(refreshed.settings?.hasGa4ApiSecret ? "••••••••" : "");
+    show("Integrações salvas", "success");
   }
 
   async function genKey() {
     const res = await fetch("/api/symbius/integrations", { method: "POST" });
     const d = await res.json();
+    if (!res.ok) {
+      show("Falha ao gerar API key", "error");
+      return;
+    }
     setApiKey(d.apiKey);
-    const refreshed = await fetch("/api/symbius/integrations").then((r) => r.json());
+    const refreshed = await fetch("/api/symbius/integrations").then((r) =>
+      r.json(),
+    );
     setSnippet(refreshed.trackingSnippet ?? null);
+    show("API key gerada", "success");
   }
 
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 space-y-4">
+      {Toast}
       <h2 className="text-xl font-bold">Integrações & Attribution</h2>
       <label className="block text-sm">
         <span className="text-zinc-500">Webhook outbound</span>
@@ -311,6 +338,7 @@ export function AiSettingsPanel() {
   const [aiEnabled, setAiEnabled] = useState(false);
   const [aiKnowledgeBase, setAiKnowledgeBase] = useState("");
   const [aiTone, setAiTone] = useState("");
+  const { show, Toast } = useSymbiusToast();
 
   useEffect(() => {
     void fetch("/api/symbius/ai/config")
@@ -323,16 +351,22 @@ export function AiSettingsPanel() {
   }, []);
 
   async function save() {
-    await fetch("/api/symbius/ai/config", {
+    const res = await fetch("/api/symbius/ai/config", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ aiEnabled, aiKnowledgeBase, aiTone }),
     });
+    if (!res.ok) {
+      show("Falha ao salvar configuração de IA", "error");
+      return;
+    }
+    show("Configuração salva (IA ainda em breve)", "success");
   }
 
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 space-y-4">
-      <h2 className="text-xl font-bold">Manychat AI (backlog)</h2>
+      {Toast}
+      <h2 className="text-xl font-bold">IA (em breve)</h2>
       <p className="text-sm text-amber-700 bg-amber-50 rounded-lg p-3">
         Configuração salva para a fase dedicada de IA. Respostas automáticas ainda não estão ativas.
       </p>

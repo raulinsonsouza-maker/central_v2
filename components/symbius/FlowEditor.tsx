@@ -272,16 +272,18 @@ function Toolbar({ onAddStep }: { onAddStep: () => void }) {
         <button
           type="button"
           disabled
-          className="rounded-lg p-2 text-zinc-300"
-          title="Desfazer (em breve)"
+          className="hidden"
+          aria-hidden
+          title="Desfazer"
         >
           <Undo2 className="h-4 w-4" />
         </button>
         <button
           type="button"
           disabled
-          className="rounded-lg p-2 text-zinc-300"
-          title="Refazer (em breve)"
+          className="hidden"
+          aria-hidden
+          title="Refazer"
         >
           <Redo2 className="h-4 w-4" />
         </button>
@@ -475,17 +477,20 @@ function FlowEditorInner({ fluxoId }: { fluxoId: string }) {
 
   function addNode(tipo: string) {
     const id = `temp-${Date.now()}`;
+    const defaults: Record<string, Record<string, unknown>> = {
+      send_message: { text: "Nova mensagem" },
+      wait: { minutes: 5 },
+      wait_reply: { replyValidation: "any", replyField: "text" },
+      condition: { field: "text", operator: "contains", value: "" },
+      collect_phone: {},
+      add_tag: { tag: "lead" },
+      notify_admin: { message: "Novo lead" },
+      handoff_human: {},
+    };
     const node: FluxoNo = {
       id,
       tipo,
-      config:
-        tipo === "send_message"
-          ? { text: "Nova mensagem" }
-          : tipo === "wait"
-            ? { minutes: 5 }
-            : tipo === "add_tag"
-              ? { tag: "lead" }
-              : {},
+      config: defaults[tipo] ?? {},
       posX: 280 + nos.length * 40,
       posY: 280 + nos.length * 80,
       nextIds: [],
@@ -1118,14 +1123,23 @@ function FlowEditorInner({ fluxoId }: { fluxoId: string }) {
               <p className="px-2 py-1 text-[10px] font-bold uppercase tracking-wide text-zinc-600">
                 Adicionar passo
               </p>
-              {["send_message", "wait", "add_tag", "handoff_human"].map((t) => (
+              {[
+                "send_message",
+                "wait",
+                "wait_reply",
+                "condition",
+                "collect_phone",
+                "add_tag",
+                "notify_admin",
+                "handoff_human",
+              ].map((t) => (
                 <button
                   key={t}
                   type="button"
                   onClick={() => addNode(t)}
                   className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-left text-sm font-medium text-zinc-800 hover:bg-zinc-50"
                 >
-                  <MessageSquare className="h-4 w-4 shrink-0 text-[#2d6cdf]" />
+                  <MessageSquare className="h-4 w-4 shrink-0 text-[#0084ff]" />
                   {NODE_LABELS[t]}
                 </button>
               ))}
