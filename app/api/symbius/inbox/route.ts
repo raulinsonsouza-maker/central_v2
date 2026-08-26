@@ -8,6 +8,7 @@ import {
   sendInstagramMessage,
 } from "@/lib/instagram/messagingClient";
 import { attachmentPreviewLabel } from "@/lib/instagram/messageAttachments";
+import { isConversaUnread } from "@/lib/symbius/inboxUnread";
 
 export async function GET(request: NextRequest) {
   const session = await getSession();
@@ -41,7 +42,11 @@ export async function GET(request: NextRequest) {
 
   let mapped = conversas.map((c) => {
     const last = c.mensagens[0];
-    const unread = last?.direction === "INBOUND";
+    const unread = isConversaUnread({
+      lastMessageDirection: last?.direction,
+      lastMessageAt: c.lastMessageAt ?? last?.createdAt,
+      lastReadAt: c.lastReadAt,
+    });
     return {
       id: c.id,
       status: c.status,
@@ -61,6 +66,20 @@ export async function GET(request: NextRequest) {
       lastMessage: attachmentPreviewLabel(last?.attachments, last?.texto),
       lastDirection: last?.direction ?? null,
       lastMessageAt: c.lastMessageAt,
+    };
+  });
+
+  // Contagens sobre a lista completa (antes do filtro unread/q)
+  const countsBase = conversas.map((c) => {
+    const last = c.mensagens[0];
+    return {
+      status: c.status,
+      handoffHuman: c.handoffHuman,
+      unread: isConversaUnread({
+        lastMessageDirection: last?.direction,
+        lastMessageAt: c.lastMessageAt ?? last?.createdAt,
+        lastReadAt: c.lastReadAt,
+      }),
     };
   });
 
@@ -86,9 +105,9 @@ export async function GET(request: NextRequest) {
     conversas: mapped,
     counts: {
       all: conversas.length,
-      open: conversas.filter((c) => c.status === "OPEN").length,
-      unread: mapped.filter((c) => c.unread).length,
-      handoff: conversas.filter((c) => c.handoffHuman).length,
+      open: countsBase.filter((c) => c.status === "OPEN").length,
+      unread: countsBase.filter((c) => c.unread).length,
+      handoff: countsBase.filter((c) => c.handoffHuman).length,
     },
   });
 }
@@ -212,7 +231,7 @@ export async function POST(request: NextRequest) {
 
   await prisma.igConversa.update({
     where: { id: conversa.id },
-    data: { lastMessageAt: new Date(), status: "OPEN" },
+    data: { lastMessageAt: new Date(), lastReadAt: new Date(), status: "OPEN" },
   });
 
   return NextResponse.json({ message: msg });

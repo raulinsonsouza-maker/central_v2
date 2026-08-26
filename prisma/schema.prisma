@@ -706,6 +706,7 @@ model IgConversa {
   handoffHuman   Boolean   @default(false)
   assignedUserId String?
   lastMessageAt  DateTime?
+  lastReadAt     DateTime?
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
 

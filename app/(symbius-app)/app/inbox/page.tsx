@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -67,6 +67,7 @@ function displayName(c: ConversaItem["contato"]) {
 }
 
 export default function InboxPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const conversaFromUrl = searchParams.get("conversa");
   const [conversas, setConversas] = useState<ConversaItem[]>([]);
@@ -79,6 +80,9 @@ export default function InboxPage() {
   const [folder, setFolder] = useState<FolderFilter>("all");
   const [q, setQ] = useState("");
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedSnapshot, setSelectedSnapshot] = useState<ConversaItem | null>(
+    null,
+  );
   const [mensagens, setMensagens] = useState<Mensagem[]>([]);
   const [reply, setReply] = useState("");
   const [pendingMedia, setPendingMedia] = useState<PendingMedia | null>(null);
@@ -118,17 +122,49 @@ export default function InboxPage() {
   useEffect(() => {
     if (!selectedId) {
       setMensagens([]);
+      setSelectedSnapshot(null);
       return;
     }
+    let cancelled = false;
     fetch(`/api/symbius/inbox/${selectedId}`)
       .then((r) => r.json())
-      .then((d) => setMensagens(d.conversa?.mensagens ?? []));
-  }, [selectedId]);
+      .then((d) => {
+        if (cancelled) return;
+        setMensagens(d.conversa?.mensagens ?? []);
+        setConversas((prev) => {
+          const wasUnread = prev.find((c) => c.id === selectedId)?.unread;
+          if (wasUnread) {
+            setCounts((c) => ({
+              ...c,
+              unread: Math.max(0, c.unread - 1),
+            }));
+          }
+          return prev.map((c) =>
+            c.id === selectedId ? { ...c, unread: false } : c,
+          );
+        });
+        setSelectedSnapshot((prev) =>
+          prev?.id === selectedId ? { ...prev, unread: false } : prev,
+        );
+        void loadList();
+        router.refresh();
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedId, loadList, router]);
 
-  const selected = useMemo(
-    () => conversas.find((c) => c.id === selectedId) ?? null,
-    [conversas, selectedId],
-  );
+  const selected = useMemo(() => {
+    const fromList = conversas.find((c) => c.id === selectedId) ?? null;
+    if (fromList) return fromList;
+    if (selectedSnapshot?.id === selectedId) return selectedSnapshot;
+    return null;
+  }, [conversas, selectedId, selectedSnapshot]);
+
+  function openConversa(c: ConversaItem) {
+    setSelectedSnapshot(c);
+    setSelectedId(c.id);
+  }
 
   useEffect(() => {
     void fetch("/api/symbius/snippets")
@@ -397,7 +433,7 @@ export default function InboxPage() {
               <button
                 key={c.id}
                 type="button"
-                onClick={() => setSelectedId(c.id)}
+                onClick={() => openConversa(c)}
                 className={`flex w-full gap-3 border-b border-zinc-100 px-4 py-3 text-left transition-colors ${
                   active ? "bg-sky-50" : "hover:bg-zinc-50"
                 }`}

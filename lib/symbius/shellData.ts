@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { fetchIgMeProfile } from "@/lib/instagram/metaOAuth";
 import type { SymbiusSession } from "./auth";
 import { getActiveIgAccountId } from "./activeIgAccount";
+import { isConversaUnread } from "./inboxUnread";
 
 export type SymbiusShellData = {
   userName: string;
@@ -80,10 +81,12 @@ export async function getSymbiusShellData(
         status: "OPEN",
       },
       select: {
+        lastMessageAt: true,
+        lastReadAt: true,
         mensagens: {
           orderBy: { createdAt: "desc" },
           take: 1,
-          select: { direction: true },
+          select: { direction: true, createdAt: true },
         },
       },
       take: 200,
@@ -142,20 +145,37 @@ export async function getSymbiusShellData(
     }
   }
 
-  const inboxUnread = openConversas.filter(
-    (c) => c.mensagens[0]?.direction === "INBOUND",
+  const inboxUnread = openConversas.filter((c) =>
+    isConversaUnread({
+      lastMessageDirection: c.mensagens[0]?.direction,
+      lastMessageAt: c.lastMessageAt ?? c.mensagens[0]?.createdAt,
+      lastReadAt: c.lastReadAt,
+    }),
   ).length;
 
   const workspaces = await Promise.all(
     memberships.map(async (m) => {
       const ig = m.organization.igAccounts[0];
-      const unread = await prisma.igConversa.count({
-        where: {
-          organizationId: m.organizationId,
-          status: "OPEN",
-          mensagens: { some: { direction: "INBOUND" } },
+      const open = await prisma.igConversa.findMany({
+        where: { organizationId: m.organizationId, status: "OPEN" },
+        select: {
+          lastMessageAt: true,
+          lastReadAt: true,
+          mensagens: {
+            orderBy: { createdAt: "desc" },
+            take: 1,
+            select: { direction: true, createdAt: true },
+          },
         },
+        take: 200,
       });
+      const unread = open.filter((c) =>
+        isConversaUnread({
+          lastMessageDirection: c.mensagens[0]?.direction,
+          lastMessageAt: c.lastMessageAt ?? c.mensagens[0]?.createdAt,
+          lastReadAt: c.lastReadAt,
+        }),
+      ).length;
       return {
         id: m.organizationId,
         nome: m.organization.nome,

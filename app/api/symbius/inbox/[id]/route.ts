@@ -24,5 +24,16 @@ export async function GET(
     return NextResponse.json({ error: "Não encontrada" }, { status: 404 });
   }
 
-  return NextResponse.json({ conversa });
+  // Abrir a conversa = marcar como lida
+  const now = new Date();
+  const updated = await prisma.igConversa.update({
+    where: { id: conversa.id },
+    data: { lastReadAt: now },
+    include: {
+      contato: true,
+      mensagens: { orderBy: { createdAt: "asc" } },
+    },
+  });
+
+  return NextResponse.json({ conversa: updated });
 }
