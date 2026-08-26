@@ -103,7 +103,7 @@ export async function getSymbiusShellData(
         organization: {
           include: {
             igAccounts: {
-              where: { status: "CONNECTED" },
+              where: { status: { in: ["CONNECTED", "NEEDS_REAUTH"] } },
               orderBy: { createdAt: "desc" },
               take: 1,
             },

@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
+import type { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import {
   createSessionToken,
@@ -10,6 +11,26 @@ import {
 
 export { SYMBIUS_SESSION_COOKIE, type SymbiusSession };
 export { createSessionToken, verifySessionToken } from "./session-token";
+
+export const SYMBIUS_SESSION_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+  maxAge: 60 * 60 * 24 * 30,
+};
+
+export function attachSessionCookie(
+  response: NextResponse,
+  token: string,
+): NextResponse {
+  response.cookies.set(
+    SYMBIUS_SESSION_COOKIE,
+    token,
+    SYMBIUS_SESSION_COOKIE_OPTIONS,
+  );
+  return response;
+}
 
 export async function hashPassword(password: string): Promise<string> {
   return bcrypt.hash(password, 12);
@@ -24,13 +45,7 @@ export async function verifyPassword(
 
 export async function setSessionCookie(token: string): Promise<void> {
   const jar = await cookies();
-  jar.set(SYMBIUS_SESSION_COOKIE, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 30,
-  });
+  jar.set(SYMBIUS_SESSION_COOKIE, token, SYMBIUS_SESSION_COOKIE_OPTIONS);
 }
 
 export async function clearSessionCookie(): Promise<void> {
@@ -59,6 +74,38 @@ export async function requireSession(): Promise<SymbiusSession> {
   const session = await getSession();
   if (!session) throw new Error("UNAUTHORIZED");
   return session;
+}
+
+/** Emite JWT de sessão para um usuário (sem gravar cookie). */
+export async function createSessionForUser(userId: string): Promise<{
+  token: string;
+  organizationId: string;
+}> {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id: userId },
+    include: {
+      memberships: {
+        include: { organization: true },
+        orderBy: { createdAt: "asc" },
+        take: 1,
+      },
+    },
+  });
+
+  const membership = user.memberships[0];
+  if (!membership || membership.organization.status !== "ACTIVE") {
+    throw new Error("Conta suspensa");
+  }
+
+  const token = await createSessionToken({
+    userId: user.id,
+    organizationId: membership.organizationId,
+    role: membership.role,
+    email: user.email,
+    nome: user.nome,
+  });
+
+  return { token, organizationId: membership.organizationId };
 }
 
 export function slugifyOrgName(name: string): string {

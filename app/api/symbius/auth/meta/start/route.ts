@@ -1,7 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
-import { cookies } from "next/headers";
 import { getSession } from "@/lib/symbius/auth";
 import { buildMetaOAuthUrl } from "@/lib/instagram/metaOAuth";
+
+const OAUTH_STATE_COOKIE = "symbius_meta_oauth_state";
+
+const OAUTH_STATE_COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+  maxAge: 600,
+};
+
+function redirectToMetaOAuth(state: string): NextResponse {
+  const res = NextResponse.redirect(buildMetaOAuthUrl(state));
+  res.cookies.set(OAUTH_STATE_COOKIE, state, OAUTH_STATE_COOKIE_OPTIONS);
+  return res;
+}
 
 export async function GET(request: NextRequest) {
   const intentParam = request.nextUrl.searchParams.get("intent");
@@ -26,16 +41,7 @@ export async function GET(request: NextRequest) {
       }),
     ).toString("base64url");
 
-    const jar = await cookies();
-    jar.set("symbius_meta_oauth_state", state, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      maxAge: 600,
-    });
-
-    return NextResponse.redirect(buildMetaOAuthUrl(state));
+    return redirectToMetaOAuth(state);
   }
 
   // Conectar/atualizar canal (usuário já logado)
@@ -50,14 +56,5 @@ export async function GET(request: NextRequest) {
     }),
   ).toString("base64url");
 
-  const jar = await cookies();
-  jar.set("symbius_meta_oauth_state", state, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 600,
-  });
-
-  return NextResponse.redirect(buildMetaOAuthUrl(state));
+  return redirectToMetaOAuth(state);
 }

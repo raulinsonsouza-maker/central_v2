@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { prisma } from "@/lib/db";
 import {
-  createSessionToken,
+  attachSessionCookie,
+  createSessionForUser,
   getSession,
   limitsForPlan,
-  setSessionCookie,
   uniqueOrgSlug,
 } from "@/lib/symbius/auth";
 import { canConnectIgAccount } from "@/lib/symbius/tenant";
@@ -23,6 +23,19 @@ type OAuthState = {
 };
 
 type IgLoginResult = Awaited<ReturnType<typeof completeInstagramLogin>>;
+
+const OAUTH_STATE_COOKIE = "symbius_meta_oauth_state";
+
+function requestBaseUrl(request: NextRequest): string {
+  const forwardedHost = request.headers.get("x-forwarded-host");
+  const host = (forwardedHost ?? request.headers.get("host") ?? "")
+    .split(",")[0]
+    ?.trim();
+  if (!host) return getSymbiusAppUrl();
+  const proto =
+    request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() ?? "https";
+  return `${proto}://${host}`;
+}
 
 function parseState(stateParam: string): OAuthState {
   try {
@@ -44,10 +57,15 @@ function redirectAuthError(base: string, error: string) {
   );
 }
 
+function clearOAuthStateCookie(response: NextResponse): NextResponse {
+  response.cookies.delete(OAUTH_STATE_COOKIE);
+  return response;
+}
+
 function redirectAfterAuth(
   base: string,
   decoded: OAuthState,
-  params: { error?: string },
+  params: { error?: string; sessionToken?: string },
 ) {
   const returnTo = decoded.returnTo ?? "/app";
 
@@ -59,16 +77,26 @@ function redirectAfterAuth(
       sp.set("ok", "1");
       sp.set("returnTo", returnTo);
     }
-    return NextResponse.redirect(
-      `${base}/login/oauth-complete?${sp.toString()}`,
+    const res = clearOAuthStateCookie(
+      NextResponse.redirect(`${base}/login/oauth-complete?${sp.toString()}`),
     );
+    if (params.sessionToken) {
+      attachSessionCookie(res, params.sessionToken);
+    }
+    return res;
   }
 
   if (params.error) {
-    return redirectAuthError(base, params.error);
+    return clearOAuthStateCookie(redirectAuthError(base, params.error));
   }
 
-  return NextResponse.redirect(`${base}${returnTo}`);
+  const res = clearOAuthStateCookie(
+    NextResponse.redirect(`${base}${returnTo}`),
+  );
+  if (params.sessionToken) {
+    attachSessionCookie(res, params.sessionToken);
+  }
+  return res;
 }
 
 function redirectAfterConnect(
@@ -84,20 +112,24 @@ function redirectAfterConnect(
       sp.set("ok", "1");
       if (params.step) sp.set("step", params.step);
     }
-    return NextResponse.redirect(
-      `${base}/app/connect/oauth-complete?${sp.toString()}`,
+    return clearOAuthStateCookie(
+      NextResponse.redirect(
+        `${base}/app/connect/oauth-complete?${sp.toString()}`,
+      ),
     );
   }
 
   if (params.error) {
-    return NextResponse.redirect(
-      `${base}/app/connect?error=${encodeURIComponent(params.error)}`,
+    return clearOAuthStateCookie(
+      NextResponse.redirect(
+        `${base}/app/connect?error=${encodeURIComponent(params.error)}`,
+      ),
     );
   }
 
   const returnTo = decoded.returnTo ?? "/app/connect";
-  return NextResponse.redirect(
-    `${base}${returnTo}?step=${params.step ?? "5"}`,
+  return clearOAuthStateCookie(
+    NextResponse.redirect(`${base}${returnTo}?step=${params.step ?? "5"}`),
   );
 }
 
@@ -142,32 +174,8 @@ async function upsertIgAccountForOrg(
 }
 
 async function issueSessionForUser(userId: string) {
-  const user = await prisma.user.findUniqueOrThrow({
-    where: { id: userId },
-    include: {
-      memberships: {
-        include: { organization: true },
-        orderBy: { createdAt: "asc" },
-        take: 1,
-      },
-    },
-  });
-
-  const membership = user.memberships[0];
-  if (!membership || membership.organization.status !== "ACTIVE") {
-    throw new Error("Conta suspensa");
-  }
-
-  const token = await createSessionToken({
-    userId: user.id,
-    organizationId: membership.organizationId,
-    role: membership.role,
-    email: user.email,
-    nome: user.nome,
-  });
-  await setSessionCookie(token);
-
-  return membership.organizationId;
+  const { token, organizationId } = await createSessionForUser(userId);
+  return { token, organizationId };
 }
 
 async function handleAuthIntent(
@@ -229,8 +237,8 @@ async function handleAuthIntent(
     if (!orgId) throw new Error("Usuário sem organização");
 
     await upsertIgAccountForOrg(orgId, result);
-    await issueSessionForUser(user.id);
-    return redirectAfterAuth(base, decoded, {});
+    const { token } = await issueSessionForUser(user.id);
+    return redirectAfterAuth(base, decoded, { sessionToken: token });
   }
 
   // 3) Novo usuário: User + Org + IgAccount
@@ -296,8 +304,8 @@ async function handleAuthIntent(
     return newUser;
   });
 
-  await issueSessionForUser(created.id);
-  return redirectAfterAuth(base, decoded, {});
+  const { token } = await issueSessionForUser(created.id);
+  return redirectAfterAuth(base, decoded, { sessionToken: token });
 }
 
 export async function GET(request: NextRequest) {
@@ -309,7 +317,7 @@ export async function GET(request: NextRequest) {
     searchParams.get("error_reason") ??
     searchParams.get("error");
 
-  const base = getSymbiusAppUrl();
+  const base = requestBaseUrl(request);
   const decoded = stateParam ? parseState(stateParam) : {};
   const isAuth = decoded.intent === "auth";
 
@@ -320,8 +328,7 @@ export async function GET(request: NextRequest) {
   }
 
   const jar = await cookies();
-  const savedState = jar.get("symbius_meta_oauth_state")?.value;
-  jar.delete("symbius_meta_oauth_state");
+  const savedState = jar.get(OAUTH_STATE_COOKIE)?.value;
 
   if (!code || !stateParam || stateParam !== savedState) {
     if (isAuth) {
@@ -343,7 +350,8 @@ export async function GET(request: NextRequest) {
 
     // --- connect (logado) ---
     const session = await getSession();
-    const organizationId = session?.organizationId ?? decoded.organizationId;
+    const organizationId =
+      decoded.organizationId ?? session?.organizationId;
     if (!organizationId) {
       return redirectAfterConnect(base, decoded, {
         error: "Não autenticado",

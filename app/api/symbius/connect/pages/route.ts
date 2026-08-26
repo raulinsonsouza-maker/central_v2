@@ -10,7 +10,10 @@ export async function GET() {
   }
 
   const accounts = await prisma.igAccount.findMany({
-    where: { organizationId: session.organizationId },
+    where: {
+      organizationId: session.organizationId,
+      status: { in: ["CONNECTED", "NEEDS_REAUTH"] },
+    },
     select: {
       id: true,
       igUserId: true,

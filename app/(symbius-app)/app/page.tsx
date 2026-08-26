@@ -21,7 +21,9 @@ export default async function SymbiusDashboardPage() {
   const org = await getOrganizationForSession(session);
   if (!org.onboardingDone) redirect("/app/onboarding");
   const ig =
-    org.igAccounts.find((a) => a.status === "CONNECTED") ?? org.igAccounts[0];
+    org.igAccounts.find((a) => a.status === "CONNECTED") ??
+    org.igAccounts.find((a) => a.status === "NEEDS_REAUTH") ??
+    org.igAccounts[0];
 
   const [contatosCount, fluxosCount, publishedCount, inboxCount] =
     await Promise.all([

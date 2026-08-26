@@ -18,6 +18,7 @@ type ConnectedAccount = {
   igUsername?: string | null;
   igProfilePictureUrl?: string | null;
   messagesEnabled?: boolean;
+  status?: string;
 };
 
 const STEPS = [
@@ -38,22 +39,39 @@ function ConnectWizard() {
   const [account, setAccount] = useState<ConnectedAccount | null>(null);
 
   const loadAccount = useCallback(async () => {
-    const res = await fetch("/api/symbius/connect/pages");
+    const res = await fetch("/api/symbius/connect/pages", {
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
     const data = await res.json();
-    const first = (data.accounts as ConnectedAccount[] | undefined)?.[0];
+    const first = (data.accounts as ConnectedAccount[] | undefined)?.find(
+      (a) => a.status === "CONNECTED" || a.status === "NEEDS_REAUTH",
+    );
     if (first) setAccount(first);
     return first ?? null;
   }, []);
+
+  const hydrateFromServer = useCallback(async () => {
+    const acc = await loadAccount();
+    if (!acc) return false;
+    setAccount(acc);
+    setStep(4);
+    return true;
+  }, [loadAccount]);
 
   useEffect(() => {
     if (stepParam >= 5) {
       setStep(4);
       void loadAccount();
-    } else if (stepParam >= 2) {
+      return;
+    }
+    if (stepParam >= 2) {
       setStep(Math.min(stepParam, 4));
       void loadAccount();
+      return;
     }
-  }, [stepParam, loadAccount]);
+    void hydrateFromServer();
+  }, [stepParam, loadAccount, hydrateFromServer]);
 
   useEffect(() => {
     if (errorParam) {
@@ -83,19 +101,21 @@ function ConnectWizard() {
       }
       if (data.ok) {
         setOauthError(null);
+        router.replace("/app/connect?step=5");
         setStep(2);
         void (async () => {
           const acc = await loadAccount();
           setStep(3);
           setTimeout(() => setStep(4), 600);
           if (acc) setAccount(acc);
+          router.refresh();
         })();
       }
     }
 
     window.addEventListener("message", onMessage);
     return () => window.removeEventListener("message", onMessage);
-  }, [loadAccount]);
+  }, [loadAccount, router]);
 
   function startMetaOAuth() {
     setOauthError(null);

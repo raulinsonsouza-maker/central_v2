@@ -6,7 +6,7 @@ export async function getOrganizationForSession(session: SymbiusSession) {
     where: { id: session.organizationId },
     include: {
       igAccounts: {
-        where: { status: { in: ["CONNECTED", "DISABLED"] } },
+        where: { status: { in: ["CONNECTED", "NEEDS_REAUTH", "DISABLED"] } },
         orderBy: { createdAt: "desc" },
       },
       subscription: true,
