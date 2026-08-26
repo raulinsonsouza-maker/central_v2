@@ -160,6 +160,17 @@ async function getOrCreateContato(
     ) {
       void enrichContatoProfile(updated.id, igsid, accessToken);
     }
+    if (!updated.trackingIdentityId) {
+      void import("@/lib/symbius/attribution/identify").then(({ ensureIgContatoIdentity }) =>
+        ensureIgContatoIdentity({
+          organizationId,
+          contatoId: updated.id,
+          igsid,
+          name: updated.nome ?? updated.username,
+          phone: updated.phone,
+        }).catch((e) => console.warn("[attribution] ig identity", e)),
+      );
+    }
     return updated;
   }
   const created = await prisma.igContato.create({
@@ -175,6 +186,14 @@ async function getOrCreateContato(
   if (accessToken) {
     void enrichContatoProfile(created.id, igsid, accessToken);
   }
+  void import("@/lib/symbius/attribution/identify").then(({ ensureIgContatoIdentity }) =>
+    ensureIgContatoIdentity({
+      organizationId,
+      contatoId: created.id,
+      igsid,
+      name: nome ?? username,
+    }).catch((e) => console.warn("[attribution] ig identity", e)),
+  );
   return created;
 }
 

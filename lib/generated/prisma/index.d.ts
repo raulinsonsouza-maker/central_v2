@@ -218,6 +218,51 @@ export type IgFluxoExecucao = $Result.DefaultSelection<Prisma.$IgFluxoExecucaoPa
  * 
  */
 export type IgWebhookEvent = $Result.DefaultSelection<Prisma.$IgWebhookEventPayload>
+/**
+ * Model TrackingIdentity
+ * 
+ */
+export type TrackingIdentity = $Result.DefaultSelection<Prisma.$TrackingIdentityPayload>
+/**
+ * Model IdentityAlias
+ * 
+ */
+export type IdentityAlias = $Result.DefaultSelection<Prisma.$IdentityAliasPayload>
+/**
+ * Model TrackingVisitor
+ * 
+ */
+export type TrackingVisitor = $Result.DefaultSelection<Prisma.$TrackingVisitorPayload>
+/**
+ * Model TrackingSession
+ * 
+ */
+export type TrackingSession = $Result.DefaultSelection<Prisma.$TrackingSessionPayload>
+/**
+ * Model TrackingEvent
+ * 
+ */
+export type TrackingEvent = $Result.DefaultSelection<Prisma.$TrackingEventPayload>
+/**
+ * Model AttributionOrder
+ * 
+ */
+export type AttributionOrder = $Result.DefaultSelection<Prisma.$AttributionOrderPayload>
+/**
+ * Model AttributionOrderItem
+ * 
+ */
+export type AttributionOrderItem = $Result.DefaultSelection<Prisma.$AttributionOrderItemPayload>
+/**
+ * Model OrderAttribution
+ * 
+ */
+export type OrderAttribution = $Result.DefaultSelection<Prisma.$OrderAttributionPayload>
+/**
+ * Model AdSpendDaily
+ * 
+ */
+export type AdSpendDaily = $Result.DefaultSelection<Prisma.$AdSpendDailyPayload>
 
 /**
  * Enums
@@ -765,6 +810,96 @@ export class PrismaClient<
     * ```
     */
   get igWebhookEvent(): Prisma.IgWebhookEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.trackingIdentity`: Exposes CRUD operations for the **TrackingIdentity** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TrackingIdentities
+    * const trackingIdentities = await prisma.trackingIdentity.findMany()
+    * ```
+    */
+  get trackingIdentity(): Prisma.TrackingIdentityDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.identityAlias`: Exposes CRUD operations for the **IdentityAlias** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more IdentityAliases
+    * const identityAliases = await prisma.identityAlias.findMany()
+    * ```
+    */
+  get identityAlias(): Prisma.IdentityAliasDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.trackingVisitor`: Exposes CRUD operations for the **TrackingVisitor** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TrackingVisitors
+    * const trackingVisitors = await prisma.trackingVisitor.findMany()
+    * ```
+    */
+  get trackingVisitor(): Prisma.TrackingVisitorDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.trackingSession`: Exposes CRUD operations for the **TrackingSession** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TrackingSessions
+    * const trackingSessions = await prisma.trackingSession.findMany()
+    * ```
+    */
+  get trackingSession(): Prisma.TrackingSessionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.trackingEvent`: Exposes CRUD operations for the **TrackingEvent** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more TrackingEvents
+    * const trackingEvents = await prisma.trackingEvent.findMany()
+    * ```
+    */
+  get trackingEvent(): Prisma.TrackingEventDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.attributionOrder`: Exposes CRUD operations for the **AttributionOrder** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AttributionOrders
+    * const attributionOrders = await prisma.attributionOrder.findMany()
+    * ```
+    */
+  get attributionOrder(): Prisma.AttributionOrderDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.attributionOrderItem`: Exposes CRUD operations for the **AttributionOrderItem** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AttributionOrderItems
+    * const attributionOrderItems = await prisma.attributionOrderItem.findMany()
+    * ```
+    */
+  get attributionOrderItem(): Prisma.AttributionOrderItemDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.orderAttribution`: Exposes CRUD operations for the **OrderAttribution** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more OrderAttributions
+    * const orderAttributions = await prisma.orderAttribution.findMany()
+    * ```
+    */
+  get orderAttribution(): Prisma.OrderAttributionDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.adSpendDaily`: Exposes CRUD operations for the **AdSpendDaily** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more AdSpendDailies
+    * const adSpendDailies = await prisma.adSpendDaily.findMany()
+    * ```
+    */
+  get adSpendDaily(): Prisma.AdSpendDailyDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -1246,7 +1381,16 @@ export namespace Prisma {
     IgFluxo: 'IgFluxo',
     IgFluxoNo: 'IgFluxoNo',
     IgFluxoExecucao: 'IgFluxoExecucao',
-    IgWebhookEvent: 'IgWebhookEvent'
+    IgWebhookEvent: 'IgWebhookEvent',
+    TrackingIdentity: 'TrackingIdentity',
+    IdentityAlias: 'IdentityAlias',
+    TrackingVisitor: 'TrackingVisitor',
+    TrackingSession: 'TrackingSession',
+    TrackingEvent: 'TrackingEvent',
+    AttributionOrder: 'AttributionOrder',
+    AttributionOrderItem: 'AttributionOrderItem',
+    OrderAttribution: 'OrderAttribution',
+    AdSpendDaily: 'AdSpendDaily'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1265,7 +1409,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "cliente" | "conta" | "conexaoIntegracao" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm" | "rdMarketingConfig" | "instagramInsightMensal" | "organization" | "user" | "organizationMember" | "subscription" | "igAccount" | "igOrgSettings" | "igSnippet" | "igTagDefinition" | "igSegmento" | "igConversionEvent" | "igMemberInvite" | "igScheduledMessage" | "igContato" | "igConversa" | "igMensagem" | "igFluxoPasta" | "igFluxo" | "igFluxoNo" | "igFluxoExecucao" | "igWebhookEvent"
+      modelProps: "cliente" | "conta" | "conexaoIntegracao" | "fatoMidiaDiario" | "agregadoMidiaSemanal" | "agregadoMidiaMensal" | "meta" | "pautaReuniao" | "googleAdsCriativo" | "googleAdsCampanha" | "metaAdsCriativo" | "fatoAnalyticsDiario" | "fatoAnalyticsPorCanal" | "systemConfig" | "syncState" | "segmento" | "metaLeadIndividual" | "crmConfig" | "leadCrm" | "rdMarketingConfig" | "instagramInsightMensal" | "organization" | "user" | "organizationMember" | "subscription" | "igAccount" | "igOrgSettings" | "igSnippet" | "igTagDefinition" | "igSegmento" | "igConversionEvent" | "igMemberInvite" | "igScheduledMessage" | "igContato" | "igConversa" | "igMensagem" | "igFluxoPasta" | "igFluxo" | "igFluxoNo" | "igFluxoExecucao" | "igWebhookEvent" | "trackingIdentity" | "identityAlias" | "trackingVisitor" | "trackingSession" | "trackingEvent" | "attributionOrder" | "attributionOrderItem" | "orderAttribution" | "adSpendDaily"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -4303,6 +4447,672 @@ export namespace Prisma {
           }
         }
       }
+      TrackingIdentity: {
+        payload: Prisma.$TrackingIdentityPayload<ExtArgs>
+        fields: Prisma.TrackingIdentityFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TrackingIdentityFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TrackingIdentityFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>
+          }
+          findFirst: {
+            args: Prisma.TrackingIdentityFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TrackingIdentityFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>
+          }
+          findMany: {
+            args: Prisma.TrackingIdentityFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>[]
+          }
+          create: {
+            args: Prisma.TrackingIdentityCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>
+          }
+          createMany: {
+            args: Prisma.TrackingIdentityCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TrackingIdentityCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>[]
+          }
+          delete: {
+            args: Prisma.TrackingIdentityDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>
+          }
+          update: {
+            args: Prisma.TrackingIdentityUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>
+          }
+          deleteMany: {
+            args: Prisma.TrackingIdentityDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TrackingIdentityUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TrackingIdentityUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>[]
+          }
+          upsert: {
+            args: Prisma.TrackingIdentityUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingIdentityPayload>
+          }
+          aggregate: {
+            args: Prisma.TrackingIdentityAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTrackingIdentity>
+          }
+          groupBy: {
+            args: Prisma.TrackingIdentityGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TrackingIdentityGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TrackingIdentityCountArgs<ExtArgs>
+            result: $Utils.Optional<TrackingIdentityCountAggregateOutputType> | number
+          }
+        }
+      }
+      IdentityAlias: {
+        payload: Prisma.$IdentityAliasPayload<ExtArgs>
+        fields: Prisma.IdentityAliasFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.IdentityAliasFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.IdentityAliasFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>
+          }
+          findFirst: {
+            args: Prisma.IdentityAliasFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.IdentityAliasFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>
+          }
+          findMany: {
+            args: Prisma.IdentityAliasFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>[]
+          }
+          create: {
+            args: Prisma.IdentityAliasCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>
+          }
+          createMany: {
+            args: Prisma.IdentityAliasCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.IdentityAliasCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>[]
+          }
+          delete: {
+            args: Prisma.IdentityAliasDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>
+          }
+          update: {
+            args: Prisma.IdentityAliasUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>
+          }
+          deleteMany: {
+            args: Prisma.IdentityAliasDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.IdentityAliasUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.IdentityAliasUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>[]
+          }
+          upsert: {
+            args: Prisma.IdentityAliasUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$IdentityAliasPayload>
+          }
+          aggregate: {
+            args: Prisma.IdentityAliasAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateIdentityAlias>
+          }
+          groupBy: {
+            args: Prisma.IdentityAliasGroupByArgs<ExtArgs>
+            result: $Utils.Optional<IdentityAliasGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.IdentityAliasCountArgs<ExtArgs>
+            result: $Utils.Optional<IdentityAliasCountAggregateOutputType> | number
+          }
+        }
+      }
+      TrackingVisitor: {
+        payload: Prisma.$TrackingVisitorPayload<ExtArgs>
+        fields: Prisma.TrackingVisitorFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TrackingVisitorFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TrackingVisitorFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>
+          }
+          findFirst: {
+            args: Prisma.TrackingVisitorFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TrackingVisitorFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>
+          }
+          findMany: {
+            args: Prisma.TrackingVisitorFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>[]
+          }
+          create: {
+            args: Prisma.TrackingVisitorCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>
+          }
+          createMany: {
+            args: Prisma.TrackingVisitorCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TrackingVisitorCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>[]
+          }
+          delete: {
+            args: Prisma.TrackingVisitorDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>
+          }
+          update: {
+            args: Prisma.TrackingVisitorUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>
+          }
+          deleteMany: {
+            args: Prisma.TrackingVisitorDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TrackingVisitorUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TrackingVisitorUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>[]
+          }
+          upsert: {
+            args: Prisma.TrackingVisitorUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingVisitorPayload>
+          }
+          aggregate: {
+            args: Prisma.TrackingVisitorAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTrackingVisitor>
+          }
+          groupBy: {
+            args: Prisma.TrackingVisitorGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TrackingVisitorGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TrackingVisitorCountArgs<ExtArgs>
+            result: $Utils.Optional<TrackingVisitorCountAggregateOutputType> | number
+          }
+        }
+      }
+      TrackingSession: {
+        payload: Prisma.$TrackingSessionPayload<ExtArgs>
+        fields: Prisma.TrackingSessionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TrackingSessionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TrackingSessionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>
+          }
+          findFirst: {
+            args: Prisma.TrackingSessionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TrackingSessionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>
+          }
+          findMany: {
+            args: Prisma.TrackingSessionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>[]
+          }
+          create: {
+            args: Prisma.TrackingSessionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>
+          }
+          createMany: {
+            args: Prisma.TrackingSessionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TrackingSessionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>[]
+          }
+          delete: {
+            args: Prisma.TrackingSessionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>
+          }
+          update: {
+            args: Prisma.TrackingSessionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>
+          }
+          deleteMany: {
+            args: Prisma.TrackingSessionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TrackingSessionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TrackingSessionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>[]
+          }
+          upsert: {
+            args: Prisma.TrackingSessionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingSessionPayload>
+          }
+          aggregate: {
+            args: Prisma.TrackingSessionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTrackingSession>
+          }
+          groupBy: {
+            args: Prisma.TrackingSessionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TrackingSessionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TrackingSessionCountArgs<ExtArgs>
+            result: $Utils.Optional<TrackingSessionCountAggregateOutputType> | number
+          }
+        }
+      }
+      TrackingEvent: {
+        payload: Prisma.$TrackingEventPayload<ExtArgs>
+        fields: Prisma.TrackingEventFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.TrackingEventFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.TrackingEventFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>
+          }
+          findFirst: {
+            args: Prisma.TrackingEventFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.TrackingEventFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>
+          }
+          findMany: {
+            args: Prisma.TrackingEventFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>[]
+          }
+          create: {
+            args: Prisma.TrackingEventCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>
+          }
+          createMany: {
+            args: Prisma.TrackingEventCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.TrackingEventCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>[]
+          }
+          delete: {
+            args: Prisma.TrackingEventDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>
+          }
+          update: {
+            args: Prisma.TrackingEventUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>
+          }
+          deleteMany: {
+            args: Prisma.TrackingEventDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.TrackingEventUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.TrackingEventUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>[]
+          }
+          upsert: {
+            args: Prisma.TrackingEventUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$TrackingEventPayload>
+          }
+          aggregate: {
+            args: Prisma.TrackingEventAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateTrackingEvent>
+          }
+          groupBy: {
+            args: Prisma.TrackingEventGroupByArgs<ExtArgs>
+            result: $Utils.Optional<TrackingEventGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.TrackingEventCountArgs<ExtArgs>
+            result: $Utils.Optional<TrackingEventCountAggregateOutputType> | number
+          }
+        }
+      }
+      AttributionOrder: {
+        payload: Prisma.$AttributionOrderPayload<ExtArgs>
+        fields: Prisma.AttributionOrderFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AttributionOrderFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttributionOrderFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>
+          }
+          findFirst: {
+            args: Prisma.AttributionOrderFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttributionOrderFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>
+          }
+          findMany: {
+            args: Prisma.AttributionOrderFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>[]
+          }
+          create: {
+            args: Prisma.AttributionOrderCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>
+          }
+          createMany: {
+            args: Prisma.AttributionOrderCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AttributionOrderCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>[]
+          }
+          delete: {
+            args: Prisma.AttributionOrderDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>
+          }
+          update: {
+            args: Prisma.AttributionOrderUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>
+          }
+          deleteMany: {
+            args: Prisma.AttributionOrderDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AttributionOrderUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AttributionOrderUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>[]
+          }
+          upsert: {
+            args: Prisma.AttributionOrderUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderPayload>
+          }
+          aggregate: {
+            args: Prisma.AttributionOrderAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAttributionOrder>
+          }
+          groupBy: {
+            args: Prisma.AttributionOrderGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AttributionOrderGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AttributionOrderCountArgs<ExtArgs>
+            result: $Utils.Optional<AttributionOrderCountAggregateOutputType> | number
+          }
+        }
+      }
+      AttributionOrderItem: {
+        payload: Prisma.$AttributionOrderItemPayload<ExtArgs>
+        fields: Prisma.AttributionOrderItemFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AttributionOrderItemFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AttributionOrderItemFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>
+          }
+          findFirst: {
+            args: Prisma.AttributionOrderItemFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AttributionOrderItemFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>
+          }
+          findMany: {
+            args: Prisma.AttributionOrderItemFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>[]
+          }
+          create: {
+            args: Prisma.AttributionOrderItemCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>
+          }
+          createMany: {
+            args: Prisma.AttributionOrderItemCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AttributionOrderItemCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>[]
+          }
+          delete: {
+            args: Prisma.AttributionOrderItemDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>
+          }
+          update: {
+            args: Prisma.AttributionOrderItemUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>
+          }
+          deleteMany: {
+            args: Prisma.AttributionOrderItemDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AttributionOrderItemUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AttributionOrderItemUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>[]
+          }
+          upsert: {
+            args: Prisma.AttributionOrderItemUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AttributionOrderItemPayload>
+          }
+          aggregate: {
+            args: Prisma.AttributionOrderItemAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAttributionOrderItem>
+          }
+          groupBy: {
+            args: Prisma.AttributionOrderItemGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AttributionOrderItemGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AttributionOrderItemCountArgs<ExtArgs>
+            result: $Utils.Optional<AttributionOrderItemCountAggregateOutputType> | number
+          }
+        }
+      }
+      OrderAttribution: {
+        payload: Prisma.$OrderAttributionPayload<ExtArgs>
+        fields: Prisma.OrderAttributionFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.OrderAttributionFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.OrderAttributionFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>
+          }
+          findFirst: {
+            args: Prisma.OrderAttributionFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.OrderAttributionFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>
+          }
+          findMany: {
+            args: Prisma.OrderAttributionFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>[]
+          }
+          create: {
+            args: Prisma.OrderAttributionCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>
+          }
+          createMany: {
+            args: Prisma.OrderAttributionCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.OrderAttributionCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>[]
+          }
+          delete: {
+            args: Prisma.OrderAttributionDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>
+          }
+          update: {
+            args: Prisma.OrderAttributionUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>
+          }
+          deleteMany: {
+            args: Prisma.OrderAttributionDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.OrderAttributionUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.OrderAttributionUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>[]
+          }
+          upsert: {
+            args: Prisma.OrderAttributionUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$OrderAttributionPayload>
+          }
+          aggregate: {
+            args: Prisma.OrderAttributionAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateOrderAttribution>
+          }
+          groupBy: {
+            args: Prisma.OrderAttributionGroupByArgs<ExtArgs>
+            result: $Utils.Optional<OrderAttributionGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.OrderAttributionCountArgs<ExtArgs>
+            result: $Utils.Optional<OrderAttributionCountAggregateOutputType> | number
+          }
+        }
+      }
+      AdSpendDaily: {
+        payload: Prisma.$AdSpendDailyPayload<ExtArgs>
+        fields: Prisma.AdSpendDailyFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.AdSpendDailyFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.AdSpendDailyFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>
+          }
+          findFirst: {
+            args: Prisma.AdSpendDailyFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.AdSpendDailyFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>
+          }
+          findMany: {
+            args: Prisma.AdSpendDailyFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>[]
+          }
+          create: {
+            args: Prisma.AdSpendDailyCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>
+          }
+          createMany: {
+            args: Prisma.AdSpendDailyCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.AdSpendDailyCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>[]
+          }
+          delete: {
+            args: Prisma.AdSpendDailyDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>
+          }
+          update: {
+            args: Prisma.AdSpendDailyUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>
+          }
+          deleteMany: {
+            args: Prisma.AdSpendDailyDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.AdSpendDailyUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.AdSpendDailyUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>[]
+          }
+          upsert: {
+            args: Prisma.AdSpendDailyUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$AdSpendDailyPayload>
+          }
+          aggregate: {
+            args: Prisma.AdSpendDailyAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateAdSpendDaily>
+          }
+          groupBy: {
+            args: Prisma.AdSpendDailyGroupByArgs<ExtArgs>
+            result: $Utils.Optional<AdSpendDailyGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.AdSpendDailyCountArgs<ExtArgs>
+            result: $Utils.Optional<AdSpendDailyCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -4440,6 +5250,15 @@ export namespace Prisma {
     igFluxoNo?: IgFluxoNoOmit
     igFluxoExecucao?: IgFluxoExecucaoOmit
     igWebhookEvent?: IgWebhookEventOmit
+    trackingIdentity?: TrackingIdentityOmit
+    identityAlias?: IdentityAliasOmit
+    trackingVisitor?: TrackingVisitorOmit
+    trackingSession?: TrackingSessionOmit
+    trackingEvent?: TrackingEventOmit
+    attributionOrder?: AttributionOrderOmit
+    attributionOrderItem?: AttributionOrderItemOmit
+    orderAttribution?: OrderAttributionOmit
+    adSpendDaily?: AdSpendDailyOmit
   }
 
   /* Types for Logging */
@@ -4811,6 +5630,12 @@ export namespace Prisma {
     memberInvites: number
     scheduledMessages: number
     tagDefinitions: number
+    trackingIdentities: number
+    trackingVisitors: number
+    trackingSessions: number
+    trackingEvents: number
+    attributionOrders: number
+    adSpendDaily: number
   }
 
   export type OrganizationCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -4828,6 +5653,12 @@ export namespace Prisma {
     memberInvites?: boolean | OrganizationCountOutputTypeCountMemberInvitesArgs
     scheduledMessages?: boolean | OrganizationCountOutputTypeCountScheduledMessagesArgs
     tagDefinitions?: boolean | OrganizationCountOutputTypeCountTagDefinitionsArgs
+    trackingIdentities?: boolean | OrganizationCountOutputTypeCountTrackingIdentitiesArgs
+    trackingVisitors?: boolean | OrganizationCountOutputTypeCountTrackingVisitorsArgs
+    trackingSessions?: boolean | OrganizationCountOutputTypeCountTrackingSessionsArgs
+    trackingEvents?: boolean | OrganizationCountOutputTypeCountTrackingEventsArgs
+    attributionOrders?: boolean | OrganizationCountOutputTypeCountAttributionOrdersArgs
+    adSpendDaily?: boolean | OrganizationCountOutputTypeCountAdSpendDailyArgs
   }
 
   // Custom InputTypes
@@ -4937,6 +5768,48 @@ export namespace Prisma {
    */
   export type OrganizationCountOutputTypeCountTagDefinitionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: IgTagDefinitionWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountTrackingIdentitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingIdentityWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountTrackingVisitorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingVisitorWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountTrackingSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingSessionWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountTrackingEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingEventWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountAttributionOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttributionOrderWhereInput
+  }
+
+  /**
+   * OrganizationCountOutputType without action
+   */
+  export type OrganizationCountOutputTypeCountAdSpendDailyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdSpendDailyWhereInput
   }
 
 
@@ -5159,6 +6032,184 @@ export namespace Prisma {
    */
   export type IgFluxoCountOutputTypeCountExecucoesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: IgFluxoExecucaoWhereInput
+  }
+
+
+  /**
+   * Count Type TrackingIdentityCountOutputType
+   */
+
+  export type TrackingIdentityCountOutputType = {
+    aliases: number
+    visitors: number
+    events: number
+    orders: number
+    contatos: number
+    mergedFrom: number
+  }
+
+  export type TrackingIdentityCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    aliases?: boolean | TrackingIdentityCountOutputTypeCountAliasesArgs
+    visitors?: boolean | TrackingIdentityCountOutputTypeCountVisitorsArgs
+    events?: boolean | TrackingIdentityCountOutputTypeCountEventsArgs
+    orders?: boolean | TrackingIdentityCountOutputTypeCountOrdersArgs
+    contatos?: boolean | TrackingIdentityCountOutputTypeCountContatosArgs
+    mergedFrom?: boolean | TrackingIdentityCountOutputTypeCountMergedFromArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TrackingIdentityCountOutputType without action
+   */
+  export type TrackingIdentityCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentityCountOutputType
+     */
+    select?: TrackingIdentityCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TrackingIdentityCountOutputType without action
+   */
+  export type TrackingIdentityCountOutputTypeCountAliasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IdentityAliasWhereInput
+  }
+
+  /**
+   * TrackingIdentityCountOutputType without action
+   */
+  export type TrackingIdentityCountOutputTypeCountVisitorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingVisitorWhereInput
+  }
+
+  /**
+   * TrackingIdentityCountOutputType without action
+   */
+  export type TrackingIdentityCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingEventWhereInput
+  }
+
+  /**
+   * TrackingIdentityCountOutputType without action
+   */
+  export type TrackingIdentityCountOutputTypeCountOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttributionOrderWhereInput
+  }
+
+  /**
+   * TrackingIdentityCountOutputType without action
+   */
+  export type TrackingIdentityCountOutputTypeCountContatosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IgContatoWhereInput
+  }
+
+  /**
+   * TrackingIdentityCountOutputType without action
+   */
+  export type TrackingIdentityCountOutputTypeCountMergedFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingIdentityWhereInput
+  }
+
+
+  /**
+   * Count Type TrackingVisitorCountOutputType
+   */
+
+  export type TrackingVisitorCountOutputType = {
+    sessions: number
+    events: number
+  }
+
+  export type TrackingVisitorCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    sessions?: boolean | TrackingVisitorCountOutputTypeCountSessionsArgs
+    events?: boolean | TrackingVisitorCountOutputTypeCountEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TrackingVisitorCountOutputType without action
+   */
+  export type TrackingVisitorCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitorCountOutputType
+     */
+    select?: TrackingVisitorCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TrackingVisitorCountOutputType without action
+   */
+  export type TrackingVisitorCountOutputTypeCountSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingSessionWhereInput
+  }
+
+  /**
+   * TrackingVisitorCountOutputType without action
+   */
+  export type TrackingVisitorCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingEventWhereInput
+  }
+
+
+  /**
+   * Count Type TrackingSessionCountOutputType
+   */
+
+  export type TrackingSessionCountOutputType = {
+    events: number
+  }
+
+  export type TrackingSessionCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    events?: boolean | TrackingSessionCountOutputTypeCountEventsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * TrackingSessionCountOutputType without action
+   */
+  export type TrackingSessionCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSessionCountOutputType
+     */
+    select?: TrackingSessionCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * TrackingSessionCountOutputType without action
+   */
+  export type TrackingSessionCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingEventWhereInput
+  }
+
+
+  /**
+   * Count Type AttributionOrderCountOutputType
+   */
+
+  export type AttributionOrderCountOutputType = {
+    items: number
+  }
+
+  export type AttributionOrderCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    items?: boolean | AttributionOrderCountOutputTypeCountItemsArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * AttributionOrderCountOutputType without action
+   */
+  export type AttributionOrderCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderCountOutputType
+     */
+    select?: AttributionOrderCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * AttributionOrderCountOutputType without action
+   */
+  export type AttributionOrderCountOutputTypeCountItemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttributionOrderItemWhereInput
   }
 
 
@@ -31370,6 +32421,12 @@ export namespace Prisma {
     memberInvites?: boolean | Organization$memberInvitesArgs<ExtArgs>
     scheduledMessages?: boolean | Organization$scheduledMessagesArgs<ExtArgs>
     tagDefinitions?: boolean | Organization$tagDefinitionsArgs<ExtArgs>
+    trackingIdentities?: boolean | Organization$trackingIdentitiesArgs<ExtArgs>
+    trackingVisitors?: boolean | Organization$trackingVisitorsArgs<ExtArgs>
+    trackingSessions?: boolean | Organization$trackingSessionsArgs<ExtArgs>
+    trackingEvents?: boolean | Organization$trackingEventsArgs<ExtArgs>
+    attributionOrders?: boolean | Organization$attributionOrdersArgs<ExtArgs>
+    adSpendDaily?: boolean | Organization$adSpendDailyArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["organization"]>
 
@@ -31436,6 +32493,12 @@ export namespace Prisma {
     memberInvites?: boolean | Organization$memberInvitesArgs<ExtArgs>
     scheduledMessages?: boolean | Organization$scheduledMessagesArgs<ExtArgs>
     tagDefinitions?: boolean | Organization$tagDefinitionsArgs<ExtArgs>
+    trackingIdentities?: boolean | Organization$trackingIdentitiesArgs<ExtArgs>
+    trackingVisitors?: boolean | Organization$trackingVisitorsArgs<ExtArgs>
+    trackingSessions?: boolean | Organization$trackingSessionsArgs<ExtArgs>
+    trackingEvents?: boolean | Organization$trackingEventsArgs<ExtArgs>
+    attributionOrders?: boolean | Organization$attributionOrdersArgs<ExtArgs>
+    adSpendDaily?: boolean | Organization$adSpendDailyArgs<ExtArgs>
     _count?: boolean | OrganizationCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type OrganizationIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -31460,6 +32523,12 @@ export namespace Prisma {
       memberInvites: Prisma.$IgMemberInvitePayload<ExtArgs>[]
       scheduledMessages: Prisma.$IgScheduledMessagePayload<ExtArgs>[]
       tagDefinitions: Prisma.$IgTagDefinitionPayload<ExtArgs>[]
+      trackingIdentities: Prisma.$TrackingIdentityPayload<ExtArgs>[]
+      trackingVisitors: Prisma.$TrackingVisitorPayload<ExtArgs>[]
+      trackingSessions: Prisma.$TrackingSessionPayload<ExtArgs>[]
+      trackingEvents: Prisma.$TrackingEventPayload<ExtArgs>[]
+      attributionOrders: Prisma.$AttributionOrderPayload<ExtArgs>[]
+      adSpendDaily: Prisma.$AdSpendDailyPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -31884,6 +32953,12 @@ export namespace Prisma {
     memberInvites<T extends Organization$memberInvitesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$memberInvitesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IgMemberInvitePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     scheduledMessages<T extends Organization$scheduledMessagesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$scheduledMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IgScheduledMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     tagDefinitions<T extends Organization$tagDefinitionsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$tagDefinitionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IgTagDefinitionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    trackingIdentities<T extends Organization$trackingIdentitiesArgs<ExtArgs> = {}>(args?: Subset<T, Organization$trackingIdentitiesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    trackingVisitors<T extends Organization$trackingVisitorsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$trackingVisitorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    trackingSessions<T extends Organization$trackingSessionsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$trackingSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    trackingEvents<T extends Organization$trackingEventsArgs<ExtArgs> = {}>(args?: Subset<T, Organization$trackingEventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attributionOrders<T extends Organization$attributionOrdersArgs<ExtArgs> = {}>(args?: Subset<T, Organization$attributionOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    adSpendDaily<T extends Organization$adSpendDailyArgs<ExtArgs> = {}>(args?: Subset<T, Organization$adSpendDailyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -32684,6 +33759,150 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: IgTagDefinitionScalarFieldEnum | IgTagDefinitionScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.trackingIdentities
+   */
+  export type Organization$trackingIdentitiesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    where?: TrackingIdentityWhereInput
+    orderBy?: TrackingIdentityOrderByWithRelationInput | TrackingIdentityOrderByWithRelationInput[]
+    cursor?: TrackingIdentityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingIdentityScalarFieldEnum | TrackingIdentityScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.trackingVisitors
+   */
+  export type Organization$trackingVisitorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    where?: TrackingVisitorWhereInput
+    orderBy?: TrackingVisitorOrderByWithRelationInput | TrackingVisitorOrderByWithRelationInput[]
+    cursor?: TrackingVisitorWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingVisitorScalarFieldEnum | TrackingVisitorScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.trackingSessions
+   */
+  export type Organization$trackingSessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    where?: TrackingSessionWhereInput
+    orderBy?: TrackingSessionOrderByWithRelationInput | TrackingSessionOrderByWithRelationInput[]
+    cursor?: TrackingSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingSessionScalarFieldEnum | TrackingSessionScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.trackingEvents
+   */
+  export type Organization$trackingEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    where?: TrackingEventWhereInput
+    orderBy?: TrackingEventOrderByWithRelationInput | TrackingEventOrderByWithRelationInput[]
+    cursor?: TrackingEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingEventScalarFieldEnum | TrackingEventScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.attributionOrders
+   */
+  export type Organization$attributionOrdersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    where?: AttributionOrderWhereInput
+    orderBy?: AttributionOrderOrderByWithRelationInput | AttributionOrderOrderByWithRelationInput[]
+    cursor?: AttributionOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttributionOrderScalarFieldEnum | AttributionOrderScalarFieldEnum[]
+  }
+
+  /**
+   * Organization.adSpendDaily
+   */
+  export type Organization$adSpendDailyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    where?: AdSpendDailyWhereInput
+    orderBy?: AdSpendDailyOrderByWithRelationInput | AdSpendDailyOrderByWithRelationInput[]
+    cursor?: AdSpendDailyWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AdSpendDailyScalarFieldEnum | AdSpendDailyScalarFieldEnum[]
   }
 
   /**
@@ -37328,6 +38547,10 @@ export namespace Prisma {
     aiEnabled: boolean | null
     aiKnowledgeBase: string | null
     aiTone: string | null
+    metaPixelId: string | null
+    metaCapiToken: string | null
+    ga4MeasurementId: string | null
+    ga4ApiSecret: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -37343,6 +38566,10 @@ export namespace Prisma {
     aiEnabled: boolean | null
     aiKnowledgeBase: string | null
     aiTone: string | null
+    metaPixelId: string | null
+    metaCapiToken: string | null
+    ga4MeasurementId: string | null
+    ga4ApiSecret: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -37360,6 +38587,11 @@ export namespace Prisma {
     aiKnowledgeBase: number
     aiGoals: number
     aiTone: number
+    metaPixelId: number
+    metaCapiToken: number
+    ga4MeasurementId: number
+    ga4ApiSecret: number
+    ecommerceConnectors: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -37377,6 +38609,10 @@ export namespace Prisma {
     aiEnabled?: true
     aiKnowledgeBase?: true
     aiTone?: true
+    metaPixelId?: true
+    metaCapiToken?: true
+    ga4MeasurementId?: true
+    ga4ApiSecret?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -37392,6 +38628,10 @@ export namespace Prisma {
     aiEnabled?: true
     aiKnowledgeBase?: true
     aiTone?: true
+    metaPixelId?: true
+    metaCapiToken?: true
+    ga4MeasurementId?: true
+    ga4ApiSecret?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -37409,6 +38649,11 @@ export namespace Prisma {
     aiKnowledgeBase?: true
     aiGoals?: true
     aiTone?: true
+    metaPixelId?: true
+    metaCapiToken?: true
+    ga4MeasurementId?: true
+    ga4ApiSecret?: true
+    ecommerceConnectors?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -37499,6 +38744,11 @@ export namespace Prisma {
     aiKnowledgeBase: string | null
     aiGoals: JsonValue
     aiTone: string | null
+    metaPixelId: string | null
+    metaCapiToken: string | null
+    ga4MeasurementId: string | null
+    ga4ApiSecret: string | null
+    ecommerceConnectors: JsonValue
     createdAt: Date
     updatedAt: Date
     _count: IgOrgSettingsCountAggregateOutputType | null
@@ -37533,6 +38783,11 @@ export namespace Prisma {
     aiKnowledgeBase?: boolean
     aiGoals?: boolean
     aiTone?: boolean
+    metaPixelId?: boolean
+    metaCapiToken?: boolean
+    ga4MeasurementId?: boolean
+    ga4ApiSecret?: boolean
+    ecommerceConnectors?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -37551,6 +38806,11 @@ export namespace Prisma {
     aiKnowledgeBase?: boolean
     aiGoals?: boolean
     aiTone?: boolean
+    metaPixelId?: boolean
+    metaCapiToken?: boolean
+    ga4MeasurementId?: boolean
+    ga4ApiSecret?: boolean
+    ecommerceConnectors?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -37569,6 +38829,11 @@ export namespace Prisma {
     aiKnowledgeBase?: boolean
     aiGoals?: boolean
     aiTone?: boolean
+    metaPixelId?: boolean
+    metaCapiToken?: boolean
+    ga4MeasurementId?: boolean
+    ga4ApiSecret?: boolean
+    ecommerceConnectors?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -37587,11 +38852,16 @@ export namespace Prisma {
     aiKnowledgeBase?: boolean
     aiGoals?: boolean
     aiTone?: boolean
+    metaPixelId?: boolean
+    metaCapiToken?: boolean
+    ga4MeasurementId?: boolean
+    ga4ApiSecret?: boolean
+    ecommerceConnectors?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type IgOrgSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "apiKey" | "webhookUrl" | "webhookEvents" | "googleSheetId" | "googleSheetTab" | "syncCentralCrm" | "aiEnabled" | "aiKnowledgeBase" | "aiGoals" | "aiTone" | "createdAt" | "updatedAt", ExtArgs["result"]["igOrgSettings"]>
+  export type IgOrgSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "apiKey" | "webhookUrl" | "webhookEvents" | "googleSheetId" | "googleSheetTab" | "syncCentralCrm" | "aiEnabled" | "aiKnowledgeBase" | "aiGoals" | "aiTone" | "metaPixelId" | "metaCapiToken" | "ga4MeasurementId" | "ga4ApiSecret" | "ecommerceConnectors" | "createdAt" | "updatedAt", ExtArgs["result"]["igOrgSettings"]>
   export type IgOrgSettingsInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
   }
@@ -37620,6 +38890,14 @@ export namespace Prisma {
       aiKnowledgeBase: string | null
       aiGoals: Prisma.JsonValue
       aiTone: string | null
+      metaPixelId: string | null
+      metaCapiToken: string | null
+      ga4MeasurementId: string | null
+      ga4ApiSecret: string | null
+      /**
+       * Shopify/Tray/Nuvemshop secrets + store URLs
+       */
+      ecommerceConnectors: Prisma.JsonValue
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["igOrgSettings"]>
@@ -38058,6 +39336,11 @@ export namespace Prisma {
     readonly aiKnowledgeBase: FieldRef<"IgOrgSettings", 'String'>
     readonly aiGoals: FieldRef<"IgOrgSettings", 'Json'>
     readonly aiTone: FieldRef<"IgOrgSettings", 'String'>
+    readonly metaPixelId: FieldRef<"IgOrgSettings", 'String'>
+    readonly metaCapiToken: FieldRef<"IgOrgSettings", 'String'>
+    readonly ga4MeasurementId: FieldRef<"IgOrgSettings", 'String'>
+    readonly ga4ApiSecret: FieldRef<"IgOrgSettings", 'String'>
+    readonly ecommerceConnectors: FieldRef<"IgOrgSettings", 'Json'>
     readonly createdAt: FieldRef<"IgOrgSettings", 'DateTime'>
     readonly updatedAt: FieldRef<"IgOrgSettings", 'DateTime'>
   }
@@ -44987,9 +46270,11 @@ export namespace Prisma {
     igsid: string | null
     nome: string | null
     username: string | null
+    profilePictureUrl: string | null
     phone: string | null
     botPaused: boolean | null
     lastInteractionAt: Date | null
+    trackingIdentityId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -45001,9 +46286,11 @@ export namespace Prisma {
     igsid: string | null
     nome: string | null
     username: string | null
+    profilePictureUrl: string | null
     phone: string | null
     botPaused: boolean | null
     lastInteractionAt: Date | null
+    trackingIdentityId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -45015,11 +46302,13 @@ export namespace Prisma {
     igsid: number
     nome: number
     username: number
+    profilePictureUrl: number
     tags: number
     campos: number
     phone: number
     botPaused: number
     lastInteractionAt: number
+    trackingIdentityId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -45033,9 +46322,11 @@ export namespace Prisma {
     igsid?: true
     nome?: true
     username?: true
+    profilePictureUrl?: true
     phone?: true
     botPaused?: true
     lastInteractionAt?: true
+    trackingIdentityId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -45047,9 +46338,11 @@ export namespace Prisma {
     igsid?: true
     nome?: true
     username?: true
+    profilePictureUrl?: true
     phone?: true
     botPaused?: true
     lastInteractionAt?: true
+    trackingIdentityId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -45061,11 +46354,13 @@ export namespace Prisma {
     igsid?: true
     nome?: true
     username?: true
+    profilePictureUrl?: true
     tags?: true
     campos?: true
     phone?: true
     botPaused?: true
     lastInteractionAt?: true
+    trackingIdentityId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -45150,11 +46445,13 @@ export namespace Prisma {
     igsid: string
     nome: string | null
     username: string | null
+    profilePictureUrl: string | null
     tags: string[]
     campos: JsonValue
     phone: string | null
     botPaused: boolean
     lastInteractionAt: Date | null
+    trackingIdentityId: string | null
     createdAt: Date
     updatedAt: Date
     _count: IgContatoCountAggregateOutputType | null
@@ -45183,15 +46480,18 @@ export namespace Prisma {
     igsid?: boolean
     nome?: boolean
     username?: boolean
+    profilePictureUrl?: boolean
     tags?: boolean
     campos?: boolean
     phone?: boolean
     botPaused?: boolean
     lastInteractionAt?: boolean
+    trackingIdentityId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     igAccount?: boolean | IgAccountDefaultArgs<ExtArgs>
+    trackingIdentity?: boolean | IgContato$trackingIdentityArgs<ExtArgs>
     conversas?: boolean | IgContato$conversasArgs<ExtArgs>
     execucoes?: boolean | IgContato$execucoesArgs<ExtArgs>
     _count?: boolean | IgContatoCountOutputTypeDefaultArgs<ExtArgs>
@@ -45204,15 +46504,18 @@ export namespace Prisma {
     igsid?: boolean
     nome?: boolean
     username?: boolean
+    profilePictureUrl?: boolean
     tags?: boolean
     campos?: boolean
     phone?: boolean
     botPaused?: boolean
     lastInteractionAt?: boolean
+    trackingIdentityId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     igAccount?: boolean | IgAccountDefaultArgs<ExtArgs>
+    trackingIdentity?: boolean | IgContato$trackingIdentityArgs<ExtArgs>
   }, ExtArgs["result"]["igContato"]>
 
   export type IgContatoSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -45222,15 +46525,18 @@ export namespace Prisma {
     igsid?: boolean
     nome?: boolean
     username?: boolean
+    profilePictureUrl?: boolean
     tags?: boolean
     campos?: boolean
     phone?: boolean
     botPaused?: boolean
     lastInteractionAt?: boolean
+    trackingIdentityId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     igAccount?: boolean | IgAccountDefaultArgs<ExtArgs>
+    trackingIdentity?: boolean | IgContato$trackingIdentityArgs<ExtArgs>
   }, ExtArgs["result"]["igContato"]>
 
   export type IgContatoSelectScalar = {
@@ -45240,19 +46546,22 @@ export namespace Prisma {
     igsid?: boolean
     nome?: boolean
     username?: boolean
+    profilePictureUrl?: boolean
     tags?: boolean
     campos?: boolean
     phone?: boolean
     botPaused?: boolean
     lastInteractionAt?: boolean
+    trackingIdentityId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type IgContatoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "igAccountId" | "igsid" | "nome" | "username" | "tags" | "campos" | "phone" | "botPaused" | "lastInteractionAt" | "createdAt" | "updatedAt", ExtArgs["result"]["igContato"]>
+  export type IgContatoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "igAccountId" | "igsid" | "nome" | "username" | "profilePictureUrl" | "tags" | "campos" | "phone" | "botPaused" | "lastInteractionAt" | "trackingIdentityId" | "createdAt" | "updatedAt", ExtArgs["result"]["igContato"]>
   export type IgContatoInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     igAccount?: boolean | IgAccountDefaultArgs<ExtArgs>
+    trackingIdentity?: boolean | IgContato$trackingIdentityArgs<ExtArgs>
     conversas?: boolean | IgContato$conversasArgs<ExtArgs>
     execucoes?: boolean | IgContato$execucoesArgs<ExtArgs>
     _count?: boolean | IgContatoCountOutputTypeDefaultArgs<ExtArgs>
@@ -45260,10 +46569,12 @@ export namespace Prisma {
   export type IgContatoIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     igAccount?: boolean | IgAccountDefaultArgs<ExtArgs>
+    trackingIdentity?: boolean | IgContato$trackingIdentityArgs<ExtArgs>
   }
   export type IgContatoIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     igAccount?: boolean | IgAccountDefaultArgs<ExtArgs>
+    trackingIdentity?: boolean | IgContato$trackingIdentityArgs<ExtArgs>
   }
 
   export type $IgContatoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -45271,6 +46582,7 @@ export namespace Prisma {
     objects: {
       organization: Prisma.$OrganizationPayload<ExtArgs>
       igAccount: Prisma.$IgAccountPayload<ExtArgs>
+      trackingIdentity: Prisma.$TrackingIdentityPayload<ExtArgs> | null
       conversas: Prisma.$IgConversaPayload<ExtArgs>[]
       execucoes: Prisma.$IgFluxoExecucaoPayload<ExtArgs>[]
     }
@@ -45281,11 +46593,13 @@ export namespace Prisma {
       igsid: string
       nome: string | null
       username: string | null
+      profilePictureUrl: string | null
       tags: string[]
       campos: Prisma.JsonValue
       phone: string | null
       botPaused: boolean
       lastInteractionAt: Date | null
+      trackingIdentityId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["igContato"]>
@@ -45684,6 +46998,7 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     igAccount<T extends IgAccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, IgAccountDefaultArgs<ExtArgs>>): Prisma__IgAccountClient<$Result.GetResult<Prisma.$IgAccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    trackingIdentity<T extends IgContato$trackingIdentityArgs<ExtArgs> = {}>(args?: Subset<T, IgContato$trackingIdentityArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     conversas<T extends IgContato$conversasArgs<ExtArgs> = {}>(args?: Subset<T, IgContato$conversasArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IgConversaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     execucoes<T extends IgContato$execucoesArgs<ExtArgs> = {}>(args?: Subset<T, IgContato$execucoesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IgFluxoExecucaoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
@@ -45721,11 +47036,13 @@ export namespace Prisma {
     readonly igsid: FieldRef<"IgContato", 'String'>
     readonly nome: FieldRef<"IgContato", 'String'>
     readonly username: FieldRef<"IgContato", 'String'>
+    readonly profilePictureUrl: FieldRef<"IgContato", 'String'>
     readonly tags: FieldRef<"IgContato", 'String[]'>
     readonly campos: FieldRef<"IgContato", 'Json'>
     readonly phone: FieldRef<"IgContato", 'String'>
     readonly botPaused: FieldRef<"IgContato", 'Boolean'>
     readonly lastInteractionAt: FieldRef<"IgContato", 'DateTime'>
+    readonly trackingIdentityId: FieldRef<"IgContato", 'String'>
     readonly createdAt: FieldRef<"IgContato", 'DateTime'>
     readonly updatedAt: FieldRef<"IgContato", 'DateTime'>
   }
@@ -46124,6 +47441,25 @@ export namespace Prisma {
   }
 
   /**
+   * IgContato.trackingIdentity
+   */
+  export type IgContato$trackingIdentityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    where?: TrackingIdentityWhereInput
+  }
+
+  /**
    * IgContato.conversas
    */
   export type IgContato$conversasArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -46209,6 +47545,7 @@ export namespace Prisma {
     handoffHuman: boolean | null
     assignedUserId: string | null
     lastMessageAt: Date | null
+    lastReadAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -46222,6 +47559,7 @@ export namespace Prisma {
     handoffHuman: boolean | null
     assignedUserId: string | null
     lastMessageAt: Date | null
+    lastReadAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -46235,6 +47573,7 @@ export namespace Prisma {
     handoffHuman: number
     assignedUserId: number
     lastMessageAt: number
+    lastReadAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -46250,6 +47589,7 @@ export namespace Prisma {
     handoffHuman?: true
     assignedUserId?: true
     lastMessageAt?: true
+    lastReadAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -46263,6 +47603,7 @@ export namespace Prisma {
     handoffHuman?: true
     assignedUserId?: true
     lastMessageAt?: true
+    lastReadAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -46276,6 +47617,7 @@ export namespace Prisma {
     handoffHuman?: true
     assignedUserId?: true
     lastMessageAt?: true
+    lastReadAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -46362,6 +47704,7 @@ export namespace Prisma {
     handoffHuman: boolean
     assignedUserId: string | null
     lastMessageAt: Date | null
+    lastReadAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: IgConversaCountAggregateOutputType | null
@@ -46392,6 +47735,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: boolean
     lastMessageAt?: boolean
+    lastReadAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -46410,6 +47754,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: boolean
     lastMessageAt?: boolean
+    lastReadAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -46426,6 +47771,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: boolean
     lastMessageAt?: boolean
+    lastReadAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
@@ -46442,11 +47788,12 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: boolean
     lastMessageAt?: boolean
+    lastReadAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type IgConversaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "igAccountId" | "contatoId" | "status" | "handoffHuman" | "assignedUserId" | "lastMessageAt" | "createdAt" | "updatedAt", ExtArgs["result"]["igConversa"]>
+  export type IgConversaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "igAccountId" | "contatoId" | "status" | "handoffHuman" | "assignedUserId" | "lastMessageAt" | "lastReadAt" | "createdAt" | "updatedAt", ExtArgs["result"]["igConversa"]>
   export type IgConversaInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     organization?: boolean | OrganizationDefaultArgs<ExtArgs>
     igAccount?: boolean | IgAccountDefaultArgs<ExtArgs>
@@ -46482,6 +47829,7 @@ export namespace Prisma {
       handoffHuman: boolean
       assignedUserId: string | null
       lastMessageAt: Date | null
+      lastReadAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["igConversa"]>
@@ -46919,6 +48267,7 @@ export namespace Prisma {
     readonly handoffHuman: FieldRef<"IgConversa", 'Boolean'>
     readonly assignedUserId: FieldRef<"IgConversa", 'String'>
     readonly lastMessageAt: FieldRef<"IgConversa", 'DateTime'>
+    readonly lastReadAt: FieldRef<"IgConversa", 'DateTime'>
     readonly createdAt: FieldRef<"IgConversa", 'DateTime'>
     readonly updatedAt: FieldRef<"IgConversa", 'DateTime'>
   }
@@ -54172,6 +55521,10836 @@ export namespace Prisma {
 
 
   /**
+   * Model TrackingIdentity
+   */
+
+  export type AggregateTrackingIdentity = {
+    _count: TrackingIdentityCountAggregateOutputType | null
+    _min: TrackingIdentityMinAggregateOutputType | null
+    _max: TrackingIdentityMaxAggregateOutputType | null
+  }
+
+  export type TrackingIdentityMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    stId: string | null
+    email: string | null
+    phone: string | null
+    name: string | null
+    status: string | null
+    mergedIntoId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TrackingIdentityMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    stId: string | null
+    email: string | null
+    phone: string | null
+    name: string | null
+    status: string | null
+    mergedIntoId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TrackingIdentityCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    stId: number
+    email: number
+    phone: number
+    name: number
+    status: number
+    leadSource: number
+    mergedIntoId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TrackingIdentityMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    stId?: true
+    email?: true
+    phone?: true
+    name?: true
+    status?: true
+    mergedIntoId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TrackingIdentityMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    stId?: true
+    email?: true
+    phone?: true
+    name?: true
+    status?: true
+    mergedIntoId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TrackingIdentityCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    stId?: true
+    email?: true
+    phone?: true
+    name?: true
+    status?: true
+    leadSource?: true
+    mergedIntoId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TrackingIdentityAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackingIdentity to aggregate.
+     */
+    where?: TrackingIdentityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingIdentities to fetch.
+     */
+    orderBy?: TrackingIdentityOrderByWithRelationInput | TrackingIdentityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TrackingIdentityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingIdentities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingIdentities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TrackingIdentities
+    **/
+    _count?: true | TrackingIdentityCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TrackingIdentityMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TrackingIdentityMaxAggregateInputType
+  }
+
+  export type GetTrackingIdentityAggregateType<T extends TrackingIdentityAggregateArgs> = {
+        [P in keyof T & keyof AggregateTrackingIdentity]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTrackingIdentity[P]>
+      : GetScalarType<T[P], AggregateTrackingIdentity[P]>
+  }
+
+
+
+
+  export type TrackingIdentityGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingIdentityWhereInput
+    orderBy?: TrackingIdentityOrderByWithAggregationInput | TrackingIdentityOrderByWithAggregationInput[]
+    by: TrackingIdentityScalarFieldEnum[] | TrackingIdentityScalarFieldEnum
+    having?: TrackingIdentityScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TrackingIdentityCountAggregateInputType | true
+    _min?: TrackingIdentityMinAggregateInputType
+    _max?: TrackingIdentityMaxAggregateInputType
+  }
+
+  export type TrackingIdentityGroupByOutputType = {
+    id: string
+    organizationId: string
+    stId: string
+    email: string | null
+    phone: string | null
+    name: string | null
+    status: string
+    leadSource: JsonValue | null
+    mergedIntoId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TrackingIdentityCountAggregateOutputType | null
+    _min: TrackingIdentityMinAggregateOutputType | null
+    _max: TrackingIdentityMaxAggregateOutputType | null
+  }
+
+  type GetTrackingIdentityGroupByPayload<T extends TrackingIdentityGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TrackingIdentityGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TrackingIdentityGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TrackingIdentityGroupByOutputType[P]>
+            : GetScalarType<T[P], TrackingIdentityGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TrackingIdentitySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    stId?: boolean
+    email?: boolean
+    phone?: boolean
+    name?: boolean
+    status?: boolean
+    leadSource?: boolean
+    mergedIntoId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    aliases?: boolean | TrackingIdentity$aliasesArgs<ExtArgs>
+    visitors?: boolean | TrackingIdentity$visitorsArgs<ExtArgs>
+    events?: boolean | TrackingIdentity$eventsArgs<ExtArgs>
+    orders?: boolean | TrackingIdentity$ordersArgs<ExtArgs>
+    contatos?: boolean | TrackingIdentity$contatosArgs<ExtArgs>
+    mergedInto?: boolean | TrackingIdentity$mergedIntoArgs<ExtArgs>
+    mergedFrom?: boolean | TrackingIdentity$mergedFromArgs<ExtArgs>
+    _count?: boolean | TrackingIdentityCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingIdentity"]>
+
+  export type TrackingIdentitySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    stId?: boolean
+    email?: boolean
+    phone?: boolean
+    name?: boolean
+    status?: boolean
+    leadSource?: boolean
+    mergedIntoId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    mergedInto?: boolean | TrackingIdentity$mergedIntoArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingIdentity"]>
+
+  export type TrackingIdentitySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    stId?: boolean
+    email?: boolean
+    phone?: boolean
+    name?: boolean
+    status?: boolean
+    leadSource?: boolean
+    mergedIntoId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    mergedInto?: boolean | TrackingIdentity$mergedIntoArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingIdentity"]>
+
+  export type TrackingIdentitySelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    stId?: boolean
+    email?: boolean
+    phone?: boolean
+    name?: boolean
+    status?: boolean
+    leadSource?: boolean
+    mergedIntoId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TrackingIdentityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "stId" | "email" | "phone" | "name" | "status" | "leadSource" | "mergedIntoId" | "createdAt" | "updatedAt", ExtArgs["result"]["trackingIdentity"]>
+  export type TrackingIdentityInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    aliases?: boolean | TrackingIdentity$aliasesArgs<ExtArgs>
+    visitors?: boolean | TrackingIdentity$visitorsArgs<ExtArgs>
+    events?: boolean | TrackingIdentity$eventsArgs<ExtArgs>
+    orders?: boolean | TrackingIdentity$ordersArgs<ExtArgs>
+    contatos?: boolean | TrackingIdentity$contatosArgs<ExtArgs>
+    mergedInto?: boolean | TrackingIdentity$mergedIntoArgs<ExtArgs>
+    mergedFrom?: boolean | TrackingIdentity$mergedFromArgs<ExtArgs>
+    _count?: boolean | TrackingIdentityCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TrackingIdentityIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    mergedInto?: boolean | TrackingIdentity$mergedIntoArgs<ExtArgs>
+  }
+  export type TrackingIdentityIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    mergedInto?: boolean | TrackingIdentity$mergedIntoArgs<ExtArgs>
+  }
+
+  export type $TrackingIdentityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TrackingIdentity"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      aliases: Prisma.$IdentityAliasPayload<ExtArgs>[]
+      visitors: Prisma.$TrackingVisitorPayload<ExtArgs>[]
+      events: Prisma.$TrackingEventPayload<ExtArgs>[]
+      orders: Prisma.$AttributionOrderPayload<ExtArgs>[]
+      contatos: Prisma.$IgContatoPayload<ExtArgs>[]
+      mergedInto: Prisma.$TrackingIdentityPayload<ExtArgs> | null
+      mergedFrom: Prisma.$TrackingIdentityPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      stId: string
+      email: string | null
+      phone: string | null
+      name: string | null
+      status: string
+      /**
+       * First-touch snapshot at lead creation (immutable)
+       */
+      leadSource: Prisma.JsonValue | null
+      mergedIntoId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["trackingIdentity"]>
+    composites: {}
+  }
+
+  type TrackingIdentityGetPayload<S extends boolean | null | undefined | TrackingIdentityDefaultArgs> = $Result.GetResult<Prisma.$TrackingIdentityPayload, S>
+
+  type TrackingIdentityCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TrackingIdentityFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TrackingIdentityCountAggregateInputType | true
+    }
+
+  export interface TrackingIdentityDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TrackingIdentity'], meta: { name: 'TrackingIdentity' } }
+    /**
+     * Find zero or one TrackingIdentity that matches the filter.
+     * @param {TrackingIdentityFindUniqueArgs} args - Arguments to find a TrackingIdentity
+     * @example
+     * // Get one TrackingIdentity
+     * const trackingIdentity = await prisma.trackingIdentity.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TrackingIdentityFindUniqueArgs>(args: SelectSubset<T, TrackingIdentityFindUniqueArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TrackingIdentity that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TrackingIdentityFindUniqueOrThrowArgs} args - Arguments to find a TrackingIdentity
+     * @example
+     * // Get one TrackingIdentity
+     * const trackingIdentity = await prisma.trackingIdentity.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TrackingIdentityFindUniqueOrThrowArgs>(args: SelectSubset<T, TrackingIdentityFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrackingIdentity that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingIdentityFindFirstArgs} args - Arguments to find a TrackingIdentity
+     * @example
+     * // Get one TrackingIdentity
+     * const trackingIdentity = await prisma.trackingIdentity.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TrackingIdentityFindFirstArgs>(args?: SelectSubset<T, TrackingIdentityFindFirstArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrackingIdentity that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingIdentityFindFirstOrThrowArgs} args - Arguments to find a TrackingIdentity
+     * @example
+     * // Get one TrackingIdentity
+     * const trackingIdentity = await prisma.trackingIdentity.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TrackingIdentityFindFirstOrThrowArgs>(args?: SelectSubset<T, TrackingIdentityFindFirstOrThrowArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TrackingIdentities that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingIdentityFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TrackingIdentities
+     * const trackingIdentities = await prisma.trackingIdentity.findMany()
+     * 
+     * // Get first 10 TrackingIdentities
+     * const trackingIdentities = await prisma.trackingIdentity.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const trackingIdentityWithIdOnly = await prisma.trackingIdentity.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TrackingIdentityFindManyArgs>(args?: SelectSubset<T, TrackingIdentityFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TrackingIdentity.
+     * @param {TrackingIdentityCreateArgs} args - Arguments to create a TrackingIdentity.
+     * @example
+     * // Create one TrackingIdentity
+     * const TrackingIdentity = await prisma.trackingIdentity.create({
+     *   data: {
+     *     // ... data to create a TrackingIdentity
+     *   }
+     * })
+     * 
+     */
+    create<T extends TrackingIdentityCreateArgs>(args: SelectSubset<T, TrackingIdentityCreateArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TrackingIdentities.
+     * @param {TrackingIdentityCreateManyArgs} args - Arguments to create many TrackingIdentities.
+     * @example
+     * // Create many TrackingIdentities
+     * const trackingIdentity = await prisma.trackingIdentity.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TrackingIdentityCreateManyArgs>(args?: SelectSubset<T, TrackingIdentityCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TrackingIdentities and returns the data saved in the database.
+     * @param {TrackingIdentityCreateManyAndReturnArgs} args - Arguments to create many TrackingIdentities.
+     * @example
+     * // Create many TrackingIdentities
+     * const trackingIdentity = await prisma.trackingIdentity.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TrackingIdentities and only return the `id`
+     * const trackingIdentityWithIdOnly = await prisma.trackingIdentity.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TrackingIdentityCreateManyAndReturnArgs>(args?: SelectSubset<T, TrackingIdentityCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TrackingIdentity.
+     * @param {TrackingIdentityDeleteArgs} args - Arguments to delete one TrackingIdentity.
+     * @example
+     * // Delete one TrackingIdentity
+     * const TrackingIdentity = await prisma.trackingIdentity.delete({
+     *   where: {
+     *     // ... filter to delete one TrackingIdentity
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TrackingIdentityDeleteArgs>(args: SelectSubset<T, TrackingIdentityDeleteArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TrackingIdentity.
+     * @param {TrackingIdentityUpdateArgs} args - Arguments to update one TrackingIdentity.
+     * @example
+     * // Update one TrackingIdentity
+     * const trackingIdentity = await prisma.trackingIdentity.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TrackingIdentityUpdateArgs>(args: SelectSubset<T, TrackingIdentityUpdateArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TrackingIdentities.
+     * @param {TrackingIdentityDeleteManyArgs} args - Arguments to filter TrackingIdentities to delete.
+     * @example
+     * // Delete a few TrackingIdentities
+     * const { count } = await prisma.trackingIdentity.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TrackingIdentityDeleteManyArgs>(args?: SelectSubset<T, TrackingIdentityDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackingIdentities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingIdentityUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TrackingIdentities
+     * const trackingIdentity = await prisma.trackingIdentity.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TrackingIdentityUpdateManyArgs>(args: SelectSubset<T, TrackingIdentityUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackingIdentities and returns the data updated in the database.
+     * @param {TrackingIdentityUpdateManyAndReturnArgs} args - Arguments to update many TrackingIdentities.
+     * @example
+     * // Update many TrackingIdentities
+     * const trackingIdentity = await prisma.trackingIdentity.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TrackingIdentities and only return the `id`
+     * const trackingIdentityWithIdOnly = await prisma.trackingIdentity.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TrackingIdentityUpdateManyAndReturnArgs>(args: SelectSubset<T, TrackingIdentityUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TrackingIdentity.
+     * @param {TrackingIdentityUpsertArgs} args - Arguments to update or create a TrackingIdentity.
+     * @example
+     * // Update or create a TrackingIdentity
+     * const trackingIdentity = await prisma.trackingIdentity.upsert({
+     *   create: {
+     *     // ... data to create a TrackingIdentity
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TrackingIdentity we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TrackingIdentityUpsertArgs>(args: SelectSubset<T, TrackingIdentityUpsertArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TrackingIdentities.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingIdentityCountArgs} args - Arguments to filter TrackingIdentities to count.
+     * @example
+     * // Count the number of TrackingIdentities
+     * const count = await prisma.trackingIdentity.count({
+     *   where: {
+     *     // ... the filter for the TrackingIdentities we want to count
+     *   }
+     * })
+    **/
+    count<T extends TrackingIdentityCountArgs>(
+      args?: Subset<T, TrackingIdentityCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TrackingIdentityCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TrackingIdentity.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingIdentityAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TrackingIdentityAggregateArgs>(args: Subset<T, TrackingIdentityAggregateArgs>): Prisma.PrismaPromise<GetTrackingIdentityAggregateType<T>>
+
+    /**
+     * Group by TrackingIdentity.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingIdentityGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TrackingIdentityGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TrackingIdentityGroupByArgs['orderBy'] }
+        : { orderBy?: TrackingIdentityGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TrackingIdentityGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTrackingIdentityGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TrackingIdentity model
+   */
+  readonly fields: TrackingIdentityFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TrackingIdentity.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TrackingIdentityClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    aliases<T extends TrackingIdentity$aliasesArgs<ExtArgs> = {}>(args?: Subset<T, TrackingIdentity$aliasesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    visitors<T extends TrackingIdentity$visitorsArgs<ExtArgs> = {}>(args?: Subset<T, TrackingIdentity$visitorsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    events<T extends TrackingIdentity$eventsArgs<ExtArgs> = {}>(args?: Subset<T, TrackingIdentity$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    orders<T extends TrackingIdentity$ordersArgs<ExtArgs> = {}>(args?: Subset<T, TrackingIdentity$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    contatos<T extends TrackingIdentity$contatosArgs<ExtArgs> = {}>(args?: Subset<T, TrackingIdentity$contatosArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IgContatoPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    mergedInto<T extends TrackingIdentity$mergedIntoArgs<ExtArgs> = {}>(args?: Subset<T, TrackingIdentity$mergedIntoArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    mergedFrom<T extends TrackingIdentity$mergedFromArgs<ExtArgs> = {}>(args?: Subset<T, TrackingIdentity$mergedFromArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TrackingIdentity model
+   */
+  interface TrackingIdentityFieldRefs {
+    readonly id: FieldRef<"TrackingIdentity", 'String'>
+    readonly organizationId: FieldRef<"TrackingIdentity", 'String'>
+    readonly stId: FieldRef<"TrackingIdentity", 'String'>
+    readonly email: FieldRef<"TrackingIdentity", 'String'>
+    readonly phone: FieldRef<"TrackingIdentity", 'String'>
+    readonly name: FieldRef<"TrackingIdentity", 'String'>
+    readonly status: FieldRef<"TrackingIdentity", 'String'>
+    readonly leadSource: FieldRef<"TrackingIdentity", 'Json'>
+    readonly mergedIntoId: FieldRef<"TrackingIdentity", 'String'>
+    readonly createdAt: FieldRef<"TrackingIdentity", 'DateTime'>
+    readonly updatedAt: FieldRef<"TrackingIdentity", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TrackingIdentity findUnique
+   */
+  export type TrackingIdentityFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingIdentity to fetch.
+     */
+    where: TrackingIdentityWhereUniqueInput
+  }
+
+  /**
+   * TrackingIdentity findUniqueOrThrow
+   */
+  export type TrackingIdentityFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingIdentity to fetch.
+     */
+    where: TrackingIdentityWhereUniqueInput
+  }
+
+  /**
+   * TrackingIdentity findFirst
+   */
+  export type TrackingIdentityFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingIdentity to fetch.
+     */
+    where?: TrackingIdentityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingIdentities to fetch.
+     */
+    orderBy?: TrackingIdentityOrderByWithRelationInput | TrackingIdentityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackingIdentities.
+     */
+    cursor?: TrackingIdentityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingIdentities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingIdentities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackingIdentities.
+     */
+    distinct?: TrackingIdentityScalarFieldEnum | TrackingIdentityScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity findFirstOrThrow
+   */
+  export type TrackingIdentityFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingIdentity to fetch.
+     */
+    where?: TrackingIdentityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingIdentities to fetch.
+     */
+    orderBy?: TrackingIdentityOrderByWithRelationInput | TrackingIdentityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackingIdentities.
+     */
+    cursor?: TrackingIdentityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingIdentities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingIdentities.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackingIdentities.
+     */
+    distinct?: TrackingIdentityScalarFieldEnum | TrackingIdentityScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity findMany
+   */
+  export type TrackingIdentityFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingIdentities to fetch.
+     */
+    where?: TrackingIdentityWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingIdentities to fetch.
+     */
+    orderBy?: TrackingIdentityOrderByWithRelationInput | TrackingIdentityOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TrackingIdentities.
+     */
+    cursor?: TrackingIdentityWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingIdentities from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingIdentities.
+     */
+    skip?: number
+    distinct?: TrackingIdentityScalarFieldEnum | TrackingIdentityScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity create
+   */
+  export type TrackingIdentityCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TrackingIdentity.
+     */
+    data: XOR<TrackingIdentityCreateInput, TrackingIdentityUncheckedCreateInput>
+  }
+
+  /**
+   * TrackingIdentity createMany
+   */
+  export type TrackingIdentityCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TrackingIdentities.
+     */
+    data: TrackingIdentityCreateManyInput | TrackingIdentityCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TrackingIdentity createManyAndReturn
+   */
+  export type TrackingIdentityCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * The data used to create many TrackingIdentities.
+     */
+    data: TrackingIdentityCreateManyInput | TrackingIdentityCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackingIdentity update
+   */
+  export type TrackingIdentityUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TrackingIdentity.
+     */
+    data: XOR<TrackingIdentityUpdateInput, TrackingIdentityUncheckedUpdateInput>
+    /**
+     * Choose, which TrackingIdentity to update.
+     */
+    where: TrackingIdentityWhereUniqueInput
+  }
+
+  /**
+   * TrackingIdentity updateMany
+   */
+  export type TrackingIdentityUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TrackingIdentities.
+     */
+    data: XOR<TrackingIdentityUpdateManyMutationInput, TrackingIdentityUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackingIdentities to update
+     */
+    where?: TrackingIdentityWhereInput
+    /**
+     * Limit how many TrackingIdentities to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrackingIdentity updateManyAndReturn
+   */
+  export type TrackingIdentityUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * The data used to update TrackingIdentities.
+     */
+    data: XOR<TrackingIdentityUpdateManyMutationInput, TrackingIdentityUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackingIdentities to update
+     */
+    where?: TrackingIdentityWhereInput
+    /**
+     * Limit how many TrackingIdentities to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackingIdentity upsert
+   */
+  export type TrackingIdentityUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TrackingIdentity to update in case it exists.
+     */
+    where: TrackingIdentityWhereUniqueInput
+    /**
+     * In case the TrackingIdentity found by the `where` argument doesn't exist, create a new TrackingIdentity with this data.
+     */
+    create: XOR<TrackingIdentityCreateInput, TrackingIdentityUncheckedCreateInput>
+    /**
+     * In case the TrackingIdentity was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TrackingIdentityUpdateInput, TrackingIdentityUncheckedUpdateInput>
+  }
+
+  /**
+   * TrackingIdentity delete
+   */
+  export type TrackingIdentityDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    /**
+     * Filter which TrackingIdentity to delete.
+     */
+    where: TrackingIdentityWhereUniqueInput
+  }
+
+  /**
+   * TrackingIdentity deleteMany
+   */
+  export type TrackingIdentityDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackingIdentities to delete
+     */
+    where?: TrackingIdentityWhereInput
+    /**
+     * Limit how many TrackingIdentities to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrackingIdentity.aliases
+   */
+  export type TrackingIdentity$aliasesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    where?: IdentityAliasWhereInput
+    orderBy?: IdentityAliasOrderByWithRelationInput | IdentityAliasOrderByWithRelationInput[]
+    cursor?: IdentityAliasWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IdentityAliasScalarFieldEnum | IdentityAliasScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity.visitors
+   */
+  export type TrackingIdentity$visitorsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    where?: TrackingVisitorWhereInput
+    orderBy?: TrackingVisitorOrderByWithRelationInput | TrackingVisitorOrderByWithRelationInput[]
+    cursor?: TrackingVisitorWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingVisitorScalarFieldEnum | TrackingVisitorScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity.events
+   */
+  export type TrackingIdentity$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    where?: TrackingEventWhereInput
+    orderBy?: TrackingEventOrderByWithRelationInput | TrackingEventOrderByWithRelationInput[]
+    cursor?: TrackingEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingEventScalarFieldEnum | TrackingEventScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity.orders
+   */
+  export type TrackingIdentity$ordersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    where?: AttributionOrderWhereInput
+    orderBy?: AttributionOrderOrderByWithRelationInput | AttributionOrderOrderByWithRelationInput[]
+    cursor?: AttributionOrderWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttributionOrderScalarFieldEnum | AttributionOrderScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity.contatos
+   */
+  export type TrackingIdentity$contatosArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IgContato
+     */
+    select?: IgContatoSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IgContato
+     */
+    omit?: IgContatoOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IgContatoInclude<ExtArgs> | null
+    where?: IgContatoWhereInput
+    orderBy?: IgContatoOrderByWithRelationInput | IgContatoOrderByWithRelationInput[]
+    cursor?: IgContatoWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: IgContatoScalarFieldEnum | IgContatoScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity.mergedInto
+   */
+  export type TrackingIdentity$mergedIntoArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    where?: TrackingIdentityWhereInput
+  }
+
+  /**
+   * TrackingIdentity.mergedFrom
+   */
+  export type TrackingIdentity$mergedFromArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    where?: TrackingIdentityWhereInput
+    orderBy?: TrackingIdentityOrderByWithRelationInput | TrackingIdentityOrderByWithRelationInput[]
+    cursor?: TrackingIdentityWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingIdentityScalarFieldEnum | TrackingIdentityScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingIdentity without action
+   */
+  export type TrackingIdentityDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model IdentityAlias
+   */
+
+  export type AggregateIdentityAlias = {
+    _count: IdentityAliasCountAggregateOutputType | null
+    _min: IdentityAliasMinAggregateOutputType | null
+    _max: IdentityAliasMaxAggregateOutputType | null
+  }
+
+  export type IdentityAliasMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    identityId: string | null
+    type: string | null
+    value: string | null
+    createdAt: Date | null
+  }
+
+  export type IdentityAliasMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    identityId: string | null
+    type: string | null
+    value: string | null
+    createdAt: Date | null
+  }
+
+  export type IdentityAliasCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    identityId: number
+    type: number
+    value: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type IdentityAliasMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    identityId?: true
+    type?: true
+    value?: true
+    createdAt?: true
+  }
+
+  export type IdentityAliasMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    identityId?: true
+    type?: true
+    value?: true
+    createdAt?: true
+  }
+
+  export type IdentityAliasCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    identityId?: true
+    type?: true
+    value?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type IdentityAliasAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IdentityAlias to aggregate.
+     */
+    where?: IdentityAliasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IdentityAliases to fetch.
+     */
+    orderBy?: IdentityAliasOrderByWithRelationInput | IdentityAliasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: IdentityAliasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IdentityAliases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IdentityAliases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned IdentityAliases
+    **/
+    _count?: true | IdentityAliasCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: IdentityAliasMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: IdentityAliasMaxAggregateInputType
+  }
+
+  export type GetIdentityAliasAggregateType<T extends IdentityAliasAggregateArgs> = {
+        [P in keyof T & keyof AggregateIdentityAlias]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateIdentityAlias[P]>
+      : GetScalarType<T[P], AggregateIdentityAlias[P]>
+  }
+
+
+
+
+  export type IdentityAliasGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: IdentityAliasWhereInput
+    orderBy?: IdentityAliasOrderByWithAggregationInput | IdentityAliasOrderByWithAggregationInput[]
+    by: IdentityAliasScalarFieldEnum[] | IdentityAliasScalarFieldEnum
+    having?: IdentityAliasScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: IdentityAliasCountAggregateInputType | true
+    _min?: IdentityAliasMinAggregateInputType
+    _max?: IdentityAliasMaxAggregateInputType
+  }
+
+  export type IdentityAliasGroupByOutputType = {
+    id: string
+    organizationId: string
+    identityId: string
+    type: string
+    value: string
+    createdAt: Date
+    _count: IdentityAliasCountAggregateOutputType | null
+    _min: IdentityAliasMinAggregateOutputType | null
+    _max: IdentityAliasMaxAggregateOutputType | null
+  }
+
+  type GetIdentityAliasGroupByPayload<T extends IdentityAliasGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<IdentityAliasGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof IdentityAliasGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], IdentityAliasGroupByOutputType[P]>
+            : GetScalarType<T[P], IdentityAliasGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type IdentityAliasSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    identityId?: boolean
+    type?: boolean
+    value?: boolean
+    createdAt?: boolean
+    identity?: boolean | TrackingIdentityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["identityAlias"]>
+
+  export type IdentityAliasSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    identityId?: boolean
+    type?: boolean
+    value?: boolean
+    createdAt?: boolean
+    identity?: boolean | TrackingIdentityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["identityAlias"]>
+
+  export type IdentityAliasSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    identityId?: boolean
+    type?: boolean
+    value?: boolean
+    createdAt?: boolean
+    identity?: boolean | TrackingIdentityDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["identityAlias"]>
+
+  export type IdentityAliasSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    identityId?: boolean
+    type?: boolean
+    value?: boolean
+    createdAt?: boolean
+  }
+
+  export type IdentityAliasOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "identityId" | "type" | "value" | "createdAt", ExtArgs["result"]["identityAlias"]>
+  export type IdentityAliasInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    identity?: boolean | TrackingIdentityDefaultArgs<ExtArgs>
+  }
+  export type IdentityAliasIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    identity?: boolean | TrackingIdentityDefaultArgs<ExtArgs>
+  }
+  export type IdentityAliasIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    identity?: boolean | TrackingIdentityDefaultArgs<ExtArgs>
+  }
+
+  export type $IdentityAliasPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "IdentityAlias"
+    objects: {
+      identity: Prisma.$TrackingIdentityPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      identityId: string
+      type: string
+      value: string
+      createdAt: Date
+    }, ExtArgs["result"]["identityAlias"]>
+    composites: {}
+  }
+
+  type IdentityAliasGetPayload<S extends boolean | null | undefined | IdentityAliasDefaultArgs> = $Result.GetResult<Prisma.$IdentityAliasPayload, S>
+
+  type IdentityAliasCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<IdentityAliasFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: IdentityAliasCountAggregateInputType | true
+    }
+
+  export interface IdentityAliasDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['IdentityAlias'], meta: { name: 'IdentityAlias' } }
+    /**
+     * Find zero or one IdentityAlias that matches the filter.
+     * @param {IdentityAliasFindUniqueArgs} args - Arguments to find a IdentityAlias
+     * @example
+     * // Get one IdentityAlias
+     * const identityAlias = await prisma.identityAlias.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends IdentityAliasFindUniqueArgs>(args: SelectSubset<T, IdentityAliasFindUniqueArgs<ExtArgs>>): Prisma__IdentityAliasClient<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one IdentityAlias that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {IdentityAliasFindUniqueOrThrowArgs} args - Arguments to find a IdentityAlias
+     * @example
+     * // Get one IdentityAlias
+     * const identityAlias = await prisma.identityAlias.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends IdentityAliasFindUniqueOrThrowArgs>(args: SelectSubset<T, IdentityAliasFindUniqueOrThrowArgs<ExtArgs>>): Prisma__IdentityAliasClient<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IdentityAlias that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdentityAliasFindFirstArgs} args - Arguments to find a IdentityAlias
+     * @example
+     * // Get one IdentityAlias
+     * const identityAlias = await prisma.identityAlias.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends IdentityAliasFindFirstArgs>(args?: SelectSubset<T, IdentityAliasFindFirstArgs<ExtArgs>>): Prisma__IdentityAliasClient<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first IdentityAlias that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdentityAliasFindFirstOrThrowArgs} args - Arguments to find a IdentityAlias
+     * @example
+     * // Get one IdentityAlias
+     * const identityAlias = await prisma.identityAlias.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends IdentityAliasFindFirstOrThrowArgs>(args?: SelectSubset<T, IdentityAliasFindFirstOrThrowArgs<ExtArgs>>): Prisma__IdentityAliasClient<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more IdentityAliases that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdentityAliasFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all IdentityAliases
+     * const identityAliases = await prisma.identityAlias.findMany()
+     * 
+     * // Get first 10 IdentityAliases
+     * const identityAliases = await prisma.identityAlias.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const identityAliasWithIdOnly = await prisma.identityAlias.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends IdentityAliasFindManyArgs>(args?: SelectSubset<T, IdentityAliasFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a IdentityAlias.
+     * @param {IdentityAliasCreateArgs} args - Arguments to create a IdentityAlias.
+     * @example
+     * // Create one IdentityAlias
+     * const IdentityAlias = await prisma.identityAlias.create({
+     *   data: {
+     *     // ... data to create a IdentityAlias
+     *   }
+     * })
+     * 
+     */
+    create<T extends IdentityAliasCreateArgs>(args: SelectSubset<T, IdentityAliasCreateArgs<ExtArgs>>): Prisma__IdentityAliasClient<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many IdentityAliases.
+     * @param {IdentityAliasCreateManyArgs} args - Arguments to create many IdentityAliases.
+     * @example
+     * // Create many IdentityAliases
+     * const identityAlias = await prisma.identityAlias.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends IdentityAliasCreateManyArgs>(args?: SelectSubset<T, IdentityAliasCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many IdentityAliases and returns the data saved in the database.
+     * @param {IdentityAliasCreateManyAndReturnArgs} args - Arguments to create many IdentityAliases.
+     * @example
+     * // Create many IdentityAliases
+     * const identityAlias = await prisma.identityAlias.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many IdentityAliases and only return the `id`
+     * const identityAliasWithIdOnly = await prisma.identityAlias.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends IdentityAliasCreateManyAndReturnArgs>(args?: SelectSubset<T, IdentityAliasCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a IdentityAlias.
+     * @param {IdentityAliasDeleteArgs} args - Arguments to delete one IdentityAlias.
+     * @example
+     * // Delete one IdentityAlias
+     * const IdentityAlias = await prisma.identityAlias.delete({
+     *   where: {
+     *     // ... filter to delete one IdentityAlias
+     *   }
+     * })
+     * 
+     */
+    delete<T extends IdentityAliasDeleteArgs>(args: SelectSubset<T, IdentityAliasDeleteArgs<ExtArgs>>): Prisma__IdentityAliasClient<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one IdentityAlias.
+     * @param {IdentityAliasUpdateArgs} args - Arguments to update one IdentityAlias.
+     * @example
+     * // Update one IdentityAlias
+     * const identityAlias = await prisma.identityAlias.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends IdentityAliasUpdateArgs>(args: SelectSubset<T, IdentityAliasUpdateArgs<ExtArgs>>): Prisma__IdentityAliasClient<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more IdentityAliases.
+     * @param {IdentityAliasDeleteManyArgs} args - Arguments to filter IdentityAliases to delete.
+     * @example
+     * // Delete a few IdentityAliases
+     * const { count } = await prisma.identityAlias.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends IdentityAliasDeleteManyArgs>(args?: SelectSubset<T, IdentityAliasDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IdentityAliases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdentityAliasUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many IdentityAliases
+     * const identityAlias = await prisma.identityAlias.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends IdentityAliasUpdateManyArgs>(args: SelectSubset<T, IdentityAliasUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more IdentityAliases and returns the data updated in the database.
+     * @param {IdentityAliasUpdateManyAndReturnArgs} args - Arguments to update many IdentityAliases.
+     * @example
+     * // Update many IdentityAliases
+     * const identityAlias = await prisma.identityAlias.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more IdentityAliases and only return the `id`
+     * const identityAliasWithIdOnly = await prisma.identityAlias.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends IdentityAliasUpdateManyAndReturnArgs>(args: SelectSubset<T, IdentityAliasUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one IdentityAlias.
+     * @param {IdentityAliasUpsertArgs} args - Arguments to update or create a IdentityAlias.
+     * @example
+     * // Update or create a IdentityAlias
+     * const identityAlias = await prisma.identityAlias.upsert({
+     *   create: {
+     *     // ... data to create a IdentityAlias
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the IdentityAlias we want to update
+     *   }
+     * })
+     */
+    upsert<T extends IdentityAliasUpsertArgs>(args: SelectSubset<T, IdentityAliasUpsertArgs<ExtArgs>>): Prisma__IdentityAliasClient<$Result.GetResult<Prisma.$IdentityAliasPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of IdentityAliases.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdentityAliasCountArgs} args - Arguments to filter IdentityAliases to count.
+     * @example
+     * // Count the number of IdentityAliases
+     * const count = await prisma.identityAlias.count({
+     *   where: {
+     *     // ... the filter for the IdentityAliases we want to count
+     *   }
+     * })
+    **/
+    count<T extends IdentityAliasCountArgs>(
+      args?: Subset<T, IdentityAliasCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], IdentityAliasCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a IdentityAlias.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdentityAliasAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends IdentityAliasAggregateArgs>(args: Subset<T, IdentityAliasAggregateArgs>): Prisma.PrismaPromise<GetIdentityAliasAggregateType<T>>
+
+    /**
+     * Group by IdentityAlias.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {IdentityAliasGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends IdentityAliasGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: IdentityAliasGroupByArgs['orderBy'] }
+        : { orderBy?: IdentityAliasGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, IdentityAliasGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetIdentityAliasGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the IdentityAlias model
+   */
+  readonly fields: IdentityAliasFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for IdentityAlias.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__IdentityAliasClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    identity<T extends TrackingIdentityDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TrackingIdentityDefaultArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the IdentityAlias model
+   */
+  interface IdentityAliasFieldRefs {
+    readonly id: FieldRef<"IdentityAlias", 'String'>
+    readonly organizationId: FieldRef<"IdentityAlias", 'String'>
+    readonly identityId: FieldRef<"IdentityAlias", 'String'>
+    readonly type: FieldRef<"IdentityAlias", 'String'>
+    readonly value: FieldRef<"IdentityAlias", 'String'>
+    readonly createdAt: FieldRef<"IdentityAlias", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * IdentityAlias findUnique
+   */
+  export type IdentityAliasFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * Filter, which IdentityAlias to fetch.
+     */
+    where: IdentityAliasWhereUniqueInput
+  }
+
+  /**
+   * IdentityAlias findUniqueOrThrow
+   */
+  export type IdentityAliasFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * Filter, which IdentityAlias to fetch.
+     */
+    where: IdentityAliasWhereUniqueInput
+  }
+
+  /**
+   * IdentityAlias findFirst
+   */
+  export type IdentityAliasFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * Filter, which IdentityAlias to fetch.
+     */
+    where?: IdentityAliasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IdentityAliases to fetch.
+     */
+    orderBy?: IdentityAliasOrderByWithRelationInput | IdentityAliasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IdentityAliases.
+     */
+    cursor?: IdentityAliasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IdentityAliases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IdentityAliases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IdentityAliases.
+     */
+    distinct?: IdentityAliasScalarFieldEnum | IdentityAliasScalarFieldEnum[]
+  }
+
+  /**
+   * IdentityAlias findFirstOrThrow
+   */
+  export type IdentityAliasFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * Filter, which IdentityAlias to fetch.
+     */
+    where?: IdentityAliasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IdentityAliases to fetch.
+     */
+    orderBy?: IdentityAliasOrderByWithRelationInput | IdentityAliasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for IdentityAliases.
+     */
+    cursor?: IdentityAliasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IdentityAliases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IdentityAliases.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of IdentityAliases.
+     */
+    distinct?: IdentityAliasScalarFieldEnum | IdentityAliasScalarFieldEnum[]
+  }
+
+  /**
+   * IdentityAlias findMany
+   */
+  export type IdentityAliasFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * Filter, which IdentityAliases to fetch.
+     */
+    where?: IdentityAliasWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of IdentityAliases to fetch.
+     */
+    orderBy?: IdentityAliasOrderByWithRelationInput | IdentityAliasOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing IdentityAliases.
+     */
+    cursor?: IdentityAliasWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` IdentityAliases from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` IdentityAliases.
+     */
+    skip?: number
+    distinct?: IdentityAliasScalarFieldEnum | IdentityAliasScalarFieldEnum[]
+  }
+
+  /**
+   * IdentityAlias create
+   */
+  export type IdentityAliasCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * The data needed to create a IdentityAlias.
+     */
+    data: XOR<IdentityAliasCreateInput, IdentityAliasUncheckedCreateInput>
+  }
+
+  /**
+   * IdentityAlias createMany
+   */
+  export type IdentityAliasCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many IdentityAliases.
+     */
+    data: IdentityAliasCreateManyInput | IdentityAliasCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * IdentityAlias createManyAndReturn
+   */
+  export type IdentityAliasCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * The data used to create many IdentityAliases.
+     */
+    data: IdentityAliasCreateManyInput | IdentityAliasCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IdentityAlias update
+   */
+  export type IdentityAliasUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * The data needed to update a IdentityAlias.
+     */
+    data: XOR<IdentityAliasUpdateInput, IdentityAliasUncheckedUpdateInput>
+    /**
+     * Choose, which IdentityAlias to update.
+     */
+    where: IdentityAliasWhereUniqueInput
+  }
+
+  /**
+   * IdentityAlias updateMany
+   */
+  export type IdentityAliasUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update IdentityAliases.
+     */
+    data: XOR<IdentityAliasUpdateManyMutationInput, IdentityAliasUncheckedUpdateManyInput>
+    /**
+     * Filter which IdentityAliases to update
+     */
+    where?: IdentityAliasWhereInput
+    /**
+     * Limit how many IdentityAliases to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * IdentityAlias updateManyAndReturn
+   */
+  export type IdentityAliasUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * The data used to update IdentityAliases.
+     */
+    data: XOR<IdentityAliasUpdateManyMutationInput, IdentityAliasUncheckedUpdateManyInput>
+    /**
+     * Filter which IdentityAliases to update
+     */
+    where?: IdentityAliasWhereInput
+    /**
+     * Limit how many IdentityAliases to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * IdentityAlias upsert
+   */
+  export type IdentityAliasUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * The filter to search for the IdentityAlias to update in case it exists.
+     */
+    where: IdentityAliasWhereUniqueInput
+    /**
+     * In case the IdentityAlias found by the `where` argument doesn't exist, create a new IdentityAlias with this data.
+     */
+    create: XOR<IdentityAliasCreateInput, IdentityAliasUncheckedCreateInput>
+    /**
+     * In case the IdentityAlias was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<IdentityAliasUpdateInput, IdentityAliasUncheckedUpdateInput>
+  }
+
+  /**
+   * IdentityAlias delete
+   */
+  export type IdentityAliasDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+    /**
+     * Filter which IdentityAlias to delete.
+     */
+    where: IdentityAliasWhereUniqueInput
+  }
+
+  /**
+   * IdentityAlias deleteMany
+   */
+  export type IdentityAliasDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which IdentityAliases to delete
+     */
+    where?: IdentityAliasWhereInput
+    /**
+     * Limit how many IdentityAliases to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * IdentityAlias without action
+   */
+  export type IdentityAliasDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the IdentityAlias
+     */
+    select?: IdentityAliasSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the IdentityAlias
+     */
+    omit?: IdentityAliasOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: IdentityAliasInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TrackingVisitor
+   */
+
+  export type AggregateTrackingVisitor = {
+    _count: TrackingVisitorCountAggregateOutputType | null
+    _min: TrackingVisitorMinAggregateOutputType | null
+    _max: TrackingVisitorMaxAggregateOutputType | null
+  }
+
+  export type TrackingVisitorMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    anonymousId: string | null
+    identityId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TrackingVisitorMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    anonymousId: string | null
+    identityId: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type TrackingVisitorCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    anonymousId: number
+    identityId: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type TrackingVisitorMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    anonymousId?: true
+    identityId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TrackingVisitorMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    anonymousId?: true
+    identityId?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type TrackingVisitorCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    anonymousId?: true
+    identityId?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type TrackingVisitorAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackingVisitor to aggregate.
+     */
+    where?: TrackingVisitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingVisitors to fetch.
+     */
+    orderBy?: TrackingVisitorOrderByWithRelationInput | TrackingVisitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TrackingVisitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingVisitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingVisitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TrackingVisitors
+    **/
+    _count?: true | TrackingVisitorCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TrackingVisitorMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TrackingVisitorMaxAggregateInputType
+  }
+
+  export type GetTrackingVisitorAggregateType<T extends TrackingVisitorAggregateArgs> = {
+        [P in keyof T & keyof AggregateTrackingVisitor]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTrackingVisitor[P]>
+      : GetScalarType<T[P], AggregateTrackingVisitor[P]>
+  }
+
+
+
+
+  export type TrackingVisitorGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingVisitorWhereInput
+    orderBy?: TrackingVisitorOrderByWithAggregationInput | TrackingVisitorOrderByWithAggregationInput[]
+    by: TrackingVisitorScalarFieldEnum[] | TrackingVisitorScalarFieldEnum
+    having?: TrackingVisitorScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TrackingVisitorCountAggregateInputType | true
+    _min?: TrackingVisitorMinAggregateInputType
+    _max?: TrackingVisitorMaxAggregateInputType
+  }
+
+  export type TrackingVisitorGroupByOutputType = {
+    id: string
+    organizationId: string
+    anonymousId: string
+    identityId: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: TrackingVisitorCountAggregateOutputType | null
+    _min: TrackingVisitorMinAggregateOutputType | null
+    _max: TrackingVisitorMaxAggregateOutputType | null
+  }
+
+  type GetTrackingVisitorGroupByPayload<T extends TrackingVisitorGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TrackingVisitorGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TrackingVisitorGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TrackingVisitorGroupByOutputType[P]>
+            : GetScalarType<T[P], TrackingVisitorGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TrackingVisitorSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    anonymousId?: boolean
+    identityId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | TrackingVisitor$identityArgs<ExtArgs>
+    sessions?: boolean | TrackingVisitor$sessionsArgs<ExtArgs>
+    events?: boolean | TrackingVisitor$eventsArgs<ExtArgs>
+    _count?: boolean | TrackingVisitorCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingVisitor"]>
+
+  export type TrackingVisitorSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    anonymousId?: boolean
+    identityId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | TrackingVisitor$identityArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingVisitor"]>
+
+  export type TrackingVisitorSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    anonymousId?: boolean
+    identityId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | TrackingVisitor$identityArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingVisitor"]>
+
+  export type TrackingVisitorSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    anonymousId?: boolean
+    identityId?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type TrackingVisitorOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "anonymousId" | "identityId" | "createdAt" | "updatedAt", ExtArgs["result"]["trackingVisitor"]>
+  export type TrackingVisitorInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | TrackingVisitor$identityArgs<ExtArgs>
+    sessions?: boolean | TrackingVisitor$sessionsArgs<ExtArgs>
+    events?: boolean | TrackingVisitor$eventsArgs<ExtArgs>
+    _count?: boolean | TrackingVisitorCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TrackingVisitorIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | TrackingVisitor$identityArgs<ExtArgs>
+  }
+  export type TrackingVisitorIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | TrackingVisitor$identityArgs<ExtArgs>
+  }
+
+  export type $TrackingVisitorPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TrackingVisitor"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      identity: Prisma.$TrackingIdentityPayload<ExtArgs> | null
+      sessions: Prisma.$TrackingSessionPayload<ExtArgs>[]
+      events: Prisma.$TrackingEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      anonymousId: string
+      identityId: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["trackingVisitor"]>
+    composites: {}
+  }
+
+  type TrackingVisitorGetPayload<S extends boolean | null | undefined | TrackingVisitorDefaultArgs> = $Result.GetResult<Prisma.$TrackingVisitorPayload, S>
+
+  type TrackingVisitorCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TrackingVisitorFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TrackingVisitorCountAggregateInputType | true
+    }
+
+  export interface TrackingVisitorDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TrackingVisitor'], meta: { name: 'TrackingVisitor' } }
+    /**
+     * Find zero or one TrackingVisitor that matches the filter.
+     * @param {TrackingVisitorFindUniqueArgs} args - Arguments to find a TrackingVisitor
+     * @example
+     * // Get one TrackingVisitor
+     * const trackingVisitor = await prisma.trackingVisitor.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TrackingVisitorFindUniqueArgs>(args: SelectSubset<T, TrackingVisitorFindUniqueArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TrackingVisitor that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TrackingVisitorFindUniqueOrThrowArgs} args - Arguments to find a TrackingVisitor
+     * @example
+     * // Get one TrackingVisitor
+     * const trackingVisitor = await prisma.trackingVisitor.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TrackingVisitorFindUniqueOrThrowArgs>(args: SelectSubset<T, TrackingVisitorFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrackingVisitor that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingVisitorFindFirstArgs} args - Arguments to find a TrackingVisitor
+     * @example
+     * // Get one TrackingVisitor
+     * const trackingVisitor = await prisma.trackingVisitor.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TrackingVisitorFindFirstArgs>(args?: SelectSubset<T, TrackingVisitorFindFirstArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrackingVisitor that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingVisitorFindFirstOrThrowArgs} args - Arguments to find a TrackingVisitor
+     * @example
+     * // Get one TrackingVisitor
+     * const trackingVisitor = await prisma.trackingVisitor.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TrackingVisitorFindFirstOrThrowArgs>(args?: SelectSubset<T, TrackingVisitorFindFirstOrThrowArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TrackingVisitors that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingVisitorFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TrackingVisitors
+     * const trackingVisitors = await prisma.trackingVisitor.findMany()
+     * 
+     * // Get first 10 TrackingVisitors
+     * const trackingVisitors = await prisma.trackingVisitor.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const trackingVisitorWithIdOnly = await prisma.trackingVisitor.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TrackingVisitorFindManyArgs>(args?: SelectSubset<T, TrackingVisitorFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TrackingVisitor.
+     * @param {TrackingVisitorCreateArgs} args - Arguments to create a TrackingVisitor.
+     * @example
+     * // Create one TrackingVisitor
+     * const TrackingVisitor = await prisma.trackingVisitor.create({
+     *   data: {
+     *     // ... data to create a TrackingVisitor
+     *   }
+     * })
+     * 
+     */
+    create<T extends TrackingVisitorCreateArgs>(args: SelectSubset<T, TrackingVisitorCreateArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TrackingVisitors.
+     * @param {TrackingVisitorCreateManyArgs} args - Arguments to create many TrackingVisitors.
+     * @example
+     * // Create many TrackingVisitors
+     * const trackingVisitor = await prisma.trackingVisitor.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TrackingVisitorCreateManyArgs>(args?: SelectSubset<T, TrackingVisitorCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TrackingVisitors and returns the data saved in the database.
+     * @param {TrackingVisitorCreateManyAndReturnArgs} args - Arguments to create many TrackingVisitors.
+     * @example
+     * // Create many TrackingVisitors
+     * const trackingVisitor = await prisma.trackingVisitor.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TrackingVisitors and only return the `id`
+     * const trackingVisitorWithIdOnly = await prisma.trackingVisitor.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TrackingVisitorCreateManyAndReturnArgs>(args?: SelectSubset<T, TrackingVisitorCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TrackingVisitor.
+     * @param {TrackingVisitorDeleteArgs} args - Arguments to delete one TrackingVisitor.
+     * @example
+     * // Delete one TrackingVisitor
+     * const TrackingVisitor = await prisma.trackingVisitor.delete({
+     *   where: {
+     *     // ... filter to delete one TrackingVisitor
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TrackingVisitorDeleteArgs>(args: SelectSubset<T, TrackingVisitorDeleteArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TrackingVisitor.
+     * @param {TrackingVisitorUpdateArgs} args - Arguments to update one TrackingVisitor.
+     * @example
+     * // Update one TrackingVisitor
+     * const trackingVisitor = await prisma.trackingVisitor.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TrackingVisitorUpdateArgs>(args: SelectSubset<T, TrackingVisitorUpdateArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TrackingVisitors.
+     * @param {TrackingVisitorDeleteManyArgs} args - Arguments to filter TrackingVisitors to delete.
+     * @example
+     * // Delete a few TrackingVisitors
+     * const { count } = await prisma.trackingVisitor.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TrackingVisitorDeleteManyArgs>(args?: SelectSubset<T, TrackingVisitorDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackingVisitors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingVisitorUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TrackingVisitors
+     * const trackingVisitor = await prisma.trackingVisitor.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TrackingVisitorUpdateManyArgs>(args: SelectSubset<T, TrackingVisitorUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackingVisitors and returns the data updated in the database.
+     * @param {TrackingVisitorUpdateManyAndReturnArgs} args - Arguments to update many TrackingVisitors.
+     * @example
+     * // Update many TrackingVisitors
+     * const trackingVisitor = await prisma.trackingVisitor.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TrackingVisitors and only return the `id`
+     * const trackingVisitorWithIdOnly = await prisma.trackingVisitor.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TrackingVisitorUpdateManyAndReturnArgs>(args: SelectSubset<T, TrackingVisitorUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TrackingVisitor.
+     * @param {TrackingVisitorUpsertArgs} args - Arguments to update or create a TrackingVisitor.
+     * @example
+     * // Update or create a TrackingVisitor
+     * const trackingVisitor = await prisma.trackingVisitor.upsert({
+     *   create: {
+     *     // ... data to create a TrackingVisitor
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TrackingVisitor we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TrackingVisitorUpsertArgs>(args: SelectSubset<T, TrackingVisitorUpsertArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TrackingVisitors.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingVisitorCountArgs} args - Arguments to filter TrackingVisitors to count.
+     * @example
+     * // Count the number of TrackingVisitors
+     * const count = await prisma.trackingVisitor.count({
+     *   where: {
+     *     // ... the filter for the TrackingVisitors we want to count
+     *   }
+     * })
+    **/
+    count<T extends TrackingVisitorCountArgs>(
+      args?: Subset<T, TrackingVisitorCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TrackingVisitorCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TrackingVisitor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingVisitorAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TrackingVisitorAggregateArgs>(args: Subset<T, TrackingVisitorAggregateArgs>): Prisma.PrismaPromise<GetTrackingVisitorAggregateType<T>>
+
+    /**
+     * Group by TrackingVisitor.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingVisitorGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TrackingVisitorGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TrackingVisitorGroupByArgs['orderBy'] }
+        : { orderBy?: TrackingVisitorGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TrackingVisitorGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTrackingVisitorGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TrackingVisitor model
+   */
+  readonly fields: TrackingVisitorFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TrackingVisitor.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TrackingVisitorClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    identity<T extends TrackingVisitor$identityArgs<ExtArgs> = {}>(args?: Subset<T, TrackingVisitor$identityArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    sessions<T extends TrackingVisitor$sessionsArgs<ExtArgs> = {}>(args?: Subset<T, TrackingVisitor$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    events<T extends TrackingVisitor$eventsArgs<ExtArgs> = {}>(args?: Subset<T, TrackingVisitor$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TrackingVisitor model
+   */
+  interface TrackingVisitorFieldRefs {
+    readonly id: FieldRef<"TrackingVisitor", 'String'>
+    readonly organizationId: FieldRef<"TrackingVisitor", 'String'>
+    readonly anonymousId: FieldRef<"TrackingVisitor", 'String'>
+    readonly identityId: FieldRef<"TrackingVisitor", 'String'>
+    readonly createdAt: FieldRef<"TrackingVisitor", 'DateTime'>
+    readonly updatedAt: FieldRef<"TrackingVisitor", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TrackingVisitor findUnique
+   */
+  export type TrackingVisitorFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingVisitor to fetch.
+     */
+    where: TrackingVisitorWhereUniqueInput
+  }
+
+  /**
+   * TrackingVisitor findUniqueOrThrow
+   */
+  export type TrackingVisitorFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingVisitor to fetch.
+     */
+    where: TrackingVisitorWhereUniqueInput
+  }
+
+  /**
+   * TrackingVisitor findFirst
+   */
+  export type TrackingVisitorFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingVisitor to fetch.
+     */
+    where?: TrackingVisitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingVisitors to fetch.
+     */
+    orderBy?: TrackingVisitorOrderByWithRelationInput | TrackingVisitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackingVisitors.
+     */
+    cursor?: TrackingVisitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingVisitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingVisitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackingVisitors.
+     */
+    distinct?: TrackingVisitorScalarFieldEnum | TrackingVisitorScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingVisitor findFirstOrThrow
+   */
+  export type TrackingVisitorFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingVisitor to fetch.
+     */
+    where?: TrackingVisitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingVisitors to fetch.
+     */
+    orderBy?: TrackingVisitorOrderByWithRelationInput | TrackingVisitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackingVisitors.
+     */
+    cursor?: TrackingVisitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingVisitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingVisitors.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackingVisitors.
+     */
+    distinct?: TrackingVisitorScalarFieldEnum | TrackingVisitorScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingVisitor findMany
+   */
+  export type TrackingVisitorFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingVisitors to fetch.
+     */
+    where?: TrackingVisitorWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingVisitors to fetch.
+     */
+    orderBy?: TrackingVisitorOrderByWithRelationInput | TrackingVisitorOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TrackingVisitors.
+     */
+    cursor?: TrackingVisitorWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingVisitors from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingVisitors.
+     */
+    skip?: number
+    distinct?: TrackingVisitorScalarFieldEnum | TrackingVisitorScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingVisitor create
+   */
+  export type TrackingVisitorCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TrackingVisitor.
+     */
+    data: XOR<TrackingVisitorCreateInput, TrackingVisitorUncheckedCreateInput>
+  }
+
+  /**
+   * TrackingVisitor createMany
+   */
+  export type TrackingVisitorCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TrackingVisitors.
+     */
+    data: TrackingVisitorCreateManyInput | TrackingVisitorCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TrackingVisitor createManyAndReturn
+   */
+  export type TrackingVisitorCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * The data used to create many TrackingVisitors.
+     */
+    data: TrackingVisitorCreateManyInput | TrackingVisitorCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackingVisitor update
+   */
+  export type TrackingVisitorUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TrackingVisitor.
+     */
+    data: XOR<TrackingVisitorUpdateInput, TrackingVisitorUncheckedUpdateInput>
+    /**
+     * Choose, which TrackingVisitor to update.
+     */
+    where: TrackingVisitorWhereUniqueInput
+  }
+
+  /**
+   * TrackingVisitor updateMany
+   */
+  export type TrackingVisitorUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TrackingVisitors.
+     */
+    data: XOR<TrackingVisitorUpdateManyMutationInput, TrackingVisitorUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackingVisitors to update
+     */
+    where?: TrackingVisitorWhereInput
+    /**
+     * Limit how many TrackingVisitors to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrackingVisitor updateManyAndReturn
+   */
+  export type TrackingVisitorUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * The data used to update TrackingVisitors.
+     */
+    data: XOR<TrackingVisitorUpdateManyMutationInput, TrackingVisitorUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackingVisitors to update
+     */
+    where?: TrackingVisitorWhereInput
+    /**
+     * Limit how many TrackingVisitors to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackingVisitor upsert
+   */
+  export type TrackingVisitorUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TrackingVisitor to update in case it exists.
+     */
+    where: TrackingVisitorWhereUniqueInput
+    /**
+     * In case the TrackingVisitor found by the `where` argument doesn't exist, create a new TrackingVisitor with this data.
+     */
+    create: XOR<TrackingVisitorCreateInput, TrackingVisitorUncheckedCreateInput>
+    /**
+     * In case the TrackingVisitor was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TrackingVisitorUpdateInput, TrackingVisitorUncheckedUpdateInput>
+  }
+
+  /**
+   * TrackingVisitor delete
+   */
+  export type TrackingVisitorDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    /**
+     * Filter which TrackingVisitor to delete.
+     */
+    where: TrackingVisitorWhereUniqueInput
+  }
+
+  /**
+   * TrackingVisitor deleteMany
+   */
+  export type TrackingVisitorDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackingVisitors to delete
+     */
+    where?: TrackingVisitorWhereInput
+    /**
+     * Limit how many TrackingVisitors to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrackingVisitor.identity
+   */
+  export type TrackingVisitor$identityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    where?: TrackingIdentityWhereInput
+  }
+
+  /**
+   * TrackingVisitor.sessions
+   */
+  export type TrackingVisitor$sessionsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    where?: TrackingSessionWhereInput
+    orderBy?: TrackingSessionOrderByWithRelationInput | TrackingSessionOrderByWithRelationInput[]
+    cursor?: TrackingSessionWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingSessionScalarFieldEnum | TrackingSessionScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingVisitor.events
+   */
+  export type TrackingVisitor$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    where?: TrackingEventWhereInput
+    orderBy?: TrackingEventOrderByWithRelationInput | TrackingEventOrderByWithRelationInput[]
+    cursor?: TrackingEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingEventScalarFieldEnum | TrackingEventScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingVisitor without action
+   */
+  export type TrackingVisitorDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TrackingSession
+   */
+
+  export type AggregateTrackingSession = {
+    _count: TrackingSessionCountAggregateOutputType | null
+    _min: TrackingSessionMinAggregateOutputType | null
+    _max: TrackingSessionMaxAggregateOutputType | null
+  }
+
+  export type TrackingSessionMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    sessionId: string | null
+    visitorId: string | null
+    landingPage: string | null
+    referrer: string | null
+    utmSource: string | null
+    utmMedium: string | null
+    utmCampaign: string | null
+    utmContent: string | null
+    utmTerm: string | null
+    fbclid: string | null
+    gclid: string | null
+    ttclid: string | null
+    msclkid: string | null
+    startedAt: Date | null
+    lastSeenAt: Date | null
+  }
+
+  export type TrackingSessionMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    sessionId: string | null
+    visitorId: string | null
+    landingPage: string | null
+    referrer: string | null
+    utmSource: string | null
+    utmMedium: string | null
+    utmCampaign: string | null
+    utmContent: string | null
+    utmTerm: string | null
+    fbclid: string | null
+    gclid: string | null
+    ttclid: string | null
+    msclkid: string | null
+    startedAt: Date | null
+    lastSeenAt: Date | null
+  }
+
+  export type TrackingSessionCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    sessionId: number
+    visitorId: number
+    landingPage: number
+    referrer: number
+    utmSource: number
+    utmMedium: number
+    utmCampaign: number
+    utmContent: number
+    utmTerm: number
+    fbclid: number
+    gclid: number
+    ttclid: number
+    msclkid: number
+    firstTouch: number
+    lastTouch: number
+    startedAt: number
+    lastSeenAt: number
+    _all: number
+  }
+
+
+  export type TrackingSessionMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    sessionId?: true
+    visitorId?: true
+    landingPage?: true
+    referrer?: true
+    utmSource?: true
+    utmMedium?: true
+    utmCampaign?: true
+    utmContent?: true
+    utmTerm?: true
+    fbclid?: true
+    gclid?: true
+    ttclid?: true
+    msclkid?: true
+    startedAt?: true
+    lastSeenAt?: true
+  }
+
+  export type TrackingSessionMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    sessionId?: true
+    visitorId?: true
+    landingPage?: true
+    referrer?: true
+    utmSource?: true
+    utmMedium?: true
+    utmCampaign?: true
+    utmContent?: true
+    utmTerm?: true
+    fbclid?: true
+    gclid?: true
+    ttclid?: true
+    msclkid?: true
+    startedAt?: true
+    lastSeenAt?: true
+  }
+
+  export type TrackingSessionCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    sessionId?: true
+    visitorId?: true
+    landingPage?: true
+    referrer?: true
+    utmSource?: true
+    utmMedium?: true
+    utmCampaign?: true
+    utmContent?: true
+    utmTerm?: true
+    fbclid?: true
+    gclid?: true
+    ttclid?: true
+    msclkid?: true
+    firstTouch?: true
+    lastTouch?: true
+    startedAt?: true
+    lastSeenAt?: true
+    _all?: true
+  }
+
+  export type TrackingSessionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackingSession to aggregate.
+     */
+    where?: TrackingSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingSessions to fetch.
+     */
+    orderBy?: TrackingSessionOrderByWithRelationInput | TrackingSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TrackingSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TrackingSessions
+    **/
+    _count?: true | TrackingSessionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TrackingSessionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TrackingSessionMaxAggregateInputType
+  }
+
+  export type GetTrackingSessionAggregateType<T extends TrackingSessionAggregateArgs> = {
+        [P in keyof T & keyof AggregateTrackingSession]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTrackingSession[P]>
+      : GetScalarType<T[P], AggregateTrackingSession[P]>
+  }
+
+
+
+
+  export type TrackingSessionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingSessionWhereInput
+    orderBy?: TrackingSessionOrderByWithAggregationInput | TrackingSessionOrderByWithAggregationInput[]
+    by: TrackingSessionScalarFieldEnum[] | TrackingSessionScalarFieldEnum
+    having?: TrackingSessionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TrackingSessionCountAggregateInputType | true
+    _min?: TrackingSessionMinAggregateInputType
+    _max?: TrackingSessionMaxAggregateInputType
+  }
+
+  export type TrackingSessionGroupByOutputType = {
+    id: string
+    organizationId: string
+    sessionId: string
+    visitorId: string
+    landingPage: string | null
+    referrer: string | null
+    utmSource: string | null
+    utmMedium: string | null
+    utmCampaign: string | null
+    utmContent: string | null
+    utmTerm: string | null
+    fbclid: string | null
+    gclid: string | null
+    ttclid: string | null
+    msclkid: string | null
+    firstTouch: JsonValue | null
+    lastTouch: JsonValue | null
+    startedAt: Date
+    lastSeenAt: Date
+    _count: TrackingSessionCountAggregateOutputType | null
+    _min: TrackingSessionMinAggregateOutputType | null
+    _max: TrackingSessionMaxAggregateOutputType | null
+  }
+
+  type GetTrackingSessionGroupByPayload<T extends TrackingSessionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TrackingSessionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TrackingSessionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TrackingSessionGroupByOutputType[P]>
+            : GetScalarType<T[P], TrackingSessionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TrackingSessionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    sessionId?: boolean
+    visitorId?: boolean
+    landingPage?: boolean
+    referrer?: boolean
+    utmSource?: boolean
+    utmMedium?: boolean
+    utmCampaign?: boolean
+    utmContent?: boolean
+    utmTerm?: boolean
+    fbclid?: boolean
+    gclid?: boolean
+    ttclid?: boolean
+    msclkid?: boolean
+    firstTouch?: boolean
+    lastTouch?: boolean
+    startedAt?: boolean
+    lastSeenAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingVisitorDefaultArgs<ExtArgs>
+    events?: boolean | TrackingSession$eventsArgs<ExtArgs>
+    _count?: boolean | TrackingSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingSession"]>
+
+  export type TrackingSessionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    sessionId?: boolean
+    visitorId?: boolean
+    landingPage?: boolean
+    referrer?: boolean
+    utmSource?: boolean
+    utmMedium?: boolean
+    utmCampaign?: boolean
+    utmContent?: boolean
+    utmTerm?: boolean
+    fbclid?: boolean
+    gclid?: boolean
+    ttclid?: boolean
+    msclkid?: boolean
+    firstTouch?: boolean
+    lastTouch?: boolean
+    startedAt?: boolean
+    lastSeenAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingVisitorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingSession"]>
+
+  export type TrackingSessionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    sessionId?: boolean
+    visitorId?: boolean
+    landingPage?: boolean
+    referrer?: boolean
+    utmSource?: boolean
+    utmMedium?: boolean
+    utmCampaign?: boolean
+    utmContent?: boolean
+    utmTerm?: boolean
+    fbclid?: boolean
+    gclid?: boolean
+    ttclid?: boolean
+    msclkid?: boolean
+    firstTouch?: boolean
+    lastTouch?: boolean
+    startedAt?: boolean
+    lastSeenAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingVisitorDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingSession"]>
+
+  export type TrackingSessionSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    sessionId?: boolean
+    visitorId?: boolean
+    landingPage?: boolean
+    referrer?: boolean
+    utmSource?: boolean
+    utmMedium?: boolean
+    utmCampaign?: boolean
+    utmContent?: boolean
+    utmTerm?: boolean
+    fbclid?: boolean
+    gclid?: boolean
+    ttclid?: boolean
+    msclkid?: boolean
+    firstTouch?: boolean
+    lastTouch?: boolean
+    startedAt?: boolean
+    lastSeenAt?: boolean
+  }
+
+  export type TrackingSessionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "sessionId" | "visitorId" | "landingPage" | "referrer" | "utmSource" | "utmMedium" | "utmCampaign" | "utmContent" | "utmTerm" | "fbclid" | "gclid" | "ttclid" | "msclkid" | "firstTouch" | "lastTouch" | "startedAt" | "lastSeenAt", ExtArgs["result"]["trackingSession"]>
+  export type TrackingSessionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingVisitorDefaultArgs<ExtArgs>
+    events?: boolean | TrackingSession$eventsArgs<ExtArgs>
+    _count?: boolean | TrackingSessionCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type TrackingSessionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingVisitorDefaultArgs<ExtArgs>
+  }
+  export type TrackingSessionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingVisitorDefaultArgs<ExtArgs>
+  }
+
+  export type $TrackingSessionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TrackingSession"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      visitor: Prisma.$TrackingVisitorPayload<ExtArgs>
+      events: Prisma.$TrackingEventPayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      sessionId: string
+      visitorId: string
+      landingPage: string | null
+      referrer: string | null
+      utmSource: string | null
+      utmMedium: string | null
+      utmCampaign: string | null
+      utmContent: string | null
+      utmTerm: string | null
+      fbclid: string | null
+      gclid: string | null
+      ttclid: string | null
+      msclkid: string | null
+      firstTouch: Prisma.JsonValue | null
+      lastTouch: Prisma.JsonValue | null
+      startedAt: Date
+      lastSeenAt: Date
+    }, ExtArgs["result"]["trackingSession"]>
+    composites: {}
+  }
+
+  type TrackingSessionGetPayload<S extends boolean | null | undefined | TrackingSessionDefaultArgs> = $Result.GetResult<Prisma.$TrackingSessionPayload, S>
+
+  type TrackingSessionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TrackingSessionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TrackingSessionCountAggregateInputType | true
+    }
+
+  export interface TrackingSessionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TrackingSession'], meta: { name: 'TrackingSession' } }
+    /**
+     * Find zero or one TrackingSession that matches the filter.
+     * @param {TrackingSessionFindUniqueArgs} args - Arguments to find a TrackingSession
+     * @example
+     * // Get one TrackingSession
+     * const trackingSession = await prisma.trackingSession.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TrackingSessionFindUniqueArgs>(args: SelectSubset<T, TrackingSessionFindUniqueArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TrackingSession that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TrackingSessionFindUniqueOrThrowArgs} args - Arguments to find a TrackingSession
+     * @example
+     * // Get one TrackingSession
+     * const trackingSession = await prisma.trackingSession.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TrackingSessionFindUniqueOrThrowArgs>(args: SelectSubset<T, TrackingSessionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrackingSession that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingSessionFindFirstArgs} args - Arguments to find a TrackingSession
+     * @example
+     * // Get one TrackingSession
+     * const trackingSession = await prisma.trackingSession.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TrackingSessionFindFirstArgs>(args?: SelectSubset<T, TrackingSessionFindFirstArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrackingSession that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingSessionFindFirstOrThrowArgs} args - Arguments to find a TrackingSession
+     * @example
+     * // Get one TrackingSession
+     * const trackingSession = await prisma.trackingSession.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TrackingSessionFindFirstOrThrowArgs>(args?: SelectSubset<T, TrackingSessionFindFirstOrThrowArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TrackingSessions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingSessionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TrackingSessions
+     * const trackingSessions = await prisma.trackingSession.findMany()
+     * 
+     * // Get first 10 TrackingSessions
+     * const trackingSessions = await prisma.trackingSession.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const trackingSessionWithIdOnly = await prisma.trackingSession.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TrackingSessionFindManyArgs>(args?: SelectSubset<T, TrackingSessionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TrackingSession.
+     * @param {TrackingSessionCreateArgs} args - Arguments to create a TrackingSession.
+     * @example
+     * // Create one TrackingSession
+     * const TrackingSession = await prisma.trackingSession.create({
+     *   data: {
+     *     // ... data to create a TrackingSession
+     *   }
+     * })
+     * 
+     */
+    create<T extends TrackingSessionCreateArgs>(args: SelectSubset<T, TrackingSessionCreateArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TrackingSessions.
+     * @param {TrackingSessionCreateManyArgs} args - Arguments to create many TrackingSessions.
+     * @example
+     * // Create many TrackingSessions
+     * const trackingSession = await prisma.trackingSession.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TrackingSessionCreateManyArgs>(args?: SelectSubset<T, TrackingSessionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TrackingSessions and returns the data saved in the database.
+     * @param {TrackingSessionCreateManyAndReturnArgs} args - Arguments to create many TrackingSessions.
+     * @example
+     * // Create many TrackingSessions
+     * const trackingSession = await prisma.trackingSession.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TrackingSessions and only return the `id`
+     * const trackingSessionWithIdOnly = await prisma.trackingSession.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TrackingSessionCreateManyAndReturnArgs>(args?: SelectSubset<T, TrackingSessionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TrackingSession.
+     * @param {TrackingSessionDeleteArgs} args - Arguments to delete one TrackingSession.
+     * @example
+     * // Delete one TrackingSession
+     * const TrackingSession = await prisma.trackingSession.delete({
+     *   where: {
+     *     // ... filter to delete one TrackingSession
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TrackingSessionDeleteArgs>(args: SelectSubset<T, TrackingSessionDeleteArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TrackingSession.
+     * @param {TrackingSessionUpdateArgs} args - Arguments to update one TrackingSession.
+     * @example
+     * // Update one TrackingSession
+     * const trackingSession = await prisma.trackingSession.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TrackingSessionUpdateArgs>(args: SelectSubset<T, TrackingSessionUpdateArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TrackingSessions.
+     * @param {TrackingSessionDeleteManyArgs} args - Arguments to filter TrackingSessions to delete.
+     * @example
+     * // Delete a few TrackingSessions
+     * const { count } = await prisma.trackingSession.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TrackingSessionDeleteManyArgs>(args?: SelectSubset<T, TrackingSessionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackingSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingSessionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TrackingSessions
+     * const trackingSession = await prisma.trackingSession.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TrackingSessionUpdateManyArgs>(args: SelectSubset<T, TrackingSessionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackingSessions and returns the data updated in the database.
+     * @param {TrackingSessionUpdateManyAndReturnArgs} args - Arguments to update many TrackingSessions.
+     * @example
+     * // Update many TrackingSessions
+     * const trackingSession = await prisma.trackingSession.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TrackingSessions and only return the `id`
+     * const trackingSessionWithIdOnly = await prisma.trackingSession.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TrackingSessionUpdateManyAndReturnArgs>(args: SelectSubset<T, TrackingSessionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TrackingSession.
+     * @param {TrackingSessionUpsertArgs} args - Arguments to update or create a TrackingSession.
+     * @example
+     * // Update or create a TrackingSession
+     * const trackingSession = await prisma.trackingSession.upsert({
+     *   create: {
+     *     // ... data to create a TrackingSession
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TrackingSession we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TrackingSessionUpsertArgs>(args: SelectSubset<T, TrackingSessionUpsertArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TrackingSessions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingSessionCountArgs} args - Arguments to filter TrackingSessions to count.
+     * @example
+     * // Count the number of TrackingSessions
+     * const count = await prisma.trackingSession.count({
+     *   where: {
+     *     // ... the filter for the TrackingSessions we want to count
+     *   }
+     * })
+    **/
+    count<T extends TrackingSessionCountArgs>(
+      args?: Subset<T, TrackingSessionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TrackingSessionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TrackingSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingSessionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TrackingSessionAggregateArgs>(args: Subset<T, TrackingSessionAggregateArgs>): Prisma.PrismaPromise<GetTrackingSessionAggregateType<T>>
+
+    /**
+     * Group by TrackingSession.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingSessionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TrackingSessionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TrackingSessionGroupByArgs['orderBy'] }
+        : { orderBy?: TrackingSessionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TrackingSessionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTrackingSessionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TrackingSession model
+   */
+  readonly fields: TrackingSessionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TrackingSession.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TrackingSessionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    visitor<T extends TrackingVisitorDefaultArgs<ExtArgs> = {}>(args?: Subset<T, TrackingVisitorDefaultArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    events<T extends TrackingSession$eventsArgs<ExtArgs> = {}>(args?: Subset<T, TrackingSession$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TrackingSession model
+   */
+  interface TrackingSessionFieldRefs {
+    readonly id: FieldRef<"TrackingSession", 'String'>
+    readonly organizationId: FieldRef<"TrackingSession", 'String'>
+    readonly sessionId: FieldRef<"TrackingSession", 'String'>
+    readonly visitorId: FieldRef<"TrackingSession", 'String'>
+    readonly landingPage: FieldRef<"TrackingSession", 'String'>
+    readonly referrer: FieldRef<"TrackingSession", 'String'>
+    readonly utmSource: FieldRef<"TrackingSession", 'String'>
+    readonly utmMedium: FieldRef<"TrackingSession", 'String'>
+    readonly utmCampaign: FieldRef<"TrackingSession", 'String'>
+    readonly utmContent: FieldRef<"TrackingSession", 'String'>
+    readonly utmTerm: FieldRef<"TrackingSession", 'String'>
+    readonly fbclid: FieldRef<"TrackingSession", 'String'>
+    readonly gclid: FieldRef<"TrackingSession", 'String'>
+    readonly ttclid: FieldRef<"TrackingSession", 'String'>
+    readonly msclkid: FieldRef<"TrackingSession", 'String'>
+    readonly firstTouch: FieldRef<"TrackingSession", 'Json'>
+    readonly lastTouch: FieldRef<"TrackingSession", 'Json'>
+    readonly startedAt: FieldRef<"TrackingSession", 'DateTime'>
+    readonly lastSeenAt: FieldRef<"TrackingSession", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TrackingSession findUnique
+   */
+  export type TrackingSessionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingSession to fetch.
+     */
+    where: TrackingSessionWhereUniqueInput
+  }
+
+  /**
+   * TrackingSession findUniqueOrThrow
+   */
+  export type TrackingSessionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingSession to fetch.
+     */
+    where: TrackingSessionWhereUniqueInput
+  }
+
+  /**
+   * TrackingSession findFirst
+   */
+  export type TrackingSessionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingSession to fetch.
+     */
+    where?: TrackingSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingSessions to fetch.
+     */
+    orderBy?: TrackingSessionOrderByWithRelationInput | TrackingSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackingSessions.
+     */
+    cursor?: TrackingSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackingSessions.
+     */
+    distinct?: TrackingSessionScalarFieldEnum | TrackingSessionScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingSession findFirstOrThrow
+   */
+  export type TrackingSessionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingSession to fetch.
+     */
+    where?: TrackingSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingSessions to fetch.
+     */
+    orderBy?: TrackingSessionOrderByWithRelationInput | TrackingSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackingSessions.
+     */
+    cursor?: TrackingSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingSessions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackingSessions.
+     */
+    distinct?: TrackingSessionScalarFieldEnum | TrackingSessionScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingSession findMany
+   */
+  export type TrackingSessionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingSessions to fetch.
+     */
+    where?: TrackingSessionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingSessions to fetch.
+     */
+    orderBy?: TrackingSessionOrderByWithRelationInput | TrackingSessionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TrackingSessions.
+     */
+    cursor?: TrackingSessionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingSessions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingSessions.
+     */
+    skip?: number
+    distinct?: TrackingSessionScalarFieldEnum | TrackingSessionScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingSession create
+   */
+  export type TrackingSessionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TrackingSession.
+     */
+    data: XOR<TrackingSessionCreateInput, TrackingSessionUncheckedCreateInput>
+  }
+
+  /**
+   * TrackingSession createMany
+   */
+  export type TrackingSessionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TrackingSessions.
+     */
+    data: TrackingSessionCreateManyInput | TrackingSessionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TrackingSession createManyAndReturn
+   */
+  export type TrackingSessionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * The data used to create many TrackingSessions.
+     */
+    data: TrackingSessionCreateManyInput | TrackingSessionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackingSession update
+   */
+  export type TrackingSessionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TrackingSession.
+     */
+    data: XOR<TrackingSessionUpdateInput, TrackingSessionUncheckedUpdateInput>
+    /**
+     * Choose, which TrackingSession to update.
+     */
+    where: TrackingSessionWhereUniqueInput
+  }
+
+  /**
+   * TrackingSession updateMany
+   */
+  export type TrackingSessionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TrackingSessions.
+     */
+    data: XOR<TrackingSessionUpdateManyMutationInput, TrackingSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackingSessions to update
+     */
+    where?: TrackingSessionWhereInput
+    /**
+     * Limit how many TrackingSessions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrackingSession updateManyAndReturn
+   */
+  export type TrackingSessionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * The data used to update TrackingSessions.
+     */
+    data: XOR<TrackingSessionUpdateManyMutationInput, TrackingSessionUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackingSessions to update
+     */
+    where?: TrackingSessionWhereInput
+    /**
+     * Limit how many TrackingSessions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackingSession upsert
+   */
+  export type TrackingSessionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TrackingSession to update in case it exists.
+     */
+    where: TrackingSessionWhereUniqueInput
+    /**
+     * In case the TrackingSession found by the `where` argument doesn't exist, create a new TrackingSession with this data.
+     */
+    create: XOR<TrackingSessionCreateInput, TrackingSessionUncheckedCreateInput>
+    /**
+     * In case the TrackingSession was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TrackingSessionUpdateInput, TrackingSessionUncheckedUpdateInput>
+  }
+
+  /**
+   * TrackingSession delete
+   */
+  export type TrackingSessionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    /**
+     * Filter which TrackingSession to delete.
+     */
+    where: TrackingSessionWhereUniqueInput
+  }
+
+  /**
+   * TrackingSession deleteMany
+   */
+  export type TrackingSessionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackingSessions to delete
+     */
+    where?: TrackingSessionWhereInput
+    /**
+     * Limit how many TrackingSessions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrackingSession.events
+   */
+  export type TrackingSession$eventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    where?: TrackingEventWhereInput
+    orderBy?: TrackingEventOrderByWithRelationInput | TrackingEventOrderByWithRelationInput[]
+    cursor?: TrackingEventWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: TrackingEventScalarFieldEnum | TrackingEventScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingSession without action
+   */
+  export type TrackingSessionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model TrackingEvent
+   */
+
+  export type AggregateTrackingEvent = {
+    _count: TrackingEventCountAggregateOutputType | null
+    _min: TrackingEventMinAggregateOutputType | null
+    _max: TrackingEventMaxAggregateOutputType | null
+  }
+
+  export type TrackingEventMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    eventId: string | null
+    name: string | null
+    visitorId: string | null
+    sessionId: string | null
+    identityId: string | null
+    occurredAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type TrackingEventMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    eventId: string | null
+    name: string | null
+    visitorId: string | null
+    sessionId: string | null
+    identityId: string | null
+    occurredAt: Date | null
+    createdAt: Date | null
+  }
+
+  export type TrackingEventCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    eventId: number
+    name: number
+    visitorId: number
+    sessionId: number
+    identityId: number
+    properties: number
+    context: number
+    occurredAt: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type TrackingEventMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    eventId?: true
+    name?: true
+    visitorId?: true
+    sessionId?: true
+    identityId?: true
+    occurredAt?: true
+    createdAt?: true
+  }
+
+  export type TrackingEventMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    eventId?: true
+    name?: true
+    visitorId?: true
+    sessionId?: true
+    identityId?: true
+    occurredAt?: true
+    createdAt?: true
+  }
+
+  export type TrackingEventCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    eventId?: true
+    name?: true
+    visitorId?: true
+    sessionId?: true
+    identityId?: true
+    properties?: true
+    context?: true
+    occurredAt?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type TrackingEventAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackingEvent to aggregate.
+     */
+    where?: TrackingEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingEvents to fetch.
+     */
+    orderBy?: TrackingEventOrderByWithRelationInput | TrackingEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: TrackingEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned TrackingEvents
+    **/
+    _count?: true | TrackingEventCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: TrackingEventMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: TrackingEventMaxAggregateInputType
+  }
+
+  export type GetTrackingEventAggregateType<T extends TrackingEventAggregateArgs> = {
+        [P in keyof T & keyof AggregateTrackingEvent]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateTrackingEvent[P]>
+      : GetScalarType<T[P], AggregateTrackingEvent[P]>
+  }
+
+
+
+
+  export type TrackingEventGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: TrackingEventWhereInput
+    orderBy?: TrackingEventOrderByWithAggregationInput | TrackingEventOrderByWithAggregationInput[]
+    by: TrackingEventScalarFieldEnum[] | TrackingEventScalarFieldEnum
+    having?: TrackingEventScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: TrackingEventCountAggregateInputType | true
+    _min?: TrackingEventMinAggregateInputType
+    _max?: TrackingEventMaxAggregateInputType
+  }
+
+  export type TrackingEventGroupByOutputType = {
+    id: string
+    organizationId: string
+    eventId: string
+    name: string
+    visitorId: string | null
+    sessionId: string | null
+    identityId: string | null
+    properties: JsonValue
+    context: JsonValue
+    occurredAt: Date
+    createdAt: Date
+    _count: TrackingEventCountAggregateOutputType | null
+    _min: TrackingEventMinAggregateOutputType | null
+    _max: TrackingEventMaxAggregateOutputType | null
+  }
+
+  type GetTrackingEventGroupByPayload<T extends TrackingEventGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<TrackingEventGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof TrackingEventGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], TrackingEventGroupByOutputType[P]>
+            : GetScalarType<T[P], TrackingEventGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type TrackingEventSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    eventId?: boolean
+    name?: boolean
+    visitorId?: boolean
+    sessionId?: boolean
+    identityId?: boolean
+    properties?: boolean
+    context?: boolean
+    occurredAt?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingEvent$visitorArgs<ExtArgs>
+    session?: boolean | TrackingEvent$sessionArgs<ExtArgs>
+    identity?: boolean | TrackingEvent$identityArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingEvent"]>
+
+  export type TrackingEventSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    eventId?: boolean
+    name?: boolean
+    visitorId?: boolean
+    sessionId?: boolean
+    identityId?: boolean
+    properties?: boolean
+    context?: boolean
+    occurredAt?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingEvent$visitorArgs<ExtArgs>
+    session?: boolean | TrackingEvent$sessionArgs<ExtArgs>
+    identity?: boolean | TrackingEvent$identityArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingEvent"]>
+
+  export type TrackingEventSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    eventId?: boolean
+    name?: boolean
+    visitorId?: boolean
+    sessionId?: boolean
+    identityId?: boolean
+    properties?: boolean
+    context?: boolean
+    occurredAt?: boolean
+    createdAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingEvent$visitorArgs<ExtArgs>
+    session?: boolean | TrackingEvent$sessionArgs<ExtArgs>
+    identity?: boolean | TrackingEvent$identityArgs<ExtArgs>
+  }, ExtArgs["result"]["trackingEvent"]>
+
+  export type TrackingEventSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    eventId?: boolean
+    name?: boolean
+    visitorId?: boolean
+    sessionId?: boolean
+    identityId?: boolean
+    properties?: boolean
+    context?: boolean
+    occurredAt?: boolean
+    createdAt?: boolean
+  }
+
+  export type TrackingEventOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "eventId" | "name" | "visitorId" | "sessionId" | "identityId" | "properties" | "context" | "occurredAt" | "createdAt", ExtArgs["result"]["trackingEvent"]>
+  export type TrackingEventInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingEvent$visitorArgs<ExtArgs>
+    session?: boolean | TrackingEvent$sessionArgs<ExtArgs>
+    identity?: boolean | TrackingEvent$identityArgs<ExtArgs>
+  }
+  export type TrackingEventIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingEvent$visitorArgs<ExtArgs>
+    session?: boolean | TrackingEvent$sessionArgs<ExtArgs>
+    identity?: boolean | TrackingEvent$identityArgs<ExtArgs>
+  }
+  export type TrackingEventIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    visitor?: boolean | TrackingEvent$visitorArgs<ExtArgs>
+    session?: boolean | TrackingEvent$sessionArgs<ExtArgs>
+    identity?: boolean | TrackingEvent$identityArgs<ExtArgs>
+  }
+
+  export type $TrackingEventPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "TrackingEvent"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      visitor: Prisma.$TrackingVisitorPayload<ExtArgs> | null
+      session: Prisma.$TrackingSessionPayload<ExtArgs> | null
+      identity: Prisma.$TrackingIdentityPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      eventId: string
+      name: string
+      visitorId: string | null
+      sessionId: string | null
+      identityId: string | null
+      properties: Prisma.JsonValue
+      context: Prisma.JsonValue
+      occurredAt: Date
+      createdAt: Date
+    }, ExtArgs["result"]["trackingEvent"]>
+    composites: {}
+  }
+
+  type TrackingEventGetPayload<S extends boolean | null | undefined | TrackingEventDefaultArgs> = $Result.GetResult<Prisma.$TrackingEventPayload, S>
+
+  type TrackingEventCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<TrackingEventFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: TrackingEventCountAggregateInputType | true
+    }
+
+  export interface TrackingEventDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['TrackingEvent'], meta: { name: 'TrackingEvent' } }
+    /**
+     * Find zero or one TrackingEvent that matches the filter.
+     * @param {TrackingEventFindUniqueArgs} args - Arguments to find a TrackingEvent
+     * @example
+     * // Get one TrackingEvent
+     * const trackingEvent = await prisma.trackingEvent.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends TrackingEventFindUniqueArgs>(args: SelectSubset<T, TrackingEventFindUniqueArgs<ExtArgs>>): Prisma__TrackingEventClient<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one TrackingEvent that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {TrackingEventFindUniqueOrThrowArgs} args - Arguments to find a TrackingEvent
+     * @example
+     * // Get one TrackingEvent
+     * const trackingEvent = await prisma.trackingEvent.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends TrackingEventFindUniqueOrThrowArgs>(args: SelectSubset<T, TrackingEventFindUniqueOrThrowArgs<ExtArgs>>): Prisma__TrackingEventClient<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrackingEvent that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingEventFindFirstArgs} args - Arguments to find a TrackingEvent
+     * @example
+     * // Get one TrackingEvent
+     * const trackingEvent = await prisma.trackingEvent.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends TrackingEventFindFirstArgs>(args?: SelectSubset<T, TrackingEventFindFirstArgs<ExtArgs>>): Prisma__TrackingEventClient<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first TrackingEvent that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingEventFindFirstOrThrowArgs} args - Arguments to find a TrackingEvent
+     * @example
+     * // Get one TrackingEvent
+     * const trackingEvent = await prisma.trackingEvent.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends TrackingEventFindFirstOrThrowArgs>(args?: SelectSubset<T, TrackingEventFindFirstOrThrowArgs<ExtArgs>>): Prisma__TrackingEventClient<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more TrackingEvents that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingEventFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all TrackingEvents
+     * const trackingEvents = await prisma.trackingEvent.findMany()
+     * 
+     * // Get first 10 TrackingEvents
+     * const trackingEvents = await prisma.trackingEvent.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const trackingEventWithIdOnly = await prisma.trackingEvent.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends TrackingEventFindManyArgs>(args?: SelectSubset<T, TrackingEventFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a TrackingEvent.
+     * @param {TrackingEventCreateArgs} args - Arguments to create a TrackingEvent.
+     * @example
+     * // Create one TrackingEvent
+     * const TrackingEvent = await prisma.trackingEvent.create({
+     *   data: {
+     *     // ... data to create a TrackingEvent
+     *   }
+     * })
+     * 
+     */
+    create<T extends TrackingEventCreateArgs>(args: SelectSubset<T, TrackingEventCreateArgs<ExtArgs>>): Prisma__TrackingEventClient<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many TrackingEvents.
+     * @param {TrackingEventCreateManyArgs} args - Arguments to create many TrackingEvents.
+     * @example
+     * // Create many TrackingEvents
+     * const trackingEvent = await prisma.trackingEvent.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends TrackingEventCreateManyArgs>(args?: SelectSubset<T, TrackingEventCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many TrackingEvents and returns the data saved in the database.
+     * @param {TrackingEventCreateManyAndReturnArgs} args - Arguments to create many TrackingEvents.
+     * @example
+     * // Create many TrackingEvents
+     * const trackingEvent = await prisma.trackingEvent.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many TrackingEvents and only return the `id`
+     * const trackingEventWithIdOnly = await prisma.trackingEvent.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends TrackingEventCreateManyAndReturnArgs>(args?: SelectSubset<T, TrackingEventCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a TrackingEvent.
+     * @param {TrackingEventDeleteArgs} args - Arguments to delete one TrackingEvent.
+     * @example
+     * // Delete one TrackingEvent
+     * const TrackingEvent = await prisma.trackingEvent.delete({
+     *   where: {
+     *     // ... filter to delete one TrackingEvent
+     *   }
+     * })
+     * 
+     */
+    delete<T extends TrackingEventDeleteArgs>(args: SelectSubset<T, TrackingEventDeleteArgs<ExtArgs>>): Prisma__TrackingEventClient<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one TrackingEvent.
+     * @param {TrackingEventUpdateArgs} args - Arguments to update one TrackingEvent.
+     * @example
+     * // Update one TrackingEvent
+     * const trackingEvent = await prisma.trackingEvent.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends TrackingEventUpdateArgs>(args: SelectSubset<T, TrackingEventUpdateArgs<ExtArgs>>): Prisma__TrackingEventClient<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more TrackingEvents.
+     * @param {TrackingEventDeleteManyArgs} args - Arguments to filter TrackingEvents to delete.
+     * @example
+     * // Delete a few TrackingEvents
+     * const { count } = await prisma.trackingEvent.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends TrackingEventDeleteManyArgs>(args?: SelectSubset<T, TrackingEventDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackingEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingEventUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many TrackingEvents
+     * const trackingEvent = await prisma.trackingEvent.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends TrackingEventUpdateManyArgs>(args: SelectSubset<T, TrackingEventUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more TrackingEvents and returns the data updated in the database.
+     * @param {TrackingEventUpdateManyAndReturnArgs} args - Arguments to update many TrackingEvents.
+     * @example
+     * // Update many TrackingEvents
+     * const trackingEvent = await prisma.trackingEvent.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more TrackingEvents and only return the `id`
+     * const trackingEventWithIdOnly = await prisma.trackingEvent.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends TrackingEventUpdateManyAndReturnArgs>(args: SelectSubset<T, TrackingEventUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one TrackingEvent.
+     * @param {TrackingEventUpsertArgs} args - Arguments to update or create a TrackingEvent.
+     * @example
+     * // Update or create a TrackingEvent
+     * const trackingEvent = await prisma.trackingEvent.upsert({
+     *   create: {
+     *     // ... data to create a TrackingEvent
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the TrackingEvent we want to update
+     *   }
+     * })
+     */
+    upsert<T extends TrackingEventUpsertArgs>(args: SelectSubset<T, TrackingEventUpsertArgs<ExtArgs>>): Prisma__TrackingEventClient<$Result.GetResult<Prisma.$TrackingEventPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of TrackingEvents.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingEventCountArgs} args - Arguments to filter TrackingEvents to count.
+     * @example
+     * // Count the number of TrackingEvents
+     * const count = await prisma.trackingEvent.count({
+     *   where: {
+     *     // ... the filter for the TrackingEvents we want to count
+     *   }
+     * })
+    **/
+    count<T extends TrackingEventCountArgs>(
+      args?: Subset<T, TrackingEventCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], TrackingEventCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a TrackingEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingEventAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends TrackingEventAggregateArgs>(args: Subset<T, TrackingEventAggregateArgs>): Prisma.PrismaPromise<GetTrackingEventAggregateType<T>>
+
+    /**
+     * Group by TrackingEvent.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {TrackingEventGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends TrackingEventGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: TrackingEventGroupByArgs['orderBy'] }
+        : { orderBy?: TrackingEventGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, TrackingEventGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetTrackingEventGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the TrackingEvent model
+   */
+  readonly fields: TrackingEventFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for TrackingEvent.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__TrackingEventClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    visitor<T extends TrackingEvent$visitorArgs<ExtArgs> = {}>(args?: Subset<T, TrackingEvent$visitorArgs<ExtArgs>>): Prisma__TrackingVisitorClient<$Result.GetResult<Prisma.$TrackingVisitorPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    session<T extends TrackingEvent$sessionArgs<ExtArgs> = {}>(args?: Subset<T, TrackingEvent$sessionArgs<ExtArgs>>): Prisma__TrackingSessionClient<$Result.GetResult<Prisma.$TrackingSessionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    identity<T extends TrackingEvent$identityArgs<ExtArgs> = {}>(args?: Subset<T, TrackingEvent$identityArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the TrackingEvent model
+   */
+  interface TrackingEventFieldRefs {
+    readonly id: FieldRef<"TrackingEvent", 'String'>
+    readonly organizationId: FieldRef<"TrackingEvent", 'String'>
+    readonly eventId: FieldRef<"TrackingEvent", 'String'>
+    readonly name: FieldRef<"TrackingEvent", 'String'>
+    readonly visitorId: FieldRef<"TrackingEvent", 'String'>
+    readonly sessionId: FieldRef<"TrackingEvent", 'String'>
+    readonly identityId: FieldRef<"TrackingEvent", 'String'>
+    readonly properties: FieldRef<"TrackingEvent", 'Json'>
+    readonly context: FieldRef<"TrackingEvent", 'Json'>
+    readonly occurredAt: FieldRef<"TrackingEvent", 'DateTime'>
+    readonly createdAt: FieldRef<"TrackingEvent", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * TrackingEvent findUnique
+   */
+  export type TrackingEventFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingEvent to fetch.
+     */
+    where: TrackingEventWhereUniqueInput
+  }
+
+  /**
+   * TrackingEvent findUniqueOrThrow
+   */
+  export type TrackingEventFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingEvent to fetch.
+     */
+    where: TrackingEventWhereUniqueInput
+  }
+
+  /**
+   * TrackingEvent findFirst
+   */
+  export type TrackingEventFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingEvent to fetch.
+     */
+    where?: TrackingEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingEvents to fetch.
+     */
+    orderBy?: TrackingEventOrderByWithRelationInput | TrackingEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackingEvents.
+     */
+    cursor?: TrackingEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackingEvents.
+     */
+    distinct?: TrackingEventScalarFieldEnum | TrackingEventScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingEvent findFirstOrThrow
+   */
+  export type TrackingEventFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingEvent to fetch.
+     */
+    where?: TrackingEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingEvents to fetch.
+     */
+    orderBy?: TrackingEventOrderByWithRelationInput | TrackingEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for TrackingEvents.
+     */
+    cursor?: TrackingEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingEvents.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of TrackingEvents.
+     */
+    distinct?: TrackingEventScalarFieldEnum | TrackingEventScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingEvent findMany
+   */
+  export type TrackingEventFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * Filter, which TrackingEvents to fetch.
+     */
+    where?: TrackingEventWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of TrackingEvents to fetch.
+     */
+    orderBy?: TrackingEventOrderByWithRelationInput | TrackingEventOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing TrackingEvents.
+     */
+    cursor?: TrackingEventWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` TrackingEvents from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` TrackingEvents.
+     */
+    skip?: number
+    distinct?: TrackingEventScalarFieldEnum | TrackingEventScalarFieldEnum[]
+  }
+
+  /**
+   * TrackingEvent create
+   */
+  export type TrackingEventCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * The data needed to create a TrackingEvent.
+     */
+    data: XOR<TrackingEventCreateInput, TrackingEventUncheckedCreateInput>
+  }
+
+  /**
+   * TrackingEvent createMany
+   */
+  export type TrackingEventCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many TrackingEvents.
+     */
+    data: TrackingEventCreateManyInput | TrackingEventCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * TrackingEvent createManyAndReturn
+   */
+  export type TrackingEventCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * The data used to create many TrackingEvents.
+     */
+    data: TrackingEventCreateManyInput | TrackingEventCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackingEvent update
+   */
+  export type TrackingEventUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * The data needed to update a TrackingEvent.
+     */
+    data: XOR<TrackingEventUpdateInput, TrackingEventUncheckedUpdateInput>
+    /**
+     * Choose, which TrackingEvent to update.
+     */
+    where: TrackingEventWhereUniqueInput
+  }
+
+  /**
+   * TrackingEvent updateMany
+   */
+  export type TrackingEventUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update TrackingEvents.
+     */
+    data: XOR<TrackingEventUpdateManyMutationInput, TrackingEventUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackingEvents to update
+     */
+    where?: TrackingEventWhereInput
+    /**
+     * Limit how many TrackingEvents to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrackingEvent updateManyAndReturn
+   */
+  export type TrackingEventUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * The data used to update TrackingEvents.
+     */
+    data: XOR<TrackingEventUpdateManyMutationInput, TrackingEventUncheckedUpdateManyInput>
+    /**
+     * Filter which TrackingEvents to update
+     */
+    where?: TrackingEventWhereInput
+    /**
+     * Limit how many TrackingEvents to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * TrackingEvent upsert
+   */
+  export type TrackingEventUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * The filter to search for the TrackingEvent to update in case it exists.
+     */
+    where: TrackingEventWhereUniqueInput
+    /**
+     * In case the TrackingEvent found by the `where` argument doesn't exist, create a new TrackingEvent with this data.
+     */
+    create: XOR<TrackingEventCreateInput, TrackingEventUncheckedCreateInput>
+    /**
+     * In case the TrackingEvent was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<TrackingEventUpdateInput, TrackingEventUncheckedUpdateInput>
+  }
+
+  /**
+   * TrackingEvent delete
+   */
+  export type TrackingEventDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+    /**
+     * Filter which TrackingEvent to delete.
+     */
+    where: TrackingEventWhereUniqueInput
+  }
+
+  /**
+   * TrackingEvent deleteMany
+   */
+  export type TrackingEventDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which TrackingEvents to delete
+     */
+    where?: TrackingEventWhereInput
+    /**
+     * Limit how many TrackingEvents to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * TrackingEvent.visitor
+   */
+  export type TrackingEvent$visitorArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingVisitor
+     */
+    select?: TrackingVisitorSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingVisitor
+     */
+    omit?: TrackingVisitorOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingVisitorInclude<ExtArgs> | null
+    where?: TrackingVisitorWhereInput
+  }
+
+  /**
+   * TrackingEvent.session
+   */
+  export type TrackingEvent$sessionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingSession
+     */
+    select?: TrackingSessionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingSession
+     */
+    omit?: TrackingSessionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingSessionInclude<ExtArgs> | null
+    where?: TrackingSessionWhereInput
+  }
+
+  /**
+   * TrackingEvent.identity
+   */
+  export type TrackingEvent$identityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    where?: TrackingIdentityWhereInput
+  }
+
+  /**
+   * TrackingEvent without action
+   */
+  export type TrackingEventDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingEvent
+     */
+    select?: TrackingEventSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingEvent
+     */
+    omit?: TrackingEventOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingEventInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AttributionOrder
+   */
+
+  export type AggregateAttributionOrder = {
+    _count: AttributionOrderCountAggregateOutputType | null
+    _avg: AttributionOrderAvgAggregateOutputType | null
+    _sum: AttributionOrderSumAggregateOutputType | null
+    _min: AttributionOrderMinAggregateOutputType | null
+    _max: AttributionOrderMaxAggregateOutputType | null
+  }
+
+  export type AttributionOrderAvgAggregateOutputType = {
+    value: Decimal | null
+  }
+
+  export type AttributionOrderSumAggregateOutputType = {
+    value: Decimal | null
+  }
+
+  export type AttributionOrderMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    externalOrderId: string | null
+    identityId: string | null
+    customerExternalId: string | null
+    value: Decimal | null
+    currency: string | null
+    status: string | null
+    eventId: string | null
+    occurredAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttributionOrderMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    externalOrderId: string | null
+    identityId: string | null
+    customerExternalId: string | null
+    value: Decimal | null
+    currency: string | null
+    status: string | null
+    eventId: string | null
+    occurredAt: Date | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AttributionOrderCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    externalOrderId: number
+    identityId: number
+    customerExternalId: number
+    value: number
+    currency: number
+    status: number
+    eventId: number
+    rawPayload: number
+    occurredAt: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AttributionOrderAvgAggregateInputType = {
+    value?: true
+  }
+
+  export type AttributionOrderSumAggregateInputType = {
+    value?: true
+  }
+
+  export type AttributionOrderMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    externalOrderId?: true
+    identityId?: true
+    customerExternalId?: true
+    value?: true
+    currency?: true
+    status?: true
+    eventId?: true
+    occurredAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttributionOrderMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    externalOrderId?: true
+    identityId?: true
+    customerExternalId?: true
+    value?: true
+    currency?: true
+    status?: true
+    eventId?: true
+    occurredAt?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AttributionOrderCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    externalOrderId?: true
+    identityId?: true
+    customerExternalId?: true
+    value?: true
+    currency?: true
+    status?: true
+    eventId?: true
+    rawPayload?: true
+    occurredAt?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AttributionOrderAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AttributionOrder to aggregate.
+     */
+    where?: AttributionOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttributionOrders to fetch.
+     */
+    orderBy?: AttributionOrderOrderByWithRelationInput | AttributionOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttributionOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttributionOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttributionOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AttributionOrders
+    **/
+    _count?: true | AttributionOrderCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AttributionOrderAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AttributionOrderSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttributionOrderMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttributionOrderMaxAggregateInputType
+  }
+
+  export type GetAttributionOrderAggregateType<T extends AttributionOrderAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttributionOrder]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttributionOrder[P]>
+      : GetScalarType<T[P], AggregateAttributionOrder[P]>
+  }
+
+
+
+
+  export type AttributionOrderGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttributionOrderWhereInput
+    orderBy?: AttributionOrderOrderByWithAggregationInput | AttributionOrderOrderByWithAggregationInput[]
+    by: AttributionOrderScalarFieldEnum[] | AttributionOrderScalarFieldEnum
+    having?: AttributionOrderScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttributionOrderCountAggregateInputType | true
+    _avg?: AttributionOrderAvgAggregateInputType
+    _sum?: AttributionOrderSumAggregateInputType
+    _min?: AttributionOrderMinAggregateInputType
+    _max?: AttributionOrderMaxAggregateInputType
+  }
+
+  export type AttributionOrderGroupByOutputType = {
+    id: string
+    organizationId: string
+    externalOrderId: string
+    identityId: string | null
+    customerExternalId: string | null
+    value: Decimal
+    currency: string
+    status: string
+    eventId: string | null
+    rawPayload: JsonValue
+    occurredAt: Date
+    createdAt: Date
+    updatedAt: Date
+    _count: AttributionOrderCountAggregateOutputType | null
+    _avg: AttributionOrderAvgAggregateOutputType | null
+    _sum: AttributionOrderSumAggregateOutputType | null
+    _min: AttributionOrderMinAggregateOutputType | null
+    _max: AttributionOrderMaxAggregateOutputType | null
+  }
+
+  type GetAttributionOrderGroupByPayload<T extends AttributionOrderGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AttributionOrderGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttributionOrderGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttributionOrderGroupByOutputType[P]>
+            : GetScalarType<T[P], AttributionOrderGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttributionOrderSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    externalOrderId?: boolean
+    identityId?: boolean
+    customerExternalId?: boolean
+    value?: boolean
+    currency?: boolean
+    status?: boolean
+    eventId?: boolean
+    rawPayload?: boolean
+    occurredAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | AttributionOrder$identityArgs<ExtArgs>
+    items?: boolean | AttributionOrder$itemsArgs<ExtArgs>
+    attribution?: boolean | AttributionOrder$attributionArgs<ExtArgs>
+    _count?: boolean | AttributionOrderCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attributionOrder"]>
+
+  export type AttributionOrderSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    externalOrderId?: boolean
+    identityId?: boolean
+    customerExternalId?: boolean
+    value?: boolean
+    currency?: boolean
+    status?: boolean
+    eventId?: boolean
+    rawPayload?: boolean
+    occurredAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | AttributionOrder$identityArgs<ExtArgs>
+  }, ExtArgs["result"]["attributionOrder"]>
+
+  export type AttributionOrderSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    externalOrderId?: boolean
+    identityId?: boolean
+    customerExternalId?: boolean
+    value?: boolean
+    currency?: boolean
+    status?: boolean
+    eventId?: boolean
+    rawPayload?: boolean
+    occurredAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | AttributionOrder$identityArgs<ExtArgs>
+  }, ExtArgs["result"]["attributionOrder"]>
+
+  export type AttributionOrderSelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    externalOrderId?: boolean
+    identityId?: boolean
+    customerExternalId?: boolean
+    value?: boolean
+    currency?: boolean
+    status?: boolean
+    eventId?: boolean
+    rawPayload?: boolean
+    occurredAt?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AttributionOrderOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "externalOrderId" | "identityId" | "customerExternalId" | "value" | "currency" | "status" | "eventId" | "rawPayload" | "occurredAt" | "createdAt" | "updatedAt", ExtArgs["result"]["attributionOrder"]>
+  export type AttributionOrderInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | AttributionOrder$identityArgs<ExtArgs>
+    items?: boolean | AttributionOrder$itemsArgs<ExtArgs>
+    attribution?: boolean | AttributionOrder$attributionArgs<ExtArgs>
+    _count?: boolean | AttributionOrderCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type AttributionOrderIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | AttributionOrder$identityArgs<ExtArgs>
+  }
+  export type AttributionOrderIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+    identity?: boolean | AttributionOrder$identityArgs<ExtArgs>
+  }
+
+  export type $AttributionOrderPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AttributionOrder"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+      identity: Prisma.$TrackingIdentityPayload<ExtArgs> | null
+      items: Prisma.$AttributionOrderItemPayload<ExtArgs>[]
+      attribution: Prisma.$OrderAttributionPayload<ExtArgs> | null
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      externalOrderId: string
+      identityId: string | null
+      customerExternalId: string | null
+      value: Prisma.Decimal
+      currency: string
+      status: string
+      eventId: string | null
+      rawPayload: Prisma.JsonValue
+      occurredAt: Date
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["attributionOrder"]>
+    composites: {}
+  }
+
+  type AttributionOrderGetPayload<S extends boolean | null | undefined | AttributionOrderDefaultArgs> = $Result.GetResult<Prisma.$AttributionOrderPayload, S>
+
+  type AttributionOrderCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AttributionOrderFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AttributionOrderCountAggregateInputType | true
+    }
+
+  export interface AttributionOrderDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AttributionOrder'], meta: { name: 'AttributionOrder' } }
+    /**
+     * Find zero or one AttributionOrder that matches the filter.
+     * @param {AttributionOrderFindUniqueArgs} args - Arguments to find a AttributionOrder
+     * @example
+     * // Get one AttributionOrder
+     * const attributionOrder = await prisma.attributionOrder.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AttributionOrderFindUniqueArgs>(args: SelectSubset<T, AttributionOrderFindUniqueArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AttributionOrder that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AttributionOrderFindUniqueOrThrowArgs} args - Arguments to find a AttributionOrder
+     * @example
+     * // Get one AttributionOrder
+     * const attributionOrder = await prisma.attributionOrder.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AttributionOrderFindUniqueOrThrowArgs>(args: SelectSubset<T, AttributionOrderFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AttributionOrder that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderFindFirstArgs} args - Arguments to find a AttributionOrder
+     * @example
+     * // Get one AttributionOrder
+     * const attributionOrder = await prisma.attributionOrder.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AttributionOrderFindFirstArgs>(args?: SelectSubset<T, AttributionOrderFindFirstArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AttributionOrder that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderFindFirstOrThrowArgs} args - Arguments to find a AttributionOrder
+     * @example
+     * // Get one AttributionOrder
+     * const attributionOrder = await prisma.attributionOrder.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AttributionOrderFindFirstOrThrowArgs>(args?: SelectSubset<T, AttributionOrderFindFirstOrThrowArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AttributionOrders that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AttributionOrders
+     * const attributionOrders = await prisma.attributionOrder.findMany()
+     * 
+     * // Get first 10 AttributionOrders
+     * const attributionOrders = await prisma.attributionOrder.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attributionOrderWithIdOnly = await prisma.attributionOrder.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AttributionOrderFindManyArgs>(args?: SelectSubset<T, AttributionOrderFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AttributionOrder.
+     * @param {AttributionOrderCreateArgs} args - Arguments to create a AttributionOrder.
+     * @example
+     * // Create one AttributionOrder
+     * const AttributionOrder = await prisma.attributionOrder.create({
+     *   data: {
+     *     // ... data to create a AttributionOrder
+     *   }
+     * })
+     * 
+     */
+    create<T extends AttributionOrderCreateArgs>(args: SelectSubset<T, AttributionOrderCreateArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AttributionOrders.
+     * @param {AttributionOrderCreateManyArgs} args - Arguments to create many AttributionOrders.
+     * @example
+     * // Create many AttributionOrders
+     * const attributionOrder = await prisma.attributionOrder.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AttributionOrderCreateManyArgs>(args?: SelectSubset<T, AttributionOrderCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AttributionOrders and returns the data saved in the database.
+     * @param {AttributionOrderCreateManyAndReturnArgs} args - Arguments to create many AttributionOrders.
+     * @example
+     * // Create many AttributionOrders
+     * const attributionOrder = await prisma.attributionOrder.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AttributionOrders and only return the `id`
+     * const attributionOrderWithIdOnly = await prisma.attributionOrder.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AttributionOrderCreateManyAndReturnArgs>(args?: SelectSubset<T, AttributionOrderCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AttributionOrder.
+     * @param {AttributionOrderDeleteArgs} args - Arguments to delete one AttributionOrder.
+     * @example
+     * // Delete one AttributionOrder
+     * const AttributionOrder = await prisma.attributionOrder.delete({
+     *   where: {
+     *     // ... filter to delete one AttributionOrder
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AttributionOrderDeleteArgs>(args: SelectSubset<T, AttributionOrderDeleteArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AttributionOrder.
+     * @param {AttributionOrderUpdateArgs} args - Arguments to update one AttributionOrder.
+     * @example
+     * // Update one AttributionOrder
+     * const attributionOrder = await prisma.attributionOrder.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AttributionOrderUpdateArgs>(args: SelectSubset<T, AttributionOrderUpdateArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AttributionOrders.
+     * @param {AttributionOrderDeleteManyArgs} args - Arguments to filter AttributionOrders to delete.
+     * @example
+     * // Delete a few AttributionOrders
+     * const { count } = await prisma.attributionOrder.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AttributionOrderDeleteManyArgs>(args?: SelectSubset<T, AttributionOrderDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AttributionOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AttributionOrders
+     * const attributionOrder = await prisma.attributionOrder.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AttributionOrderUpdateManyArgs>(args: SelectSubset<T, AttributionOrderUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AttributionOrders and returns the data updated in the database.
+     * @param {AttributionOrderUpdateManyAndReturnArgs} args - Arguments to update many AttributionOrders.
+     * @example
+     * // Update many AttributionOrders
+     * const attributionOrder = await prisma.attributionOrder.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AttributionOrders and only return the `id`
+     * const attributionOrderWithIdOnly = await prisma.attributionOrder.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AttributionOrderUpdateManyAndReturnArgs>(args: SelectSubset<T, AttributionOrderUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AttributionOrder.
+     * @param {AttributionOrderUpsertArgs} args - Arguments to update or create a AttributionOrder.
+     * @example
+     * // Update or create a AttributionOrder
+     * const attributionOrder = await prisma.attributionOrder.upsert({
+     *   create: {
+     *     // ... data to create a AttributionOrder
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AttributionOrder we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AttributionOrderUpsertArgs>(args: SelectSubset<T, AttributionOrderUpsertArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AttributionOrders.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderCountArgs} args - Arguments to filter AttributionOrders to count.
+     * @example
+     * // Count the number of AttributionOrders
+     * const count = await prisma.attributionOrder.count({
+     *   where: {
+     *     // ... the filter for the AttributionOrders we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttributionOrderCountArgs>(
+      args?: Subset<T, AttributionOrderCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttributionOrderCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AttributionOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttributionOrderAggregateArgs>(args: Subset<T, AttributionOrderAggregateArgs>): Prisma.PrismaPromise<GetAttributionOrderAggregateType<T>>
+
+    /**
+     * Group by AttributionOrder.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttributionOrderGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttributionOrderGroupByArgs['orderBy'] }
+        : { orderBy?: AttributionOrderGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttributionOrderGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttributionOrderGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AttributionOrder model
+   */
+  readonly fields: AttributionOrderFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AttributionOrder.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AttributionOrderClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    identity<T extends AttributionOrder$identityArgs<ExtArgs> = {}>(args?: Subset<T, AttributionOrder$identityArgs<ExtArgs>>): Prisma__TrackingIdentityClient<$Result.GetResult<Prisma.$TrackingIdentityPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    items<T extends AttributionOrder$itemsArgs<ExtArgs> = {}>(args?: Subset<T, AttributionOrder$itemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    attribution<T extends AttributionOrder$attributionArgs<ExtArgs> = {}>(args?: Subset<T, AttributionOrder$attributionArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AttributionOrder model
+   */
+  interface AttributionOrderFieldRefs {
+    readonly id: FieldRef<"AttributionOrder", 'String'>
+    readonly organizationId: FieldRef<"AttributionOrder", 'String'>
+    readonly externalOrderId: FieldRef<"AttributionOrder", 'String'>
+    readonly identityId: FieldRef<"AttributionOrder", 'String'>
+    readonly customerExternalId: FieldRef<"AttributionOrder", 'String'>
+    readonly value: FieldRef<"AttributionOrder", 'Decimal'>
+    readonly currency: FieldRef<"AttributionOrder", 'String'>
+    readonly status: FieldRef<"AttributionOrder", 'String'>
+    readonly eventId: FieldRef<"AttributionOrder", 'String'>
+    readonly rawPayload: FieldRef<"AttributionOrder", 'Json'>
+    readonly occurredAt: FieldRef<"AttributionOrder", 'DateTime'>
+    readonly createdAt: FieldRef<"AttributionOrder", 'DateTime'>
+    readonly updatedAt: FieldRef<"AttributionOrder", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AttributionOrder findUnique
+   */
+  export type AttributionOrderFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrder to fetch.
+     */
+    where: AttributionOrderWhereUniqueInput
+  }
+
+  /**
+   * AttributionOrder findUniqueOrThrow
+   */
+  export type AttributionOrderFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrder to fetch.
+     */
+    where: AttributionOrderWhereUniqueInput
+  }
+
+  /**
+   * AttributionOrder findFirst
+   */
+  export type AttributionOrderFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrder to fetch.
+     */
+    where?: AttributionOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttributionOrders to fetch.
+     */
+    orderBy?: AttributionOrderOrderByWithRelationInput | AttributionOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AttributionOrders.
+     */
+    cursor?: AttributionOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttributionOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttributionOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttributionOrders.
+     */
+    distinct?: AttributionOrderScalarFieldEnum | AttributionOrderScalarFieldEnum[]
+  }
+
+  /**
+   * AttributionOrder findFirstOrThrow
+   */
+  export type AttributionOrderFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrder to fetch.
+     */
+    where?: AttributionOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttributionOrders to fetch.
+     */
+    orderBy?: AttributionOrderOrderByWithRelationInput | AttributionOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AttributionOrders.
+     */
+    cursor?: AttributionOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttributionOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttributionOrders.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttributionOrders.
+     */
+    distinct?: AttributionOrderScalarFieldEnum | AttributionOrderScalarFieldEnum[]
+  }
+
+  /**
+   * AttributionOrder findMany
+   */
+  export type AttributionOrderFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrders to fetch.
+     */
+    where?: AttributionOrderWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttributionOrders to fetch.
+     */
+    orderBy?: AttributionOrderOrderByWithRelationInput | AttributionOrderOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AttributionOrders.
+     */
+    cursor?: AttributionOrderWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttributionOrders from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttributionOrders.
+     */
+    skip?: number
+    distinct?: AttributionOrderScalarFieldEnum | AttributionOrderScalarFieldEnum[]
+  }
+
+  /**
+   * AttributionOrder create
+   */
+  export type AttributionOrderCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AttributionOrder.
+     */
+    data: XOR<AttributionOrderCreateInput, AttributionOrderUncheckedCreateInput>
+  }
+
+  /**
+   * AttributionOrder createMany
+   */
+  export type AttributionOrderCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AttributionOrders.
+     */
+    data: AttributionOrderCreateManyInput | AttributionOrderCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AttributionOrder createManyAndReturn
+   */
+  export type AttributionOrderCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * The data used to create many AttributionOrders.
+     */
+    data: AttributionOrderCreateManyInput | AttributionOrderCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AttributionOrder update
+   */
+  export type AttributionOrderUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AttributionOrder.
+     */
+    data: XOR<AttributionOrderUpdateInput, AttributionOrderUncheckedUpdateInput>
+    /**
+     * Choose, which AttributionOrder to update.
+     */
+    where: AttributionOrderWhereUniqueInput
+  }
+
+  /**
+   * AttributionOrder updateMany
+   */
+  export type AttributionOrderUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AttributionOrders.
+     */
+    data: XOR<AttributionOrderUpdateManyMutationInput, AttributionOrderUncheckedUpdateManyInput>
+    /**
+     * Filter which AttributionOrders to update
+     */
+    where?: AttributionOrderWhereInput
+    /**
+     * Limit how many AttributionOrders to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AttributionOrder updateManyAndReturn
+   */
+  export type AttributionOrderUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * The data used to update AttributionOrders.
+     */
+    data: XOR<AttributionOrderUpdateManyMutationInput, AttributionOrderUncheckedUpdateManyInput>
+    /**
+     * Filter which AttributionOrders to update
+     */
+    where?: AttributionOrderWhereInput
+    /**
+     * Limit how many AttributionOrders to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AttributionOrder upsert
+   */
+  export type AttributionOrderUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AttributionOrder to update in case it exists.
+     */
+    where: AttributionOrderWhereUniqueInput
+    /**
+     * In case the AttributionOrder found by the `where` argument doesn't exist, create a new AttributionOrder with this data.
+     */
+    create: XOR<AttributionOrderCreateInput, AttributionOrderUncheckedCreateInput>
+    /**
+     * In case the AttributionOrder was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttributionOrderUpdateInput, AttributionOrderUncheckedUpdateInput>
+  }
+
+  /**
+   * AttributionOrder delete
+   */
+  export type AttributionOrderDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+    /**
+     * Filter which AttributionOrder to delete.
+     */
+    where: AttributionOrderWhereUniqueInput
+  }
+
+  /**
+   * AttributionOrder deleteMany
+   */
+  export type AttributionOrderDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AttributionOrders to delete
+     */
+    where?: AttributionOrderWhereInput
+    /**
+     * Limit how many AttributionOrders to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AttributionOrder.identity
+   */
+  export type AttributionOrder$identityArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the TrackingIdentity
+     */
+    select?: TrackingIdentitySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the TrackingIdentity
+     */
+    omit?: TrackingIdentityOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: TrackingIdentityInclude<ExtArgs> | null
+    where?: TrackingIdentityWhereInput
+  }
+
+  /**
+   * AttributionOrder.items
+   */
+  export type AttributionOrder$itemsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    where?: AttributionOrderItemWhereInput
+    orderBy?: AttributionOrderItemOrderByWithRelationInput | AttributionOrderItemOrderByWithRelationInput[]
+    cursor?: AttributionOrderItemWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: AttributionOrderItemScalarFieldEnum | AttributionOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * AttributionOrder.attribution
+   */
+  export type AttributionOrder$attributionArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    where?: OrderAttributionWhereInput
+  }
+
+  /**
+   * AttributionOrder without action
+   */
+  export type AttributionOrderDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrder
+     */
+    select?: AttributionOrderSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrder
+     */
+    omit?: AttributionOrderOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AttributionOrderItem
+   */
+
+  export type AggregateAttributionOrderItem = {
+    _count: AttributionOrderItemCountAggregateOutputType | null
+    _avg: AttributionOrderItemAvgAggregateOutputType | null
+    _sum: AttributionOrderItemSumAggregateOutputType | null
+    _min: AttributionOrderItemMinAggregateOutputType | null
+    _max: AttributionOrderItemMaxAggregateOutputType | null
+  }
+
+  export type AttributionOrderItemAvgAggregateOutputType = {
+    quantity: number | null
+    price: Decimal | null
+  }
+
+  export type AttributionOrderItemSumAggregateOutputType = {
+    quantity: number | null
+    price: Decimal | null
+  }
+
+  export type AttributionOrderItemMinAggregateOutputType = {
+    id: string | null
+    orderId: string | null
+    productId: string | null
+    name: string | null
+    quantity: number | null
+    price: Decimal | null
+  }
+
+  export type AttributionOrderItemMaxAggregateOutputType = {
+    id: string | null
+    orderId: string | null
+    productId: string | null
+    name: string | null
+    quantity: number | null
+    price: Decimal | null
+  }
+
+  export type AttributionOrderItemCountAggregateOutputType = {
+    id: number
+    orderId: number
+    productId: number
+    name: number
+    quantity: number
+    price: number
+    _all: number
+  }
+
+
+  export type AttributionOrderItemAvgAggregateInputType = {
+    quantity?: true
+    price?: true
+  }
+
+  export type AttributionOrderItemSumAggregateInputType = {
+    quantity?: true
+    price?: true
+  }
+
+  export type AttributionOrderItemMinAggregateInputType = {
+    id?: true
+    orderId?: true
+    productId?: true
+    name?: true
+    quantity?: true
+    price?: true
+  }
+
+  export type AttributionOrderItemMaxAggregateInputType = {
+    id?: true
+    orderId?: true
+    productId?: true
+    name?: true
+    quantity?: true
+    price?: true
+  }
+
+  export type AttributionOrderItemCountAggregateInputType = {
+    id?: true
+    orderId?: true
+    productId?: true
+    name?: true
+    quantity?: true
+    price?: true
+    _all?: true
+  }
+
+  export type AttributionOrderItemAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AttributionOrderItem to aggregate.
+     */
+    where?: AttributionOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttributionOrderItems to fetch.
+     */
+    orderBy?: AttributionOrderItemOrderByWithRelationInput | AttributionOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AttributionOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttributionOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttributionOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AttributionOrderItems
+    **/
+    _count?: true | AttributionOrderItemCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AttributionOrderItemAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AttributionOrderItemSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AttributionOrderItemMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AttributionOrderItemMaxAggregateInputType
+  }
+
+  export type GetAttributionOrderItemAggregateType<T extends AttributionOrderItemAggregateArgs> = {
+        [P in keyof T & keyof AggregateAttributionOrderItem]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAttributionOrderItem[P]>
+      : GetScalarType<T[P], AggregateAttributionOrderItem[P]>
+  }
+
+
+
+
+  export type AttributionOrderItemGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AttributionOrderItemWhereInput
+    orderBy?: AttributionOrderItemOrderByWithAggregationInput | AttributionOrderItemOrderByWithAggregationInput[]
+    by: AttributionOrderItemScalarFieldEnum[] | AttributionOrderItemScalarFieldEnum
+    having?: AttributionOrderItemScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AttributionOrderItemCountAggregateInputType | true
+    _avg?: AttributionOrderItemAvgAggregateInputType
+    _sum?: AttributionOrderItemSumAggregateInputType
+    _min?: AttributionOrderItemMinAggregateInputType
+    _max?: AttributionOrderItemMaxAggregateInputType
+  }
+
+  export type AttributionOrderItemGroupByOutputType = {
+    id: string
+    orderId: string
+    productId: string
+    name: string | null
+    quantity: number
+    price: Decimal
+    _count: AttributionOrderItemCountAggregateOutputType | null
+    _avg: AttributionOrderItemAvgAggregateOutputType | null
+    _sum: AttributionOrderItemSumAggregateOutputType | null
+    _min: AttributionOrderItemMinAggregateOutputType | null
+    _max: AttributionOrderItemMaxAggregateOutputType | null
+  }
+
+  type GetAttributionOrderItemGroupByPayload<T extends AttributionOrderItemGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AttributionOrderItemGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AttributionOrderItemGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AttributionOrderItemGroupByOutputType[P]>
+            : GetScalarType<T[P], AttributionOrderItemGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AttributionOrderItemSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    productId?: boolean
+    name?: boolean
+    quantity?: boolean
+    price?: boolean
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attributionOrderItem"]>
+
+  export type AttributionOrderItemSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    productId?: boolean
+    name?: boolean
+    quantity?: boolean
+    price?: boolean
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attributionOrderItem"]>
+
+  export type AttributionOrderItemSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    productId?: boolean
+    name?: boolean
+    quantity?: boolean
+    price?: boolean
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["attributionOrderItem"]>
+
+  export type AttributionOrderItemSelectScalar = {
+    id?: boolean
+    orderId?: boolean
+    productId?: boolean
+    name?: boolean
+    quantity?: boolean
+    price?: boolean
+  }
+
+  export type AttributionOrderItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "productId" | "name" | "quantity" | "price", ExtArgs["result"]["attributionOrderItem"]>
+  export type AttributionOrderItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }
+  export type AttributionOrderItemIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }
+  export type AttributionOrderItemIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }
+
+  export type $AttributionOrderItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AttributionOrderItem"
+    objects: {
+      order: Prisma.$AttributionOrderPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      orderId: string
+      productId: string
+      name: string | null
+      quantity: number
+      price: Prisma.Decimal
+    }, ExtArgs["result"]["attributionOrderItem"]>
+    composites: {}
+  }
+
+  type AttributionOrderItemGetPayload<S extends boolean | null | undefined | AttributionOrderItemDefaultArgs> = $Result.GetResult<Prisma.$AttributionOrderItemPayload, S>
+
+  type AttributionOrderItemCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AttributionOrderItemFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AttributionOrderItemCountAggregateInputType | true
+    }
+
+  export interface AttributionOrderItemDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AttributionOrderItem'], meta: { name: 'AttributionOrderItem' } }
+    /**
+     * Find zero or one AttributionOrderItem that matches the filter.
+     * @param {AttributionOrderItemFindUniqueArgs} args - Arguments to find a AttributionOrderItem
+     * @example
+     * // Get one AttributionOrderItem
+     * const attributionOrderItem = await prisma.attributionOrderItem.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AttributionOrderItemFindUniqueArgs>(args: SelectSubset<T, AttributionOrderItemFindUniqueArgs<ExtArgs>>): Prisma__AttributionOrderItemClient<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AttributionOrderItem that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AttributionOrderItemFindUniqueOrThrowArgs} args - Arguments to find a AttributionOrderItem
+     * @example
+     * // Get one AttributionOrderItem
+     * const attributionOrderItem = await prisma.attributionOrderItem.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AttributionOrderItemFindUniqueOrThrowArgs>(args: SelectSubset<T, AttributionOrderItemFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AttributionOrderItemClient<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AttributionOrderItem that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderItemFindFirstArgs} args - Arguments to find a AttributionOrderItem
+     * @example
+     * // Get one AttributionOrderItem
+     * const attributionOrderItem = await prisma.attributionOrderItem.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AttributionOrderItemFindFirstArgs>(args?: SelectSubset<T, AttributionOrderItemFindFirstArgs<ExtArgs>>): Prisma__AttributionOrderItemClient<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AttributionOrderItem that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderItemFindFirstOrThrowArgs} args - Arguments to find a AttributionOrderItem
+     * @example
+     * // Get one AttributionOrderItem
+     * const attributionOrderItem = await prisma.attributionOrderItem.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AttributionOrderItemFindFirstOrThrowArgs>(args?: SelectSubset<T, AttributionOrderItemFindFirstOrThrowArgs<ExtArgs>>): Prisma__AttributionOrderItemClient<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AttributionOrderItems that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderItemFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AttributionOrderItems
+     * const attributionOrderItems = await prisma.attributionOrderItem.findMany()
+     * 
+     * // Get first 10 AttributionOrderItems
+     * const attributionOrderItems = await prisma.attributionOrderItem.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const attributionOrderItemWithIdOnly = await prisma.attributionOrderItem.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AttributionOrderItemFindManyArgs>(args?: SelectSubset<T, AttributionOrderItemFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AttributionOrderItem.
+     * @param {AttributionOrderItemCreateArgs} args - Arguments to create a AttributionOrderItem.
+     * @example
+     * // Create one AttributionOrderItem
+     * const AttributionOrderItem = await prisma.attributionOrderItem.create({
+     *   data: {
+     *     // ... data to create a AttributionOrderItem
+     *   }
+     * })
+     * 
+     */
+    create<T extends AttributionOrderItemCreateArgs>(args: SelectSubset<T, AttributionOrderItemCreateArgs<ExtArgs>>): Prisma__AttributionOrderItemClient<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AttributionOrderItems.
+     * @param {AttributionOrderItemCreateManyArgs} args - Arguments to create many AttributionOrderItems.
+     * @example
+     * // Create many AttributionOrderItems
+     * const attributionOrderItem = await prisma.attributionOrderItem.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AttributionOrderItemCreateManyArgs>(args?: SelectSubset<T, AttributionOrderItemCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AttributionOrderItems and returns the data saved in the database.
+     * @param {AttributionOrderItemCreateManyAndReturnArgs} args - Arguments to create many AttributionOrderItems.
+     * @example
+     * // Create many AttributionOrderItems
+     * const attributionOrderItem = await prisma.attributionOrderItem.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AttributionOrderItems and only return the `id`
+     * const attributionOrderItemWithIdOnly = await prisma.attributionOrderItem.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AttributionOrderItemCreateManyAndReturnArgs>(args?: SelectSubset<T, AttributionOrderItemCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AttributionOrderItem.
+     * @param {AttributionOrderItemDeleteArgs} args - Arguments to delete one AttributionOrderItem.
+     * @example
+     * // Delete one AttributionOrderItem
+     * const AttributionOrderItem = await prisma.attributionOrderItem.delete({
+     *   where: {
+     *     // ... filter to delete one AttributionOrderItem
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AttributionOrderItemDeleteArgs>(args: SelectSubset<T, AttributionOrderItemDeleteArgs<ExtArgs>>): Prisma__AttributionOrderItemClient<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AttributionOrderItem.
+     * @param {AttributionOrderItemUpdateArgs} args - Arguments to update one AttributionOrderItem.
+     * @example
+     * // Update one AttributionOrderItem
+     * const attributionOrderItem = await prisma.attributionOrderItem.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AttributionOrderItemUpdateArgs>(args: SelectSubset<T, AttributionOrderItemUpdateArgs<ExtArgs>>): Prisma__AttributionOrderItemClient<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AttributionOrderItems.
+     * @param {AttributionOrderItemDeleteManyArgs} args - Arguments to filter AttributionOrderItems to delete.
+     * @example
+     * // Delete a few AttributionOrderItems
+     * const { count } = await prisma.attributionOrderItem.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AttributionOrderItemDeleteManyArgs>(args?: SelectSubset<T, AttributionOrderItemDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AttributionOrderItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderItemUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AttributionOrderItems
+     * const attributionOrderItem = await prisma.attributionOrderItem.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AttributionOrderItemUpdateManyArgs>(args: SelectSubset<T, AttributionOrderItemUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AttributionOrderItems and returns the data updated in the database.
+     * @param {AttributionOrderItemUpdateManyAndReturnArgs} args - Arguments to update many AttributionOrderItems.
+     * @example
+     * // Update many AttributionOrderItems
+     * const attributionOrderItem = await prisma.attributionOrderItem.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AttributionOrderItems and only return the `id`
+     * const attributionOrderItemWithIdOnly = await prisma.attributionOrderItem.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AttributionOrderItemUpdateManyAndReturnArgs>(args: SelectSubset<T, AttributionOrderItemUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AttributionOrderItem.
+     * @param {AttributionOrderItemUpsertArgs} args - Arguments to update or create a AttributionOrderItem.
+     * @example
+     * // Update or create a AttributionOrderItem
+     * const attributionOrderItem = await prisma.attributionOrderItem.upsert({
+     *   create: {
+     *     // ... data to create a AttributionOrderItem
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AttributionOrderItem we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AttributionOrderItemUpsertArgs>(args: SelectSubset<T, AttributionOrderItemUpsertArgs<ExtArgs>>): Prisma__AttributionOrderItemClient<$Result.GetResult<Prisma.$AttributionOrderItemPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AttributionOrderItems.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderItemCountArgs} args - Arguments to filter AttributionOrderItems to count.
+     * @example
+     * // Count the number of AttributionOrderItems
+     * const count = await prisma.attributionOrderItem.count({
+     *   where: {
+     *     // ... the filter for the AttributionOrderItems we want to count
+     *   }
+     * })
+    **/
+    count<T extends AttributionOrderItemCountArgs>(
+      args?: Subset<T, AttributionOrderItemCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AttributionOrderItemCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AttributionOrderItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderItemAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AttributionOrderItemAggregateArgs>(args: Subset<T, AttributionOrderItemAggregateArgs>): Prisma.PrismaPromise<GetAttributionOrderItemAggregateType<T>>
+
+    /**
+     * Group by AttributionOrderItem.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AttributionOrderItemGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AttributionOrderItemGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AttributionOrderItemGroupByArgs['orderBy'] }
+        : { orderBy?: AttributionOrderItemGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AttributionOrderItemGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAttributionOrderItemGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AttributionOrderItem model
+   */
+  readonly fields: AttributionOrderItemFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AttributionOrderItem.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AttributionOrderItemClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    order<T extends AttributionOrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AttributionOrderDefaultArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AttributionOrderItem model
+   */
+  interface AttributionOrderItemFieldRefs {
+    readonly id: FieldRef<"AttributionOrderItem", 'String'>
+    readonly orderId: FieldRef<"AttributionOrderItem", 'String'>
+    readonly productId: FieldRef<"AttributionOrderItem", 'String'>
+    readonly name: FieldRef<"AttributionOrderItem", 'String'>
+    readonly quantity: FieldRef<"AttributionOrderItem", 'Int'>
+    readonly price: FieldRef<"AttributionOrderItem", 'Decimal'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AttributionOrderItem findUnique
+   */
+  export type AttributionOrderItemFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrderItem to fetch.
+     */
+    where: AttributionOrderItemWhereUniqueInput
+  }
+
+  /**
+   * AttributionOrderItem findUniqueOrThrow
+   */
+  export type AttributionOrderItemFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrderItem to fetch.
+     */
+    where: AttributionOrderItemWhereUniqueInput
+  }
+
+  /**
+   * AttributionOrderItem findFirst
+   */
+  export type AttributionOrderItemFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrderItem to fetch.
+     */
+    where?: AttributionOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttributionOrderItems to fetch.
+     */
+    orderBy?: AttributionOrderItemOrderByWithRelationInput | AttributionOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AttributionOrderItems.
+     */
+    cursor?: AttributionOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttributionOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttributionOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttributionOrderItems.
+     */
+    distinct?: AttributionOrderItemScalarFieldEnum | AttributionOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * AttributionOrderItem findFirstOrThrow
+   */
+  export type AttributionOrderItemFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrderItem to fetch.
+     */
+    where?: AttributionOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttributionOrderItems to fetch.
+     */
+    orderBy?: AttributionOrderItemOrderByWithRelationInput | AttributionOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AttributionOrderItems.
+     */
+    cursor?: AttributionOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttributionOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttributionOrderItems.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AttributionOrderItems.
+     */
+    distinct?: AttributionOrderItemScalarFieldEnum | AttributionOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * AttributionOrderItem findMany
+   */
+  export type AttributionOrderItemFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter, which AttributionOrderItems to fetch.
+     */
+    where?: AttributionOrderItemWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AttributionOrderItems to fetch.
+     */
+    orderBy?: AttributionOrderItemOrderByWithRelationInput | AttributionOrderItemOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AttributionOrderItems.
+     */
+    cursor?: AttributionOrderItemWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AttributionOrderItems from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AttributionOrderItems.
+     */
+    skip?: number
+    distinct?: AttributionOrderItemScalarFieldEnum | AttributionOrderItemScalarFieldEnum[]
+  }
+
+  /**
+   * AttributionOrderItem create
+   */
+  export type AttributionOrderItemCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AttributionOrderItem.
+     */
+    data: XOR<AttributionOrderItemCreateInput, AttributionOrderItemUncheckedCreateInput>
+  }
+
+  /**
+   * AttributionOrderItem createMany
+   */
+  export type AttributionOrderItemCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AttributionOrderItems.
+     */
+    data: AttributionOrderItemCreateManyInput | AttributionOrderItemCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AttributionOrderItem createManyAndReturn
+   */
+  export type AttributionOrderItemCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * The data used to create many AttributionOrderItems.
+     */
+    data: AttributionOrderItemCreateManyInput | AttributionOrderItemCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AttributionOrderItem update
+   */
+  export type AttributionOrderItemUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AttributionOrderItem.
+     */
+    data: XOR<AttributionOrderItemUpdateInput, AttributionOrderItemUncheckedUpdateInput>
+    /**
+     * Choose, which AttributionOrderItem to update.
+     */
+    where: AttributionOrderItemWhereUniqueInput
+  }
+
+  /**
+   * AttributionOrderItem updateMany
+   */
+  export type AttributionOrderItemUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AttributionOrderItems.
+     */
+    data: XOR<AttributionOrderItemUpdateManyMutationInput, AttributionOrderItemUncheckedUpdateManyInput>
+    /**
+     * Filter which AttributionOrderItems to update
+     */
+    where?: AttributionOrderItemWhereInput
+    /**
+     * Limit how many AttributionOrderItems to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AttributionOrderItem updateManyAndReturn
+   */
+  export type AttributionOrderItemUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * The data used to update AttributionOrderItems.
+     */
+    data: XOR<AttributionOrderItemUpdateManyMutationInput, AttributionOrderItemUncheckedUpdateManyInput>
+    /**
+     * Filter which AttributionOrderItems to update
+     */
+    where?: AttributionOrderItemWhereInput
+    /**
+     * Limit how many AttributionOrderItems to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AttributionOrderItem upsert
+   */
+  export type AttributionOrderItemUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AttributionOrderItem to update in case it exists.
+     */
+    where: AttributionOrderItemWhereUniqueInput
+    /**
+     * In case the AttributionOrderItem found by the `where` argument doesn't exist, create a new AttributionOrderItem with this data.
+     */
+    create: XOR<AttributionOrderItemCreateInput, AttributionOrderItemUncheckedCreateInput>
+    /**
+     * In case the AttributionOrderItem was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AttributionOrderItemUpdateInput, AttributionOrderItemUncheckedUpdateInput>
+  }
+
+  /**
+   * AttributionOrderItem delete
+   */
+  export type AttributionOrderItemDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+    /**
+     * Filter which AttributionOrderItem to delete.
+     */
+    where: AttributionOrderItemWhereUniqueInput
+  }
+
+  /**
+   * AttributionOrderItem deleteMany
+   */
+  export type AttributionOrderItemDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AttributionOrderItems to delete
+     */
+    where?: AttributionOrderItemWhereInput
+    /**
+     * Limit how many AttributionOrderItems to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AttributionOrderItem without action
+   */
+  export type AttributionOrderItemDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AttributionOrderItem
+     */
+    select?: AttributionOrderItemSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AttributionOrderItem
+     */
+    omit?: AttributionOrderItemOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AttributionOrderItemInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model OrderAttribution
+   */
+
+  export type AggregateOrderAttribution = {
+    _count: OrderAttributionCountAggregateOutputType | null
+    _avg: OrderAttributionAvgAggregateOutputType | null
+    _sum: OrderAttributionSumAggregateOutputType | null
+    _min: OrderAttributionMinAggregateOutputType | null
+    _max: OrderAttributionMaxAggregateOutputType | null
+  }
+
+  export type OrderAttributionAvgAggregateOutputType = {
+    attributedValue: Decimal | null
+  }
+
+  export type OrderAttributionSumAggregateOutputType = {
+    attributedValue: Decimal | null
+  }
+
+  export type OrderAttributionMinAggregateOutputType = {
+    id: string | null
+    orderId: string | null
+    model: string | null
+    attributedSource: string | null
+    attributedMedium: string | null
+    attributedCampaign: string | null
+    attributedAdset: string | null
+    attributedAd: string | null
+    attributedContent: string | null
+    attributedValue: Decimal | null
+  }
+
+  export type OrderAttributionMaxAggregateOutputType = {
+    id: string | null
+    orderId: string | null
+    model: string | null
+    attributedSource: string | null
+    attributedMedium: string | null
+    attributedCampaign: string | null
+    attributedAdset: string | null
+    attributedAd: string | null
+    attributedContent: string | null
+    attributedValue: Decimal | null
+  }
+
+  export type OrderAttributionCountAggregateOutputType = {
+    id: number
+    orderId: number
+    model: number
+    leadSource: number
+    saleSource: number
+    firstTouch: number
+    lastTouch: number
+    attributedSource: number
+    attributedMedium: number
+    attributedCampaign: number
+    attributedAdset: number
+    attributedAd: number
+    attributedContent: number
+    attributedValue: number
+    linearShares: number
+    _all: number
+  }
+
+
+  export type OrderAttributionAvgAggregateInputType = {
+    attributedValue?: true
+  }
+
+  export type OrderAttributionSumAggregateInputType = {
+    attributedValue?: true
+  }
+
+  export type OrderAttributionMinAggregateInputType = {
+    id?: true
+    orderId?: true
+    model?: true
+    attributedSource?: true
+    attributedMedium?: true
+    attributedCampaign?: true
+    attributedAdset?: true
+    attributedAd?: true
+    attributedContent?: true
+    attributedValue?: true
+  }
+
+  export type OrderAttributionMaxAggregateInputType = {
+    id?: true
+    orderId?: true
+    model?: true
+    attributedSource?: true
+    attributedMedium?: true
+    attributedCampaign?: true
+    attributedAdset?: true
+    attributedAd?: true
+    attributedContent?: true
+    attributedValue?: true
+  }
+
+  export type OrderAttributionCountAggregateInputType = {
+    id?: true
+    orderId?: true
+    model?: true
+    leadSource?: true
+    saleSource?: true
+    firstTouch?: true
+    lastTouch?: true
+    attributedSource?: true
+    attributedMedium?: true
+    attributedCampaign?: true
+    attributedAdset?: true
+    attributedAd?: true
+    attributedContent?: true
+    attributedValue?: true
+    linearShares?: true
+    _all?: true
+  }
+
+  export type OrderAttributionAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderAttribution to aggregate.
+     */
+    where?: OrderAttributionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderAttributions to fetch.
+     */
+    orderBy?: OrderAttributionOrderByWithRelationInput | OrderAttributionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: OrderAttributionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderAttributions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderAttributions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned OrderAttributions
+    **/
+    _count?: true | OrderAttributionCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: OrderAttributionAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: OrderAttributionSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: OrderAttributionMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: OrderAttributionMaxAggregateInputType
+  }
+
+  export type GetOrderAttributionAggregateType<T extends OrderAttributionAggregateArgs> = {
+        [P in keyof T & keyof AggregateOrderAttribution]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateOrderAttribution[P]>
+      : GetScalarType<T[P], AggregateOrderAttribution[P]>
+  }
+
+
+
+
+  export type OrderAttributionGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: OrderAttributionWhereInput
+    orderBy?: OrderAttributionOrderByWithAggregationInput | OrderAttributionOrderByWithAggregationInput[]
+    by: OrderAttributionScalarFieldEnum[] | OrderAttributionScalarFieldEnum
+    having?: OrderAttributionScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: OrderAttributionCountAggregateInputType | true
+    _avg?: OrderAttributionAvgAggregateInputType
+    _sum?: OrderAttributionSumAggregateInputType
+    _min?: OrderAttributionMinAggregateInputType
+    _max?: OrderAttributionMaxAggregateInputType
+  }
+
+  export type OrderAttributionGroupByOutputType = {
+    id: string
+    orderId: string
+    model: string
+    leadSource: JsonValue | null
+    saleSource: JsonValue | null
+    firstTouch: JsonValue | null
+    lastTouch: JsonValue | null
+    attributedSource: string | null
+    attributedMedium: string | null
+    attributedCampaign: string | null
+    attributedAdset: string | null
+    attributedAd: string | null
+    attributedContent: string | null
+    attributedValue: Decimal
+    linearShares: JsonValue | null
+    _count: OrderAttributionCountAggregateOutputType | null
+    _avg: OrderAttributionAvgAggregateOutputType | null
+    _sum: OrderAttributionSumAggregateOutputType | null
+    _min: OrderAttributionMinAggregateOutputType | null
+    _max: OrderAttributionMaxAggregateOutputType | null
+  }
+
+  type GetOrderAttributionGroupByPayload<T extends OrderAttributionGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<OrderAttributionGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof OrderAttributionGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], OrderAttributionGroupByOutputType[P]>
+            : GetScalarType<T[P], OrderAttributionGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type OrderAttributionSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    model?: boolean
+    leadSource?: boolean
+    saleSource?: boolean
+    firstTouch?: boolean
+    lastTouch?: boolean
+    attributedSource?: boolean
+    attributedMedium?: boolean
+    attributedCampaign?: boolean
+    attributedAdset?: boolean
+    attributedAd?: boolean
+    attributedContent?: boolean
+    attributedValue?: boolean
+    linearShares?: boolean
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderAttribution"]>
+
+  export type OrderAttributionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    model?: boolean
+    leadSource?: boolean
+    saleSource?: boolean
+    firstTouch?: boolean
+    lastTouch?: boolean
+    attributedSource?: boolean
+    attributedMedium?: boolean
+    attributedCampaign?: boolean
+    attributedAdset?: boolean
+    attributedAd?: boolean
+    attributedContent?: boolean
+    attributedValue?: boolean
+    linearShares?: boolean
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderAttribution"]>
+
+  export type OrderAttributionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    orderId?: boolean
+    model?: boolean
+    leadSource?: boolean
+    saleSource?: boolean
+    firstTouch?: boolean
+    lastTouch?: boolean
+    attributedSource?: boolean
+    attributedMedium?: boolean
+    attributedCampaign?: boolean
+    attributedAdset?: boolean
+    attributedAd?: boolean
+    attributedContent?: boolean
+    attributedValue?: boolean
+    linearShares?: boolean
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["orderAttribution"]>
+
+  export type OrderAttributionSelectScalar = {
+    id?: boolean
+    orderId?: boolean
+    model?: boolean
+    leadSource?: boolean
+    saleSource?: boolean
+    firstTouch?: boolean
+    lastTouch?: boolean
+    attributedSource?: boolean
+    attributedMedium?: boolean
+    attributedCampaign?: boolean
+    attributedAdset?: boolean
+    attributedAd?: boolean
+    attributedContent?: boolean
+    attributedValue?: boolean
+    linearShares?: boolean
+  }
+
+  export type OrderAttributionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "orderId" | "model" | "leadSource" | "saleSource" | "firstTouch" | "lastTouch" | "attributedSource" | "attributedMedium" | "attributedCampaign" | "attributedAdset" | "attributedAd" | "attributedContent" | "attributedValue" | "linearShares", ExtArgs["result"]["orderAttribution"]>
+  export type OrderAttributionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }
+  export type OrderAttributionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }
+  export type OrderAttributionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    order?: boolean | AttributionOrderDefaultArgs<ExtArgs>
+  }
+
+  export type $OrderAttributionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "OrderAttribution"
+    objects: {
+      order: Prisma.$AttributionOrderPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      orderId: string
+      model: string
+      leadSource: Prisma.JsonValue | null
+      saleSource: Prisma.JsonValue | null
+      firstTouch: Prisma.JsonValue | null
+      lastTouch: Prisma.JsonValue | null
+      attributedSource: string | null
+      attributedMedium: string | null
+      attributedCampaign: string | null
+      attributedAdset: string | null
+      attributedAd: string | null
+      attributedContent: string | null
+      attributedValue: Prisma.Decimal
+      linearShares: Prisma.JsonValue | null
+    }, ExtArgs["result"]["orderAttribution"]>
+    composites: {}
+  }
+
+  type OrderAttributionGetPayload<S extends boolean | null | undefined | OrderAttributionDefaultArgs> = $Result.GetResult<Prisma.$OrderAttributionPayload, S>
+
+  type OrderAttributionCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<OrderAttributionFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: OrderAttributionCountAggregateInputType | true
+    }
+
+  export interface OrderAttributionDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['OrderAttribution'], meta: { name: 'OrderAttribution' } }
+    /**
+     * Find zero or one OrderAttribution that matches the filter.
+     * @param {OrderAttributionFindUniqueArgs} args - Arguments to find a OrderAttribution
+     * @example
+     * // Get one OrderAttribution
+     * const orderAttribution = await prisma.orderAttribution.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends OrderAttributionFindUniqueArgs>(args: SelectSubset<T, OrderAttributionFindUniqueArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one OrderAttribution that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {OrderAttributionFindUniqueOrThrowArgs} args - Arguments to find a OrderAttribution
+     * @example
+     * // Get one OrderAttribution
+     * const orderAttribution = await prisma.orderAttribution.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends OrderAttributionFindUniqueOrThrowArgs>(args: SelectSubset<T, OrderAttributionFindUniqueOrThrowArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderAttribution that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAttributionFindFirstArgs} args - Arguments to find a OrderAttribution
+     * @example
+     * // Get one OrderAttribution
+     * const orderAttribution = await prisma.orderAttribution.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends OrderAttributionFindFirstArgs>(args?: SelectSubset<T, OrderAttributionFindFirstArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first OrderAttribution that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAttributionFindFirstOrThrowArgs} args - Arguments to find a OrderAttribution
+     * @example
+     * // Get one OrderAttribution
+     * const orderAttribution = await prisma.orderAttribution.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends OrderAttributionFindFirstOrThrowArgs>(args?: SelectSubset<T, OrderAttributionFindFirstOrThrowArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more OrderAttributions that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAttributionFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all OrderAttributions
+     * const orderAttributions = await prisma.orderAttribution.findMany()
+     * 
+     * // Get first 10 OrderAttributions
+     * const orderAttributions = await prisma.orderAttribution.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const orderAttributionWithIdOnly = await prisma.orderAttribution.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends OrderAttributionFindManyArgs>(args?: SelectSubset<T, OrderAttributionFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a OrderAttribution.
+     * @param {OrderAttributionCreateArgs} args - Arguments to create a OrderAttribution.
+     * @example
+     * // Create one OrderAttribution
+     * const OrderAttribution = await prisma.orderAttribution.create({
+     *   data: {
+     *     // ... data to create a OrderAttribution
+     *   }
+     * })
+     * 
+     */
+    create<T extends OrderAttributionCreateArgs>(args: SelectSubset<T, OrderAttributionCreateArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many OrderAttributions.
+     * @param {OrderAttributionCreateManyArgs} args - Arguments to create many OrderAttributions.
+     * @example
+     * // Create many OrderAttributions
+     * const orderAttribution = await prisma.orderAttribution.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends OrderAttributionCreateManyArgs>(args?: SelectSubset<T, OrderAttributionCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many OrderAttributions and returns the data saved in the database.
+     * @param {OrderAttributionCreateManyAndReturnArgs} args - Arguments to create many OrderAttributions.
+     * @example
+     * // Create many OrderAttributions
+     * const orderAttribution = await prisma.orderAttribution.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many OrderAttributions and only return the `id`
+     * const orderAttributionWithIdOnly = await prisma.orderAttribution.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends OrderAttributionCreateManyAndReturnArgs>(args?: SelectSubset<T, OrderAttributionCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a OrderAttribution.
+     * @param {OrderAttributionDeleteArgs} args - Arguments to delete one OrderAttribution.
+     * @example
+     * // Delete one OrderAttribution
+     * const OrderAttribution = await prisma.orderAttribution.delete({
+     *   where: {
+     *     // ... filter to delete one OrderAttribution
+     *   }
+     * })
+     * 
+     */
+    delete<T extends OrderAttributionDeleteArgs>(args: SelectSubset<T, OrderAttributionDeleteArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one OrderAttribution.
+     * @param {OrderAttributionUpdateArgs} args - Arguments to update one OrderAttribution.
+     * @example
+     * // Update one OrderAttribution
+     * const orderAttribution = await prisma.orderAttribution.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends OrderAttributionUpdateArgs>(args: SelectSubset<T, OrderAttributionUpdateArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more OrderAttributions.
+     * @param {OrderAttributionDeleteManyArgs} args - Arguments to filter OrderAttributions to delete.
+     * @example
+     * // Delete a few OrderAttributions
+     * const { count } = await prisma.orderAttribution.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends OrderAttributionDeleteManyArgs>(args?: SelectSubset<T, OrderAttributionDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderAttributions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAttributionUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many OrderAttributions
+     * const orderAttribution = await prisma.orderAttribution.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends OrderAttributionUpdateManyArgs>(args: SelectSubset<T, OrderAttributionUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more OrderAttributions and returns the data updated in the database.
+     * @param {OrderAttributionUpdateManyAndReturnArgs} args - Arguments to update many OrderAttributions.
+     * @example
+     * // Update many OrderAttributions
+     * const orderAttribution = await prisma.orderAttribution.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more OrderAttributions and only return the `id`
+     * const orderAttributionWithIdOnly = await prisma.orderAttribution.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends OrderAttributionUpdateManyAndReturnArgs>(args: SelectSubset<T, OrderAttributionUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one OrderAttribution.
+     * @param {OrderAttributionUpsertArgs} args - Arguments to update or create a OrderAttribution.
+     * @example
+     * // Update or create a OrderAttribution
+     * const orderAttribution = await prisma.orderAttribution.upsert({
+     *   create: {
+     *     // ... data to create a OrderAttribution
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the OrderAttribution we want to update
+     *   }
+     * })
+     */
+    upsert<T extends OrderAttributionUpsertArgs>(args: SelectSubset<T, OrderAttributionUpsertArgs<ExtArgs>>): Prisma__OrderAttributionClient<$Result.GetResult<Prisma.$OrderAttributionPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of OrderAttributions.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAttributionCountArgs} args - Arguments to filter OrderAttributions to count.
+     * @example
+     * // Count the number of OrderAttributions
+     * const count = await prisma.orderAttribution.count({
+     *   where: {
+     *     // ... the filter for the OrderAttributions we want to count
+     *   }
+     * })
+    **/
+    count<T extends OrderAttributionCountArgs>(
+      args?: Subset<T, OrderAttributionCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], OrderAttributionCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a OrderAttribution.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAttributionAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends OrderAttributionAggregateArgs>(args: Subset<T, OrderAttributionAggregateArgs>): Prisma.PrismaPromise<GetOrderAttributionAggregateType<T>>
+
+    /**
+     * Group by OrderAttribution.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {OrderAttributionGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends OrderAttributionGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: OrderAttributionGroupByArgs['orderBy'] }
+        : { orderBy?: OrderAttributionGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, OrderAttributionGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetOrderAttributionGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the OrderAttribution model
+   */
+  readonly fields: OrderAttributionFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for OrderAttribution.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__OrderAttributionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    order<T extends AttributionOrderDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AttributionOrderDefaultArgs<ExtArgs>>): Prisma__AttributionOrderClient<$Result.GetResult<Prisma.$AttributionOrderPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the OrderAttribution model
+   */
+  interface OrderAttributionFieldRefs {
+    readonly id: FieldRef<"OrderAttribution", 'String'>
+    readonly orderId: FieldRef<"OrderAttribution", 'String'>
+    readonly model: FieldRef<"OrderAttribution", 'String'>
+    readonly leadSource: FieldRef<"OrderAttribution", 'Json'>
+    readonly saleSource: FieldRef<"OrderAttribution", 'Json'>
+    readonly firstTouch: FieldRef<"OrderAttribution", 'Json'>
+    readonly lastTouch: FieldRef<"OrderAttribution", 'Json'>
+    readonly attributedSource: FieldRef<"OrderAttribution", 'String'>
+    readonly attributedMedium: FieldRef<"OrderAttribution", 'String'>
+    readonly attributedCampaign: FieldRef<"OrderAttribution", 'String'>
+    readonly attributedAdset: FieldRef<"OrderAttribution", 'String'>
+    readonly attributedAd: FieldRef<"OrderAttribution", 'String'>
+    readonly attributedContent: FieldRef<"OrderAttribution", 'String'>
+    readonly attributedValue: FieldRef<"OrderAttribution", 'Decimal'>
+    readonly linearShares: FieldRef<"OrderAttribution", 'Json'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * OrderAttribution findUnique
+   */
+  export type OrderAttributionFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAttribution to fetch.
+     */
+    where: OrderAttributionWhereUniqueInput
+  }
+
+  /**
+   * OrderAttribution findUniqueOrThrow
+   */
+  export type OrderAttributionFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAttribution to fetch.
+     */
+    where: OrderAttributionWhereUniqueInput
+  }
+
+  /**
+   * OrderAttribution findFirst
+   */
+  export type OrderAttributionFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAttribution to fetch.
+     */
+    where?: OrderAttributionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderAttributions to fetch.
+     */
+    orderBy?: OrderAttributionOrderByWithRelationInput | OrderAttributionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderAttributions.
+     */
+    cursor?: OrderAttributionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderAttributions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderAttributions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderAttributions.
+     */
+    distinct?: OrderAttributionScalarFieldEnum | OrderAttributionScalarFieldEnum[]
+  }
+
+  /**
+   * OrderAttribution findFirstOrThrow
+   */
+  export type OrderAttributionFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAttribution to fetch.
+     */
+    where?: OrderAttributionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderAttributions to fetch.
+     */
+    orderBy?: OrderAttributionOrderByWithRelationInput | OrderAttributionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for OrderAttributions.
+     */
+    cursor?: OrderAttributionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderAttributions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderAttributions.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of OrderAttributions.
+     */
+    distinct?: OrderAttributionScalarFieldEnum | OrderAttributionScalarFieldEnum[]
+  }
+
+  /**
+   * OrderAttribution findMany
+   */
+  export type OrderAttributionFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * Filter, which OrderAttributions to fetch.
+     */
+    where?: OrderAttributionWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of OrderAttributions to fetch.
+     */
+    orderBy?: OrderAttributionOrderByWithRelationInput | OrderAttributionOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing OrderAttributions.
+     */
+    cursor?: OrderAttributionWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` OrderAttributions from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` OrderAttributions.
+     */
+    skip?: number
+    distinct?: OrderAttributionScalarFieldEnum | OrderAttributionScalarFieldEnum[]
+  }
+
+  /**
+   * OrderAttribution create
+   */
+  export type OrderAttributionCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * The data needed to create a OrderAttribution.
+     */
+    data: XOR<OrderAttributionCreateInput, OrderAttributionUncheckedCreateInput>
+  }
+
+  /**
+   * OrderAttribution createMany
+   */
+  export type OrderAttributionCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many OrderAttributions.
+     */
+    data: OrderAttributionCreateManyInput | OrderAttributionCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * OrderAttribution createManyAndReturn
+   */
+  export type OrderAttributionCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * The data used to create many OrderAttributions.
+     */
+    data: OrderAttributionCreateManyInput | OrderAttributionCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderAttribution update
+   */
+  export type OrderAttributionUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * The data needed to update a OrderAttribution.
+     */
+    data: XOR<OrderAttributionUpdateInput, OrderAttributionUncheckedUpdateInput>
+    /**
+     * Choose, which OrderAttribution to update.
+     */
+    where: OrderAttributionWhereUniqueInput
+  }
+
+  /**
+   * OrderAttribution updateMany
+   */
+  export type OrderAttributionUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update OrderAttributions.
+     */
+    data: XOR<OrderAttributionUpdateManyMutationInput, OrderAttributionUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderAttributions to update
+     */
+    where?: OrderAttributionWhereInput
+    /**
+     * Limit how many OrderAttributions to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderAttribution updateManyAndReturn
+   */
+  export type OrderAttributionUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * The data used to update OrderAttributions.
+     */
+    data: XOR<OrderAttributionUpdateManyMutationInput, OrderAttributionUncheckedUpdateManyInput>
+    /**
+     * Filter which OrderAttributions to update
+     */
+    where?: OrderAttributionWhereInput
+    /**
+     * Limit how many OrderAttributions to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * OrderAttribution upsert
+   */
+  export type OrderAttributionUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * The filter to search for the OrderAttribution to update in case it exists.
+     */
+    where: OrderAttributionWhereUniqueInput
+    /**
+     * In case the OrderAttribution found by the `where` argument doesn't exist, create a new OrderAttribution with this data.
+     */
+    create: XOR<OrderAttributionCreateInput, OrderAttributionUncheckedCreateInput>
+    /**
+     * In case the OrderAttribution was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<OrderAttributionUpdateInput, OrderAttributionUncheckedUpdateInput>
+  }
+
+  /**
+   * OrderAttribution delete
+   */
+  export type OrderAttributionDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+    /**
+     * Filter which OrderAttribution to delete.
+     */
+    where: OrderAttributionWhereUniqueInput
+  }
+
+  /**
+   * OrderAttribution deleteMany
+   */
+  export type OrderAttributionDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which OrderAttributions to delete
+     */
+    where?: OrderAttributionWhereInput
+    /**
+     * Limit how many OrderAttributions to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * OrderAttribution without action
+   */
+  export type OrderAttributionDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the OrderAttribution
+     */
+    select?: OrderAttributionSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the OrderAttribution
+     */
+    omit?: OrderAttributionOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: OrderAttributionInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model AdSpendDaily
+   */
+
+  export type AggregateAdSpendDaily = {
+    _count: AdSpendDailyCountAggregateOutputType | null
+    _avg: AdSpendDailyAvgAggregateOutputType | null
+    _sum: AdSpendDailySumAggregateOutputType | null
+    _min: AdSpendDailyMinAggregateOutputType | null
+    _max: AdSpendDailyMaxAggregateOutputType | null
+  }
+
+  export type AdSpendDailyAvgAggregateOutputType = {
+    spend: Decimal | null
+  }
+
+  export type AdSpendDailySumAggregateOutputType = {
+    spend: Decimal | null
+  }
+
+  export type AdSpendDailyMinAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    date: Date | null
+    platform: string | null
+    campaignId: string | null
+    campaignName: string | null
+    adsetId: string | null
+    adsetName: string | null
+    adId: string | null
+    adName: string | null
+    spend: Decimal | null
+    currency: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AdSpendDailyMaxAggregateOutputType = {
+    id: string | null
+    organizationId: string | null
+    date: Date | null
+    platform: string | null
+    campaignId: string | null
+    campaignName: string | null
+    adsetId: string | null
+    adsetName: string | null
+    adId: string | null
+    adName: string | null
+    spend: Decimal | null
+    currency: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type AdSpendDailyCountAggregateOutputType = {
+    id: number
+    organizationId: number
+    date: number
+    platform: number
+    campaignId: number
+    campaignName: number
+    adsetId: number
+    adsetName: number
+    adId: number
+    adName: number
+    spend: number
+    currency: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type AdSpendDailyAvgAggregateInputType = {
+    spend?: true
+  }
+
+  export type AdSpendDailySumAggregateInputType = {
+    spend?: true
+  }
+
+  export type AdSpendDailyMinAggregateInputType = {
+    id?: true
+    organizationId?: true
+    date?: true
+    platform?: true
+    campaignId?: true
+    campaignName?: true
+    adsetId?: true
+    adsetName?: true
+    adId?: true
+    adName?: true
+    spend?: true
+    currency?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AdSpendDailyMaxAggregateInputType = {
+    id?: true
+    organizationId?: true
+    date?: true
+    platform?: true
+    campaignId?: true
+    campaignName?: true
+    adsetId?: true
+    adsetName?: true
+    adId?: true
+    adName?: true
+    spend?: true
+    currency?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type AdSpendDailyCountAggregateInputType = {
+    id?: true
+    organizationId?: true
+    date?: true
+    platform?: true
+    campaignId?: true
+    campaignName?: true
+    adsetId?: true
+    adsetName?: true
+    adId?: true
+    adName?: true
+    spend?: true
+    currency?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type AdSpendDailyAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdSpendDaily to aggregate.
+     */
+    where?: AdSpendDailyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdSpendDailies to fetch.
+     */
+    orderBy?: AdSpendDailyOrderByWithRelationInput | AdSpendDailyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: AdSpendDailyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdSpendDailies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdSpendDailies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned AdSpendDailies
+    **/
+    _count?: true | AdSpendDailyCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: AdSpendDailyAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: AdSpendDailySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: AdSpendDailyMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: AdSpendDailyMaxAggregateInputType
+  }
+
+  export type GetAdSpendDailyAggregateType<T extends AdSpendDailyAggregateArgs> = {
+        [P in keyof T & keyof AggregateAdSpendDaily]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateAdSpendDaily[P]>
+      : GetScalarType<T[P], AggregateAdSpendDaily[P]>
+  }
+
+
+
+
+  export type AdSpendDailyGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: AdSpendDailyWhereInput
+    orderBy?: AdSpendDailyOrderByWithAggregationInput | AdSpendDailyOrderByWithAggregationInput[]
+    by: AdSpendDailyScalarFieldEnum[] | AdSpendDailyScalarFieldEnum
+    having?: AdSpendDailyScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: AdSpendDailyCountAggregateInputType | true
+    _avg?: AdSpendDailyAvgAggregateInputType
+    _sum?: AdSpendDailySumAggregateInputType
+    _min?: AdSpendDailyMinAggregateInputType
+    _max?: AdSpendDailyMaxAggregateInputType
+  }
+
+  export type AdSpendDailyGroupByOutputType = {
+    id: string
+    organizationId: string
+    date: Date
+    platform: string
+    campaignId: string
+    campaignName: string | null
+    adsetId: string
+    adsetName: string | null
+    adId: string
+    adName: string | null
+    spend: Decimal
+    currency: string
+    createdAt: Date
+    updatedAt: Date
+    _count: AdSpendDailyCountAggregateOutputType | null
+    _avg: AdSpendDailyAvgAggregateOutputType | null
+    _sum: AdSpendDailySumAggregateOutputType | null
+    _min: AdSpendDailyMinAggregateOutputType | null
+    _max: AdSpendDailyMaxAggregateOutputType | null
+  }
+
+  type GetAdSpendDailyGroupByPayload<T extends AdSpendDailyGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<AdSpendDailyGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof AdSpendDailyGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], AdSpendDailyGroupByOutputType[P]>
+            : GetScalarType<T[P], AdSpendDailyGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type AdSpendDailySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    date?: boolean
+    platform?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
+    adId?: boolean
+    adName?: boolean
+    spend?: boolean
+    currency?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adSpendDaily"]>
+
+  export type AdSpendDailySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    date?: boolean
+    platform?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
+    adId?: boolean
+    adName?: boolean
+    spend?: boolean
+    currency?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adSpendDaily"]>
+
+  export type AdSpendDailySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    organizationId?: boolean
+    date?: boolean
+    platform?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
+    adId?: boolean
+    adName?: boolean
+    spend?: boolean
+    currency?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["adSpendDaily"]>
+
+  export type AdSpendDailySelectScalar = {
+    id?: boolean
+    organizationId?: boolean
+    date?: boolean
+    platform?: boolean
+    campaignId?: boolean
+    campaignName?: boolean
+    adsetId?: boolean
+    adsetName?: boolean
+    adId?: boolean
+    adName?: boolean
+    spend?: boolean
+    currency?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type AdSpendDailyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "organizationId" | "date" | "platform" | "campaignId" | "campaignName" | "adsetId" | "adsetName" | "adId" | "adName" | "spend" | "currency" | "createdAt" | "updatedAt", ExtArgs["result"]["adSpendDaily"]>
+  export type AdSpendDailyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type AdSpendDailyIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+  export type AdSpendDailyIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    organization?: boolean | OrganizationDefaultArgs<ExtArgs>
+  }
+
+  export type $AdSpendDailyPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "AdSpendDaily"
+    objects: {
+      organization: Prisma.$OrganizationPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      organizationId: string
+      date: Date
+      platform: string
+      campaignId: string
+      campaignName: string | null
+      adsetId: string
+      adsetName: string | null
+      adId: string
+      adName: string | null
+      spend: Prisma.Decimal
+      currency: string
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["adSpendDaily"]>
+    composites: {}
+  }
+
+  type AdSpendDailyGetPayload<S extends boolean | null | undefined | AdSpendDailyDefaultArgs> = $Result.GetResult<Prisma.$AdSpendDailyPayload, S>
+
+  type AdSpendDailyCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<AdSpendDailyFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: AdSpendDailyCountAggregateInputType | true
+    }
+
+  export interface AdSpendDailyDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['AdSpendDaily'], meta: { name: 'AdSpendDaily' } }
+    /**
+     * Find zero or one AdSpendDaily that matches the filter.
+     * @param {AdSpendDailyFindUniqueArgs} args - Arguments to find a AdSpendDaily
+     * @example
+     * // Get one AdSpendDaily
+     * const adSpendDaily = await prisma.adSpendDaily.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends AdSpendDailyFindUniqueArgs>(args: SelectSubset<T, AdSpendDailyFindUniqueArgs<ExtArgs>>): Prisma__AdSpendDailyClient<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one AdSpendDaily that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {AdSpendDailyFindUniqueOrThrowArgs} args - Arguments to find a AdSpendDaily
+     * @example
+     * // Get one AdSpendDaily
+     * const adSpendDaily = await prisma.adSpendDaily.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends AdSpendDailyFindUniqueOrThrowArgs>(args: SelectSubset<T, AdSpendDailyFindUniqueOrThrowArgs<ExtArgs>>): Prisma__AdSpendDailyClient<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdSpendDaily that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdSpendDailyFindFirstArgs} args - Arguments to find a AdSpendDaily
+     * @example
+     * // Get one AdSpendDaily
+     * const adSpendDaily = await prisma.adSpendDaily.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends AdSpendDailyFindFirstArgs>(args?: SelectSubset<T, AdSpendDailyFindFirstArgs<ExtArgs>>): Prisma__AdSpendDailyClient<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first AdSpendDaily that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdSpendDailyFindFirstOrThrowArgs} args - Arguments to find a AdSpendDaily
+     * @example
+     * // Get one AdSpendDaily
+     * const adSpendDaily = await prisma.adSpendDaily.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends AdSpendDailyFindFirstOrThrowArgs>(args?: SelectSubset<T, AdSpendDailyFindFirstOrThrowArgs<ExtArgs>>): Prisma__AdSpendDailyClient<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more AdSpendDailies that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdSpendDailyFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all AdSpendDailies
+     * const adSpendDailies = await prisma.adSpendDaily.findMany()
+     * 
+     * // Get first 10 AdSpendDailies
+     * const adSpendDailies = await prisma.adSpendDaily.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const adSpendDailyWithIdOnly = await prisma.adSpendDaily.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends AdSpendDailyFindManyArgs>(args?: SelectSubset<T, AdSpendDailyFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a AdSpendDaily.
+     * @param {AdSpendDailyCreateArgs} args - Arguments to create a AdSpendDaily.
+     * @example
+     * // Create one AdSpendDaily
+     * const AdSpendDaily = await prisma.adSpendDaily.create({
+     *   data: {
+     *     // ... data to create a AdSpendDaily
+     *   }
+     * })
+     * 
+     */
+    create<T extends AdSpendDailyCreateArgs>(args: SelectSubset<T, AdSpendDailyCreateArgs<ExtArgs>>): Prisma__AdSpendDailyClient<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many AdSpendDailies.
+     * @param {AdSpendDailyCreateManyArgs} args - Arguments to create many AdSpendDailies.
+     * @example
+     * // Create many AdSpendDailies
+     * const adSpendDaily = await prisma.adSpendDaily.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends AdSpendDailyCreateManyArgs>(args?: SelectSubset<T, AdSpendDailyCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many AdSpendDailies and returns the data saved in the database.
+     * @param {AdSpendDailyCreateManyAndReturnArgs} args - Arguments to create many AdSpendDailies.
+     * @example
+     * // Create many AdSpendDailies
+     * const adSpendDaily = await prisma.adSpendDaily.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many AdSpendDailies and only return the `id`
+     * const adSpendDailyWithIdOnly = await prisma.adSpendDaily.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends AdSpendDailyCreateManyAndReturnArgs>(args?: SelectSubset<T, AdSpendDailyCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a AdSpendDaily.
+     * @param {AdSpendDailyDeleteArgs} args - Arguments to delete one AdSpendDaily.
+     * @example
+     * // Delete one AdSpendDaily
+     * const AdSpendDaily = await prisma.adSpendDaily.delete({
+     *   where: {
+     *     // ... filter to delete one AdSpendDaily
+     *   }
+     * })
+     * 
+     */
+    delete<T extends AdSpendDailyDeleteArgs>(args: SelectSubset<T, AdSpendDailyDeleteArgs<ExtArgs>>): Prisma__AdSpendDailyClient<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one AdSpendDaily.
+     * @param {AdSpendDailyUpdateArgs} args - Arguments to update one AdSpendDaily.
+     * @example
+     * // Update one AdSpendDaily
+     * const adSpendDaily = await prisma.adSpendDaily.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends AdSpendDailyUpdateArgs>(args: SelectSubset<T, AdSpendDailyUpdateArgs<ExtArgs>>): Prisma__AdSpendDailyClient<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more AdSpendDailies.
+     * @param {AdSpendDailyDeleteManyArgs} args - Arguments to filter AdSpendDailies to delete.
+     * @example
+     * // Delete a few AdSpendDailies
+     * const { count } = await prisma.adSpendDaily.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends AdSpendDailyDeleteManyArgs>(args?: SelectSubset<T, AdSpendDailyDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdSpendDailies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdSpendDailyUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many AdSpendDailies
+     * const adSpendDaily = await prisma.adSpendDaily.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends AdSpendDailyUpdateManyArgs>(args: SelectSubset<T, AdSpendDailyUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more AdSpendDailies and returns the data updated in the database.
+     * @param {AdSpendDailyUpdateManyAndReturnArgs} args - Arguments to update many AdSpendDailies.
+     * @example
+     * // Update many AdSpendDailies
+     * const adSpendDaily = await prisma.adSpendDaily.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more AdSpendDailies and only return the `id`
+     * const adSpendDailyWithIdOnly = await prisma.adSpendDaily.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends AdSpendDailyUpdateManyAndReturnArgs>(args: SelectSubset<T, AdSpendDailyUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one AdSpendDaily.
+     * @param {AdSpendDailyUpsertArgs} args - Arguments to update or create a AdSpendDaily.
+     * @example
+     * // Update or create a AdSpendDaily
+     * const adSpendDaily = await prisma.adSpendDaily.upsert({
+     *   create: {
+     *     // ... data to create a AdSpendDaily
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the AdSpendDaily we want to update
+     *   }
+     * })
+     */
+    upsert<T extends AdSpendDailyUpsertArgs>(args: SelectSubset<T, AdSpendDailyUpsertArgs<ExtArgs>>): Prisma__AdSpendDailyClient<$Result.GetResult<Prisma.$AdSpendDailyPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of AdSpendDailies.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdSpendDailyCountArgs} args - Arguments to filter AdSpendDailies to count.
+     * @example
+     * // Count the number of AdSpendDailies
+     * const count = await prisma.adSpendDaily.count({
+     *   where: {
+     *     // ... the filter for the AdSpendDailies we want to count
+     *   }
+     * })
+    **/
+    count<T extends AdSpendDailyCountArgs>(
+      args?: Subset<T, AdSpendDailyCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], AdSpendDailyCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a AdSpendDaily.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdSpendDailyAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends AdSpendDailyAggregateArgs>(args: Subset<T, AdSpendDailyAggregateArgs>): Prisma.PrismaPromise<GetAdSpendDailyAggregateType<T>>
+
+    /**
+     * Group by AdSpendDaily.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {AdSpendDailyGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends AdSpendDailyGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: AdSpendDailyGroupByArgs['orderBy'] }
+        : { orderBy?: AdSpendDailyGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, AdSpendDailyGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetAdSpendDailyGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the AdSpendDaily model
+   */
+  readonly fields: AdSpendDailyFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for AdSpendDaily.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__AdSpendDailyClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    organization<T extends OrganizationDefaultArgs<ExtArgs> = {}>(args?: Subset<T, OrganizationDefaultArgs<ExtArgs>>): Prisma__OrganizationClient<$Result.GetResult<Prisma.$OrganizationPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the AdSpendDaily model
+   */
+  interface AdSpendDailyFieldRefs {
+    readonly id: FieldRef<"AdSpendDaily", 'String'>
+    readonly organizationId: FieldRef<"AdSpendDaily", 'String'>
+    readonly date: FieldRef<"AdSpendDaily", 'DateTime'>
+    readonly platform: FieldRef<"AdSpendDaily", 'String'>
+    readonly campaignId: FieldRef<"AdSpendDaily", 'String'>
+    readonly campaignName: FieldRef<"AdSpendDaily", 'String'>
+    readonly adsetId: FieldRef<"AdSpendDaily", 'String'>
+    readonly adsetName: FieldRef<"AdSpendDaily", 'String'>
+    readonly adId: FieldRef<"AdSpendDaily", 'String'>
+    readonly adName: FieldRef<"AdSpendDaily", 'String'>
+    readonly spend: FieldRef<"AdSpendDaily", 'Decimal'>
+    readonly currency: FieldRef<"AdSpendDaily", 'String'>
+    readonly createdAt: FieldRef<"AdSpendDaily", 'DateTime'>
+    readonly updatedAt: FieldRef<"AdSpendDaily", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * AdSpendDaily findUnique
+   */
+  export type AdSpendDailyFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * Filter, which AdSpendDaily to fetch.
+     */
+    where: AdSpendDailyWhereUniqueInput
+  }
+
+  /**
+   * AdSpendDaily findUniqueOrThrow
+   */
+  export type AdSpendDailyFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * Filter, which AdSpendDaily to fetch.
+     */
+    where: AdSpendDailyWhereUniqueInput
+  }
+
+  /**
+   * AdSpendDaily findFirst
+   */
+  export type AdSpendDailyFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * Filter, which AdSpendDaily to fetch.
+     */
+    where?: AdSpendDailyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdSpendDailies to fetch.
+     */
+    orderBy?: AdSpendDailyOrderByWithRelationInput | AdSpendDailyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdSpendDailies.
+     */
+    cursor?: AdSpendDailyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdSpendDailies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdSpendDailies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdSpendDailies.
+     */
+    distinct?: AdSpendDailyScalarFieldEnum | AdSpendDailyScalarFieldEnum[]
+  }
+
+  /**
+   * AdSpendDaily findFirstOrThrow
+   */
+  export type AdSpendDailyFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * Filter, which AdSpendDaily to fetch.
+     */
+    where?: AdSpendDailyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdSpendDailies to fetch.
+     */
+    orderBy?: AdSpendDailyOrderByWithRelationInput | AdSpendDailyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for AdSpendDailies.
+     */
+    cursor?: AdSpendDailyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdSpendDailies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdSpendDailies.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of AdSpendDailies.
+     */
+    distinct?: AdSpendDailyScalarFieldEnum | AdSpendDailyScalarFieldEnum[]
+  }
+
+  /**
+   * AdSpendDaily findMany
+   */
+  export type AdSpendDailyFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * Filter, which AdSpendDailies to fetch.
+     */
+    where?: AdSpendDailyWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of AdSpendDailies to fetch.
+     */
+    orderBy?: AdSpendDailyOrderByWithRelationInput | AdSpendDailyOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing AdSpendDailies.
+     */
+    cursor?: AdSpendDailyWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` AdSpendDailies from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` AdSpendDailies.
+     */
+    skip?: number
+    distinct?: AdSpendDailyScalarFieldEnum | AdSpendDailyScalarFieldEnum[]
+  }
+
+  /**
+   * AdSpendDaily create
+   */
+  export type AdSpendDailyCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * The data needed to create a AdSpendDaily.
+     */
+    data: XOR<AdSpendDailyCreateInput, AdSpendDailyUncheckedCreateInput>
+  }
+
+  /**
+   * AdSpendDaily createMany
+   */
+  export type AdSpendDailyCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many AdSpendDailies.
+     */
+    data: AdSpendDailyCreateManyInput | AdSpendDailyCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * AdSpendDaily createManyAndReturn
+   */
+  export type AdSpendDailyCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * The data used to create many AdSpendDailies.
+     */
+    data: AdSpendDailyCreateManyInput | AdSpendDailyCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdSpendDaily update
+   */
+  export type AdSpendDailyUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * The data needed to update a AdSpendDaily.
+     */
+    data: XOR<AdSpendDailyUpdateInput, AdSpendDailyUncheckedUpdateInput>
+    /**
+     * Choose, which AdSpendDaily to update.
+     */
+    where: AdSpendDailyWhereUniqueInput
+  }
+
+  /**
+   * AdSpendDaily updateMany
+   */
+  export type AdSpendDailyUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update AdSpendDailies.
+     */
+    data: XOR<AdSpendDailyUpdateManyMutationInput, AdSpendDailyUncheckedUpdateManyInput>
+    /**
+     * Filter which AdSpendDailies to update
+     */
+    where?: AdSpendDailyWhereInput
+    /**
+     * Limit how many AdSpendDailies to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdSpendDaily updateManyAndReturn
+   */
+  export type AdSpendDailyUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * The data used to update AdSpendDailies.
+     */
+    data: XOR<AdSpendDailyUpdateManyMutationInput, AdSpendDailyUncheckedUpdateManyInput>
+    /**
+     * Filter which AdSpendDailies to update
+     */
+    where?: AdSpendDailyWhereInput
+    /**
+     * Limit how many AdSpendDailies to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * AdSpendDaily upsert
+   */
+  export type AdSpendDailyUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * The filter to search for the AdSpendDaily to update in case it exists.
+     */
+    where: AdSpendDailyWhereUniqueInput
+    /**
+     * In case the AdSpendDaily found by the `where` argument doesn't exist, create a new AdSpendDaily with this data.
+     */
+    create: XOR<AdSpendDailyCreateInput, AdSpendDailyUncheckedCreateInput>
+    /**
+     * In case the AdSpendDaily was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<AdSpendDailyUpdateInput, AdSpendDailyUncheckedUpdateInput>
+  }
+
+  /**
+   * AdSpendDaily delete
+   */
+  export type AdSpendDailyDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+    /**
+     * Filter which AdSpendDaily to delete.
+     */
+    where: AdSpendDailyWhereUniqueInput
+  }
+
+  /**
+   * AdSpendDaily deleteMany
+   */
+  export type AdSpendDailyDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which AdSpendDailies to delete
+     */
+    where?: AdSpendDailyWhereInput
+    /**
+     * Limit how many AdSpendDailies to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * AdSpendDaily without action
+   */
+  export type AdSpendDailyDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the AdSpendDaily
+     */
+    select?: AdSpendDailySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the AdSpendDaily
+     */
+    omit?: AdSpendDailyOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AdSpendDailyInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -54696,6 +66875,11 @@ export namespace Prisma {
     aiKnowledgeBase: 'aiKnowledgeBase',
     aiGoals: 'aiGoals',
     aiTone: 'aiTone',
+    metaPixelId: 'metaPixelId',
+    metaCapiToken: 'metaCapiToken',
+    ga4MeasurementId: 'ga4MeasurementId',
+    ga4ApiSecret: 'ga4ApiSecret',
+    ecommerceConnectors: 'ecommerceConnectors',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -54788,11 +66972,13 @@ export namespace Prisma {
     igsid: 'igsid',
     nome: 'nome',
     username: 'username',
+    profilePictureUrl: 'profilePictureUrl',
     tags: 'tags',
     campos: 'campos',
     phone: 'phone',
     botPaused: 'botPaused',
     lastInteractionAt: 'lastInteractionAt',
+    trackingIdentityId: 'trackingIdentityId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -54809,6 +66995,7 @@ export namespace Prisma {
     handoffHuman: 'handoffHuman',
     assignedUserId: 'assignedUserId',
     lastMessageAt: 'lastMessageAt',
+    lastReadAt: 'lastReadAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -54901,6 +67088,161 @@ export namespace Prisma {
   };
 
   export type IgWebhookEventScalarFieldEnum = (typeof IgWebhookEventScalarFieldEnum)[keyof typeof IgWebhookEventScalarFieldEnum]
+
+
+  export const TrackingIdentityScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    stId: 'stId',
+    email: 'email',
+    phone: 'phone',
+    name: 'name',
+    status: 'status',
+    leadSource: 'leadSource',
+    mergedIntoId: 'mergedIntoId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TrackingIdentityScalarFieldEnum = (typeof TrackingIdentityScalarFieldEnum)[keyof typeof TrackingIdentityScalarFieldEnum]
+
+
+  export const IdentityAliasScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    identityId: 'identityId',
+    type: 'type',
+    value: 'value',
+    createdAt: 'createdAt'
+  };
+
+  export type IdentityAliasScalarFieldEnum = (typeof IdentityAliasScalarFieldEnum)[keyof typeof IdentityAliasScalarFieldEnum]
+
+
+  export const TrackingVisitorScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    anonymousId: 'anonymousId',
+    identityId: 'identityId',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type TrackingVisitorScalarFieldEnum = (typeof TrackingVisitorScalarFieldEnum)[keyof typeof TrackingVisitorScalarFieldEnum]
+
+
+  export const TrackingSessionScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    sessionId: 'sessionId',
+    visitorId: 'visitorId',
+    landingPage: 'landingPage',
+    referrer: 'referrer',
+    utmSource: 'utmSource',
+    utmMedium: 'utmMedium',
+    utmCampaign: 'utmCampaign',
+    utmContent: 'utmContent',
+    utmTerm: 'utmTerm',
+    fbclid: 'fbclid',
+    gclid: 'gclid',
+    ttclid: 'ttclid',
+    msclkid: 'msclkid',
+    firstTouch: 'firstTouch',
+    lastTouch: 'lastTouch',
+    startedAt: 'startedAt',
+    lastSeenAt: 'lastSeenAt'
+  };
+
+  export type TrackingSessionScalarFieldEnum = (typeof TrackingSessionScalarFieldEnum)[keyof typeof TrackingSessionScalarFieldEnum]
+
+
+  export const TrackingEventScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    eventId: 'eventId',
+    name: 'name',
+    visitorId: 'visitorId',
+    sessionId: 'sessionId',
+    identityId: 'identityId',
+    properties: 'properties',
+    context: 'context',
+    occurredAt: 'occurredAt',
+    createdAt: 'createdAt'
+  };
+
+  export type TrackingEventScalarFieldEnum = (typeof TrackingEventScalarFieldEnum)[keyof typeof TrackingEventScalarFieldEnum]
+
+
+  export const AttributionOrderScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    externalOrderId: 'externalOrderId',
+    identityId: 'identityId',
+    customerExternalId: 'customerExternalId',
+    value: 'value',
+    currency: 'currency',
+    status: 'status',
+    eventId: 'eventId',
+    rawPayload: 'rawPayload',
+    occurredAt: 'occurredAt',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AttributionOrderScalarFieldEnum = (typeof AttributionOrderScalarFieldEnum)[keyof typeof AttributionOrderScalarFieldEnum]
+
+
+  export const AttributionOrderItemScalarFieldEnum: {
+    id: 'id',
+    orderId: 'orderId',
+    productId: 'productId',
+    name: 'name',
+    quantity: 'quantity',
+    price: 'price'
+  };
+
+  export type AttributionOrderItemScalarFieldEnum = (typeof AttributionOrderItemScalarFieldEnum)[keyof typeof AttributionOrderItemScalarFieldEnum]
+
+
+  export const OrderAttributionScalarFieldEnum: {
+    id: 'id',
+    orderId: 'orderId',
+    model: 'model',
+    leadSource: 'leadSource',
+    saleSource: 'saleSource',
+    firstTouch: 'firstTouch',
+    lastTouch: 'lastTouch',
+    attributedSource: 'attributedSource',
+    attributedMedium: 'attributedMedium',
+    attributedCampaign: 'attributedCampaign',
+    attributedAdset: 'attributedAdset',
+    attributedAd: 'attributedAd',
+    attributedContent: 'attributedContent',
+    attributedValue: 'attributedValue',
+    linearShares: 'linearShares'
+  };
+
+  export type OrderAttributionScalarFieldEnum = (typeof OrderAttributionScalarFieldEnum)[keyof typeof OrderAttributionScalarFieldEnum]
+
+
+  export const AdSpendDailyScalarFieldEnum: {
+    id: 'id',
+    organizationId: 'organizationId',
+    date: 'date',
+    platform: 'platform',
+    campaignId: 'campaignId',
+    campaignName: 'campaignName',
+    adsetId: 'adsetId',
+    adsetName: 'adsetName',
+    adId: 'adId',
+    adName: 'adName',
+    spend: 'spend',
+    currency: 'currency',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type AdSpendDailyScalarFieldEnum = (typeof AdSpendDailyScalarFieldEnum)[keyof typeof AdSpendDailyScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -57313,6 +69655,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteListRelationFilter
     scheduledMessages?: IgScheduledMessageListRelationFilter
     tagDefinitions?: IgTagDefinitionListRelationFilter
+    trackingIdentities?: TrackingIdentityListRelationFilter
+    trackingVisitors?: TrackingVisitorListRelationFilter
+    trackingSessions?: TrackingSessionListRelationFilter
+    trackingEvents?: TrackingEventListRelationFilter
+    attributionOrders?: AttributionOrderListRelationFilter
+    adSpendDaily?: AdSpendDailyListRelationFilter
   }
 
   export type OrganizationOrderByWithRelationInput = {
@@ -57344,6 +69692,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteOrderByRelationAggregateInput
     scheduledMessages?: IgScheduledMessageOrderByRelationAggregateInput
     tagDefinitions?: IgTagDefinitionOrderByRelationAggregateInput
+    trackingIdentities?: TrackingIdentityOrderByRelationAggregateInput
+    trackingVisitors?: TrackingVisitorOrderByRelationAggregateInput
+    trackingSessions?: TrackingSessionOrderByRelationAggregateInput
+    trackingEvents?: TrackingEventOrderByRelationAggregateInput
+    attributionOrders?: AttributionOrderOrderByRelationAggregateInput
+    adSpendDaily?: AdSpendDailyOrderByRelationAggregateInput
   }
 
   export type OrganizationWhereUniqueInput = Prisma.AtLeast<{
@@ -57378,6 +69732,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteListRelationFilter
     scheduledMessages?: IgScheduledMessageListRelationFilter
     tagDefinitions?: IgTagDefinitionListRelationFilter
+    trackingIdentities?: TrackingIdentityListRelationFilter
+    trackingVisitors?: TrackingVisitorListRelationFilter
+    trackingSessions?: TrackingSessionListRelationFilter
+    trackingEvents?: TrackingEventListRelationFilter
+    attributionOrders?: AttributionOrderListRelationFilter
+    adSpendDaily?: AdSpendDailyListRelationFilter
   }, "id" | "slug">
 
   export type OrganizationOrderByWithAggregationInput = {
@@ -57760,6 +70120,11 @@ export namespace Prisma {
     aiKnowledgeBase?: StringNullableFilter<"IgOrgSettings"> | string | null
     aiGoals?: JsonFilter<"IgOrgSettings">
     aiTone?: StringNullableFilter<"IgOrgSettings"> | string | null
+    metaPixelId?: StringNullableFilter<"IgOrgSettings"> | string | null
+    metaCapiToken?: StringNullableFilter<"IgOrgSettings"> | string | null
+    ga4MeasurementId?: StringNullableFilter<"IgOrgSettings"> | string | null
+    ga4ApiSecret?: StringNullableFilter<"IgOrgSettings"> | string | null
+    ecommerceConnectors?: JsonFilter<"IgOrgSettings">
     createdAt?: DateTimeFilter<"IgOrgSettings"> | Date | string
     updatedAt?: DateTimeFilter<"IgOrgSettings"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
@@ -57778,6 +70143,11 @@ export namespace Prisma {
     aiKnowledgeBase?: SortOrderInput | SortOrder
     aiGoals?: SortOrder
     aiTone?: SortOrderInput | SortOrder
+    metaPixelId?: SortOrderInput | SortOrder
+    metaCapiToken?: SortOrderInput | SortOrder
+    ga4MeasurementId?: SortOrderInput | SortOrder
+    ga4ApiSecret?: SortOrderInput | SortOrder
+    ecommerceConnectors?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
@@ -57799,6 +70169,11 @@ export namespace Prisma {
     aiKnowledgeBase?: StringNullableFilter<"IgOrgSettings"> | string | null
     aiGoals?: JsonFilter<"IgOrgSettings">
     aiTone?: StringNullableFilter<"IgOrgSettings"> | string | null
+    metaPixelId?: StringNullableFilter<"IgOrgSettings"> | string | null
+    metaCapiToken?: StringNullableFilter<"IgOrgSettings"> | string | null
+    ga4MeasurementId?: StringNullableFilter<"IgOrgSettings"> | string | null
+    ga4ApiSecret?: StringNullableFilter<"IgOrgSettings"> | string | null
+    ecommerceConnectors?: JsonFilter<"IgOrgSettings">
     createdAt?: DateTimeFilter<"IgOrgSettings"> | Date | string
     updatedAt?: DateTimeFilter<"IgOrgSettings"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
@@ -57817,6 +70192,11 @@ export namespace Prisma {
     aiKnowledgeBase?: SortOrderInput | SortOrder
     aiGoals?: SortOrder
     aiTone?: SortOrderInput | SortOrder
+    metaPixelId?: SortOrderInput | SortOrder
+    metaCapiToken?: SortOrderInput | SortOrder
+    ga4MeasurementId?: SortOrderInput | SortOrder
+    ga4ApiSecret?: SortOrderInput | SortOrder
+    ecommerceConnectors?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: IgOrgSettingsCountOrderByAggregateInput
@@ -57840,6 +70220,11 @@ export namespace Prisma {
     aiKnowledgeBase?: StringNullableWithAggregatesFilter<"IgOrgSettings"> | string | null
     aiGoals?: JsonWithAggregatesFilter<"IgOrgSettings">
     aiTone?: StringNullableWithAggregatesFilter<"IgOrgSettings"> | string | null
+    metaPixelId?: StringNullableWithAggregatesFilter<"IgOrgSettings"> | string | null
+    metaCapiToken?: StringNullableWithAggregatesFilter<"IgOrgSettings"> | string | null
+    ga4MeasurementId?: StringNullableWithAggregatesFilter<"IgOrgSettings"> | string | null
+    ga4ApiSecret?: StringNullableWithAggregatesFilter<"IgOrgSettings"> | string | null
+    ecommerceConnectors?: JsonWithAggregatesFilter<"IgOrgSettings">
     createdAt?: DateTimeWithAggregatesFilter<"IgOrgSettings"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"IgOrgSettings"> | Date | string
   }
@@ -58245,15 +70630,18 @@ export namespace Prisma {
     igsid?: StringFilter<"IgContato"> | string
     nome?: StringNullableFilter<"IgContato"> | string | null
     username?: StringNullableFilter<"IgContato"> | string | null
+    profilePictureUrl?: StringNullableFilter<"IgContato"> | string | null
     tags?: StringNullableListFilter<"IgContato">
     campos?: JsonFilter<"IgContato">
     phone?: StringNullableFilter<"IgContato"> | string | null
     botPaused?: BoolFilter<"IgContato"> | boolean
     lastInteractionAt?: DateTimeNullableFilter<"IgContato"> | Date | string | null
+    trackingIdentityId?: StringNullableFilter<"IgContato"> | string | null
     createdAt?: DateTimeFilter<"IgContato"> | Date | string
     updatedAt?: DateTimeFilter<"IgContato"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     igAccount?: XOR<IgAccountScalarRelationFilter, IgAccountWhereInput>
+    trackingIdentity?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
     conversas?: IgConversaListRelationFilter
     execucoes?: IgFluxoExecucaoListRelationFilter
   }
@@ -58265,15 +70653,18 @@ export namespace Prisma {
     igsid?: SortOrder
     nome?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
+    profilePictureUrl?: SortOrderInput | SortOrder
     tags?: SortOrder
     campos?: SortOrder
     phone?: SortOrderInput | SortOrder
     botPaused?: SortOrder
     lastInteractionAt?: SortOrderInput | SortOrder
+    trackingIdentityId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
     igAccount?: IgAccountOrderByWithRelationInput
+    trackingIdentity?: TrackingIdentityOrderByWithRelationInput
     conversas?: IgConversaOrderByRelationAggregateInput
     execucoes?: IgFluxoExecucaoOrderByRelationAggregateInput
   }
@@ -58289,15 +70680,18 @@ export namespace Prisma {
     igsid?: StringFilter<"IgContato"> | string
     nome?: StringNullableFilter<"IgContato"> | string | null
     username?: StringNullableFilter<"IgContato"> | string | null
+    profilePictureUrl?: StringNullableFilter<"IgContato"> | string | null
     tags?: StringNullableListFilter<"IgContato">
     campos?: JsonFilter<"IgContato">
     phone?: StringNullableFilter<"IgContato"> | string | null
     botPaused?: BoolFilter<"IgContato"> | boolean
     lastInteractionAt?: DateTimeNullableFilter<"IgContato"> | Date | string | null
+    trackingIdentityId?: StringNullableFilter<"IgContato"> | string | null
     createdAt?: DateTimeFilter<"IgContato"> | Date | string
     updatedAt?: DateTimeFilter<"IgContato"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
     igAccount?: XOR<IgAccountScalarRelationFilter, IgAccountWhereInput>
+    trackingIdentity?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
     conversas?: IgConversaListRelationFilter
     execucoes?: IgFluxoExecucaoListRelationFilter
   }, "id" | "igAccountId_igsid">
@@ -58309,11 +70703,13 @@ export namespace Prisma {
     igsid?: SortOrder
     nome?: SortOrderInput | SortOrder
     username?: SortOrderInput | SortOrder
+    profilePictureUrl?: SortOrderInput | SortOrder
     tags?: SortOrder
     campos?: SortOrder
     phone?: SortOrderInput | SortOrder
     botPaused?: SortOrder
     lastInteractionAt?: SortOrderInput | SortOrder
+    trackingIdentityId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: IgContatoCountOrderByAggregateInput
@@ -58331,11 +70727,13 @@ export namespace Prisma {
     igsid?: StringWithAggregatesFilter<"IgContato"> | string
     nome?: StringNullableWithAggregatesFilter<"IgContato"> | string | null
     username?: StringNullableWithAggregatesFilter<"IgContato"> | string | null
+    profilePictureUrl?: StringNullableWithAggregatesFilter<"IgContato"> | string | null
     tags?: StringNullableListFilter<"IgContato">
     campos?: JsonWithAggregatesFilter<"IgContato">
     phone?: StringNullableWithAggregatesFilter<"IgContato"> | string | null
     botPaused?: BoolWithAggregatesFilter<"IgContato"> | boolean
     lastInteractionAt?: DateTimeNullableWithAggregatesFilter<"IgContato"> | Date | string | null
+    trackingIdentityId?: StringNullableWithAggregatesFilter<"IgContato"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"IgContato"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"IgContato"> | Date | string
   }
@@ -58352,6 +70750,7 @@ export namespace Prisma {
     handoffHuman?: BoolFilter<"IgConversa"> | boolean
     assignedUserId?: StringNullableFilter<"IgConversa"> | string | null
     lastMessageAt?: DateTimeNullableFilter<"IgConversa"> | Date | string | null
+    lastReadAt?: DateTimeNullableFilter<"IgConversa"> | Date | string | null
     createdAt?: DateTimeFilter<"IgConversa"> | Date | string
     updatedAt?: DateTimeFilter<"IgConversa"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
@@ -58369,6 +70768,7 @@ export namespace Prisma {
     handoffHuman?: SortOrder
     assignedUserId?: SortOrderInput | SortOrder
     lastMessageAt?: SortOrderInput | SortOrder
+    lastReadAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     organization?: OrganizationOrderByWithRelationInput
@@ -58389,6 +70789,7 @@ export namespace Prisma {
     handoffHuman?: BoolFilter<"IgConversa"> | boolean
     assignedUserId?: StringNullableFilter<"IgConversa"> | string | null
     lastMessageAt?: DateTimeNullableFilter<"IgConversa"> | Date | string | null
+    lastReadAt?: DateTimeNullableFilter<"IgConversa"> | Date | string | null
     createdAt?: DateTimeFilter<"IgConversa"> | Date | string
     updatedAt?: DateTimeFilter<"IgConversa"> | Date | string
     organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
@@ -58406,6 +70807,7 @@ export namespace Prisma {
     handoffHuman?: SortOrder
     assignedUserId?: SortOrderInput | SortOrder
     lastMessageAt?: SortOrderInput | SortOrder
+    lastReadAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: IgConversaCountOrderByAggregateInput
@@ -58425,6 +70827,7 @@ export namespace Prisma {
     handoffHuman?: BoolWithAggregatesFilter<"IgConversa"> | boolean
     assignedUserId?: StringNullableWithAggregatesFilter<"IgConversa"> | string | null
     lastMessageAt?: DateTimeNullableWithAggregatesFilter<"IgConversa"> | Date | string | null
+    lastReadAt?: DateTimeNullableWithAggregatesFilter<"IgConversa"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"IgConversa"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"IgConversa"> | Date | string
   }
@@ -58885,6 +71288,850 @@ export namespace Prisma {
     processed?: BoolWithAggregatesFilter<"IgWebhookEvent"> | boolean
     error?: StringNullableWithAggregatesFilter<"IgWebhookEvent"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"IgWebhookEvent"> | Date | string
+  }
+
+  export type TrackingIdentityWhereInput = {
+    AND?: TrackingIdentityWhereInput | TrackingIdentityWhereInput[]
+    OR?: TrackingIdentityWhereInput[]
+    NOT?: TrackingIdentityWhereInput | TrackingIdentityWhereInput[]
+    id?: StringFilter<"TrackingIdentity"> | string
+    organizationId?: StringFilter<"TrackingIdentity"> | string
+    stId?: StringFilter<"TrackingIdentity"> | string
+    email?: StringNullableFilter<"TrackingIdentity"> | string | null
+    phone?: StringNullableFilter<"TrackingIdentity"> | string | null
+    name?: StringNullableFilter<"TrackingIdentity"> | string | null
+    status?: StringFilter<"TrackingIdentity"> | string
+    leadSource?: JsonNullableFilter<"TrackingIdentity">
+    mergedIntoId?: StringNullableFilter<"TrackingIdentity"> | string | null
+    createdAt?: DateTimeFilter<"TrackingIdentity"> | Date | string
+    updatedAt?: DateTimeFilter<"TrackingIdentity"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    aliases?: IdentityAliasListRelationFilter
+    visitors?: TrackingVisitorListRelationFilter
+    events?: TrackingEventListRelationFilter
+    orders?: AttributionOrderListRelationFilter
+    contatos?: IgContatoListRelationFilter
+    mergedInto?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
+    mergedFrom?: TrackingIdentityListRelationFilter
+  }
+
+  export type TrackingIdentityOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    stId?: SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    status?: SortOrder
+    leadSource?: SortOrderInput | SortOrder
+    mergedIntoId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    aliases?: IdentityAliasOrderByRelationAggregateInput
+    visitors?: TrackingVisitorOrderByRelationAggregateInput
+    events?: TrackingEventOrderByRelationAggregateInput
+    orders?: AttributionOrderOrderByRelationAggregateInput
+    contatos?: IgContatoOrderByRelationAggregateInput
+    mergedInto?: TrackingIdentityOrderByWithRelationInput
+    mergedFrom?: TrackingIdentityOrderByRelationAggregateInput
+  }
+
+  export type TrackingIdentityWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId_stId?: TrackingIdentityOrganizationIdStIdCompoundUniqueInput
+    AND?: TrackingIdentityWhereInput | TrackingIdentityWhereInput[]
+    OR?: TrackingIdentityWhereInput[]
+    NOT?: TrackingIdentityWhereInput | TrackingIdentityWhereInput[]
+    organizationId?: StringFilter<"TrackingIdentity"> | string
+    stId?: StringFilter<"TrackingIdentity"> | string
+    email?: StringNullableFilter<"TrackingIdentity"> | string | null
+    phone?: StringNullableFilter<"TrackingIdentity"> | string | null
+    name?: StringNullableFilter<"TrackingIdentity"> | string | null
+    status?: StringFilter<"TrackingIdentity"> | string
+    leadSource?: JsonNullableFilter<"TrackingIdentity">
+    mergedIntoId?: StringNullableFilter<"TrackingIdentity"> | string | null
+    createdAt?: DateTimeFilter<"TrackingIdentity"> | Date | string
+    updatedAt?: DateTimeFilter<"TrackingIdentity"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    aliases?: IdentityAliasListRelationFilter
+    visitors?: TrackingVisitorListRelationFilter
+    events?: TrackingEventListRelationFilter
+    orders?: AttributionOrderListRelationFilter
+    contatos?: IgContatoListRelationFilter
+    mergedInto?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
+    mergedFrom?: TrackingIdentityListRelationFilter
+  }, "id" | "organizationId_stId">
+
+  export type TrackingIdentityOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    stId?: SortOrder
+    email?: SortOrderInput | SortOrder
+    phone?: SortOrderInput | SortOrder
+    name?: SortOrderInput | SortOrder
+    status?: SortOrder
+    leadSource?: SortOrderInput | SortOrder
+    mergedIntoId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TrackingIdentityCountOrderByAggregateInput
+    _max?: TrackingIdentityMaxOrderByAggregateInput
+    _min?: TrackingIdentityMinOrderByAggregateInput
+  }
+
+  export type TrackingIdentityScalarWhereWithAggregatesInput = {
+    AND?: TrackingIdentityScalarWhereWithAggregatesInput | TrackingIdentityScalarWhereWithAggregatesInput[]
+    OR?: TrackingIdentityScalarWhereWithAggregatesInput[]
+    NOT?: TrackingIdentityScalarWhereWithAggregatesInput | TrackingIdentityScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TrackingIdentity"> | string
+    organizationId?: StringWithAggregatesFilter<"TrackingIdentity"> | string
+    stId?: StringWithAggregatesFilter<"TrackingIdentity"> | string
+    email?: StringNullableWithAggregatesFilter<"TrackingIdentity"> | string | null
+    phone?: StringNullableWithAggregatesFilter<"TrackingIdentity"> | string | null
+    name?: StringNullableWithAggregatesFilter<"TrackingIdentity"> | string | null
+    status?: StringWithAggregatesFilter<"TrackingIdentity"> | string
+    leadSource?: JsonNullableWithAggregatesFilter<"TrackingIdentity">
+    mergedIntoId?: StringNullableWithAggregatesFilter<"TrackingIdentity"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TrackingIdentity"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TrackingIdentity"> | Date | string
+  }
+
+  export type IdentityAliasWhereInput = {
+    AND?: IdentityAliasWhereInput | IdentityAliasWhereInput[]
+    OR?: IdentityAliasWhereInput[]
+    NOT?: IdentityAliasWhereInput | IdentityAliasWhereInput[]
+    id?: StringFilter<"IdentityAlias"> | string
+    organizationId?: StringFilter<"IdentityAlias"> | string
+    identityId?: StringFilter<"IdentityAlias"> | string
+    type?: StringFilter<"IdentityAlias"> | string
+    value?: StringFilter<"IdentityAlias"> | string
+    createdAt?: DateTimeFilter<"IdentityAlias"> | Date | string
+    identity?: XOR<TrackingIdentityScalarRelationFilter, TrackingIdentityWhereInput>
+  }
+
+  export type IdentityAliasOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    identityId?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    identity?: TrackingIdentityOrderByWithRelationInput
+  }
+
+  export type IdentityAliasWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId_type_value?: IdentityAliasOrganizationIdTypeValueCompoundUniqueInput
+    AND?: IdentityAliasWhereInput | IdentityAliasWhereInput[]
+    OR?: IdentityAliasWhereInput[]
+    NOT?: IdentityAliasWhereInput | IdentityAliasWhereInput[]
+    organizationId?: StringFilter<"IdentityAlias"> | string
+    identityId?: StringFilter<"IdentityAlias"> | string
+    type?: StringFilter<"IdentityAlias"> | string
+    value?: StringFilter<"IdentityAlias"> | string
+    createdAt?: DateTimeFilter<"IdentityAlias"> | Date | string
+    identity?: XOR<TrackingIdentityScalarRelationFilter, TrackingIdentityWhereInput>
+  }, "id" | "organizationId_type_value">
+
+  export type IdentityAliasOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    identityId?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+    _count?: IdentityAliasCountOrderByAggregateInput
+    _max?: IdentityAliasMaxOrderByAggregateInput
+    _min?: IdentityAliasMinOrderByAggregateInput
+  }
+
+  export type IdentityAliasScalarWhereWithAggregatesInput = {
+    AND?: IdentityAliasScalarWhereWithAggregatesInput | IdentityAliasScalarWhereWithAggregatesInput[]
+    OR?: IdentityAliasScalarWhereWithAggregatesInput[]
+    NOT?: IdentityAliasScalarWhereWithAggregatesInput | IdentityAliasScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"IdentityAlias"> | string
+    organizationId?: StringWithAggregatesFilter<"IdentityAlias"> | string
+    identityId?: StringWithAggregatesFilter<"IdentityAlias"> | string
+    type?: StringWithAggregatesFilter<"IdentityAlias"> | string
+    value?: StringWithAggregatesFilter<"IdentityAlias"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"IdentityAlias"> | Date | string
+  }
+
+  export type TrackingVisitorWhereInput = {
+    AND?: TrackingVisitorWhereInput | TrackingVisitorWhereInput[]
+    OR?: TrackingVisitorWhereInput[]
+    NOT?: TrackingVisitorWhereInput | TrackingVisitorWhereInput[]
+    id?: StringFilter<"TrackingVisitor"> | string
+    organizationId?: StringFilter<"TrackingVisitor"> | string
+    anonymousId?: StringFilter<"TrackingVisitor"> | string
+    identityId?: StringNullableFilter<"TrackingVisitor"> | string | null
+    createdAt?: DateTimeFilter<"TrackingVisitor"> | Date | string
+    updatedAt?: DateTimeFilter<"TrackingVisitor"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    identity?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
+    sessions?: TrackingSessionListRelationFilter
+    events?: TrackingEventListRelationFilter
+  }
+
+  export type TrackingVisitorOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    anonymousId?: SortOrder
+    identityId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    identity?: TrackingIdentityOrderByWithRelationInput
+    sessions?: TrackingSessionOrderByRelationAggregateInput
+    events?: TrackingEventOrderByRelationAggregateInput
+  }
+
+  export type TrackingVisitorWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId_anonymousId?: TrackingVisitorOrganizationIdAnonymousIdCompoundUniqueInput
+    AND?: TrackingVisitorWhereInput | TrackingVisitorWhereInput[]
+    OR?: TrackingVisitorWhereInput[]
+    NOT?: TrackingVisitorWhereInput | TrackingVisitorWhereInput[]
+    organizationId?: StringFilter<"TrackingVisitor"> | string
+    anonymousId?: StringFilter<"TrackingVisitor"> | string
+    identityId?: StringNullableFilter<"TrackingVisitor"> | string | null
+    createdAt?: DateTimeFilter<"TrackingVisitor"> | Date | string
+    updatedAt?: DateTimeFilter<"TrackingVisitor"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    identity?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
+    sessions?: TrackingSessionListRelationFilter
+    events?: TrackingEventListRelationFilter
+  }, "id" | "organizationId_anonymousId">
+
+  export type TrackingVisitorOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    anonymousId?: SortOrder
+    identityId?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: TrackingVisitorCountOrderByAggregateInput
+    _max?: TrackingVisitorMaxOrderByAggregateInput
+    _min?: TrackingVisitorMinOrderByAggregateInput
+  }
+
+  export type TrackingVisitorScalarWhereWithAggregatesInput = {
+    AND?: TrackingVisitorScalarWhereWithAggregatesInput | TrackingVisitorScalarWhereWithAggregatesInput[]
+    OR?: TrackingVisitorScalarWhereWithAggregatesInput[]
+    NOT?: TrackingVisitorScalarWhereWithAggregatesInput | TrackingVisitorScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TrackingVisitor"> | string
+    organizationId?: StringWithAggregatesFilter<"TrackingVisitor"> | string
+    anonymousId?: StringWithAggregatesFilter<"TrackingVisitor"> | string
+    identityId?: StringNullableWithAggregatesFilter<"TrackingVisitor"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"TrackingVisitor"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"TrackingVisitor"> | Date | string
+  }
+
+  export type TrackingSessionWhereInput = {
+    AND?: TrackingSessionWhereInput | TrackingSessionWhereInput[]
+    OR?: TrackingSessionWhereInput[]
+    NOT?: TrackingSessionWhereInput | TrackingSessionWhereInput[]
+    id?: StringFilter<"TrackingSession"> | string
+    organizationId?: StringFilter<"TrackingSession"> | string
+    sessionId?: StringFilter<"TrackingSession"> | string
+    visitorId?: StringFilter<"TrackingSession"> | string
+    landingPage?: StringNullableFilter<"TrackingSession"> | string | null
+    referrer?: StringNullableFilter<"TrackingSession"> | string | null
+    utmSource?: StringNullableFilter<"TrackingSession"> | string | null
+    utmMedium?: StringNullableFilter<"TrackingSession"> | string | null
+    utmCampaign?: StringNullableFilter<"TrackingSession"> | string | null
+    utmContent?: StringNullableFilter<"TrackingSession"> | string | null
+    utmTerm?: StringNullableFilter<"TrackingSession"> | string | null
+    fbclid?: StringNullableFilter<"TrackingSession"> | string | null
+    gclid?: StringNullableFilter<"TrackingSession"> | string | null
+    ttclid?: StringNullableFilter<"TrackingSession"> | string | null
+    msclkid?: StringNullableFilter<"TrackingSession"> | string | null
+    firstTouch?: JsonNullableFilter<"TrackingSession">
+    lastTouch?: JsonNullableFilter<"TrackingSession">
+    startedAt?: DateTimeFilter<"TrackingSession"> | Date | string
+    lastSeenAt?: DateTimeFilter<"TrackingSession"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    visitor?: XOR<TrackingVisitorScalarRelationFilter, TrackingVisitorWhereInput>
+    events?: TrackingEventListRelationFilter
+  }
+
+  export type TrackingSessionOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    sessionId?: SortOrder
+    visitorId?: SortOrder
+    landingPage?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    utmSource?: SortOrderInput | SortOrder
+    utmMedium?: SortOrderInput | SortOrder
+    utmCampaign?: SortOrderInput | SortOrder
+    utmContent?: SortOrderInput | SortOrder
+    utmTerm?: SortOrderInput | SortOrder
+    fbclid?: SortOrderInput | SortOrder
+    gclid?: SortOrderInput | SortOrder
+    ttclid?: SortOrderInput | SortOrder
+    msclkid?: SortOrderInput | SortOrder
+    firstTouch?: SortOrderInput | SortOrder
+    lastTouch?: SortOrderInput | SortOrder
+    startedAt?: SortOrder
+    lastSeenAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    visitor?: TrackingVisitorOrderByWithRelationInput
+    events?: TrackingEventOrderByRelationAggregateInput
+  }
+
+  export type TrackingSessionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId_sessionId?: TrackingSessionOrganizationIdSessionIdCompoundUniqueInput
+    AND?: TrackingSessionWhereInput | TrackingSessionWhereInput[]
+    OR?: TrackingSessionWhereInput[]
+    NOT?: TrackingSessionWhereInput | TrackingSessionWhereInput[]
+    organizationId?: StringFilter<"TrackingSession"> | string
+    sessionId?: StringFilter<"TrackingSession"> | string
+    visitorId?: StringFilter<"TrackingSession"> | string
+    landingPage?: StringNullableFilter<"TrackingSession"> | string | null
+    referrer?: StringNullableFilter<"TrackingSession"> | string | null
+    utmSource?: StringNullableFilter<"TrackingSession"> | string | null
+    utmMedium?: StringNullableFilter<"TrackingSession"> | string | null
+    utmCampaign?: StringNullableFilter<"TrackingSession"> | string | null
+    utmContent?: StringNullableFilter<"TrackingSession"> | string | null
+    utmTerm?: StringNullableFilter<"TrackingSession"> | string | null
+    fbclid?: StringNullableFilter<"TrackingSession"> | string | null
+    gclid?: StringNullableFilter<"TrackingSession"> | string | null
+    ttclid?: StringNullableFilter<"TrackingSession"> | string | null
+    msclkid?: StringNullableFilter<"TrackingSession"> | string | null
+    firstTouch?: JsonNullableFilter<"TrackingSession">
+    lastTouch?: JsonNullableFilter<"TrackingSession">
+    startedAt?: DateTimeFilter<"TrackingSession"> | Date | string
+    lastSeenAt?: DateTimeFilter<"TrackingSession"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    visitor?: XOR<TrackingVisitorScalarRelationFilter, TrackingVisitorWhereInput>
+    events?: TrackingEventListRelationFilter
+  }, "id" | "organizationId_sessionId">
+
+  export type TrackingSessionOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    sessionId?: SortOrder
+    visitorId?: SortOrder
+    landingPage?: SortOrderInput | SortOrder
+    referrer?: SortOrderInput | SortOrder
+    utmSource?: SortOrderInput | SortOrder
+    utmMedium?: SortOrderInput | SortOrder
+    utmCampaign?: SortOrderInput | SortOrder
+    utmContent?: SortOrderInput | SortOrder
+    utmTerm?: SortOrderInput | SortOrder
+    fbclid?: SortOrderInput | SortOrder
+    gclid?: SortOrderInput | SortOrder
+    ttclid?: SortOrderInput | SortOrder
+    msclkid?: SortOrderInput | SortOrder
+    firstTouch?: SortOrderInput | SortOrder
+    lastTouch?: SortOrderInput | SortOrder
+    startedAt?: SortOrder
+    lastSeenAt?: SortOrder
+    _count?: TrackingSessionCountOrderByAggregateInput
+    _max?: TrackingSessionMaxOrderByAggregateInput
+    _min?: TrackingSessionMinOrderByAggregateInput
+  }
+
+  export type TrackingSessionScalarWhereWithAggregatesInput = {
+    AND?: TrackingSessionScalarWhereWithAggregatesInput | TrackingSessionScalarWhereWithAggregatesInput[]
+    OR?: TrackingSessionScalarWhereWithAggregatesInput[]
+    NOT?: TrackingSessionScalarWhereWithAggregatesInput | TrackingSessionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TrackingSession"> | string
+    organizationId?: StringWithAggregatesFilter<"TrackingSession"> | string
+    sessionId?: StringWithAggregatesFilter<"TrackingSession"> | string
+    visitorId?: StringWithAggregatesFilter<"TrackingSession"> | string
+    landingPage?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    referrer?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    utmSource?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    utmMedium?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    utmCampaign?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    utmContent?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    utmTerm?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    fbclid?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    gclid?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    ttclid?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    msclkid?: StringNullableWithAggregatesFilter<"TrackingSession"> | string | null
+    firstTouch?: JsonNullableWithAggregatesFilter<"TrackingSession">
+    lastTouch?: JsonNullableWithAggregatesFilter<"TrackingSession">
+    startedAt?: DateTimeWithAggregatesFilter<"TrackingSession"> | Date | string
+    lastSeenAt?: DateTimeWithAggregatesFilter<"TrackingSession"> | Date | string
+  }
+
+  export type TrackingEventWhereInput = {
+    AND?: TrackingEventWhereInput | TrackingEventWhereInput[]
+    OR?: TrackingEventWhereInput[]
+    NOT?: TrackingEventWhereInput | TrackingEventWhereInput[]
+    id?: StringFilter<"TrackingEvent"> | string
+    organizationId?: StringFilter<"TrackingEvent"> | string
+    eventId?: StringFilter<"TrackingEvent"> | string
+    name?: StringFilter<"TrackingEvent"> | string
+    visitorId?: StringNullableFilter<"TrackingEvent"> | string | null
+    sessionId?: StringNullableFilter<"TrackingEvent"> | string | null
+    identityId?: StringNullableFilter<"TrackingEvent"> | string | null
+    properties?: JsonFilter<"TrackingEvent">
+    context?: JsonFilter<"TrackingEvent">
+    occurredAt?: DateTimeFilter<"TrackingEvent"> | Date | string
+    createdAt?: DateTimeFilter<"TrackingEvent"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    visitor?: XOR<TrackingVisitorNullableScalarRelationFilter, TrackingVisitorWhereInput> | null
+    session?: XOR<TrackingSessionNullableScalarRelationFilter, TrackingSessionWhereInput> | null
+    identity?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
+  }
+
+  export type TrackingEventOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    eventId?: SortOrder
+    name?: SortOrder
+    visitorId?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    identityId?: SortOrderInput | SortOrder
+    properties?: SortOrder
+    context?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    visitor?: TrackingVisitorOrderByWithRelationInput
+    session?: TrackingSessionOrderByWithRelationInput
+    identity?: TrackingIdentityOrderByWithRelationInput
+  }
+
+  export type TrackingEventWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId_eventId?: TrackingEventOrganizationIdEventIdCompoundUniqueInput
+    AND?: TrackingEventWhereInput | TrackingEventWhereInput[]
+    OR?: TrackingEventWhereInput[]
+    NOT?: TrackingEventWhereInput | TrackingEventWhereInput[]
+    organizationId?: StringFilter<"TrackingEvent"> | string
+    eventId?: StringFilter<"TrackingEvent"> | string
+    name?: StringFilter<"TrackingEvent"> | string
+    visitorId?: StringNullableFilter<"TrackingEvent"> | string | null
+    sessionId?: StringNullableFilter<"TrackingEvent"> | string | null
+    identityId?: StringNullableFilter<"TrackingEvent"> | string | null
+    properties?: JsonFilter<"TrackingEvent">
+    context?: JsonFilter<"TrackingEvent">
+    occurredAt?: DateTimeFilter<"TrackingEvent"> | Date | string
+    createdAt?: DateTimeFilter<"TrackingEvent"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    visitor?: XOR<TrackingVisitorNullableScalarRelationFilter, TrackingVisitorWhereInput> | null
+    session?: XOR<TrackingSessionNullableScalarRelationFilter, TrackingSessionWhereInput> | null
+    identity?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
+  }, "id" | "organizationId_eventId">
+
+  export type TrackingEventOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    eventId?: SortOrder
+    name?: SortOrder
+    visitorId?: SortOrderInput | SortOrder
+    sessionId?: SortOrderInput | SortOrder
+    identityId?: SortOrderInput | SortOrder
+    properties?: SortOrder
+    context?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+    _count?: TrackingEventCountOrderByAggregateInput
+    _max?: TrackingEventMaxOrderByAggregateInput
+    _min?: TrackingEventMinOrderByAggregateInput
+  }
+
+  export type TrackingEventScalarWhereWithAggregatesInput = {
+    AND?: TrackingEventScalarWhereWithAggregatesInput | TrackingEventScalarWhereWithAggregatesInput[]
+    OR?: TrackingEventScalarWhereWithAggregatesInput[]
+    NOT?: TrackingEventScalarWhereWithAggregatesInput | TrackingEventScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"TrackingEvent"> | string
+    organizationId?: StringWithAggregatesFilter<"TrackingEvent"> | string
+    eventId?: StringWithAggregatesFilter<"TrackingEvent"> | string
+    name?: StringWithAggregatesFilter<"TrackingEvent"> | string
+    visitorId?: StringNullableWithAggregatesFilter<"TrackingEvent"> | string | null
+    sessionId?: StringNullableWithAggregatesFilter<"TrackingEvent"> | string | null
+    identityId?: StringNullableWithAggregatesFilter<"TrackingEvent"> | string | null
+    properties?: JsonWithAggregatesFilter<"TrackingEvent">
+    context?: JsonWithAggregatesFilter<"TrackingEvent">
+    occurredAt?: DateTimeWithAggregatesFilter<"TrackingEvent"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"TrackingEvent"> | Date | string
+  }
+
+  export type AttributionOrderWhereInput = {
+    AND?: AttributionOrderWhereInput | AttributionOrderWhereInput[]
+    OR?: AttributionOrderWhereInput[]
+    NOT?: AttributionOrderWhereInput | AttributionOrderWhereInput[]
+    id?: StringFilter<"AttributionOrder"> | string
+    organizationId?: StringFilter<"AttributionOrder"> | string
+    externalOrderId?: StringFilter<"AttributionOrder"> | string
+    identityId?: StringNullableFilter<"AttributionOrder"> | string | null
+    customerExternalId?: StringNullableFilter<"AttributionOrder"> | string | null
+    value?: DecimalFilter<"AttributionOrder"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"AttributionOrder"> | string
+    status?: StringFilter<"AttributionOrder"> | string
+    eventId?: StringNullableFilter<"AttributionOrder"> | string | null
+    rawPayload?: JsonFilter<"AttributionOrder">
+    occurredAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+    createdAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    identity?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
+    items?: AttributionOrderItemListRelationFilter
+    attribution?: XOR<OrderAttributionNullableScalarRelationFilter, OrderAttributionWhereInput> | null
+  }
+
+  export type AttributionOrderOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    externalOrderId?: SortOrder
+    identityId?: SortOrderInput | SortOrder
+    customerExternalId?: SortOrderInput | SortOrder
+    value?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    eventId?: SortOrderInput | SortOrder
+    rawPayload?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+    identity?: TrackingIdentityOrderByWithRelationInput
+    items?: AttributionOrderItemOrderByRelationAggregateInput
+    attribution?: OrderAttributionOrderByWithRelationInput
+  }
+
+  export type AttributionOrderWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId_externalOrderId?: AttributionOrderOrganizationIdExternalOrderIdCompoundUniqueInput
+    AND?: AttributionOrderWhereInput | AttributionOrderWhereInput[]
+    OR?: AttributionOrderWhereInput[]
+    NOT?: AttributionOrderWhereInput | AttributionOrderWhereInput[]
+    organizationId?: StringFilter<"AttributionOrder"> | string
+    externalOrderId?: StringFilter<"AttributionOrder"> | string
+    identityId?: StringNullableFilter<"AttributionOrder"> | string | null
+    customerExternalId?: StringNullableFilter<"AttributionOrder"> | string | null
+    value?: DecimalFilter<"AttributionOrder"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"AttributionOrder"> | string
+    status?: StringFilter<"AttributionOrder"> | string
+    eventId?: StringNullableFilter<"AttributionOrder"> | string | null
+    rawPayload?: JsonFilter<"AttributionOrder">
+    occurredAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+    createdAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+    identity?: XOR<TrackingIdentityNullableScalarRelationFilter, TrackingIdentityWhereInput> | null
+    items?: AttributionOrderItemListRelationFilter
+    attribution?: XOR<OrderAttributionNullableScalarRelationFilter, OrderAttributionWhereInput> | null
+  }, "id" | "organizationId_externalOrderId">
+
+  export type AttributionOrderOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    externalOrderId?: SortOrder
+    identityId?: SortOrderInput | SortOrder
+    customerExternalId?: SortOrderInput | SortOrder
+    value?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    eventId?: SortOrderInput | SortOrder
+    rawPayload?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AttributionOrderCountOrderByAggregateInput
+    _avg?: AttributionOrderAvgOrderByAggregateInput
+    _max?: AttributionOrderMaxOrderByAggregateInput
+    _min?: AttributionOrderMinOrderByAggregateInput
+    _sum?: AttributionOrderSumOrderByAggregateInput
+  }
+
+  export type AttributionOrderScalarWhereWithAggregatesInput = {
+    AND?: AttributionOrderScalarWhereWithAggregatesInput | AttributionOrderScalarWhereWithAggregatesInput[]
+    OR?: AttributionOrderScalarWhereWithAggregatesInput[]
+    NOT?: AttributionOrderScalarWhereWithAggregatesInput | AttributionOrderScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AttributionOrder"> | string
+    organizationId?: StringWithAggregatesFilter<"AttributionOrder"> | string
+    externalOrderId?: StringWithAggregatesFilter<"AttributionOrder"> | string
+    identityId?: StringNullableWithAggregatesFilter<"AttributionOrder"> | string | null
+    customerExternalId?: StringNullableWithAggregatesFilter<"AttributionOrder"> | string | null
+    value?: DecimalWithAggregatesFilter<"AttributionOrder"> | Decimal | DecimalJsLike | number | string
+    currency?: StringWithAggregatesFilter<"AttributionOrder"> | string
+    status?: StringWithAggregatesFilter<"AttributionOrder"> | string
+    eventId?: StringNullableWithAggregatesFilter<"AttributionOrder"> | string | null
+    rawPayload?: JsonWithAggregatesFilter<"AttributionOrder">
+    occurredAt?: DateTimeWithAggregatesFilter<"AttributionOrder"> | Date | string
+    createdAt?: DateTimeWithAggregatesFilter<"AttributionOrder"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AttributionOrder"> | Date | string
+  }
+
+  export type AttributionOrderItemWhereInput = {
+    AND?: AttributionOrderItemWhereInput | AttributionOrderItemWhereInput[]
+    OR?: AttributionOrderItemWhereInput[]
+    NOT?: AttributionOrderItemWhereInput | AttributionOrderItemWhereInput[]
+    id?: StringFilter<"AttributionOrderItem"> | string
+    orderId?: StringFilter<"AttributionOrderItem"> | string
+    productId?: StringFilter<"AttributionOrderItem"> | string
+    name?: StringNullableFilter<"AttributionOrderItem"> | string | null
+    quantity?: IntFilter<"AttributionOrderItem"> | number
+    price?: DecimalFilter<"AttributionOrderItem"> | Decimal | DecimalJsLike | number | string
+    order?: XOR<AttributionOrderScalarRelationFilter, AttributionOrderWhereInput>
+  }
+
+  export type AttributionOrderItemOrderByWithRelationInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    order?: AttributionOrderOrderByWithRelationInput
+  }
+
+  export type AttributionOrderItemWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: AttributionOrderItemWhereInput | AttributionOrderItemWhereInput[]
+    OR?: AttributionOrderItemWhereInput[]
+    NOT?: AttributionOrderItemWhereInput | AttributionOrderItemWhereInput[]
+    orderId?: StringFilter<"AttributionOrderItem"> | string
+    productId?: StringFilter<"AttributionOrderItem"> | string
+    name?: StringNullableFilter<"AttributionOrderItem"> | string | null
+    quantity?: IntFilter<"AttributionOrderItem"> | number
+    price?: DecimalFilter<"AttributionOrderItem"> | Decimal | DecimalJsLike | number | string
+    order?: XOR<AttributionOrderScalarRelationFilter, AttributionOrderWhereInput>
+  }, "id">
+
+  export type AttributionOrderItemOrderByWithAggregationInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrderInput | SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+    _count?: AttributionOrderItemCountOrderByAggregateInput
+    _avg?: AttributionOrderItemAvgOrderByAggregateInput
+    _max?: AttributionOrderItemMaxOrderByAggregateInput
+    _min?: AttributionOrderItemMinOrderByAggregateInput
+    _sum?: AttributionOrderItemSumOrderByAggregateInput
+  }
+
+  export type AttributionOrderItemScalarWhereWithAggregatesInput = {
+    AND?: AttributionOrderItemScalarWhereWithAggregatesInput | AttributionOrderItemScalarWhereWithAggregatesInput[]
+    OR?: AttributionOrderItemScalarWhereWithAggregatesInput[]
+    NOT?: AttributionOrderItemScalarWhereWithAggregatesInput | AttributionOrderItemScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AttributionOrderItem"> | string
+    orderId?: StringWithAggregatesFilter<"AttributionOrderItem"> | string
+    productId?: StringWithAggregatesFilter<"AttributionOrderItem"> | string
+    name?: StringNullableWithAggregatesFilter<"AttributionOrderItem"> | string | null
+    quantity?: IntWithAggregatesFilter<"AttributionOrderItem"> | number
+    price?: DecimalWithAggregatesFilter<"AttributionOrderItem"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type OrderAttributionWhereInput = {
+    AND?: OrderAttributionWhereInput | OrderAttributionWhereInput[]
+    OR?: OrderAttributionWhereInput[]
+    NOT?: OrderAttributionWhereInput | OrderAttributionWhereInput[]
+    id?: StringFilter<"OrderAttribution"> | string
+    orderId?: StringFilter<"OrderAttribution"> | string
+    model?: StringFilter<"OrderAttribution"> | string
+    leadSource?: JsonNullableFilter<"OrderAttribution">
+    saleSource?: JsonNullableFilter<"OrderAttribution">
+    firstTouch?: JsonNullableFilter<"OrderAttribution">
+    lastTouch?: JsonNullableFilter<"OrderAttribution">
+    attributedSource?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedMedium?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedCampaign?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedAdset?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedAd?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedContent?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedValue?: DecimalFilter<"OrderAttribution"> | Decimal | DecimalJsLike | number | string
+    linearShares?: JsonNullableFilter<"OrderAttribution">
+    order?: XOR<AttributionOrderScalarRelationFilter, AttributionOrderWhereInput>
+  }
+
+  export type OrderAttributionOrderByWithRelationInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    model?: SortOrder
+    leadSource?: SortOrderInput | SortOrder
+    saleSource?: SortOrderInput | SortOrder
+    firstTouch?: SortOrderInput | SortOrder
+    lastTouch?: SortOrderInput | SortOrder
+    attributedSource?: SortOrderInput | SortOrder
+    attributedMedium?: SortOrderInput | SortOrder
+    attributedCampaign?: SortOrderInput | SortOrder
+    attributedAdset?: SortOrderInput | SortOrder
+    attributedAd?: SortOrderInput | SortOrder
+    attributedContent?: SortOrderInput | SortOrder
+    attributedValue?: SortOrder
+    linearShares?: SortOrderInput | SortOrder
+    order?: AttributionOrderOrderByWithRelationInput
+  }
+
+  export type OrderAttributionWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    orderId?: string
+    AND?: OrderAttributionWhereInput | OrderAttributionWhereInput[]
+    OR?: OrderAttributionWhereInput[]
+    NOT?: OrderAttributionWhereInput | OrderAttributionWhereInput[]
+    model?: StringFilter<"OrderAttribution"> | string
+    leadSource?: JsonNullableFilter<"OrderAttribution">
+    saleSource?: JsonNullableFilter<"OrderAttribution">
+    firstTouch?: JsonNullableFilter<"OrderAttribution">
+    lastTouch?: JsonNullableFilter<"OrderAttribution">
+    attributedSource?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedMedium?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedCampaign?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedAdset?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedAd?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedContent?: StringNullableFilter<"OrderAttribution"> | string | null
+    attributedValue?: DecimalFilter<"OrderAttribution"> | Decimal | DecimalJsLike | number | string
+    linearShares?: JsonNullableFilter<"OrderAttribution">
+    order?: XOR<AttributionOrderScalarRelationFilter, AttributionOrderWhereInput>
+  }, "id" | "orderId">
+
+  export type OrderAttributionOrderByWithAggregationInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    model?: SortOrder
+    leadSource?: SortOrderInput | SortOrder
+    saleSource?: SortOrderInput | SortOrder
+    firstTouch?: SortOrderInput | SortOrder
+    lastTouch?: SortOrderInput | SortOrder
+    attributedSource?: SortOrderInput | SortOrder
+    attributedMedium?: SortOrderInput | SortOrder
+    attributedCampaign?: SortOrderInput | SortOrder
+    attributedAdset?: SortOrderInput | SortOrder
+    attributedAd?: SortOrderInput | SortOrder
+    attributedContent?: SortOrderInput | SortOrder
+    attributedValue?: SortOrder
+    linearShares?: SortOrderInput | SortOrder
+    _count?: OrderAttributionCountOrderByAggregateInput
+    _avg?: OrderAttributionAvgOrderByAggregateInput
+    _max?: OrderAttributionMaxOrderByAggregateInput
+    _min?: OrderAttributionMinOrderByAggregateInput
+    _sum?: OrderAttributionSumOrderByAggregateInput
+  }
+
+  export type OrderAttributionScalarWhereWithAggregatesInput = {
+    AND?: OrderAttributionScalarWhereWithAggregatesInput | OrderAttributionScalarWhereWithAggregatesInput[]
+    OR?: OrderAttributionScalarWhereWithAggregatesInput[]
+    NOT?: OrderAttributionScalarWhereWithAggregatesInput | OrderAttributionScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"OrderAttribution"> | string
+    orderId?: StringWithAggregatesFilter<"OrderAttribution"> | string
+    model?: StringWithAggregatesFilter<"OrderAttribution"> | string
+    leadSource?: JsonNullableWithAggregatesFilter<"OrderAttribution">
+    saleSource?: JsonNullableWithAggregatesFilter<"OrderAttribution">
+    firstTouch?: JsonNullableWithAggregatesFilter<"OrderAttribution">
+    lastTouch?: JsonNullableWithAggregatesFilter<"OrderAttribution">
+    attributedSource?: StringNullableWithAggregatesFilter<"OrderAttribution"> | string | null
+    attributedMedium?: StringNullableWithAggregatesFilter<"OrderAttribution"> | string | null
+    attributedCampaign?: StringNullableWithAggregatesFilter<"OrderAttribution"> | string | null
+    attributedAdset?: StringNullableWithAggregatesFilter<"OrderAttribution"> | string | null
+    attributedAd?: StringNullableWithAggregatesFilter<"OrderAttribution"> | string | null
+    attributedContent?: StringNullableWithAggregatesFilter<"OrderAttribution"> | string | null
+    attributedValue?: DecimalWithAggregatesFilter<"OrderAttribution"> | Decimal | DecimalJsLike | number | string
+    linearShares?: JsonNullableWithAggregatesFilter<"OrderAttribution">
+  }
+
+  export type AdSpendDailyWhereInput = {
+    AND?: AdSpendDailyWhereInput | AdSpendDailyWhereInput[]
+    OR?: AdSpendDailyWhereInput[]
+    NOT?: AdSpendDailyWhereInput | AdSpendDailyWhereInput[]
+    id?: StringFilter<"AdSpendDaily"> | string
+    organizationId?: StringFilter<"AdSpendDaily"> | string
+    date?: DateTimeFilter<"AdSpendDaily"> | Date | string
+    platform?: StringFilter<"AdSpendDaily"> | string
+    campaignId?: StringFilter<"AdSpendDaily"> | string
+    campaignName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    adsetId?: StringFilter<"AdSpendDaily"> | string
+    adsetName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    adId?: StringFilter<"AdSpendDaily"> | string
+    adName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    spend?: DecimalFilter<"AdSpendDaily"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"AdSpendDaily"> | string
+    createdAt?: DateTimeFilter<"AdSpendDaily"> | Date | string
+    updatedAt?: DateTimeFilter<"AdSpendDaily"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+  }
+
+  export type AdSpendDailyOrderByWithRelationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    date?: SortOrder
+    platform?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrderInput | SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrderInput | SortOrder
+    adId?: SortOrder
+    adName?: SortOrderInput | SortOrder
+    spend?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    organization?: OrganizationOrderByWithRelationInput
+  }
+
+  export type AdSpendDailyWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    organizationId_date_platform_campaignId_adsetId_adId?: AdSpendDailyOrganizationIdDatePlatformCampaignIdAdsetIdAdIdCompoundUniqueInput
+    AND?: AdSpendDailyWhereInput | AdSpendDailyWhereInput[]
+    OR?: AdSpendDailyWhereInput[]
+    NOT?: AdSpendDailyWhereInput | AdSpendDailyWhereInput[]
+    organizationId?: StringFilter<"AdSpendDaily"> | string
+    date?: DateTimeFilter<"AdSpendDaily"> | Date | string
+    platform?: StringFilter<"AdSpendDaily"> | string
+    campaignId?: StringFilter<"AdSpendDaily"> | string
+    campaignName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    adsetId?: StringFilter<"AdSpendDaily"> | string
+    adsetName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    adId?: StringFilter<"AdSpendDaily"> | string
+    adName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    spend?: DecimalFilter<"AdSpendDaily"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"AdSpendDaily"> | string
+    createdAt?: DateTimeFilter<"AdSpendDaily"> | Date | string
+    updatedAt?: DateTimeFilter<"AdSpendDaily"> | Date | string
+    organization?: XOR<OrganizationScalarRelationFilter, OrganizationWhereInput>
+  }, "id" | "organizationId_date_platform_campaignId_adsetId_adId">
+
+  export type AdSpendDailyOrderByWithAggregationInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    date?: SortOrder
+    platform?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrderInput | SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrderInput | SortOrder
+    adId?: SortOrder
+    adName?: SortOrderInput | SortOrder
+    spend?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: AdSpendDailyCountOrderByAggregateInput
+    _avg?: AdSpendDailyAvgOrderByAggregateInput
+    _max?: AdSpendDailyMaxOrderByAggregateInput
+    _min?: AdSpendDailyMinOrderByAggregateInput
+    _sum?: AdSpendDailySumOrderByAggregateInput
+  }
+
+  export type AdSpendDailyScalarWhereWithAggregatesInput = {
+    AND?: AdSpendDailyScalarWhereWithAggregatesInput | AdSpendDailyScalarWhereWithAggregatesInput[]
+    OR?: AdSpendDailyScalarWhereWithAggregatesInput[]
+    NOT?: AdSpendDailyScalarWhereWithAggregatesInput | AdSpendDailyScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"AdSpendDaily"> | string
+    organizationId?: StringWithAggregatesFilter<"AdSpendDaily"> | string
+    date?: DateTimeWithAggregatesFilter<"AdSpendDaily"> | Date | string
+    platform?: StringWithAggregatesFilter<"AdSpendDaily"> | string
+    campaignId?: StringWithAggregatesFilter<"AdSpendDaily"> | string
+    campaignName?: StringNullableWithAggregatesFilter<"AdSpendDaily"> | string | null
+    adsetId?: StringWithAggregatesFilter<"AdSpendDaily"> | string
+    adsetName?: StringNullableWithAggregatesFilter<"AdSpendDaily"> | string | null
+    adId?: StringWithAggregatesFilter<"AdSpendDaily"> | string
+    adName?: StringNullableWithAggregatesFilter<"AdSpendDaily"> | string | null
+    spend?: DecimalWithAggregatesFilter<"AdSpendDaily"> | Decimal | DecimalJsLike | number | string
+    currency?: StringWithAggregatesFilter<"AdSpendDaily"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"AdSpendDaily"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"AdSpendDaily"> | Date | string
   }
 
   export type ClienteCreateInput = {
@@ -61470,6 +74717,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateInput = {
@@ -61501,6 +74754,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUpdateInput = {
@@ -61532,6 +74791,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateInput = {
@@ -61563,6 +74828,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateManyInput = {
@@ -61984,6 +75255,11 @@ export namespace Prisma {
     aiKnowledgeBase?: string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: string | null
+    metaPixelId?: string | null
+    metaCapiToken?: string | null
+    ga4MeasurementId?: string | null
+    ga4ApiSecret?: string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutOrgSettingsInput
@@ -62002,6 +75278,11 @@ export namespace Prisma {
     aiKnowledgeBase?: string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: string | null
+    metaPixelId?: string | null
+    metaCapiToken?: string | null
+    ga4MeasurementId?: string | null
+    ga4ApiSecret?: string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -62018,6 +75299,11 @@ export namespace Prisma {
     aiKnowledgeBase?: NullableStringFieldUpdateOperationsInput | string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: NullableStringFieldUpdateOperationsInput | string | null
+    metaPixelId?: NullableStringFieldUpdateOperationsInput | string | null
+    metaCapiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4MeasurementId?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4ApiSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutOrgSettingsNestedInput
@@ -62036,6 +75322,11 @@ export namespace Prisma {
     aiKnowledgeBase?: NullableStringFieldUpdateOperationsInput | string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: NullableStringFieldUpdateOperationsInput | string | null
+    metaPixelId?: NullableStringFieldUpdateOperationsInput | string | null
+    metaCapiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4MeasurementId?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4ApiSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -62053,6 +75344,11 @@ export namespace Prisma {
     aiKnowledgeBase?: string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: string | null
+    metaPixelId?: string | null
+    metaCapiToken?: string | null
+    ga4MeasurementId?: string | null
+    ga4ApiSecret?: string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -62069,6 +75365,11 @@ export namespace Prisma {
     aiKnowledgeBase?: NullableStringFieldUpdateOperationsInput | string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: NullableStringFieldUpdateOperationsInput | string | null
+    metaPixelId?: NullableStringFieldUpdateOperationsInput | string | null
+    metaCapiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4MeasurementId?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4ApiSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -62086,6 +75387,11 @@ export namespace Prisma {
     aiKnowledgeBase?: NullableStringFieldUpdateOperationsInput | string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: NullableStringFieldUpdateOperationsInput | string | null
+    metaPixelId?: NullableStringFieldUpdateOperationsInput | string | null
+    metaCapiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4MeasurementId?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4ApiSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -62509,6 +75815,7 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
@@ -62518,6 +75825,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutContatosInput
     igAccount: IgAccountCreateNestedOneWithoutContatosInput
+    trackingIdentity?: TrackingIdentityCreateNestedOneWithoutContatosInput
     conversas?: IgConversaCreateNestedManyWithoutContatoInput
     execucoes?: IgFluxoExecucaoCreateNestedManyWithoutContatoInput
   }
@@ -62529,11 +75837,13 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
     botPaused?: boolean
     lastInteractionAt?: Date | string | null
+    trackingIdentityId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     conversas?: IgConversaUncheckedCreateNestedManyWithoutContatoInput
@@ -62545,6 +75855,7 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62554,6 +75865,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutContatosNestedInput
     igAccount?: IgAccountUpdateOneRequiredWithoutContatosNestedInput
+    trackingIdentity?: TrackingIdentityUpdateOneWithoutContatosNestedInput
     conversas?: IgConversaUpdateManyWithoutContatoNestedInput
     execucoes?: IgFluxoExecucaoUpdateManyWithoutContatoNestedInput
   }
@@ -62565,11 +75877,13 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     botPaused?: BoolFieldUpdateOperationsInput | boolean
     lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trackingIdentityId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversas?: IgConversaUncheckedUpdateManyWithoutContatoNestedInput
@@ -62583,11 +75897,13 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
     botPaused?: boolean
     lastInteractionAt?: Date | string | null
+    trackingIdentityId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -62597,6 +75913,7 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -62613,11 +75930,13 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     botPaused?: BoolFieldUpdateOperationsInput | boolean
     lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trackingIdentityId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -62628,6 +75947,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutConversasInput
@@ -62645,6 +75965,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     mensagens?: IgMensagemUncheckedCreateNestedManyWithoutConversaInput
@@ -62656,6 +75977,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutConversasNestedInput
@@ -62673,6 +75995,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     mensagens?: IgMensagemUncheckedUpdateManyWithoutConversaNestedInput
@@ -62687,6 +76010,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -62697,6 +76021,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -62710,6 +76035,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -63197,6 +76523,930 @@ export namespace Prisma {
     processed?: BoolFieldUpdateOperationsInput | boolean
     error?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingIdentityCreateInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingIdentitiesInput
+    aliases?: IdentityAliasCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoCreateNestedManyWithoutTrackingIdentityInput
+    mergedInto?: TrackingIdentityCreateNestedOneWithoutMergedFromInput
+    mergedFrom?: TrackingIdentityCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput
+    mergedFrom?: TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput
+    aliases?: IdentityAliasUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUpdateManyWithoutTrackingIdentityNestedInput
+    mergedInto?: TrackingIdentityUpdateOneWithoutMergedFromNestedInput
+    mergedFrom?: TrackingIdentityUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput
+    mergedFrom?: TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityCreateManyInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrackingIdentityUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingIdentityUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdentityAliasCreateInput = {
+    id?: string
+    organizationId: string
+    type: string
+    value: string
+    createdAt?: Date | string
+    identity: TrackingIdentityCreateNestedOneWithoutAliasesInput
+  }
+
+  export type IdentityAliasUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    identityId: string
+    type: string
+    value: string
+    createdAt?: Date | string
+  }
+
+  export type IdentityAliasUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    identity?: TrackingIdentityUpdateOneRequiredWithoutAliasesNestedInput
+  }
+
+  export type IdentityAliasUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    identityId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdentityAliasCreateManyInput = {
+    id?: string
+    organizationId: string
+    identityId: string
+    type: string
+    value: string
+    createdAt?: Date | string
+  }
+
+  export type IdentityAliasUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdentityAliasUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    identityId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingVisitorCreateInput = {
+    id?: string
+    anonymousId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingVisitorsInput
+    identity?: TrackingIdentityCreateNestedOneWithoutVisitorsInput
+    sessions?: TrackingSessionCreateNestedManyWithoutVisitorInput
+    events?: TrackingEventCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    anonymousId: string
+    identityId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: TrackingSessionUncheckedCreateNestedManyWithoutVisitorInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingVisitorsNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutVisitorsNestedInput
+    sessions?: TrackingSessionUpdateManyWithoutVisitorNestedInput
+    events?: TrackingEventUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingVisitorUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: TrackingSessionUncheckedUpdateManyWithoutVisitorNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingVisitorCreateManyInput = {
+    id?: string
+    organizationId: string
+    anonymousId: string
+    identityId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrackingVisitorUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingVisitorUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingSessionCreateInput = {
+    id?: string
+    sessionId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingSessionsInput
+    visitor: TrackingVisitorCreateNestedOneWithoutSessionsInput
+    events?: TrackingEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type TrackingSessionUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    sessionId: string
+    visitorId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+    events?: TrackingEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type TrackingSessionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingSessionsNestedInput
+    visitor?: TrackingVisitorUpdateOneRequiredWithoutSessionsNestedInput
+    events?: TrackingEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TrackingSessionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TrackingEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TrackingSessionCreateManyInput = {
+    id?: string
+    organizationId: string
+    sessionId: string
+    visitorId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+  }
+
+  export type TrackingSessionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingSessionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventCreateInput = {
+    id?: string
+    eventId: string
+    name: string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingEventsInput
+    visitor?: TrackingVisitorCreateNestedOneWithoutEventsInput
+    session?: TrackingSessionCreateNestedOneWithoutEventsInput
+    identity?: TrackingIdentityCreateNestedOneWithoutEventsInput
+  }
+
+  export type TrackingEventUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    eventId: string
+    name: string
+    visitorId?: string | null
+    sessionId?: string | null
+    identityId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TrackingEventUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingEventsNestedInput
+    visitor?: TrackingVisitorUpdateOneWithoutEventsNestedInput
+    session?: TrackingSessionUpdateOneWithoutEventsNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutEventsNestedInput
+  }
+
+  export type TrackingEventUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    visitorId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventCreateManyInput = {
+    id?: string
+    organizationId: string
+    eventId: string
+    name: string
+    visitorId?: string | null
+    sessionId?: string | null
+    identityId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TrackingEventUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    visitorId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttributionOrderCreateInput = {
+    id?: string
+    externalOrderId: string
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutAttributionOrdersInput
+    identity?: TrackingIdentityCreateNestedOneWithoutOrdersInput
+    items?: AttributionOrderItemCreateNestedManyWithoutOrderInput
+    attribution?: OrderAttributionCreateNestedOneWithoutOrderInput
+  }
+
+  export type AttributionOrderUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    externalOrderId: string
+    identityId?: string | null
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: AttributionOrderItemUncheckedCreateNestedManyWithoutOrderInput
+    attribution?: OrderAttributionUncheckedCreateNestedOneWithoutOrderInput
+  }
+
+  export type AttributionOrderUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutAttributionOrdersNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutOrdersNestedInput
+    items?: AttributionOrderItemUpdateManyWithoutOrderNestedInput
+    attribution?: OrderAttributionUpdateOneWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: AttributionOrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    attribution?: OrderAttributionUncheckedUpdateOneWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderCreateManyInput = {
+    id?: string
+    organizationId: string
+    externalOrderId: string
+    identityId?: string | null
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AttributionOrderUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttributionOrderUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttributionOrderItemCreateInput = {
+    id?: string
+    productId: string
+    name?: string | null
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+    order: AttributionOrderCreateNestedOneWithoutItemsInput
+  }
+
+  export type AttributionOrderItemUncheckedCreateInput = {
+    id?: string
+    orderId: string
+    productId: string
+    name?: string | null
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    order?: AttributionOrderUpdateOneRequiredWithoutItemsNestedInput
+  }
+
+  export type AttributionOrderItemUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemCreateManyInput = {
+    id?: string
+    orderId: string
+    productId: string
+    name?: string | null
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type OrderAttributionCreateInput = {
+    id?: string
+    model?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: string | null
+    attributedMedium?: string | null
+    attributedCampaign?: string | null
+    attributedAdset?: string | null
+    attributedAd?: string | null
+    attributedContent?: string | null
+    attributedValue: Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+    order: AttributionOrderCreateNestedOneWithoutAttributionInput
+  }
+
+  export type OrderAttributionUncheckedCreateInput = {
+    id?: string
+    orderId: string
+    model?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: string | null
+    attributedMedium?: string | null
+    attributedCampaign?: string | null
+    attributedAdset?: string | null
+    attributedAd?: string | null
+    attributedContent?: string | null
+    attributedValue: Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type OrderAttributionUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAdset?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAd?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+    order?: AttributionOrderUpdateOneRequiredWithoutAttributionNestedInput
+  }
+
+  export type OrderAttributionUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAdset?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAd?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type OrderAttributionCreateManyInput = {
+    id?: string
+    orderId: string
+    model?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: string | null
+    attributedMedium?: string | null
+    attributedCampaign?: string | null
+    attributedAdset?: string | null
+    attributedAd?: string | null
+    attributedContent?: string | null
+    attributedValue: Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type OrderAttributionUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAdset?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAd?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type OrderAttributionUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    orderId?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAdset?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAd?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type AdSpendDailyCreateInput = {
+    id?: string
+    date: Date | string
+    platform: string
+    campaignId?: string
+    campaignName?: string | null
+    adsetId?: string
+    adsetName?: string | null
+    adId?: string
+    adName?: string | null
+    spend: Decimal | DecimalJsLike | number | string
+    currency?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutAdSpendDailyInput
+  }
+
+  export type AdSpendDailyUncheckedCreateInput = {
+    id?: string
+    organizationId: string
+    date: Date | string
+    platform: string
+    campaignId?: string
+    campaignName?: string | null
+    adsetId?: string
+    adsetName?: string | null
+    adId?: string
+    adName?: string | null
+    spend: Decimal | DecimalJsLike | number | string
+    currency?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdSpendDailyUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: StringFieldUpdateOperationsInput | string
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    adId?: StringFieldUpdateOperationsInput | string
+    adName?: NullableStringFieldUpdateOperationsInput | string | null
+    spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutAdSpendDailyNestedInput
+  }
+
+  export type AdSpendDailyUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: StringFieldUpdateOperationsInput | string
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    adId?: StringFieldUpdateOperationsInput | string
+    adName?: NullableStringFieldUpdateOperationsInput | string | null
+    spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdSpendDailyCreateManyInput = {
+    id?: string
+    organizationId: string
+    date: Date | string
+    platform: string
+    campaignId?: string
+    campaignName?: string | null
+    adsetId?: string
+    adsetName?: string | null
+    adId?: string
+    adName?: string | null
+    spend: Decimal | DecimalJsLike | number | string
+    currency?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdSpendDailyUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: StringFieldUpdateOperationsInput | string
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    adId?: StringFieldUpdateOperationsInput | string
+    adName?: NullableStringFieldUpdateOperationsInput | string | null
+    spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdSpendDailyUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: StringFieldUpdateOperationsInput | string
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    adId?: StringFieldUpdateOperationsInput | string
+    adName?: NullableStringFieldUpdateOperationsInput | string | null
+    spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type StringFilter<$PrismaModel = never> = {
@@ -65238,6 +79488,42 @@ export namespace Prisma {
     none?: IgTagDefinitionWhereInput
   }
 
+  export type TrackingIdentityListRelationFilter = {
+    every?: TrackingIdentityWhereInput
+    some?: TrackingIdentityWhereInput
+    none?: TrackingIdentityWhereInput
+  }
+
+  export type TrackingVisitorListRelationFilter = {
+    every?: TrackingVisitorWhereInput
+    some?: TrackingVisitorWhereInput
+    none?: TrackingVisitorWhereInput
+  }
+
+  export type TrackingSessionListRelationFilter = {
+    every?: TrackingSessionWhereInput
+    some?: TrackingSessionWhereInput
+    none?: TrackingSessionWhereInput
+  }
+
+  export type TrackingEventListRelationFilter = {
+    every?: TrackingEventWhereInput
+    some?: TrackingEventWhereInput
+    none?: TrackingEventWhereInput
+  }
+
+  export type AttributionOrderListRelationFilter = {
+    every?: AttributionOrderWhereInput
+    some?: AttributionOrderWhereInput
+    none?: AttributionOrderWhereInput
+  }
+
+  export type AdSpendDailyListRelationFilter = {
+    every?: AdSpendDailyWhereInput
+    some?: AdSpendDailyWhereInput
+    none?: AdSpendDailyWhereInput
+  }
+
   export type OrganizationMemberOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
@@ -65291,6 +79577,30 @@ export namespace Prisma {
   }
 
   export type IgTagDefinitionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TrackingIdentityOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TrackingVisitorOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TrackingSessionOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TrackingEventOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttributionOrderOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AdSpendDailyOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -65548,6 +79858,11 @@ export namespace Prisma {
     aiKnowledgeBase?: SortOrder
     aiGoals?: SortOrder
     aiTone?: SortOrder
+    metaPixelId?: SortOrder
+    metaCapiToken?: SortOrder
+    ga4MeasurementId?: SortOrder
+    ga4ApiSecret?: SortOrder
+    ecommerceConnectors?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -65563,6 +79878,10 @@ export namespace Prisma {
     aiEnabled?: SortOrder
     aiKnowledgeBase?: SortOrder
     aiTone?: SortOrder
+    metaPixelId?: SortOrder
+    metaCapiToken?: SortOrder
+    ga4MeasurementId?: SortOrder
+    ga4ApiSecret?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -65578,6 +79897,10 @@ export namespace Prisma {
     aiEnabled?: SortOrder
     aiKnowledgeBase?: SortOrder
     aiTone?: SortOrder
+    metaPixelId?: SortOrder
+    metaCapiToken?: SortOrder
+    ga4MeasurementId?: SortOrder
+    ga4ApiSecret?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -65768,6 +80091,11 @@ export namespace Prisma {
     isNot?: IgAccountWhereInput
   }
 
+  export type TrackingIdentityNullableScalarRelationFilter = {
+    is?: TrackingIdentityWhereInput | null
+    isNot?: TrackingIdentityWhereInput | null
+  }
+
   export type IgContatoIgAccountIdIgsidCompoundUniqueInput = {
     igAccountId: string
     igsid: string
@@ -65780,11 +80108,13 @@ export namespace Prisma {
     igsid?: SortOrder
     nome?: SortOrder
     username?: SortOrder
+    profilePictureUrl?: SortOrder
     tags?: SortOrder
     campos?: SortOrder
     phone?: SortOrder
     botPaused?: SortOrder
     lastInteractionAt?: SortOrder
+    trackingIdentityId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -65796,9 +80126,11 @@ export namespace Prisma {
     igsid?: SortOrder
     nome?: SortOrder
     username?: SortOrder
+    profilePictureUrl?: SortOrder
     phone?: SortOrder
     botPaused?: SortOrder
     lastInteractionAt?: SortOrder
+    trackingIdentityId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -65810,9 +80142,11 @@ export namespace Prisma {
     igsid?: SortOrder
     nome?: SortOrder
     username?: SortOrder
+    profilePictureUrl?: SortOrder
     phone?: SortOrder
     botPaused?: SortOrder
     lastInteractionAt?: SortOrder
+    trackingIdentityId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -65841,6 +80175,7 @@ export namespace Prisma {
     handoffHuman?: SortOrder
     assignedUserId?: SortOrder
     lastMessageAt?: SortOrder
+    lastReadAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -65854,6 +80189,7 @@ export namespace Prisma {
     handoffHuman?: SortOrder
     assignedUserId?: SortOrder
     lastMessageAt?: SortOrder
+    lastReadAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -65867,6 +80203,7 @@ export namespace Prisma {
     handoffHuman?: SortOrder
     assignedUserId?: SortOrder
     lastMessageAt?: SortOrder
+    lastReadAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -66109,6 +80446,492 @@ export namespace Prisma {
     processed?: SortOrder
     error?: SortOrder
     createdAt?: SortOrder
+  }
+
+  export type IdentityAliasListRelationFilter = {
+    every?: IdentityAliasWhereInput
+    some?: IdentityAliasWhereInput
+    none?: IdentityAliasWhereInput
+  }
+
+  export type IdentityAliasOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type TrackingIdentityOrganizationIdStIdCompoundUniqueInput = {
+    organizationId: string
+    stId: string
+  }
+
+  export type TrackingIdentityCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    stId?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    leadSource?: SortOrder
+    mergedIntoId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrackingIdentityMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    stId?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    mergedIntoId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrackingIdentityMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    stId?: SortOrder
+    email?: SortOrder
+    phone?: SortOrder
+    name?: SortOrder
+    status?: SortOrder
+    mergedIntoId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrackingIdentityScalarRelationFilter = {
+    is?: TrackingIdentityWhereInput
+    isNot?: TrackingIdentityWhereInput
+  }
+
+  export type IdentityAliasOrganizationIdTypeValueCompoundUniqueInput = {
+    organizationId: string
+    type: string
+    value: string
+  }
+
+  export type IdentityAliasCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    identityId?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IdentityAliasMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    identityId?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type IdentityAliasMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    identityId?: SortOrder
+    type?: SortOrder
+    value?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TrackingVisitorOrganizationIdAnonymousIdCompoundUniqueInput = {
+    organizationId: string
+    anonymousId: string
+  }
+
+  export type TrackingVisitorCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    anonymousId?: SortOrder
+    identityId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrackingVisitorMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    anonymousId?: SortOrder
+    identityId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrackingVisitorMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    anonymousId?: SortOrder
+    identityId?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type TrackingVisitorScalarRelationFilter = {
+    is?: TrackingVisitorWhereInput
+    isNot?: TrackingVisitorWhereInput
+  }
+
+  export type TrackingSessionOrganizationIdSessionIdCompoundUniqueInput = {
+    organizationId: string
+    sessionId: string
+  }
+
+  export type TrackingSessionCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    sessionId?: SortOrder
+    visitorId?: SortOrder
+    landingPage?: SortOrder
+    referrer?: SortOrder
+    utmSource?: SortOrder
+    utmMedium?: SortOrder
+    utmCampaign?: SortOrder
+    utmContent?: SortOrder
+    utmTerm?: SortOrder
+    fbclid?: SortOrder
+    gclid?: SortOrder
+    ttclid?: SortOrder
+    msclkid?: SortOrder
+    firstTouch?: SortOrder
+    lastTouch?: SortOrder
+    startedAt?: SortOrder
+    lastSeenAt?: SortOrder
+  }
+
+  export type TrackingSessionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    sessionId?: SortOrder
+    visitorId?: SortOrder
+    landingPage?: SortOrder
+    referrer?: SortOrder
+    utmSource?: SortOrder
+    utmMedium?: SortOrder
+    utmCampaign?: SortOrder
+    utmContent?: SortOrder
+    utmTerm?: SortOrder
+    fbclid?: SortOrder
+    gclid?: SortOrder
+    ttclid?: SortOrder
+    msclkid?: SortOrder
+    startedAt?: SortOrder
+    lastSeenAt?: SortOrder
+  }
+
+  export type TrackingSessionMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    sessionId?: SortOrder
+    visitorId?: SortOrder
+    landingPage?: SortOrder
+    referrer?: SortOrder
+    utmSource?: SortOrder
+    utmMedium?: SortOrder
+    utmCampaign?: SortOrder
+    utmContent?: SortOrder
+    utmTerm?: SortOrder
+    fbclid?: SortOrder
+    gclid?: SortOrder
+    ttclid?: SortOrder
+    msclkid?: SortOrder
+    startedAt?: SortOrder
+    lastSeenAt?: SortOrder
+  }
+
+  export type TrackingVisitorNullableScalarRelationFilter = {
+    is?: TrackingVisitorWhereInput | null
+    isNot?: TrackingVisitorWhereInput | null
+  }
+
+  export type TrackingSessionNullableScalarRelationFilter = {
+    is?: TrackingSessionWhereInput | null
+    isNot?: TrackingSessionWhereInput | null
+  }
+
+  export type TrackingEventOrganizationIdEventIdCompoundUniqueInput = {
+    organizationId: string
+    eventId: string
+  }
+
+  export type TrackingEventCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    eventId?: SortOrder
+    name?: SortOrder
+    visitorId?: SortOrder
+    sessionId?: SortOrder
+    identityId?: SortOrder
+    properties?: SortOrder
+    context?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TrackingEventMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    eventId?: SortOrder
+    name?: SortOrder
+    visitorId?: SortOrder
+    sessionId?: SortOrder
+    identityId?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type TrackingEventMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    eventId?: SortOrder
+    name?: SortOrder
+    visitorId?: SortOrder
+    sessionId?: SortOrder
+    identityId?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type AttributionOrderItemListRelationFilter = {
+    every?: AttributionOrderItemWhereInput
+    some?: AttributionOrderItemWhereInput
+    none?: AttributionOrderItemWhereInput
+  }
+
+  export type OrderAttributionNullableScalarRelationFilter = {
+    is?: OrderAttributionWhereInput | null
+    isNot?: OrderAttributionWhereInput | null
+  }
+
+  export type AttributionOrderItemOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type AttributionOrderOrganizationIdExternalOrderIdCompoundUniqueInput = {
+    organizationId: string
+    externalOrderId: string
+  }
+
+  export type AttributionOrderCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    externalOrderId?: SortOrder
+    identityId?: SortOrder
+    customerExternalId?: SortOrder
+    value?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    eventId?: SortOrder
+    rawPayload?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttributionOrderAvgOrderByAggregateInput = {
+    value?: SortOrder
+  }
+
+  export type AttributionOrderMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    externalOrderId?: SortOrder
+    identityId?: SortOrder
+    customerExternalId?: SortOrder
+    value?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    eventId?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttributionOrderMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    externalOrderId?: SortOrder
+    identityId?: SortOrder
+    customerExternalId?: SortOrder
+    value?: SortOrder
+    currency?: SortOrder
+    status?: SortOrder
+    eventId?: SortOrder
+    occurredAt?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AttributionOrderSumOrderByAggregateInput = {
+    value?: SortOrder
+  }
+
+  export type AttributionOrderScalarRelationFilter = {
+    is?: AttributionOrderWhereInput
+    isNot?: AttributionOrderWhereInput
+  }
+
+  export type AttributionOrderItemCountOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type AttributionOrderItemAvgOrderByAggregateInput = {
+    quantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type AttributionOrderItemMaxOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type AttributionOrderItemMinOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    productId?: SortOrder
+    name?: SortOrder
+    quantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type AttributionOrderItemSumOrderByAggregateInput = {
+    quantity?: SortOrder
+    price?: SortOrder
+  }
+
+  export type OrderAttributionCountOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    model?: SortOrder
+    leadSource?: SortOrder
+    saleSource?: SortOrder
+    firstTouch?: SortOrder
+    lastTouch?: SortOrder
+    attributedSource?: SortOrder
+    attributedMedium?: SortOrder
+    attributedCampaign?: SortOrder
+    attributedAdset?: SortOrder
+    attributedAd?: SortOrder
+    attributedContent?: SortOrder
+    attributedValue?: SortOrder
+    linearShares?: SortOrder
+  }
+
+  export type OrderAttributionAvgOrderByAggregateInput = {
+    attributedValue?: SortOrder
+  }
+
+  export type OrderAttributionMaxOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    model?: SortOrder
+    attributedSource?: SortOrder
+    attributedMedium?: SortOrder
+    attributedCampaign?: SortOrder
+    attributedAdset?: SortOrder
+    attributedAd?: SortOrder
+    attributedContent?: SortOrder
+    attributedValue?: SortOrder
+  }
+
+  export type OrderAttributionMinOrderByAggregateInput = {
+    id?: SortOrder
+    orderId?: SortOrder
+    model?: SortOrder
+    attributedSource?: SortOrder
+    attributedMedium?: SortOrder
+    attributedCampaign?: SortOrder
+    attributedAdset?: SortOrder
+    attributedAd?: SortOrder
+    attributedContent?: SortOrder
+    attributedValue?: SortOrder
+  }
+
+  export type OrderAttributionSumOrderByAggregateInput = {
+    attributedValue?: SortOrder
+  }
+
+  export type AdSpendDailyOrganizationIdDatePlatformCampaignIdAdsetIdAdIdCompoundUniqueInput = {
+    organizationId: string
+    date: Date | string
+    platform: string
+    campaignId: string
+    adsetId: string
+    adId: string
+  }
+
+  export type AdSpendDailyCountOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    date?: SortOrder
+    platform?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
+    adId?: SortOrder
+    adName?: SortOrder
+    spend?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdSpendDailyAvgOrderByAggregateInput = {
+    spend?: SortOrder
+  }
+
+  export type AdSpendDailyMaxOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    date?: SortOrder
+    platform?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
+    adId?: SortOrder
+    adName?: SortOrder
+    spend?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdSpendDailyMinOrderByAggregateInput = {
+    id?: SortOrder
+    organizationId?: SortOrder
+    date?: SortOrder
+    platform?: SortOrder
+    campaignId?: SortOrder
+    campaignName?: SortOrder
+    adsetId?: SortOrder
+    adsetName?: SortOrder
+    adId?: SortOrder
+    adName?: SortOrder
+    spend?: SortOrder
+    currency?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type AdSpendDailySumOrderByAggregateInput = {
+    spend?: SortOrder
   }
 
   export type AgregadoMidiaMensalCreateNestedManyWithoutClienteInput = {
@@ -67573,6 +82396,48 @@ export namespace Prisma {
     connect?: IgTagDefinitionWhereUniqueInput | IgTagDefinitionWhereUniqueInput[]
   }
 
+  export type TrackingIdentityCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<TrackingIdentityCreateWithoutOrganizationInput, TrackingIdentityUncheckedCreateWithoutOrganizationInput> | TrackingIdentityCreateWithoutOrganizationInput[] | TrackingIdentityUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutOrganizationInput | TrackingIdentityCreateOrConnectWithoutOrganizationInput[]
+    createMany?: TrackingIdentityCreateManyOrganizationInputEnvelope
+    connect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+  }
+
+  export type TrackingVisitorCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<TrackingVisitorCreateWithoutOrganizationInput, TrackingVisitorUncheckedCreateWithoutOrganizationInput> | TrackingVisitorCreateWithoutOrganizationInput[] | TrackingVisitorUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutOrganizationInput | TrackingVisitorCreateOrConnectWithoutOrganizationInput[]
+    createMany?: TrackingVisitorCreateManyOrganizationInputEnvelope
+    connect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+  }
+
+  export type TrackingSessionCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<TrackingSessionCreateWithoutOrganizationInput, TrackingSessionUncheckedCreateWithoutOrganizationInput> | TrackingSessionCreateWithoutOrganizationInput[] | TrackingSessionUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutOrganizationInput | TrackingSessionCreateOrConnectWithoutOrganizationInput[]
+    createMany?: TrackingSessionCreateManyOrganizationInputEnvelope
+    connect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+  }
+
+  export type TrackingEventCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<TrackingEventCreateWithoutOrganizationInput, TrackingEventUncheckedCreateWithoutOrganizationInput> | TrackingEventCreateWithoutOrganizationInput[] | TrackingEventUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutOrganizationInput | TrackingEventCreateOrConnectWithoutOrganizationInput[]
+    createMany?: TrackingEventCreateManyOrganizationInputEnvelope
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+  }
+
+  export type AttributionOrderCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<AttributionOrderCreateWithoutOrganizationInput, AttributionOrderUncheckedCreateWithoutOrganizationInput> | AttributionOrderCreateWithoutOrganizationInput[] | AttributionOrderUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutOrganizationInput | AttributionOrderCreateOrConnectWithoutOrganizationInput[]
+    createMany?: AttributionOrderCreateManyOrganizationInputEnvelope
+    connect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+  }
+
+  export type AdSpendDailyCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<AdSpendDailyCreateWithoutOrganizationInput, AdSpendDailyUncheckedCreateWithoutOrganizationInput> | AdSpendDailyCreateWithoutOrganizationInput[] | AdSpendDailyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: AdSpendDailyCreateOrConnectWithoutOrganizationInput | AdSpendDailyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: AdSpendDailyCreateManyOrganizationInputEnvelope
+    connect?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+  }
+
   export type OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput = {
     create?: XOR<OrganizationMemberCreateWithoutOrganizationInput, OrganizationMemberUncheckedCreateWithoutOrganizationInput> | OrganizationMemberCreateWithoutOrganizationInput[] | OrganizationMemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: OrganizationMemberCreateOrConnectWithoutOrganizationInput | OrganizationMemberCreateOrConnectWithoutOrganizationInput[]
@@ -67681,6 +82546,48 @@ export namespace Prisma {
     connectOrCreate?: IgTagDefinitionCreateOrConnectWithoutOrganizationInput | IgTagDefinitionCreateOrConnectWithoutOrganizationInput[]
     createMany?: IgTagDefinitionCreateManyOrganizationInputEnvelope
     connect?: IgTagDefinitionWhereUniqueInput | IgTagDefinitionWhereUniqueInput[]
+  }
+
+  export type TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<TrackingIdentityCreateWithoutOrganizationInput, TrackingIdentityUncheckedCreateWithoutOrganizationInput> | TrackingIdentityCreateWithoutOrganizationInput[] | TrackingIdentityUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutOrganizationInput | TrackingIdentityCreateOrConnectWithoutOrganizationInput[]
+    createMany?: TrackingIdentityCreateManyOrganizationInputEnvelope
+    connect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+  }
+
+  export type TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<TrackingVisitorCreateWithoutOrganizationInput, TrackingVisitorUncheckedCreateWithoutOrganizationInput> | TrackingVisitorCreateWithoutOrganizationInput[] | TrackingVisitorUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutOrganizationInput | TrackingVisitorCreateOrConnectWithoutOrganizationInput[]
+    createMany?: TrackingVisitorCreateManyOrganizationInputEnvelope
+    connect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+  }
+
+  export type TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<TrackingSessionCreateWithoutOrganizationInput, TrackingSessionUncheckedCreateWithoutOrganizationInput> | TrackingSessionCreateWithoutOrganizationInput[] | TrackingSessionUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutOrganizationInput | TrackingSessionCreateOrConnectWithoutOrganizationInput[]
+    createMany?: TrackingSessionCreateManyOrganizationInputEnvelope
+    connect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+  }
+
+  export type TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<TrackingEventCreateWithoutOrganizationInput, TrackingEventUncheckedCreateWithoutOrganizationInput> | TrackingEventCreateWithoutOrganizationInput[] | TrackingEventUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutOrganizationInput | TrackingEventCreateOrConnectWithoutOrganizationInput[]
+    createMany?: TrackingEventCreateManyOrganizationInputEnvelope
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+  }
+
+  export type AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<AttributionOrderCreateWithoutOrganizationInput, AttributionOrderUncheckedCreateWithoutOrganizationInput> | AttributionOrderCreateWithoutOrganizationInput[] | AttributionOrderUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutOrganizationInput | AttributionOrderCreateOrConnectWithoutOrganizationInput[]
+    createMany?: AttributionOrderCreateManyOrganizationInputEnvelope
+    connect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+  }
+
+  export type AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput = {
+    create?: XOR<AdSpendDailyCreateWithoutOrganizationInput, AdSpendDailyUncheckedCreateWithoutOrganizationInput> | AdSpendDailyCreateWithoutOrganizationInput[] | AdSpendDailyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: AdSpendDailyCreateOrConnectWithoutOrganizationInput | AdSpendDailyCreateOrConnectWithoutOrganizationInput[]
+    createMany?: AdSpendDailyCreateManyOrganizationInputEnvelope
+    connect?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
   }
 
   export type OrganizationMemberUpdateManyWithoutOrganizationNestedInput = {
@@ -67899,6 +82806,90 @@ export namespace Prisma {
     deleteMany?: IgTagDefinitionScalarWhereInput | IgTagDefinitionScalarWhereInput[]
   }
 
+  export type TrackingIdentityUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutOrganizationInput, TrackingIdentityUncheckedCreateWithoutOrganizationInput> | TrackingIdentityCreateWithoutOrganizationInput[] | TrackingIdentityUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutOrganizationInput | TrackingIdentityCreateOrConnectWithoutOrganizationInput[]
+    upsert?: TrackingIdentityUpsertWithWhereUniqueWithoutOrganizationInput | TrackingIdentityUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: TrackingIdentityCreateManyOrganizationInputEnvelope
+    set?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    disconnect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    delete?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    connect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    update?: TrackingIdentityUpdateWithWhereUniqueWithoutOrganizationInput | TrackingIdentityUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: TrackingIdentityUpdateManyWithWhereWithoutOrganizationInput | TrackingIdentityUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: TrackingIdentityScalarWhereInput | TrackingIdentityScalarWhereInput[]
+  }
+
+  export type TrackingVisitorUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<TrackingVisitorCreateWithoutOrganizationInput, TrackingVisitorUncheckedCreateWithoutOrganizationInput> | TrackingVisitorCreateWithoutOrganizationInput[] | TrackingVisitorUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutOrganizationInput | TrackingVisitorCreateOrConnectWithoutOrganizationInput[]
+    upsert?: TrackingVisitorUpsertWithWhereUniqueWithoutOrganizationInput | TrackingVisitorUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: TrackingVisitorCreateManyOrganizationInputEnvelope
+    set?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    disconnect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    delete?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    connect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    update?: TrackingVisitorUpdateWithWhereUniqueWithoutOrganizationInput | TrackingVisitorUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: TrackingVisitorUpdateManyWithWhereWithoutOrganizationInput | TrackingVisitorUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: TrackingVisitorScalarWhereInput | TrackingVisitorScalarWhereInput[]
+  }
+
+  export type TrackingSessionUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<TrackingSessionCreateWithoutOrganizationInput, TrackingSessionUncheckedCreateWithoutOrganizationInput> | TrackingSessionCreateWithoutOrganizationInput[] | TrackingSessionUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutOrganizationInput | TrackingSessionCreateOrConnectWithoutOrganizationInput[]
+    upsert?: TrackingSessionUpsertWithWhereUniqueWithoutOrganizationInput | TrackingSessionUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: TrackingSessionCreateManyOrganizationInputEnvelope
+    set?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    disconnect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    delete?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    connect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    update?: TrackingSessionUpdateWithWhereUniqueWithoutOrganizationInput | TrackingSessionUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: TrackingSessionUpdateManyWithWhereWithoutOrganizationInput | TrackingSessionUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: TrackingSessionScalarWhereInput | TrackingSessionScalarWhereInput[]
+  }
+
+  export type TrackingEventUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<TrackingEventCreateWithoutOrganizationInput, TrackingEventUncheckedCreateWithoutOrganizationInput> | TrackingEventCreateWithoutOrganizationInput[] | TrackingEventUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutOrganizationInput | TrackingEventCreateOrConnectWithoutOrganizationInput[]
+    upsert?: TrackingEventUpsertWithWhereUniqueWithoutOrganizationInput | TrackingEventUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: TrackingEventCreateManyOrganizationInputEnvelope
+    set?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    disconnect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    delete?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    update?: TrackingEventUpdateWithWhereUniqueWithoutOrganizationInput | TrackingEventUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: TrackingEventUpdateManyWithWhereWithoutOrganizationInput | TrackingEventUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+  }
+
+  export type AttributionOrderUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<AttributionOrderCreateWithoutOrganizationInput, AttributionOrderUncheckedCreateWithoutOrganizationInput> | AttributionOrderCreateWithoutOrganizationInput[] | AttributionOrderUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutOrganizationInput | AttributionOrderCreateOrConnectWithoutOrganizationInput[]
+    upsert?: AttributionOrderUpsertWithWhereUniqueWithoutOrganizationInput | AttributionOrderUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: AttributionOrderCreateManyOrganizationInputEnvelope
+    set?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    disconnect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    delete?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    connect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    update?: AttributionOrderUpdateWithWhereUniqueWithoutOrganizationInput | AttributionOrderUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: AttributionOrderUpdateManyWithWhereWithoutOrganizationInput | AttributionOrderUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: AttributionOrderScalarWhereInput | AttributionOrderScalarWhereInput[]
+  }
+
+  export type AdSpendDailyUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<AdSpendDailyCreateWithoutOrganizationInput, AdSpendDailyUncheckedCreateWithoutOrganizationInput> | AdSpendDailyCreateWithoutOrganizationInput[] | AdSpendDailyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: AdSpendDailyCreateOrConnectWithoutOrganizationInput | AdSpendDailyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: AdSpendDailyUpsertWithWhereUniqueWithoutOrganizationInput | AdSpendDailyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: AdSpendDailyCreateManyOrganizationInputEnvelope
+    set?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+    disconnect?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+    delete?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+    connect?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+    update?: AdSpendDailyUpdateWithWhereUniqueWithoutOrganizationInput | AdSpendDailyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: AdSpendDailyUpdateManyWithWhereWithoutOrganizationInput | AdSpendDailyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: AdSpendDailyScalarWhereInput | AdSpendDailyScalarWhereInput[]
+  }
+
   export type OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput = {
     create?: XOR<OrganizationMemberCreateWithoutOrganizationInput, OrganizationMemberUncheckedCreateWithoutOrganizationInput> | OrganizationMemberCreateWithoutOrganizationInput[] | OrganizationMemberUncheckedCreateWithoutOrganizationInput[]
     connectOrCreate?: OrganizationMemberCreateOrConnectWithoutOrganizationInput | OrganizationMemberCreateOrConnectWithoutOrganizationInput[]
@@ -68113,6 +83104,90 @@ export namespace Prisma {
     update?: IgTagDefinitionUpdateWithWhereUniqueWithoutOrganizationInput | IgTagDefinitionUpdateWithWhereUniqueWithoutOrganizationInput[]
     updateMany?: IgTagDefinitionUpdateManyWithWhereWithoutOrganizationInput | IgTagDefinitionUpdateManyWithWhereWithoutOrganizationInput[]
     deleteMany?: IgTagDefinitionScalarWhereInput | IgTagDefinitionScalarWhereInput[]
+  }
+
+  export type TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutOrganizationInput, TrackingIdentityUncheckedCreateWithoutOrganizationInput> | TrackingIdentityCreateWithoutOrganizationInput[] | TrackingIdentityUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutOrganizationInput | TrackingIdentityCreateOrConnectWithoutOrganizationInput[]
+    upsert?: TrackingIdentityUpsertWithWhereUniqueWithoutOrganizationInput | TrackingIdentityUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: TrackingIdentityCreateManyOrganizationInputEnvelope
+    set?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    disconnect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    delete?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    connect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    update?: TrackingIdentityUpdateWithWhereUniqueWithoutOrganizationInput | TrackingIdentityUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: TrackingIdentityUpdateManyWithWhereWithoutOrganizationInput | TrackingIdentityUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: TrackingIdentityScalarWhereInput | TrackingIdentityScalarWhereInput[]
+  }
+
+  export type TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<TrackingVisitorCreateWithoutOrganizationInput, TrackingVisitorUncheckedCreateWithoutOrganizationInput> | TrackingVisitorCreateWithoutOrganizationInput[] | TrackingVisitorUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutOrganizationInput | TrackingVisitorCreateOrConnectWithoutOrganizationInput[]
+    upsert?: TrackingVisitorUpsertWithWhereUniqueWithoutOrganizationInput | TrackingVisitorUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: TrackingVisitorCreateManyOrganizationInputEnvelope
+    set?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    disconnect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    delete?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    connect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    update?: TrackingVisitorUpdateWithWhereUniqueWithoutOrganizationInput | TrackingVisitorUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: TrackingVisitorUpdateManyWithWhereWithoutOrganizationInput | TrackingVisitorUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: TrackingVisitorScalarWhereInput | TrackingVisitorScalarWhereInput[]
+  }
+
+  export type TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<TrackingSessionCreateWithoutOrganizationInput, TrackingSessionUncheckedCreateWithoutOrganizationInput> | TrackingSessionCreateWithoutOrganizationInput[] | TrackingSessionUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutOrganizationInput | TrackingSessionCreateOrConnectWithoutOrganizationInput[]
+    upsert?: TrackingSessionUpsertWithWhereUniqueWithoutOrganizationInput | TrackingSessionUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: TrackingSessionCreateManyOrganizationInputEnvelope
+    set?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    disconnect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    delete?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    connect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    update?: TrackingSessionUpdateWithWhereUniqueWithoutOrganizationInput | TrackingSessionUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: TrackingSessionUpdateManyWithWhereWithoutOrganizationInput | TrackingSessionUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: TrackingSessionScalarWhereInput | TrackingSessionScalarWhereInput[]
+  }
+
+  export type TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<TrackingEventCreateWithoutOrganizationInput, TrackingEventUncheckedCreateWithoutOrganizationInput> | TrackingEventCreateWithoutOrganizationInput[] | TrackingEventUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutOrganizationInput | TrackingEventCreateOrConnectWithoutOrganizationInput[]
+    upsert?: TrackingEventUpsertWithWhereUniqueWithoutOrganizationInput | TrackingEventUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: TrackingEventCreateManyOrganizationInputEnvelope
+    set?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    disconnect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    delete?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    update?: TrackingEventUpdateWithWhereUniqueWithoutOrganizationInput | TrackingEventUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: TrackingEventUpdateManyWithWhereWithoutOrganizationInput | TrackingEventUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+  }
+
+  export type AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<AttributionOrderCreateWithoutOrganizationInput, AttributionOrderUncheckedCreateWithoutOrganizationInput> | AttributionOrderCreateWithoutOrganizationInput[] | AttributionOrderUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutOrganizationInput | AttributionOrderCreateOrConnectWithoutOrganizationInput[]
+    upsert?: AttributionOrderUpsertWithWhereUniqueWithoutOrganizationInput | AttributionOrderUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: AttributionOrderCreateManyOrganizationInputEnvelope
+    set?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    disconnect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    delete?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    connect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    update?: AttributionOrderUpdateWithWhereUniqueWithoutOrganizationInput | AttributionOrderUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: AttributionOrderUpdateManyWithWhereWithoutOrganizationInput | AttributionOrderUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: AttributionOrderScalarWhereInput | AttributionOrderScalarWhereInput[]
+  }
+
+  export type AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput = {
+    create?: XOR<AdSpendDailyCreateWithoutOrganizationInput, AdSpendDailyUncheckedCreateWithoutOrganizationInput> | AdSpendDailyCreateWithoutOrganizationInput[] | AdSpendDailyUncheckedCreateWithoutOrganizationInput[]
+    connectOrCreate?: AdSpendDailyCreateOrConnectWithoutOrganizationInput | AdSpendDailyCreateOrConnectWithoutOrganizationInput[]
+    upsert?: AdSpendDailyUpsertWithWhereUniqueWithoutOrganizationInput | AdSpendDailyUpsertWithWhereUniqueWithoutOrganizationInput[]
+    createMany?: AdSpendDailyCreateManyOrganizationInputEnvelope
+    set?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+    disconnect?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+    delete?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+    connect?: AdSpendDailyWhereUniqueInput | AdSpendDailyWhereUniqueInput[]
+    update?: AdSpendDailyUpdateWithWhereUniqueWithoutOrganizationInput | AdSpendDailyUpdateWithWhereUniqueWithoutOrganizationInput[]
+    updateMany?: AdSpendDailyUpdateManyWithWhereWithoutOrganizationInput | AdSpendDailyUpdateManyWithWhereWithoutOrganizationInput[]
+    deleteMany?: AdSpendDailyScalarWhereInput | AdSpendDailyScalarWhereInput[]
   }
 
   export type OrganizationMemberCreateNestedManyWithoutUserInput = {
@@ -68462,6 +83537,12 @@ export namespace Prisma {
     connect?: IgAccountWhereUniqueInput
   }
 
+  export type TrackingIdentityCreateNestedOneWithoutContatosInput = {
+    create?: XOR<TrackingIdentityCreateWithoutContatosInput, TrackingIdentityUncheckedCreateWithoutContatosInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutContatosInput
+    connect?: TrackingIdentityWhereUniqueInput
+  }
+
   export type IgConversaCreateNestedManyWithoutContatoInput = {
     create?: XOR<IgConversaCreateWithoutContatoInput, IgConversaUncheckedCreateWithoutContatoInput> | IgConversaCreateWithoutContatoInput[] | IgConversaUncheckedCreateWithoutContatoInput[]
     connectOrCreate?: IgConversaCreateOrConnectWithoutContatoInput | IgConversaCreateOrConnectWithoutContatoInput[]
@@ -68509,6 +83590,16 @@ export namespace Prisma {
     upsert?: IgAccountUpsertWithoutContatosInput
     connect?: IgAccountWhereUniqueInput
     update?: XOR<XOR<IgAccountUpdateToOneWithWhereWithoutContatosInput, IgAccountUpdateWithoutContatosInput>, IgAccountUncheckedUpdateWithoutContatosInput>
+  }
+
+  export type TrackingIdentityUpdateOneWithoutContatosNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutContatosInput, TrackingIdentityUncheckedCreateWithoutContatosInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutContatosInput
+    upsert?: TrackingIdentityUpsertWithoutContatosInput
+    disconnect?: TrackingIdentityWhereInput | boolean
+    delete?: TrackingIdentityWhereInput | boolean
+    connect?: TrackingIdentityWhereUniqueInput
+    update?: XOR<XOR<TrackingIdentityUpdateToOneWithWhereWithoutContatosInput, TrackingIdentityUpdateWithoutContatosInput>, TrackingIdentityUncheckedUpdateWithoutContatosInput>
   }
 
   export type IgConversaUpdateManyWithoutContatoNestedInput = {
@@ -68930,6 +84021,694 @@ export namespace Prisma {
     delete?: OrganizationWhereInput | boolean
     connect?: OrganizationWhereUniqueInput
     update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutWebhookEventsInput, OrganizationUpdateWithoutWebhookEventsInput>, OrganizationUncheckedUpdateWithoutWebhookEventsInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutTrackingIdentitiesInput = {
+    create?: XOR<OrganizationCreateWithoutTrackingIdentitiesInput, OrganizationUncheckedCreateWithoutTrackingIdentitiesInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutTrackingIdentitiesInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type IdentityAliasCreateNestedManyWithoutIdentityInput = {
+    create?: XOR<IdentityAliasCreateWithoutIdentityInput, IdentityAliasUncheckedCreateWithoutIdentityInput> | IdentityAliasCreateWithoutIdentityInput[] | IdentityAliasUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: IdentityAliasCreateOrConnectWithoutIdentityInput | IdentityAliasCreateOrConnectWithoutIdentityInput[]
+    createMany?: IdentityAliasCreateManyIdentityInputEnvelope
+    connect?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+  }
+
+  export type TrackingVisitorCreateNestedManyWithoutIdentityInput = {
+    create?: XOR<TrackingVisitorCreateWithoutIdentityInput, TrackingVisitorUncheckedCreateWithoutIdentityInput> | TrackingVisitorCreateWithoutIdentityInput[] | TrackingVisitorUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutIdentityInput | TrackingVisitorCreateOrConnectWithoutIdentityInput[]
+    createMany?: TrackingVisitorCreateManyIdentityInputEnvelope
+    connect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+  }
+
+  export type TrackingEventCreateNestedManyWithoutIdentityInput = {
+    create?: XOR<TrackingEventCreateWithoutIdentityInput, TrackingEventUncheckedCreateWithoutIdentityInput> | TrackingEventCreateWithoutIdentityInput[] | TrackingEventUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutIdentityInput | TrackingEventCreateOrConnectWithoutIdentityInput[]
+    createMany?: TrackingEventCreateManyIdentityInputEnvelope
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+  }
+
+  export type AttributionOrderCreateNestedManyWithoutIdentityInput = {
+    create?: XOR<AttributionOrderCreateWithoutIdentityInput, AttributionOrderUncheckedCreateWithoutIdentityInput> | AttributionOrderCreateWithoutIdentityInput[] | AttributionOrderUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutIdentityInput | AttributionOrderCreateOrConnectWithoutIdentityInput[]
+    createMany?: AttributionOrderCreateManyIdentityInputEnvelope
+    connect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+  }
+
+  export type IgContatoCreateNestedManyWithoutTrackingIdentityInput = {
+    create?: XOR<IgContatoCreateWithoutTrackingIdentityInput, IgContatoUncheckedCreateWithoutTrackingIdentityInput> | IgContatoCreateWithoutTrackingIdentityInput[] | IgContatoUncheckedCreateWithoutTrackingIdentityInput[]
+    connectOrCreate?: IgContatoCreateOrConnectWithoutTrackingIdentityInput | IgContatoCreateOrConnectWithoutTrackingIdentityInput[]
+    createMany?: IgContatoCreateManyTrackingIdentityInputEnvelope
+    connect?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+  }
+
+  export type TrackingIdentityCreateNestedOneWithoutMergedFromInput = {
+    create?: XOR<TrackingIdentityCreateWithoutMergedFromInput, TrackingIdentityUncheckedCreateWithoutMergedFromInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutMergedFromInput
+    connect?: TrackingIdentityWhereUniqueInput
+  }
+
+  export type TrackingIdentityCreateNestedManyWithoutMergedIntoInput = {
+    create?: XOR<TrackingIdentityCreateWithoutMergedIntoInput, TrackingIdentityUncheckedCreateWithoutMergedIntoInput> | TrackingIdentityCreateWithoutMergedIntoInput[] | TrackingIdentityUncheckedCreateWithoutMergedIntoInput[]
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutMergedIntoInput | TrackingIdentityCreateOrConnectWithoutMergedIntoInput[]
+    createMany?: TrackingIdentityCreateManyMergedIntoInputEnvelope
+    connect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+  }
+
+  export type IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput = {
+    create?: XOR<IdentityAliasCreateWithoutIdentityInput, IdentityAliasUncheckedCreateWithoutIdentityInput> | IdentityAliasCreateWithoutIdentityInput[] | IdentityAliasUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: IdentityAliasCreateOrConnectWithoutIdentityInput | IdentityAliasCreateOrConnectWithoutIdentityInput[]
+    createMany?: IdentityAliasCreateManyIdentityInputEnvelope
+    connect?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+  }
+
+  export type TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput = {
+    create?: XOR<TrackingVisitorCreateWithoutIdentityInput, TrackingVisitorUncheckedCreateWithoutIdentityInput> | TrackingVisitorCreateWithoutIdentityInput[] | TrackingVisitorUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutIdentityInput | TrackingVisitorCreateOrConnectWithoutIdentityInput[]
+    createMany?: TrackingVisitorCreateManyIdentityInputEnvelope
+    connect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+  }
+
+  export type TrackingEventUncheckedCreateNestedManyWithoutIdentityInput = {
+    create?: XOR<TrackingEventCreateWithoutIdentityInput, TrackingEventUncheckedCreateWithoutIdentityInput> | TrackingEventCreateWithoutIdentityInput[] | TrackingEventUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutIdentityInput | TrackingEventCreateOrConnectWithoutIdentityInput[]
+    createMany?: TrackingEventCreateManyIdentityInputEnvelope
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+  }
+
+  export type AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput = {
+    create?: XOR<AttributionOrderCreateWithoutIdentityInput, AttributionOrderUncheckedCreateWithoutIdentityInput> | AttributionOrderCreateWithoutIdentityInput[] | AttributionOrderUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutIdentityInput | AttributionOrderCreateOrConnectWithoutIdentityInput[]
+    createMany?: AttributionOrderCreateManyIdentityInputEnvelope
+    connect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+  }
+
+  export type IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput = {
+    create?: XOR<IgContatoCreateWithoutTrackingIdentityInput, IgContatoUncheckedCreateWithoutTrackingIdentityInput> | IgContatoCreateWithoutTrackingIdentityInput[] | IgContatoUncheckedCreateWithoutTrackingIdentityInput[]
+    connectOrCreate?: IgContatoCreateOrConnectWithoutTrackingIdentityInput | IgContatoCreateOrConnectWithoutTrackingIdentityInput[]
+    createMany?: IgContatoCreateManyTrackingIdentityInputEnvelope
+    connect?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+  }
+
+  export type TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput = {
+    create?: XOR<TrackingIdentityCreateWithoutMergedIntoInput, TrackingIdentityUncheckedCreateWithoutMergedIntoInput> | TrackingIdentityCreateWithoutMergedIntoInput[] | TrackingIdentityUncheckedCreateWithoutMergedIntoInput[]
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutMergedIntoInput | TrackingIdentityCreateOrConnectWithoutMergedIntoInput[]
+    createMany?: TrackingIdentityCreateManyMergedIntoInputEnvelope
+    connect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput = {
+    create?: XOR<OrganizationCreateWithoutTrackingIdentitiesInput, OrganizationUncheckedCreateWithoutTrackingIdentitiesInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutTrackingIdentitiesInput
+    upsert?: OrganizationUpsertWithoutTrackingIdentitiesInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutTrackingIdentitiesInput, OrganizationUpdateWithoutTrackingIdentitiesInput>, OrganizationUncheckedUpdateWithoutTrackingIdentitiesInput>
+  }
+
+  export type IdentityAliasUpdateManyWithoutIdentityNestedInput = {
+    create?: XOR<IdentityAliasCreateWithoutIdentityInput, IdentityAliasUncheckedCreateWithoutIdentityInput> | IdentityAliasCreateWithoutIdentityInput[] | IdentityAliasUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: IdentityAliasCreateOrConnectWithoutIdentityInput | IdentityAliasCreateOrConnectWithoutIdentityInput[]
+    upsert?: IdentityAliasUpsertWithWhereUniqueWithoutIdentityInput | IdentityAliasUpsertWithWhereUniqueWithoutIdentityInput[]
+    createMany?: IdentityAliasCreateManyIdentityInputEnvelope
+    set?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+    disconnect?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+    delete?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+    connect?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+    update?: IdentityAliasUpdateWithWhereUniqueWithoutIdentityInput | IdentityAliasUpdateWithWhereUniqueWithoutIdentityInput[]
+    updateMany?: IdentityAliasUpdateManyWithWhereWithoutIdentityInput | IdentityAliasUpdateManyWithWhereWithoutIdentityInput[]
+    deleteMany?: IdentityAliasScalarWhereInput | IdentityAliasScalarWhereInput[]
+  }
+
+  export type TrackingVisitorUpdateManyWithoutIdentityNestedInput = {
+    create?: XOR<TrackingVisitorCreateWithoutIdentityInput, TrackingVisitorUncheckedCreateWithoutIdentityInput> | TrackingVisitorCreateWithoutIdentityInput[] | TrackingVisitorUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutIdentityInput | TrackingVisitorCreateOrConnectWithoutIdentityInput[]
+    upsert?: TrackingVisitorUpsertWithWhereUniqueWithoutIdentityInput | TrackingVisitorUpsertWithWhereUniqueWithoutIdentityInput[]
+    createMany?: TrackingVisitorCreateManyIdentityInputEnvelope
+    set?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    disconnect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    delete?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    connect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    update?: TrackingVisitorUpdateWithWhereUniqueWithoutIdentityInput | TrackingVisitorUpdateWithWhereUniqueWithoutIdentityInput[]
+    updateMany?: TrackingVisitorUpdateManyWithWhereWithoutIdentityInput | TrackingVisitorUpdateManyWithWhereWithoutIdentityInput[]
+    deleteMany?: TrackingVisitorScalarWhereInput | TrackingVisitorScalarWhereInput[]
+  }
+
+  export type TrackingEventUpdateManyWithoutIdentityNestedInput = {
+    create?: XOR<TrackingEventCreateWithoutIdentityInput, TrackingEventUncheckedCreateWithoutIdentityInput> | TrackingEventCreateWithoutIdentityInput[] | TrackingEventUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutIdentityInput | TrackingEventCreateOrConnectWithoutIdentityInput[]
+    upsert?: TrackingEventUpsertWithWhereUniqueWithoutIdentityInput | TrackingEventUpsertWithWhereUniqueWithoutIdentityInput[]
+    createMany?: TrackingEventCreateManyIdentityInputEnvelope
+    set?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    disconnect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    delete?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    update?: TrackingEventUpdateWithWhereUniqueWithoutIdentityInput | TrackingEventUpdateWithWhereUniqueWithoutIdentityInput[]
+    updateMany?: TrackingEventUpdateManyWithWhereWithoutIdentityInput | TrackingEventUpdateManyWithWhereWithoutIdentityInput[]
+    deleteMany?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+  }
+
+  export type AttributionOrderUpdateManyWithoutIdentityNestedInput = {
+    create?: XOR<AttributionOrderCreateWithoutIdentityInput, AttributionOrderUncheckedCreateWithoutIdentityInput> | AttributionOrderCreateWithoutIdentityInput[] | AttributionOrderUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutIdentityInput | AttributionOrderCreateOrConnectWithoutIdentityInput[]
+    upsert?: AttributionOrderUpsertWithWhereUniqueWithoutIdentityInput | AttributionOrderUpsertWithWhereUniqueWithoutIdentityInput[]
+    createMany?: AttributionOrderCreateManyIdentityInputEnvelope
+    set?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    disconnect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    delete?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    connect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    update?: AttributionOrderUpdateWithWhereUniqueWithoutIdentityInput | AttributionOrderUpdateWithWhereUniqueWithoutIdentityInput[]
+    updateMany?: AttributionOrderUpdateManyWithWhereWithoutIdentityInput | AttributionOrderUpdateManyWithWhereWithoutIdentityInput[]
+    deleteMany?: AttributionOrderScalarWhereInput | AttributionOrderScalarWhereInput[]
+  }
+
+  export type IgContatoUpdateManyWithoutTrackingIdentityNestedInput = {
+    create?: XOR<IgContatoCreateWithoutTrackingIdentityInput, IgContatoUncheckedCreateWithoutTrackingIdentityInput> | IgContatoCreateWithoutTrackingIdentityInput[] | IgContatoUncheckedCreateWithoutTrackingIdentityInput[]
+    connectOrCreate?: IgContatoCreateOrConnectWithoutTrackingIdentityInput | IgContatoCreateOrConnectWithoutTrackingIdentityInput[]
+    upsert?: IgContatoUpsertWithWhereUniqueWithoutTrackingIdentityInput | IgContatoUpsertWithWhereUniqueWithoutTrackingIdentityInput[]
+    createMany?: IgContatoCreateManyTrackingIdentityInputEnvelope
+    set?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+    disconnect?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+    delete?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+    connect?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+    update?: IgContatoUpdateWithWhereUniqueWithoutTrackingIdentityInput | IgContatoUpdateWithWhereUniqueWithoutTrackingIdentityInput[]
+    updateMany?: IgContatoUpdateManyWithWhereWithoutTrackingIdentityInput | IgContatoUpdateManyWithWhereWithoutTrackingIdentityInput[]
+    deleteMany?: IgContatoScalarWhereInput | IgContatoScalarWhereInput[]
+  }
+
+  export type TrackingIdentityUpdateOneWithoutMergedFromNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutMergedFromInput, TrackingIdentityUncheckedCreateWithoutMergedFromInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutMergedFromInput
+    upsert?: TrackingIdentityUpsertWithoutMergedFromInput
+    disconnect?: TrackingIdentityWhereInput | boolean
+    delete?: TrackingIdentityWhereInput | boolean
+    connect?: TrackingIdentityWhereUniqueInput
+    update?: XOR<XOR<TrackingIdentityUpdateToOneWithWhereWithoutMergedFromInput, TrackingIdentityUpdateWithoutMergedFromInput>, TrackingIdentityUncheckedUpdateWithoutMergedFromInput>
+  }
+
+  export type TrackingIdentityUpdateManyWithoutMergedIntoNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutMergedIntoInput, TrackingIdentityUncheckedCreateWithoutMergedIntoInput> | TrackingIdentityCreateWithoutMergedIntoInput[] | TrackingIdentityUncheckedCreateWithoutMergedIntoInput[]
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutMergedIntoInput | TrackingIdentityCreateOrConnectWithoutMergedIntoInput[]
+    upsert?: TrackingIdentityUpsertWithWhereUniqueWithoutMergedIntoInput | TrackingIdentityUpsertWithWhereUniqueWithoutMergedIntoInput[]
+    createMany?: TrackingIdentityCreateManyMergedIntoInputEnvelope
+    set?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    disconnect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    delete?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    connect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    update?: TrackingIdentityUpdateWithWhereUniqueWithoutMergedIntoInput | TrackingIdentityUpdateWithWhereUniqueWithoutMergedIntoInput[]
+    updateMany?: TrackingIdentityUpdateManyWithWhereWithoutMergedIntoInput | TrackingIdentityUpdateManyWithWhereWithoutMergedIntoInput[]
+    deleteMany?: TrackingIdentityScalarWhereInput | TrackingIdentityScalarWhereInput[]
+  }
+
+  export type IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput = {
+    create?: XOR<IdentityAliasCreateWithoutIdentityInput, IdentityAliasUncheckedCreateWithoutIdentityInput> | IdentityAliasCreateWithoutIdentityInput[] | IdentityAliasUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: IdentityAliasCreateOrConnectWithoutIdentityInput | IdentityAliasCreateOrConnectWithoutIdentityInput[]
+    upsert?: IdentityAliasUpsertWithWhereUniqueWithoutIdentityInput | IdentityAliasUpsertWithWhereUniqueWithoutIdentityInput[]
+    createMany?: IdentityAliasCreateManyIdentityInputEnvelope
+    set?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+    disconnect?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+    delete?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+    connect?: IdentityAliasWhereUniqueInput | IdentityAliasWhereUniqueInput[]
+    update?: IdentityAliasUpdateWithWhereUniqueWithoutIdentityInput | IdentityAliasUpdateWithWhereUniqueWithoutIdentityInput[]
+    updateMany?: IdentityAliasUpdateManyWithWhereWithoutIdentityInput | IdentityAliasUpdateManyWithWhereWithoutIdentityInput[]
+    deleteMany?: IdentityAliasScalarWhereInput | IdentityAliasScalarWhereInput[]
+  }
+
+  export type TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput = {
+    create?: XOR<TrackingVisitorCreateWithoutIdentityInput, TrackingVisitorUncheckedCreateWithoutIdentityInput> | TrackingVisitorCreateWithoutIdentityInput[] | TrackingVisitorUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutIdentityInput | TrackingVisitorCreateOrConnectWithoutIdentityInput[]
+    upsert?: TrackingVisitorUpsertWithWhereUniqueWithoutIdentityInput | TrackingVisitorUpsertWithWhereUniqueWithoutIdentityInput[]
+    createMany?: TrackingVisitorCreateManyIdentityInputEnvelope
+    set?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    disconnect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    delete?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    connect?: TrackingVisitorWhereUniqueInput | TrackingVisitorWhereUniqueInput[]
+    update?: TrackingVisitorUpdateWithWhereUniqueWithoutIdentityInput | TrackingVisitorUpdateWithWhereUniqueWithoutIdentityInput[]
+    updateMany?: TrackingVisitorUpdateManyWithWhereWithoutIdentityInput | TrackingVisitorUpdateManyWithWhereWithoutIdentityInput[]
+    deleteMany?: TrackingVisitorScalarWhereInput | TrackingVisitorScalarWhereInput[]
+  }
+
+  export type TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput = {
+    create?: XOR<TrackingEventCreateWithoutIdentityInput, TrackingEventUncheckedCreateWithoutIdentityInput> | TrackingEventCreateWithoutIdentityInput[] | TrackingEventUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutIdentityInput | TrackingEventCreateOrConnectWithoutIdentityInput[]
+    upsert?: TrackingEventUpsertWithWhereUniqueWithoutIdentityInput | TrackingEventUpsertWithWhereUniqueWithoutIdentityInput[]
+    createMany?: TrackingEventCreateManyIdentityInputEnvelope
+    set?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    disconnect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    delete?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    update?: TrackingEventUpdateWithWhereUniqueWithoutIdentityInput | TrackingEventUpdateWithWhereUniqueWithoutIdentityInput[]
+    updateMany?: TrackingEventUpdateManyWithWhereWithoutIdentityInput | TrackingEventUpdateManyWithWhereWithoutIdentityInput[]
+    deleteMany?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+  }
+
+  export type AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput = {
+    create?: XOR<AttributionOrderCreateWithoutIdentityInput, AttributionOrderUncheckedCreateWithoutIdentityInput> | AttributionOrderCreateWithoutIdentityInput[] | AttributionOrderUncheckedCreateWithoutIdentityInput[]
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutIdentityInput | AttributionOrderCreateOrConnectWithoutIdentityInput[]
+    upsert?: AttributionOrderUpsertWithWhereUniqueWithoutIdentityInput | AttributionOrderUpsertWithWhereUniqueWithoutIdentityInput[]
+    createMany?: AttributionOrderCreateManyIdentityInputEnvelope
+    set?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    disconnect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    delete?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    connect?: AttributionOrderWhereUniqueInput | AttributionOrderWhereUniqueInput[]
+    update?: AttributionOrderUpdateWithWhereUniqueWithoutIdentityInput | AttributionOrderUpdateWithWhereUniqueWithoutIdentityInput[]
+    updateMany?: AttributionOrderUpdateManyWithWhereWithoutIdentityInput | AttributionOrderUpdateManyWithWhereWithoutIdentityInput[]
+    deleteMany?: AttributionOrderScalarWhereInput | AttributionOrderScalarWhereInput[]
+  }
+
+  export type IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput = {
+    create?: XOR<IgContatoCreateWithoutTrackingIdentityInput, IgContatoUncheckedCreateWithoutTrackingIdentityInput> | IgContatoCreateWithoutTrackingIdentityInput[] | IgContatoUncheckedCreateWithoutTrackingIdentityInput[]
+    connectOrCreate?: IgContatoCreateOrConnectWithoutTrackingIdentityInput | IgContatoCreateOrConnectWithoutTrackingIdentityInput[]
+    upsert?: IgContatoUpsertWithWhereUniqueWithoutTrackingIdentityInput | IgContatoUpsertWithWhereUniqueWithoutTrackingIdentityInput[]
+    createMany?: IgContatoCreateManyTrackingIdentityInputEnvelope
+    set?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+    disconnect?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+    delete?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+    connect?: IgContatoWhereUniqueInput | IgContatoWhereUniqueInput[]
+    update?: IgContatoUpdateWithWhereUniqueWithoutTrackingIdentityInput | IgContatoUpdateWithWhereUniqueWithoutTrackingIdentityInput[]
+    updateMany?: IgContatoUpdateManyWithWhereWithoutTrackingIdentityInput | IgContatoUpdateManyWithWhereWithoutTrackingIdentityInput[]
+    deleteMany?: IgContatoScalarWhereInput | IgContatoScalarWhereInput[]
+  }
+
+  export type TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutMergedIntoInput, TrackingIdentityUncheckedCreateWithoutMergedIntoInput> | TrackingIdentityCreateWithoutMergedIntoInput[] | TrackingIdentityUncheckedCreateWithoutMergedIntoInput[]
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutMergedIntoInput | TrackingIdentityCreateOrConnectWithoutMergedIntoInput[]
+    upsert?: TrackingIdentityUpsertWithWhereUniqueWithoutMergedIntoInput | TrackingIdentityUpsertWithWhereUniqueWithoutMergedIntoInput[]
+    createMany?: TrackingIdentityCreateManyMergedIntoInputEnvelope
+    set?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    disconnect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    delete?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    connect?: TrackingIdentityWhereUniqueInput | TrackingIdentityWhereUniqueInput[]
+    update?: TrackingIdentityUpdateWithWhereUniqueWithoutMergedIntoInput | TrackingIdentityUpdateWithWhereUniqueWithoutMergedIntoInput[]
+    updateMany?: TrackingIdentityUpdateManyWithWhereWithoutMergedIntoInput | TrackingIdentityUpdateManyWithWhereWithoutMergedIntoInput[]
+    deleteMany?: TrackingIdentityScalarWhereInput | TrackingIdentityScalarWhereInput[]
+  }
+
+  export type TrackingIdentityCreateNestedOneWithoutAliasesInput = {
+    create?: XOR<TrackingIdentityCreateWithoutAliasesInput, TrackingIdentityUncheckedCreateWithoutAliasesInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutAliasesInput
+    connect?: TrackingIdentityWhereUniqueInput
+  }
+
+  export type TrackingIdentityUpdateOneRequiredWithoutAliasesNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutAliasesInput, TrackingIdentityUncheckedCreateWithoutAliasesInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutAliasesInput
+    upsert?: TrackingIdentityUpsertWithoutAliasesInput
+    connect?: TrackingIdentityWhereUniqueInput
+    update?: XOR<XOR<TrackingIdentityUpdateToOneWithWhereWithoutAliasesInput, TrackingIdentityUpdateWithoutAliasesInput>, TrackingIdentityUncheckedUpdateWithoutAliasesInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutTrackingVisitorsInput = {
+    create?: XOR<OrganizationCreateWithoutTrackingVisitorsInput, OrganizationUncheckedCreateWithoutTrackingVisitorsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutTrackingVisitorsInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type TrackingIdentityCreateNestedOneWithoutVisitorsInput = {
+    create?: XOR<TrackingIdentityCreateWithoutVisitorsInput, TrackingIdentityUncheckedCreateWithoutVisitorsInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutVisitorsInput
+    connect?: TrackingIdentityWhereUniqueInput
+  }
+
+  export type TrackingSessionCreateNestedManyWithoutVisitorInput = {
+    create?: XOR<TrackingSessionCreateWithoutVisitorInput, TrackingSessionUncheckedCreateWithoutVisitorInput> | TrackingSessionCreateWithoutVisitorInput[] | TrackingSessionUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutVisitorInput | TrackingSessionCreateOrConnectWithoutVisitorInput[]
+    createMany?: TrackingSessionCreateManyVisitorInputEnvelope
+    connect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+  }
+
+  export type TrackingEventCreateNestedManyWithoutVisitorInput = {
+    create?: XOR<TrackingEventCreateWithoutVisitorInput, TrackingEventUncheckedCreateWithoutVisitorInput> | TrackingEventCreateWithoutVisitorInput[] | TrackingEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutVisitorInput | TrackingEventCreateOrConnectWithoutVisitorInput[]
+    createMany?: TrackingEventCreateManyVisitorInputEnvelope
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+  }
+
+  export type TrackingSessionUncheckedCreateNestedManyWithoutVisitorInput = {
+    create?: XOR<TrackingSessionCreateWithoutVisitorInput, TrackingSessionUncheckedCreateWithoutVisitorInput> | TrackingSessionCreateWithoutVisitorInput[] | TrackingSessionUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutVisitorInput | TrackingSessionCreateOrConnectWithoutVisitorInput[]
+    createMany?: TrackingSessionCreateManyVisitorInputEnvelope
+    connect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+  }
+
+  export type TrackingEventUncheckedCreateNestedManyWithoutVisitorInput = {
+    create?: XOR<TrackingEventCreateWithoutVisitorInput, TrackingEventUncheckedCreateWithoutVisitorInput> | TrackingEventCreateWithoutVisitorInput[] | TrackingEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutVisitorInput | TrackingEventCreateOrConnectWithoutVisitorInput[]
+    createMany?: TrackingEventCreateManyVisitorInputEnvelope
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutTrackingVisitorsNestedInput = {
+    create?: XOR<OrganizationCreateWithoutTrackingVisitorsInput, OrganizationUncheckedCreateWithoutTrackingVisitorsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutTrackingVisitorsInput
+    upsert?: OrganizationUpsertWithoutTrackingVisitorsInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutTrackingVisitorsInput, OrganizationUpdateWithoutTrackingVisitorsInput>, OrganizationUncheckedUpdateWithoutTrackingVisitorsInput>
+  }
+
+  export type TrackingIdentityUpdateOneWithoutVisitorsNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutVisitorsInput, TrackingIdentityUncheckedCreateWithoutVisitorsInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutVisitorsInput
+    upsert?: TrackingIdentityUpsertWithoutVisitorsInput
+    disconnect?: TrackingIdentityWhereInput | boolean
+    delete?: TrackingIdentityWhereInput | boolean
+    connect?: TrackingIdentityWhereUniqueInput
+    update?: XOR<XOR<TrackingIdentityUpdateToOneWithWhereWithoutVisitorsInput, TrackingIdentityUpdateWithoutVisitorsInput>, TrackingIdentityUncheckedUpdateWithoutVisitorsInput>
+  }
+
+  export type TrackingSessionUpdateManyWithoutVisitorNestedInput = {
+    create?: XOR<TrackingSessionCreateWithoutVisitorInput, TrackingSessionUncheckedCreateWithoutVisitorInput> | TrackingSessionCreateWithoutVisitorInput[] | TrackingSessionUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutVisitorInput | TrackingSessionCreateOrConnectWithoutVisitorInput[]
+    upsert?: TrackingSessionUpsertWithWhereUniqueWithoutVisitorInput | TrackingSessionUpsertWithWhereUniqueWithoutVisitorInput[]
+    createMany?: TrackingSessionCreateManyVisitorInputEnvelope
+    set?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    disconnect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    delete?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    connect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    update?: TrackingSessionUpdateWithWhereUniqueWithoutVisitorInput | TrackingSessionUpdateWithWhereUniqueWithoutVisitorInput[]
+    updateMany?: TrackingSessionUpdateManyWithWhereWithoutVisitorInput | TrackingSessionUpdateManyWithWhereWithoutVisitorInput[]
+    deleteMany?: TrackingSessionScalarWhereInput | TrackingSessionScalarWhereInput[]
+  }
+
+  export type TrackingEventUpdateManyWithoutVisitorNestedInput = {
+    create?: XOR<TrackingEventCreateWithoutVisitorInput, TrackingEventUncheckedCreateWithoutVisitorInput> | TrackingEventCreateWithoutVisitorInput[] | TrackingEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutVisitorInput | TrackingEventCreateOrConnectWithoutVisitorInput[]
+    upsert?: TrackingEventUpsertWithWhereUniqueWithoutVisitorInput | TrackingEventUpsertWithWhereUniqueWithoutVisitorInput[]
+    createMany?: TrackingEventCreateManyVisitorInputEnvelope
+    set?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    disconnect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    delete?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    update?: TrackingEventUpdateWithWhereUniqueWithoutVisitorInput | TrackingEventUpdateWithWhereUniqueWithoutVisitorInput[]
+    updateMany?: TrackingEventUpdateManyWithWhereWithoutVisitorInput | TrackingEventUpdateManyWithWhereWithoutVisitorInput[]
+    deleteMany?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+  }
+
+  export type TrackingSessionUncheckedUpdateManyWithoutVisitorNestedInput = {
+    create?: XOR<TrackingSessionCreateWithoutVisitorInput, TrackingSessionUncheckedCreateWithoutVisitorInput> | TrackingSessionCreateWithoutVisitorInput[] | TrackingSessionUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutVisitorInput | TrackingSessionCreateOrConnectWithoutVisitorInput[]
+    upsert?: TrackingSessionUpsertWithWhereUniqueWithoutVisitorInput | TrackingSessionUpsertWithWhereUniqueWithoutVisitorInput[]
+    createMany?: TrackingSessionCreateManyVisitorInputEnvelope
+    set?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    disconnect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    delete?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    connect?: TrackingSessionWhereUniqueInput | TrackingSessionWhereUniqueInput[]
+    update?: TrackingSessionUpdateWithWhereUniqueWithoutVisitorInput | TrackingSessionUpdateWithWhereUniqueWithoutVisitorInput[]
+    updateMany?: TrackingSessionUpdateManyWithWhereWithoutVisitorInput | TrackingSessionUpdateManyWithWhereWithoutVisitorInput[]
+    deleteMany?: TrackingSessionScalarWhereInput | TrackingSessionScalarWhereInput[]
+  }
+
+  export type TrackingEventUncheckedUpdateManyWithoutVisitorNestedInput = {
+    create?: XOR<TrackingEventCreateWithoutVisitorInput, TrackingEventUncheckedCreateWithoutVisitorInput> | TrackingEventCreateWithoutVisitorInput[] | TrackingEventUncheckedCreateWithoutVisitorInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutVisitorInput | TrackingEventCreateOrConnectWithoutVisitorInput[]
+    upsert?: TrackingEventUpsertWithWhereUniqueWithoutVisitorInput | TrackingEventUpsertWithWhereUniqueWithoutVisitorInput[]
+    createMany?: TrackingEventCreateManyVisitorInputEnvelope
+    set?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    disconnect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    delete?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    update?: TrackingEventUpdateWithWhereUniqueWithoutVisitorInput | TrackingEventUpdateWithWhereUniqueWithoutVisitorInput[]
+    updateMany?: TrackingEventUpdateManyWithWhereWithoutVisitorInput | TrackingEventUpdateManyWithWhereWithoutVisitorInput[]
+    deleteMany?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutTrackingSessionsInput = {
+    create?: XOR<OrganizationCreateWithoutTrackingSessionsInput, OrganizationUncheckedCreateWithoutTrackingSessionsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutTrackingSessionsInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type TrackingVisitorCreateNestedOneWithoutSessionsInput = {
+    create?: XOR<TrackingVisitorCreateWithoutSessionsInput, TrackingVisitorUncheckedCreateWithoutSessionsInput>
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutSessionsInput
+    connect?: TrackingVisitorWhereUniqueInput
+  }
+
+  export type TrackingEventCreateNestedManyWithoutSessionInput = {
+    create?: XOR<TrackingEventCreateWithoutSessionInput, TrackingEventUncheckedCreateWithoutSessionInput> | TrackingEventCreateWithoutSessionInput[] | TrackingEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutSessionInput | TrackingEventCreateOrConnectWithoutSessionInput[]
+    createMany?: TrackingEventCreateManySessionInputEnvelope
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+  }
+
+  export type TrackingEventUncheckedCreateNestedManyWithoutSessionInput = {
+    create?: XOR<TrackingEventCreateWithoutSessionInput, TrackingEventUncheckedCreateWithoutSessionInput> | TrackingEventCreateWithoutSessionInput[] | TrackingEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutSessionInput | TrackingEventCreateOrConnectWithoutSessionInput[]
+    createMany?: TrackingEventCreateManySessionInputEnvelope
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutTrackingSessionsNestedInput = {
+    create?: XOR<OrganizationCreateWithoutTrackingSessionsInput, OrganizationUncheckedCreateWithoutTrackingSessionsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutTrackingSessionsInput
+    upsert?: OrganizationUpsertWithoutTrackingSessionsInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutTrackingSessionsInput, OrganizationUpdateWithoutTrackingSessionsInput>, OrganizationUncheckedUpdateWithoutTrackingSessionsInput>
+  }
+
+  export type TrackingVisitorUpdateOneRequiredWithoutSessionsNestedInput = {
+    create?: XOR<TrackingVisitorCreateWithoutSessionsInput, TrackingVisitorUncheckedCreateWithoutSessionsInput>
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutSessionsInput
+    upsert?: TrackingVisitorUpsertWithoutSessionsInput
+    connect?: TrackingVisitorWhereUniqueInput
+    update?: XOR<XOR<TrackingVisitorUpdateToOneWithWhereWithoutSessionsInput, TrackingVisitorUpdateWithoutSessionsInput>, TrackingVisitorUncheckedUpdateWithoutSessionsInput>
+  }
+
+  export type TrackingEventUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<TrackingEventCreateWithoutSessionInput, TrackingEventUncheckedCreateWithoutSessionInput> | TrackingEventCreateWithoutSessionInput[] | TrackingEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutSessionInput | TrackingEventCreateOrConnectWithoutSessionInput[]
+    upsert?: TrackingEventUpsertWithWhereUniqueWithoutSessionInput | TrackingEventUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: TrackingEventCreateManySessionInputEnvelope
+    set?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    disconnect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    delete?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    update?: TrackingEventUpdateWithWhereUniqueWithoutSessionInput | TrackingEventUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: TrackingEventUpdateManyWithWhereWithoutSessionInput | TrackingEventUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+  }
+
+  export type TrackingEventUncheckedUpdateManyWithoutSessionNestedInput = {
+    create?: XOR<TrackingEventCreateWithoutSessionInput, TrackingEventUncheckedCreateWithoutSessionInput> | TrackingEventCreateWithoutSessionInput[] | TrackingEventUncheckedCreateWithoutSessionInput[]
+    connectOrCreate?: TrackingEventCreateOrConnectWithoutSessionInput | TrackingEventCreateOrConnectWithoutSessionInput[]
+    upsert?: TrackingEventUpsertWithWhereUniqueWithoutSessionInput | TrackingEventUpsertWithWhereUniqueWithoutSessionInput[]
+    createMany?: TrackingEventCreateManySessionInputEnvelope
+    set?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    disconnect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    delete?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    connect?: TrackingEventWhereUniqueInput | TrackingEventWhereUniqueInput[]
+    update?: TrackingEventUpdateWithWhereUniqueWithoutSessionInput | TrackingEventUpdateWithWhereUniqueWithoutSessionInput[]
+    updateMany?: TrackingEventUpdateManyWithWhereWithoutSessionInput | TrackingEventUpdateManyWithWhereWithoutSessionInput[]
+    deleteMany?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+  }
+
+  export type OrganizationCreateNestedOneWithoutTrackingEventsInput = {
+    create?: XOR<OrganizationCreateWithoutTrackingEventsInput, OrganizationUncheckedCreateWithoutTrackingEventsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutTrackingEventsInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type TrackingVisitorCreateNestedOneWithoutEventsInput = {
+    create?: XOR<TrackingVisitorCreateWithoutEventsInput, TrackingVisitorUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutEventsInput
+    connect?: TrackingVisitorWhereUniqueInput
+  }
+
+  export type TrackingSessionCreateNestedOneWithoutEventsInput = {
+    create?: XOR<TrackingSessionCreateWithoutEventsInput, TrackingSessionUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutEventsInput
+    connect?: TrackingSessionWhereUniqueInput
+  }
+
+  export type TrackingIdentityCreateNestedOneWithoutEventsInput = {
+    create?: XOR<TrackingIdentityCreateWithoutEventsInput, TrackingIdentityUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutEventsInput
+    connect?: TrackingIdentityWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutTrackingEventsNestedInput = {
+    create?: XOR<OrganizationCreateWithoutTrackingEventsInput, OrganizationUncheckedCreateWithoutTrackingEventsInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutTrackingEventsInput
+    upsert?: OrganizationUpsertWithoutTrackingEventsInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutTrackingEventsInput, OrganizationUpdateWithoutTrackingEventsInput>, OrganizationUncheckedUpdateWithoutTrackingEventsInput>
+  }
+
+  export type TrackingVisitorUpdateOneWithoutEventsNestedInput = {
+    create?: XOR<TrackingVisitorCreateWithoutEventsInput, TrackingVisitorUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: TrackingVisitorCreateOrConnectWithoutEventsInput
+    upsert?: TrackingVisitorUpsertWithoutEventsInput
+    disconnect?: TrackingVisitorWhereInput | boolean
+    delete?: TrackingVisitorWhereInput | boolean
+    connect?: TrackingVisitorWhereUniqueInput
+    update?: XOR<XOR<TrackingVisitorUpdateToOneWithWhereWithoutEventsInput, TrackingVisitorUpdateWithoutEventsInput>, TrackingVisitorUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type TrackingSessionUpdateOneWithoutEventsNestedInput = {
+    create?: XOR<TrackingSessionCreateWithoutEventsInput, TrackingSessionUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: TrackingSessionCreateOrConnectWithoutEventsInput
+    upsert?: TrackingSessionUpsertWithoutEventsInput
+    disconnect?: TrackingSessionWhereInput | boolean
+    delete?: TrackingSessionWhereInput | boolean
+    connect?: TrackingSessionWhereUniqueInput
+    update?: XOR<XOR<TrackingSessionUpdateToOneWithWhereWithoutEventsInput, TrackingSessionUpdateWithoutEventsInput>, TrackingSessionUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type TrackingIdentityUpdateOneWithoutEventsNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutEventsInput, TrackingIdentityUncheckedCreateWithoutEventsInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutEventsInput
+    upsert?: TrackingIdentityUpsertWithoutEventsInput
+    disconnect?: TrackingIdentityWhereInput | boolean
+    delete?: TrackingIdentityWhereInput | boolean
+    connect?: TrackingIdentityWhereUniqueInput
+    update?: XOR<XOR<TrackingIdentityUpdateToOneWithWhereWithoutEventsInput, TrackingIdentityUpdateWithoutEventsInput>, TrackingIdentityUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutAttributionOrdersInput = {
+    create?: XOR<OrganizationCreateWithoutAttributionOrdersInput, OrganizationUncheckedCreateWithoutAttributionOrdersInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutAttributionOrdersInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type TrackingIdentityCreateNestedOneWithoutOrdersInput = {
+    create?: XOR<TrackingIdentityCreateWithoutOrdersInput, TrackingIdentityUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutOrdersInput
+    connect?: TrackingIdentityWhereUniqueInput
+  }
+
+  export type AttributionOrderItemCreateNestedManyWithoutOrderInput = {
+    create?: XOR<AttributionOrderItemCreateWithoutOrderInput, AttributionOrderItemUncheckedCreateWithoutOrderInput> | AttributionOrderItemCreateWithoutOrderInput[] | AttributionOrderItemUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: AttributionOrderItemCreateOrConnectWithoutOrderInput | AttributionOrderItemCreateOrConnectWithoutOrderInput[]
+    createMany?: AttributionOrderItemCreateManyOrderInputEnvelope
+    connect?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+  }
+
+  export type OrderAttributionCreateNestedOneWithoutOrderInput = {
+    create?: XOR<OrderAttributionCreateWithoutOrderInput, OrderAttributionUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: OrderAttributionCreateOrConnectWithoutOrderInput
+    connect?: OrderAttributionWhereUniqueInput
+  }
+
+  export type AttributionOrderItemUncheckedCreateNestedManyWithoutOrderInput = {
+    create?: XOR<AttributionOrderItemCreateWithoutOrderInput, AttributionOrderItemUncheckedCreateWithoutOrderInput> | AttributionOrderItemCreateWithoutOrderInput[] | AttributionOrderItemUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: AttributionOrderItemCreateOrConnectWithoutOrderInput | AttributionOrderItemCreateOrConnectWithoutOrderInput[]
+    createMany?: AttributionOrderItemCreateManyOrderInputEnvelope
+    connect?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+  }
+
+  export type OrderAttributionUncheckedCreateNestedOneWithoutOrderInput = {
+    create?: XOR<OrderAttributionCreateWithoutOrderInput, OrderAttributionUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: OrderAttributionCreateOrConnectWithoutOrderInput
+    connect?: OrderAttributionWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutAttributionOrdersNestedInput = {
+    create?: XOR<OrganizationCreateWithoutAttributionOrdersInput, OrganizationUncheckedCreateWithoutAttributionOrdersInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutAttributionOrdersInput
+    upsert?: OrganizationUpsertWithoutAttributionOrdersInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutAttributionOrdersInput, OrganizationUpdateWithoutAttributionOrdersInput>, OrganizationUncheckedUpdateWithoutAttributionOrdersInput>
+  }
+
+  export type TrackingIdentityUpdateOneWithoutOrdersNestedInput = {
+    create?: XOR<TrackingIdentityCreateWithoutOrdersInput, TrackingIdentityUncheckedCreateWithoutOrdersInput>
+    connectOrCreate?: TrackingIdentityCreateOrConnectWithoutOrdersInput
+    upsert?: TrackingIdentityUpsertWithoutOrdersInput
+    disconnect?: TrackingIdentityWhereInput | boolean
+    delete?: TrackingIdentityWhereInput | boolean
+    connect?: TrackingIdentityWhereUniqueInput
+    update?: XOR<XOR<TrackingIdentityUpdateToOneWithWhereWithoutOrdersInput, TrackingIdentityUpdateWithoutOrdersInput>, TrackingIdentityUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type AttributionOrderItemUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<AttributionOrderItemCreateWithoutOrderInput, AttributionOrderItemUncheckedCreateWithoutOrderInput> | AttributionOrderItemCreateWithoutOrderInput[] | AttributionOrderItemUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: AttributionOrderItemCreateOrConnectWithoutOrderInput | AttributionOrderItemCreateOrConnectWithoutOrderInput[]
+    upsert?: AttributionOrderItemUpsertWithWhereUniqueWithoutOrderInput | AttributionOrderItemUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: AttributionOrderItemCreateManyOrderInputEnvelope
+    set?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+    disconnect?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+    delete?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+    connect?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+    update?: AttributionOrderItemUpdateWithWhereUniqueWithoutOrderInput | AttributionOrderItemUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: AttributionOrderItemUpdateManyWithWhereWithoutOrderInput | AttributionOrderItemUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: AttributionOrderItemScalarWhereInput | AttributionOrderItemScalarWhereInput[]
+  }
+
+  export type OrderAttributionUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<OrderAttributionCreateWithoutOrderInput, OrderAttributionUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: OrderAttributionCreateOrConnectWithoutOrderInput
+    upsert?: OrderAttributionUpsertWithoutOrderInput
+    disconnect?: OrderAttributionWhereInput | boolean
+    delete?: OrderAttributionWhereInput | boolean
+    connect?: OrderAttributionWhereUniqueInput
+    update?: XOR<XOR<OrderAttributionUpdateToOneWithWhereWithoutOrderInput, OrderAttributionUpdateWithoutOrderInput>, OrderAttributionUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type AttributionOrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
+    create?: XOR<AttributionOrderItemCreateWithoutOrderInput, AttributionOrderItemUncheckedCreateWithoutOrderInput> | AttributionOrderItemCreateWithoutOrderInput[] | AttributionOrderItemUncheckedCreateWithoutOrderInput[]
+    connectOrCreate?: AttributionOrderItemCreateOrConnectWithoutOrderInput | AttributionOrderItemCreateOrConnectWithoutOrderInput[]
+    upsert?: AttributionOrderItemUpsertWithWhereUniqueWithoutOrderInput | AttributionOrderItemUpsertWithWhereUniqueWithoutOrderInput[]
+    createMany?: AttributionOrderItemCreateManyOrderInputEnvelope
+    set?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+    disconnect?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+    delete?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+    connect?: AttributionOrderItemWhereUniqueInput | AttributionOrderItemWhereUniqueInput[]
+    update?: AttributionOrderItemUpdateWithWhereUniqueWithoutOrderInput | AttributionOrderItemUpdateWithWhereUniqueWithoutOrderInput[]
+    updateMany?: AttributionOrderItemUpdateManyWithWhereWithoutOrderInput | AttributionOrderItemUpdateManyWithWhereWithoutOrderInput[]
+    deleteMany?: AttributionOrderItemScalarWhereInput | AttributionOrderItemScalarWhereInput[]
+  }
+
+  export type OrderAttributionUncheckedUpdateOneWithoutOrderNestedInput = {
+    create?: XOR<OrderAttributionCreateWithoutOrderInput, OrderAttributionUncheckedCreateWithoutOrderInput>
+    connectOrCreate?: OrderAttributionCreateOrConnectWithoutOrderInput
+    upsert?: OrderAttributionUpsertWithoutOrderInput
+    disconnect?: OrderAttributionWhereInput | boolean
+    delete?: OrderAttributionWhereInput | boolean
+    connect?: OrderAttributionWhereUniqueInput
+    update?: XOR<XOR<OrderAttributionUpdateToOneWithWhereWithoutOrderInput, OrderAttributionUpdateWithoutOrderInput>, OrderAttributionUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type AttributionOrderCreateNestedOneWithoutItemsInput = {
+    create?: XOR<AttributionOrderCreateWithoutItemsInput, AttributionOrderUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutItemsInput
+    connect?: AttributionOrderWhereUniqueInput
+  }
+
+  export type AttributionOrderUpdateOneRequiredWithoutItemsNestedInput = {
+    create?: XOR<AttributionOrderCreateWithoutItemsInput, AttributionOrderUncheckedCreateWithoutItemsInput>
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutItemsInput
+    upsert?: AttributionOrderUpsertWithoutItemsInput
+    connect?: AttributionOrderWhereUniqueInput
+    update?: XOR<XOR<AttributionOrderUpdateToOneWithWhereWithoutItemsInput, AttributionOrderUpdateWithoutItemsInput>, AttributionOrderUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type AttributionOrderCreateNestedOneWithoutAttributionInput = {
+    create?: XOR<AttributionOrderCreateWithoutAttributionInput, AttributionOrderUncheckedCreateWithoutAttributionInput>
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutAttributionInput
+    connect?: AttributionOrderWhereUniqueInput
+  }
+
+  export type AttributionOrderUpdateOneRequiredWithoutAttributionNestedInput = {
+    create?: XOR<AttributionOrderCreateWithoutAttributionInput, AttributionOrderUncheckedCreateWithoutAttributionInput>
+    connectOrCreate?: AttributionOrderCreateOrConnectWithoutAttributionInput
+    upsert?: AttributionOrderUpsertWithoutAttributionInput
+    connect?: AttributionOrderWhereUniqueInput
+    update?: XOR<XOR<AttributionOrderUpdateToOneWithWhereWithoutAttributionInput, AttributionOrderUpdateWithoutAttributionInput>, AttributionOrderUncheckedUpdateWithoutAttributionInput>
+  }
+
+  export type OrganizationCreateNestedOneWithoutAdSpendDailyInput = {
+    create?: XOR<OrganizationCreateWithoutAdSpendDailyInput, OrganizationUncheckedCreateWithoutAdSpendDailyInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutAdSpendDailyInput
+    connect?: OrganizationWhereUniqueInput
+  }
+
+  export type OrganizationUpdateOneRequiredWithoutAdSpendDailyNestedInput = {
+    create?: XOR<OrganizationCreateWithoutAdSpendDailyInput, OrganizationUncheckedCreateWithoutAdSpendDailyInput>
+    connectOrCreate?: OrganizationCreateOrConnectWithoutAdSpendDailyInput
+    upsert?: OrganizationUpsertWithoutAdSpendDailyInput
+    connect?: OrganizationWhereUniqueInput
+    update?: XOR<XOR<OrganizationUpdateToOneWithWhereWithoutAdSpendDailyInput, OrganizationUpdateWithoutAdSpendDailyInput>, OrganizationUncheckedUpdateWithoutAdSpendDailyInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -74404,6 +90183,7 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
@@ -74412,6 +90192,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     igAccount: IgAccountCreateNestedOneWithoutContatosInput
+    trackingIdentity?: TrackingIdentityCreateNestedOneWithoutContatosInput
     conversas?: IgConversaCreateNestedManyWithoutContatoInput
     execucoes?: IgFluxoExecucaoCreateNestedManyWithoutContatoInput
   }
@@ -74422,11 +90203,13 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
     botPaused?: boolean
     lastInteractionAt?: Date | string | null
+    trackingIdentityId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     conversas?: IgConversaUncheckedCreateNestedManyWithoutContatoInput
@@ -74449,6 +90232,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     igAccount: IgAccountCreateNestedOneWithoutConversasInput
@@ -74464,6 +90248,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     mensagens?: IgMensagemUncheckedCreateNestedManyWithoutConversaInput
@@ -74619,6 +90404,11 @@ export namespace Prisma {
     aiKnowledgeBase?: string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: string | null
+    metaPixelId?: string | null
+    metaCapiToken?: string | null
+    ga4MeasurementId?: string | null
+    ga4ApiSecret?: string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -74635,6 +90425,11 @@ export namespace Prisma {
     aiKnowledgeBase?: string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: string | null
+    metaPixelId?: string | null
+    metaCapiToken?: string | null
+    ga4MeasurementId?: string | null
+    ga4ApiSecret?: string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -74812,6 +90607,260 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type TrackingIdentityCreateWithoutOrganizationInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoCreateNestedManyWithoutTrackingIdentityInput
+    mergedInto?: TrackingIdentityCreateNestedOneWithoutMergedFromInput
+    mergedFrom?: TrackingIdentityCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput
+    mergedFrom?: TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityCreateOrConnectWithoutOrganizationInput = {
+    where: TrackingIdentityWhereUniqueInput
+    create: XOR<TrackingIdentityCreateWithoutOrganizationInput, TrackingIdentityUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type TrackingIdentityCreateManyOrganizationInputEnvelope = {
+    data: TrackingIdentityCreateManyOrganizationInput | TrackingIdentityCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TrackingVisitorCreateWithoutOrganizationInput = {
+    id?: string
+    anonymousId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    identity?: TrackingIdentityCreateNestedOneWithoutVisitorsInput
+    sessions?: TrackingSessionCreateNestedManyWithoutVisitorInput
+    events?: TrackingEventCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    anonymousId: string
+    identityId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: TrackingSessionUncheckedCreateNestedManyWithoutVisitorInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorCreateOrConnectWithoutOrganizationInput = {
+    where: TrackingVisitorWhereUniqueInput
+    create: XOR<TrackingVisitorCreateWithoutOrganizationInput, TrackingVisitorUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type TrackingVisitorCreateManyOrganizationInputEnvelope = {
+    data: TrackingVisitorCreateManyOrganizationInput | TrackingVisitorCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TrackingSessionCreateWithoutOrganizationInput = {
+    id?: string
+    sessionId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+    visitor: TrackingVisitorCreateNestedOneWithoutSessionsInput
+    events?: TrackingEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type TrackingSessionUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    sessionId: string
+    visitorId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+    events?: TrackingEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type TrackingSessionCreateOrConnectWithoutOrganizationInput = {
+    where: TrackingSessionWhereUniqueInput
+    create: XOR<TrackingSessionCreateWithoutOrganizationInput, TrackingSessionUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type TrackingSessionCreateManyOrganizationInputEnvelope = {
+    data: TrackingSessionCreateManyOrganizationInput | TrackingSessionCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TrackingEventCreateWithoutOrganizationInput = {
+    id?: string
+    eventId: string
+    name: string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    visitor?: TrackingVisitorCreateNestedOneWithoutEventsInput
+    session?: TrackingSessionCreateNestedOneWithoutEventsInput
+    identity?: TrackingIdentityCreateNestedOneWithoutEventsInput
+  }
+
+  export type TrackingEventUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    eventId: string
+    name: string
+    visitorId?: string | null
+    sessionId?: string | null
+    identityId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TrackingEventCreateOrConnectWithoutOrganizationInput = {
+    where: TrackingEventWhereUniqueInput
+    create: XOR<TrackingEventCreateWithoutOrganizationInput, TrackingEventUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type TrackingEventCreateManyOrganizationInputEnvelope = {
+    data: TrackingEventCreateManyOrganizationInput | TrackingEventCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AttributionOrderCreateWithoutOrganizationInput = {
+    id?: string
+    externalOrderId: string
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    identity?: TrackingIdentityCreateNestedOneWithoutOrdersInput
+    items?: AttributionOrderItemCreateNestedManyWithoutOrderInput
+    attribution?: OrderAttributionCreateNestedOneWithoutOrderInput
+  }
+
+  export type AttributionOrderUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    externalOrderId: string
+    identityId?: string | null
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: AttributionOrderItemUncheckedCreateNestedManyWithoutOrderInput
+    attribution?: OrderAttributionUncheckedCreateNestedOneWithoutOrderInput
+  }
+
+  export type AttributionOrderCreateOrConnectWithoutOrganizationInput = {
+    where: AttributionOrderWhereUniqueInput
+    create: XOR<AttributionOrderCreateWithoutOrganizationInput, AttributionOrderUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type AttributionOrderCreateManyOrganizationInputEnvelope = {
+    data: AttributionOrderCreateManyOrganizationInput | AttributionOrderCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AdSpendDailyCreateWithoutOrganizationInput = {
+    id?: string
+    date: Date | string
+    platform: string
+    campaignId?: string
+    campaignName?: string | null
+    adsetId?: string
+    adsetName?: string | null
+    adId?: string
+    adName?: string | null
+    spend: Decimal | DecimalJsLike | number | string
+    currency?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdSpendDailyUncheckedCreateWithoutOrganizationInput = {
+    id?: string
+    date: Date | string
+    platform: string
+    campaignId?: string
+    campaignName?: string | null
+    adsetId?: string
+    adsetName?: string | null
+    adId?: string
+    adName?: string | null
+    spend: Decimal | DecimalJsLike | number | string
+    currency?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdSpendDailyCreateOrConnectWithoutOrganizationInput = {
+    where: AdSpendDailyWhereUniqueInput
+    create: XOR<AdSpendDailyCreateWithoutOrganizationInput, AdSpendDailyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type AdSpendDailyCreateManyOrganizationInputEnvelope = {
+    data: AdSpendDailyCreateManyOrganizationInput | AdSpendDailyCreateManyOrganizationInput[]
+    skipDuplicates?: boolean
+  }
+
   export type OrganizationMemberUpsertWithWhereUniqueWithoutOrganizationInput = {
     where: OrganizationMemberWhereUniqueInput
     update: XOR<OrganizationMemberUpdateWithoutOrganizationInput, OrganizationMemberUncheckedUpdateWithoutOrganizationInput>
@@ -74935,11 +90984,13 @@ export namespace Prisma {
     igsid?: StringFilter<"IgContato"> | string
     nome?: StringNullableFilter<"IgContato"> | string | null
     username?: StringNullableFilter<"IgContato"> | string | null
+    profilePictureUrl?: StringNullableFilter<"IgContato"> | string | null
     tags?: StringNullableListFilter<"IgContato">
     campos?: JsonFilter<"IgContato">
     phone?: StringNullableFilter<"IgContato"> | string | null
     botPaused?: BoolFilter<"IgContato"> | boolean
     lastInteractionAt?: DateTimeNullableFilter<"IgContato"> | Date | string | null
+    trackingIdentityId?: StringNullableFilter<"IgContato"> | string | null
     createdAt?: DateTimeFilter<"IgContato"> | Date | string
     updatedAt?: DateTimeFilter<"IgContato"> | Date | string
   }
@@ -74972,6 +91023,7 @@ export namespace Prisma {
     handoffHuman?: BoolFilter<"IgConversa"> | boolean
     assignedUserId?: StringNullableFilter<"IgConversa"> | string | null
     lastMessageAt?: DateTimeNullableFilter<"IgConversa"> | Date | string | null
+    lastReadAt?: DateTimeNullableFilter<"IgConversa"> | Date | string | null
     createdAt?: DateTimeFilter<"IgConversa"> | Date | string
     updatedAt?: DateTimeFilter<"IgConversa"> | Date | string
   }
@@ -75120,6 +91172,11 @@ export namespace Prisma {
     aiKnowledgeBase?: NullableStringFieldUpdateOperationsInput | string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: NullableStringFieldUpdateOperationsInput | string | null
+    metaPixelId?: NullableStringFieldUpdateOperationsInput | string | null
+    metaCapiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4MeasurementId?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4ApiSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -75136,6 +91193,11 @@ export namespace Prisma {
     aiKnowledgeBase?: NullableStringFieldUpdateOperationsInput | string | null
     aiGoals?: JsonNullValueInput | InputJsonValue
     aiTone?: NullableStringFieldUpdateOperationsInput | string | null
+    metaPixelId?: NullableStringFieldUpdateOperationsInput | string | null
+    metaCapiToken?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4MeasurementId?: NullableStringFieldUpdateOperationsInput | string | null
+    ga4ApiSecret?: NullableStringFieldUpdateOperationsInput | string | null
+    ecommerceConnectors?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -75314,6 +91376,212 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"IgTagDefinition"> | Date | string
   }
 
+  export type TrackingIdentityUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: TrackingIdentityWhereUniqueInput
+    update: XOR<TrackingIdentityUpdateWithoutOrganizationInput, TrackingIdentityUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<TrackingIdentityCreateWithoutOrganizationInput, TrackingIdentityUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type TrackingIdentityUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: TrackingIdentityWhereUniqueInput
+    data: XOR<TrackingIdentityUpdateWithoutOrganizationInput, TrackingIdentityUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type TrackingIdentityUpdateManyWithWhereWithoutOrganizationInput = {
+    where: TrackingIdentityScalarWhereInput
+    data: XOR<TrackingIdentityUpdateManyMutationInput, TrackingIdentityUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type TrackingIdentityScalarWhereInput = {
+    AND?: TrackingIdentityScalarWhereInput | TrackingIdentityScalarWhereInput[]
+    OR?: TrackingIdentityScalarWhereInput[]
+    NOT?: TrackingIdentityScalarWhereInput | TrackingIdentityScalarWhereInput[]
+    id?: StringFilter<"TrackingIdentity"> | string
+    organizationId?: StringFilter<"TrackingIdentity"> | string
+    stId?: StringFilter<"TrackingIdentity"> | string
+    email?: StringNullableFilter<"TrackingIdentity"> | string | null
+    phone?: StringNullableFilter<"TrackingIdentity"> | string | null
+    name?: StringNullableFilter<"TrackingIdentity"> | string | null
+    status?: StringFilter<"TrackingIdentity"> | string
+    leadSource?: JsonNullableFilter<"TrackingIdentity">
+    mergedIntoId?: StringNullableFilter<"TrackingIdentity"> | string | null
+    createdAt?: DateTimeFilter<"TrackingIdentity"> | Date | string
+    updatedAt?: DateTimeFilter<"TrackingIdentity"> | Date | string
+  }
+
+  export type TrackingVisitorUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: TrackingVisitorWhereUniqueInput
+    update: XOR<TrackingVisitorUpdateWithoutOrganizationInput, TrackingVisitorUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<TrackingVisitorCreateWithoutOrganizationInput, TrackingVisitorUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type TrackingVisitorUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: TrackingVisitorWhereUniqueInput
+    data: XOR<TrackingVisitorUpdateWithoutOrganizationInput, TrackingVisitorUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type TrackingVisitorUpdateManyWithWhereWithoutOrganizationInput = {
+    where: TrackingVisitorScalarWhereInput
+    data: XOR<TrackingVisitorUpdateManyMutationInput, TrackingVisitorUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type TrackingVisitorScalarWhereInput = {
+    AND?: TrackingVisitorScalarWhereInput | TrackingVisitorScalarWhereInput[]
+    OR?: TrackingVisitorScalarWhereInput[]
+    NOT?: TrackingVisitorScalarWhereInput | TrackingVisitorScalarWhereInput[]
+    id?: StringFilter<"TrackingVisitor"> | string
+    organizationId?: StringFilter<"TrackingVisitor"> | string
+    anonymousId?: StringFilter<"TrackingVisitor"> | string
+    identityId?: StringNullableFilter<"TrackingVisitor"> | string | null
+    createdAt?: DateTimeFilter<"TrackingVisitor"> | Date | string
+    updatedAt?: DateTimeFilter<"TrackingVisitor"> | Date | string
+  }
+
+  export type TrackingSessionUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: TrackingSessionWhereUniqueInput
+    update: XOR<TrackingSessionUpdateWithoutOrganizationInput, TrackingSessionUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<TrackingSessionCreateWithoutOrganizationInput, TrackingSessionUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type TrackingSessionUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: TrackingSessionWhereUniqueInput
+    data: XOR<TrackingSessionUpdateWithoutOrganizationInput, TrackingSessionUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type TrackingSessionUpdateManyWithWhereWithoutOrganizationInput = {
+    where: TrackingSessionScalarWhereInput
+    data: XOR<TrackingSessionUpdateManyMutationInput, TrackingSessionUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type TrackingSessionScalarWhereInput = {
+    AND?: TrackingSessionScalarWhereInput | TrackingSessionScalarWhereInput[]
+    OR?: TrackingSessionScalarWhereInput[]
+    NOT?: TrackingSessionScalarWhereInput | TrackingSessionScalarWhereInput[]
+    id?: StringFilter<"TrackingSession"> | string
+    organizationId?: StringFilter<"TrackingSession"> | string
+    sessionId?: StringFilter<"TrackingSession"> | string
+    visitorId?: StringFilter<"TrackingSession"> | string
+    landingPage?: StringNullableFilter<"TrackingSession"> | string | null
+    referrer?: StringNullableFilter<"TrackingSession"> | string | null
+    utmSource?: StringNullableFilter<"TrackingSession"> | string | null
+    utmMedium?: StringNullableFilter<"TrackingSession"> | string | null
+    utmCampaign?: StringNullableFilter<"TrackingSession"> | string | null
+    utmContent?: StringNullableFilter<"TrackingSession"> | string | null
+    utmTerm?: StringNullableFilter<"TrackingSession"> | string | null
+    fbclid?: StringNullableFilter<"TrackingSession"> | string | null
+    gclid?: StringNullableFilter<"TrackingSession"> | string | null
+    ttclid?: StringNullableFilter<"TrackingSession"> | string | null
+    msclkid?: StringNullableFilter<"TrackingSession"> | string | null
+    firstTouch?: JsonNullableFilter<"TrackingSession">
+    lastTouch?: JsonNullableFilter<"TrackingSession">
+    startedAt?: DateTimeFilter<"TrackingSession"> | Date | string
+    lastSeenAt?: DateTimeFilter<"TrackingSession"> | Date | string
+  }
+
+  export type TrackingEventUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: TrackingEventWhereUniqueInput
+    update: XOR<TrackingEventUpdateWithoutOrganizationInput, TrackingEventUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<TrackingEventCreateWithoutOrganizationInput, TrackingEventUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type TrackingEventUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: TrackingEventWhereUniqueInput
+    data: XOR<TrackingEventUpdateWithoutOrganizationInput, TrackingEventUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type TrackingEventUpdateManyWithWhereWithoutOrganizationInput = {
+    where: TrackingEventScalarWhereInput
+    data: XOR<TrackingEventUpdateManyMutationInput, TrackingEventUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type TrackingEventScalarWhereInput = {
+    AND?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+    OR?: TrackingEventScalarWhereInput[]
+    NOT?: TrackingEventScalarWhereInput | TrackingEventScalarWhereInput[]
+    id?: StringFilter<"TrackingEvent"> | string
+    organizationId?: StringFilter<"TrackingEvent"> | string
+    eventId?: StringFilter<"TrackingEvent"> | string
+    name?: StringFilter<"TrackingEvent"> | string
+    visitorId?: StringNullableFilter<"TrackingEvent"> | string | null
+    sessionId?: StringNullableFilter<"TrackingEvent"> | string | null
+    identityId?: StringNullableFilter<"TrackingEvent"> | string | null
+    properties?: JsonFilter<"TrackingEvent">
+    context?: JsonFilter<"TrackingEvent">
+    occurredAt?: DateTimeFilter<"TrackingEvent"> | Date | string
+    createdAt?: DateTimeFilter<"TrackingEvent"> | Date | string
+  }
+
+  export type AttributionOrderUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: AttributionOrderWhereUniqueInput
+    update: XOR<AttributionOrderUpdateWithoutOrganizationInput, AttributionOrderUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<AttributionOrderCreateWithoutOrganizationInput, AttributionOrderUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type AttributionOrderUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: AttributionOrderWhereUniqueInput
+    data: XOR<AttributionOrderUpdateWithoutOrganizationInput, AttributionOrderUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type AttributionOrderUpdateManyWithWhereWithoutOrganizationInput = {
+    where: AttributionOrderScalarWhereInput
+    data: XOR<AttributionOrderUpdateManyMutationInput, AttributionOrderUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type AttributionOrderScalarWhereInput = {
+    AND?: AttributionOrderScalarWhereInput | AttributionOrderScalarWhereInput[]
+    OR?: AttributionOrderScalarWhereInput[]
+    NOT?: AttributionOrderScalarWhereInput | AttributionOrderScalarWhereInput[]
+    id?: StringFilter<"AttributionOrder"> | string
+    organizationId?: StringFilter<"AttributionOrder"> | string
+    externalOrderId?: StringFilter<"AttributionOrder"> | string
+    identityId?: StringNullableFilter<"AttributionOrder"> | string | null
+    customerExternalId?: StringNullableFilter<"AttributionOrder"> | string | null
+    value?: DecimalFilter<"AttributionOrder"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"AttributionOrder"> | string
+    status?: StringFilter<"AttributionOrder"> | string
+    eventId?: StringNullableFilter<"AttributionOrder"> | string | null
+    rawPayload?: JsonFilter<"AttributionOrder">
+    occurredAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+    createdAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+    updatedAt?: DateTimeFilter<"AttributionOrder"> | Date | string
+  }
+
+  export type AdSpendDailyUpsertWithWhereUniqueWithoutOrganizationInput = {
+    where: AdSpendDailyWhereUniqueInput
+    update: XOR<AdSpendDailyUpdateWithoutOrganizationInput, AdSpendDailyUncheckedUpdateWithoutOrganizationInput>
+    create: XOR<AdSpendDailyCreateWithoutOrganizationInput, AdSpendDailyUncheckedCreateWithoutOrganizationInput>
+  }
+
+  export type AdSpendDailyUpdateWithWhereUniqueWithoutOrganizationInput = {
+    where: AdSpendDailyWhereUniqueInput
+    data: XOR<AdSpendDailyUpdateWithoutOrganizationInput, AdSpendDailyUncheckedUpdateWithoutOrganizationInput>
+  }
+
+  export type AdSpendDailyUpdateManyWithWhereWithoutOrganizationInput = {
+    where: AdSpendDailyScalarWhereInput
+    data: XOR<AdSpendDailyUpdateManyMutationInput, AdSpendDailyUncheckedUpdateManyWithoutOrganizationInput>
+  }
+
+  export type AdSpendDailyScalarWhereInput = {
+    AND?: AdSpendDailyScalarWhereInput | AdSpendDailyScalarWhereInput[]
+    OR?: AdSpendDailyScalarWhereInput[]
+    NOT?: AdSpendDailyScalarWhereInput | AdSpendDailyScalarWhereInput[]
+    id?: StringFilter<"AdSpendDaily"> | string
+    organizationId?: StringFilter<"AdSpendDaily"> | string
+    date?: DateTimeFilter<"AdSpendDaily"> | Date | string
+    platform?: StringFilter<"AdSpendDaily"> | string
+    campaignId?: StringFilter<"AdSpendDaily"> | string
+    campaignName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    adsetId?: StringFilter<"AdSpendDaily"> | string
+    adsetName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    adId?: StringFilter<"AdSpendDaily"> | string
+    adName?: StringNullableFilter<"AdSpendDaily"> | string | null
+    spend?: DecimalFilter<"AdSpendDaily"> | Decimal | DecimalJsLike | number | string
+    currency?: StringFilter<"AdSpendDaily"> | string
+    createdAt?: DateTimeFilter<"AdSpendDaily"> | Date | string
+    updatedAt?: DateTimeFilter<"AdSpendDaily"> | Date | string
+  }
+
   export type OrganizationMemberCreateWithoutUserInput = {
     id?: string
     role?: string
@@ -75409,6 +91677,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMembersInput = {
@@ -75439,6 +91713,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMembersInput = {
@@ -75516,6 +91796,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMembersInput = {
@@ -75546,6 +91832,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutSubscriptionInput = {
@@ -75576,6 +91868,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSubscriptionInput = {
@@ -75606,6 +91904,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSubscriptionInput = {
@@ -75652,6 +91956,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSubscriptionInput = {
@@ -75682,6 +91992,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutIgAccountsInput = {
@@ -75712,6 +92028,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutIgAccountsInput = {
@@ -75742,6 +92064,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutIgAccountsInput = {
@@ -75754,6 +92082,7 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
@@ -75762,6 +92091,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutContatosInput
+    trackingIdentity?: TrackingIdentityCreateNestedOneWithoutContatosInput
     conversas?: IgConversaCreateNestedManyWithoutContatoInput
     execucoes?: IgFluxoExecucaoCreateNestedManyWithoutContatoInput
   }
@@ -75772,11 +92102,13 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
     botPaused?: boolean
     lastInteractionAt?: Date | string | null
+    trackingIdentityId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     conversas?: IgConversaUncheckedCreateNestedManyWithoutContatoInput
@@ -75799,6 +92131,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutConversasInput
@@ -75814,6 +92147,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     mensagens?: IgMensagemUncheckedCreateNestedManyWithoutConversaInput
@@ -75908,6 +92242,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutIgAccountsInput = {
@@ -75938,6 +92278,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IgContatoUpsertWithWhereUniqueWithoutIgAccountInput = {
@@ -76016,6 +92362,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutOrgSettingsInput = {
@@ -76046,6 +92398,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutOrgSettingsInput = {
@@ -76092,6 +92450,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutOrgSettingsInput = {
@@ -76122,6 +92486,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutSnippetsInput = {
@@ -76152,6 +92522,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSnippetsInput = {
@@ -76182,6 +92558,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSnippetsInput = {
@@ -76228,6 +92610,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSnippetsInput = {
@@ -76258,6 +92646,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutTagDefinitionsInput = {
@@ -76288,6 +92682,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutTagDefinitionsInput = {
@@ -76318,6 +92718,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutTagDefinitionsInput = {
@@ -76364,6 +92770,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutTagDefinitionsInput = {
@@ -76394,6 +92806,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutSegmentosInput = {
@@ -76424,6 +92842,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutSegmentosInput = {
@@ -76454,6 +92878,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutSegmentosInput = {
@@ -76500,6 +92930,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutSegmentosInput = {
@@ -76530,6 +92966,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutConversionEventsInput = {
@@ -76560,6 +93002,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutConversionEventsInput = {
@@ -76590,6 +93038,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutConversionEventsInput = {
@@ -76636,6 +93090,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutConversionEventsInput = {
@@ -76666,6 +93126,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutMemberInvitesInput = {
@@ -76696,6 +93162,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutMemberInvitesInput = {
@@ -76726,6 +93198,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutMemberInvitesInput = {
@@ -76772,6 +93250,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutMemberInvitesInput = {
@@ -76802,6 +93286,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutScheduledMessagesInput = {
@@ -76832,6 +93322,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutScheduledMessagesInput = {
@@ -76862,6 +93358,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutScheduledMessagesInput = {
@@ -76908,6 +93410,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutScheduledMessagesInput = {
@@ -76938,6 +93446,12 @@ export namespace Prisma {
     conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationCreateWithoutContatosInput = {
@@ -76968,6 +93482,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutContatosInput = {
@@ -76998,6 +93518,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutContatosInput = {
@@ -77056,12 +93582,56 @@ export namespace Prisma {
     create: XOR<IgAccountCreateWithoutContatosInput, IgAccountUncheckedCreateWithoutContatosInput>
   }
 
+  export type TrackingIdentityCreateWithoutContatosInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingIdentitiesInput
+    aliases?: IdentityAliasCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderCreateNestedManyWithoutIdentityInput
+    mergedInto?: TrackingIdentityCreateNestedOneWithoutMergedFromInput
+    mergedFrom?: TrackingIdentityCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUncheckedCreateWithoutContatosInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput
+    mergedFrom?: TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityCreateOrConnectWithoutContatosInput = {
+    where: TrackingIdentityWhereUniqueInput
+    create: XOR<TrackingIdentityCreateWithoutContatosInput, TrackingIdentityUncheckedCreateWithoutContatosInput>
+  }
+
   export type IgConversaCreateWithoutContatoInput = {
     id?: string
     status?: string
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutConversasInput
@@ -77077,6 +93647,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     mensagens?: IgMensagemUncheckedCreateNestedManyWithoutConversaInput
@@ -77165,6 +93736,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutContatosInput = {
@@ -77195,6 +93772,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IgAccountUpsertWithoutContatosInput = {
@@ -77252,6 +93835,55 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversas?: IgConversaUncheckedUpdateManyWithoutIgAccountNestedInput
     fluxos?: IgFluxoUncheckedUpdateManyWithoutIgAccountNestedInput
+  }
+
+  export type TrackingIdentityUpsertWithoutContatosInput = {
+    update: XOR<TrackingIdentityUpdateWithoutContatosInput, TrackingIdentityUncheckedUpdateWithoutContatosInput>
+    create: XOR<TrackingIdentityCreateWithoutContatosInput, TrackingIdentityUncheckedCreateWithoutContatosInput>
+    where?: TrackingIdentityWhereInput
+  }
+
+  export type TrackingIdentityUpdateToOneWithWhereWithoutContatosInput = {
+    where?: TrackingIdentityWhereInput
+    data: XOR<TrackingIdentityUpdateWithoutContatosInput, TrackingIdentityUncheckedUpdateWithoutContatosInput>
+  }
+
+  export type TrackingIdentityUpdateWithoutContatosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput
+    aliases?: IdentityAliasUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUpdateManyWithoutIdentityNestedInput
+    mergedInto?: TrackingIdentityUpdateOneWithoutMergedFromNestedInput
+    mergedFrom?: TrackingIdentityUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateWithoutContatosInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput
+    mergedFrom?: TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput
   }
 
   export type IgConversaUpsertWithWhereUniqueWithoutContatoInput = {
@@ -77314,6 +93946,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutConversasInput = {
@@ -77344,6 +93982,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutConversasInput = {
@@ -77407,6 +94051,7 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
@@ -77416,6 +94061,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutContatosInput
     igAccount: IgAccountCreateNestedOneWithoutContatosInput
+    trackingIdentity?: TrackingIdentityCreateNestedOneWithoutContatosInput
     execucoes?: IgFluxoExecucaoCreateNestedManyWithoutContatoInput
   }
 
@@ -77426,11 +94072,13 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
     botPaused?: boolean
     lastInteractionAt?: Date | string | null
+    trackingIdentityId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     execucoes?: IgFluxoExecucaoUncheckedCreateNestedManyWithoutContatoInput
@@ -77516,6 +94164,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutConversasInput = {
@@ -77546,6 +94200,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IgAccountUpsertWithoutConversasInput = {
@@ -77621,6 +94281,7 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -77630,6 +94291,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutContatosNestedInput
     igAccount?: IgAccountUpdateOneRequiredWithoutContatosNestedInput
+    trackingIdentity?: TrackingIdentityUpdateOneWithoutContatosNestedInput
     execucoes?: IgFluxoExecucaoUpdateManyWithoutContatoNestedInput
   }
 
@@ -77640,11 +94302,13 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     botPaused?: BoolFieldUpdateOperationsInput | boolean
     lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trackingIdentityId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     execucoes?: IgFluxoExecucaoUncheckedUpdateManyWithoutContatoNestedInput
@@ -77689,6 +94353,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutConversasInput
@@ -77705,6 +94370,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -77731,6 +94397,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutConversasNestedInput
@@ -77747,6 +94414,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -77779,6 +94447,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFluxoPastasInput = {
@@ -77809,6 +94483,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFluxoPastasInput = {
@@ -77895,6 +94575,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFluxoPastasInput = {
@@ -77925,6 +94611,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IgFluxoUpsertWithWhereUniqueWithoutPastaInput = {
@@ -77971,6 +94663,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutFluxosInput = {
@@ -78001,6 +94699,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutFluxosInput = {
@@ -78181,6 +94885,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutFluxosInput = {
@@ -78211,6 +94921,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IgAccountUpsertWithoutFluxosInput = {
@@ -78446,6 +95162,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutExecucoesInput = {
@@ -78476,6 +95198,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutExecucoesInput = {
@@ -78523,6 +95251,7 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
@@ -78532,6 +95261,7 @@ export namespace Prisma {
     updatedAt?: Date | string
     organization: OrganizationCreateNestedOneWithoutContatosInput
     igAccount: IgAccountCreateNestedOneWithoutContatosInput
+    trackingIdentity?: TrackingIdentityCreateNestedOneWithoutContatosInput
     conversas?: IgConversaCreateNestedManyWithoutContatoInput
   }
 
@@ -78542,11 +95272,13 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
     botPaused?: boolean
     lastInteractionAt?: Date | string | null
+    trackingIdentityId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     conversas?: IgConversaUncheckedCreateNestedManyWithoutContatoInput
@@ -78596,6 +95328,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutExecucoesInput = {
@@ -78626,6 +95364,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type IgFluxoUpsertWithoutExecucoesInput = {
@@ -78685,6 +95429,7 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -78694,6 +95439,7 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutContatosNestedInput
     igAccount?: IgAccountUpdateOneRequiredWithoutContatosNestedInput
+    trackingIdentity?: TrackingIdentityUpdateOneWithoutContatosNestedInput
     conversas?: IgConversaUpdateManyWithoutContatoNestedInput
   }
 
@@ -78704,11 +95450,13 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     botPaused?: BoolFieldUpdateOperationsInput | boolean
     lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trackingIdentityId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversas?: IgConversaUncheckedUpdateManyWithoutContatoNestedInput
@@ -78742,6 +95490,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationUncheckedCreateWithoutWebhookEventsInput = {
@@ -78772,6 +95526,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
     scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
     tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
   }
 
   export type OrganizationCreateOrConnectWithoutWebhookEventsInput = {
@@ -78818,6 +95578,12 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
   }
 
   export type OrganizationUncheckedUpdateWithoutWebhookEventsInput = {
@@ -78848,6 +95614,2468 @@ export namespace Prisma {
     memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
     scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
     tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationCreateWithoutTrackingIdentitiesInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutTrackingIdentitiesInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountUncheckedCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaUncheckedCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoUncheckedCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventUncheckedCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetUncheckedCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutTrackingIdentitiesInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutTrackingIdentitiesInput, OrganizationUncheckedCreateWithoutTrackingIdentitiesInput>
+  }
+
+  export type IdentityAliasCreateWithoutIdentityInput = {
+    id?: string
+    organizationId: string
+    type: string
+    value: string
+    createdAt?: Date | string
+  }
+
+  export type IdentityAliasUncheckedCreateWithoutIdentityInput = {
+    id?: string
+    organizationId: string
+    type: string
+    value: string
+    createdAt?: Date | string
+  }
+
+  export type IdentityAliasCreateOrConnectWithoutIdentityInput = {
+    where: IdentityAliasWhereUniqueInput
+    create: XOR<IdentityAliasCreateWithoutIdentityInput, IdentityAliasUncheckedCreateWithoutIdentityInput>
+  }
+
+  export type IdentityAliasCreateManyIdentityInputEnvelope = {
+    data: IdentityAliasCreateManyIdentityInput | IdentityAliasCreateManyIdentityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TrackingVisitorCreateWithoutIdentityInput = {
+    id?: string
+    anonymousId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingVisitorsInput
+    sessions?: TrackingSessionCreateNestedManyWithoutVisitorInput
+    events?: TrackingEventCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorUncheckedCreateWithoutIdentityInput = {
+    id?: string
+    organizationId: string
+    anonymousId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: TrackingSessionUncheckedCreateNestedManyWithoutVisitorInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorCreateOrConnectWithoutIdentityInput = {
+    where: TrackingVisitorWhereUniqueInput
+    create: XOR<TrackingVisitorCreateWithoutIdentityInput, TrackingVisitorUncheckedCreateWithoutIdentityInput>
+  }
+
+  export type TrackingVisitorCreateManyIdentityInputEnvelope = {
+    data: TrackingVisitorCreateManyIdentityInput | TrackingVisitorCreateManyIdentityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TrackingEventCreateWithoutIdentityInput = {
+    id?: string
+    eventId: string
+    name: string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingEventsInput
+    visitor?: TrackingVisitorCreateNestedOneWithoutEventsInput
+    session?: TrackingSessionCreateNestedOneWithoutEventsInput
+  }
+
+  export type TrackingEventUncheckedCreateWithoutIdentityInput = {
+    id?: string
+    organizationId: string
+    eventId: string
+    name: string
+    visitorId?: string | null
+    sessionId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TrackingEventCreateOrConnectWithoutIdentityInput = {
+    where: TrackingEventWhereUniqueInput
+    create: XOR<TrackingEventCreateWithoutIdentityInput, TrackingEventUncheckedCreateWithoutIdentityInput>
+  }
+
+  export type TrackingEventCreateManyIdentityInputEnvelope = {
+    data: TrackingEventCreateManyIdentityInput | TrackingEventCreateManyIdentityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type AttributionOrderCreateWithoutIdentityInput = {
+    id?: string
+    externalOrderId: string
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutAttributionOrdersInput
+    items?: AttributionOrderItemCreateNestedManyWithoutOrderInput
+    attribution?: OrderAttributionCreateNestedOneWithoutOrderInput
+  }
+
+  export type AttributionOrderUncheckedCreateWithoutIdentityInput = {
+    id?: string
+    organizationId: string
+    externalOrderId: string
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: AttributionOrderItemUncheckedCreateNestedManyWithoutOrderInput
+    attribution?: OrderAttributionUncheckedCreateNestedOneWithoutOrderInput
+  }
+
+  export type AttributionOrderCreateOrConnectWithoutIdentityInput = {
+    where: AttributionOrderWhereUniqueInput
+    create: XOR<AttributionOrderCreateWithoutIdentityInput, AttributionOrderUncheckedCreateWithoutIdentityInput>
+  }
+
+  export type AttributionOrderCreateManyIdentityInputEnvelope = {
+    data: AttributionOrderCreateManyIdentityInput | AttributionOrderCreateManyIdentityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type IgContatoCreateWithoutTrackingIdentityInput = {
+    id?: string
+    igsid: string
+    nome?: string | null
+    username?: string | null
+    profilePictureUrl?: string | null
+    tags?: IgContatoCreatetagsInput | string[]
+    campos?: JsonNullValueInput | InputJsonValue
+    phone?: string | null
+    botPaused?: boolean
+    lastInteractionAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutContatosInput
+    igAccount: IgAccountCreateNestedOneWithoutContatosInput
+    conversas?: IgConversaCreateNestedManyWithoutContatoInput
+    execucoes?: IgFluxoExecucaoCreateNestedManyWithoutContatoInput
+  }
+
+  export type IgContatoUncheckedCreateWithoutTrackingIdentityInput = {
+    id?: string
+    organizationId: string
+    igAccountId: string
+    igsid: string
+    nome?: string | null
+    username?: string | null
+    profilePictureUrl?: string | null
+    tags?: IgContatoCreatetagsInput | string[]
+    campos?: JsonNullValueInput | InputJsonValue
+    phone?: string | null
+    botPaused?: boolean
+    lastInteractionAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    conversas?: IgConversaUncheckedCreateNestedManyWithoutContatoInput
+    execucoes?: IgFluxoExecucaoUncheckedCreateNestedManyWithoutContatoInput
+  }
+
+  export type IgContatoCreateOrConnectWithoutTrackingIdentityInput = {
+    where: IgContatoWhereUniqueInput
+    create: XOR<IgContatoCreateWithoutTrackingIdentityInput, IgContatoUncheckedCreateWithoutTrackingIdentityInput>
+  }
+
+  export type IgContatoCreateManyTrackingIdentityInputEnvelope = {
+    data: IgContatoCreateManyTrackingIdentityInput | IgContatoCreateManyTrackingIdentityInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TrackingIdentityCreateWithoutMergedFromInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingIdentitiesInput
+    aliases?: IdentityAliasCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoCreateNestedManyWithoutTrackingIdentityInput
+    mergedInto?: TrackingIdentityCreateNestedOneWithoutMergedFromInput
+  }
+
+  export type TrackingIdentityUncheckedCreateWithoutMergedFromInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput
+  }
+
+  export type TrackingIdentityCreateOrConnectWithoutMergedFromInput = {
+    where: TrackingIdentityWhereUniqueInput
+    create: XOR<TrackingIdentityCreateWithoutMergedFromInput, TrackingIdentityUncheckedCreateWithoutMergedFromInput>
+  }
+
+  export type TrackingIdentityCreateWithoutMergedIntoInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingIdentitiesInput
+    aliases?: IdentityAliasCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoCreateNestedManyWithoutTrackingIdentityInput
+    mergedFrom?: TrackingIdentityCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUncheckedCreateWithoutMergedIntoInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput
+    mergedFrom?: TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityCreateOrConnectWithoutMergedIntoInput = {
+    where: TrackingIdentityWhereUniqueInput
+    create: XOR<TrackingIdentityCreateWithoutMergedIntoInput, TrackingIdentityUncheckedCreateWithoutMergedIntoInput>
+  }
+
+  export type TrackingIdentityCreateManyMergedIntoInputEnvelope = {
+    data: TrackingIdentityCreateManyMergedIntoInput | TrackingIdentityCreateManyMergedIntoInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutTrackingIdentitiesInput = {
+    update: XOR<OrganizationUpdateWithoutTrackingIdentitiesInput, OrganizationUncheckedUpdateWithoutTrackingIdentitiesInput>
+    create: XOR<OrganizationCreateWithoutTrackingIdentitiesInput, OrganizationUncheckedCreateWithoutTrackingIdentitiesInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutTrackingIdentitiesInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutTrackingIdentitiesInput, OrganizationUncheckedUpdateWithoutTrackingIdentitiesInput>
+  }
+
+  export type OrganizationUpdateWithoutTrackingIdentitiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutTrackingIdentitiesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUncheckedUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUncheckedUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUncheckedUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUncheckedUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type IdentityAliasUpsertWithWhereUniqueWithoutIdentityInput = {
+    where: IdentityAliasWhereUniqueInput
+    update: XOR<IdentityAliasUpdateWithoutIdentityInput, IdentityAliasUncheckedUpdateWithoutIdentityInput>
+    create: XOR<IdentityAliasCreateWithoutIdentityInput, IdentityAliasUncheckedCreateWithoutIdentityInput>
+  }
+
+  export type IdentityAliasUpdateWithWhereUniqueWithoutIdentityInput = {
+    where: IdentityAliasWhereUniqueInput
+    data: XOR<IdentityAliasUpdateWithoutIdentityInput, IdentityAliasUncheckedUpdateWithoutIdentityInput>
+  }
+
+  export type IdentityAliasUpdateManyWithWhereWithoutIdentityInput = {
+    where: IdentityAliasScalarWhereInput
+    data: XOR<IdentityAliasUpdateManyMutationInput, IdentityAliasUncheckedUpdateManyWithoutIdentityInput>
+  }
+
+  export type IdentityAliasScalarWhereInput = {
+    AND?: IdentityAliasScalarWhereInput | IdentityAliasScalarWhereInput[]
+    OR?: IdentityAliasScalarWhereInput[]
+    NOT?: IdentityAliasScalarWhereInput | IdentityAliasScalarWhereInput[]
+    id?: StringFilter<"IdentityAlias"> | string
+    organizationId?: StringFilter<"IdentityAlias"> | string
+    identityId?: StringFilter<"IdentityAlias"> | string
+    type?: StringFilter<"IdentityAlias"> | string
+    value?: StringFilter<"IdentityAlias"> | string
+    createdAt?: DateTimeFilter<"IdentityAlias"> | Date | string
+  }
+
+  export type TrackingVisitorUpsertWithWhereUniqueWithoutIdentityInput = {
+    where: TrackingVisitorWhereUniqueInput
+    update: XOR<TrackingVisitorUpdateWithoutIdentityInput, TrackingVisitorUncheckedUpdateWithoutIdentityInput>
+    create: XOR<TrackingVisitorCreateWithoutIdentityInput, TrackingVisitorUncheckedCreateWithoutIdentityInput>
+  }
+
+  export type TrackingVisitorUpdateWithWhereUniqueWithoutIdentityInput = {
+    where: TrackingVisitorWhereUniqueInput
+    data: XOR<TrackingVisitorUpdateWithoutIdentityInput, TrackingVisitorUncheckedUpdateWithoutIdentityInput>
+  }
+
+  export type TrackingVisitorUpdateManyWithWhereWithoutIdentityInput = {
+    where: TrackingVisitorScalarWhereInput
+    data: XOR<TrackingVisitorUpdateManyMutationInput, TrackingVisitorUncheckedUpdateManyWithoutIdentityInput>
+  }
+
+  export type TrackingEventUpsertWithWhereUniqueWithoutIdentityInput = {
+    where: TrackingEventWhereUniqueInput
+    update: XOR<TrackingEventUpdateWithoutIdentityInput, TrackingEventUncheckedUpdateWithoutIdentityInput>
+    create: XOR<TrackingEventCreateWithoutIdentityInput, TrackingEventUncheckedCreateWithoutIdentityInput>
+  }
+
+  export type TrackingEventUpdateWithWhereUniqueWithoutIdentityInput = {
+    where: TrackingEventWhereUniqueInput
+    data: XOR<TrackingEventUpdateWithoutIdentityInput, TrackingEventUncheckedUpdateWithoutIdentityInput>
+  }
+
+  export type TrackingEventUpdateManyWithWhereWithoutIdentityInput = {
+    where: TrackingEventScalarWhereInput
+    data: XOR<TrackingEventUpdateManyMutationInput, TrackingEventUncheckedUpdateManyWithoutIdentityInput>
+  }
+
+  export type AttributionOrderUpsertWithWhereUniqueWithoutIdentityInput = {
+    where: AttributionOrderWhereUniqueInput
+    update: XOR<AttributionOrderUpdateWithoutIdentityInput, AttributionOrderUncheckedUpdateWithoutIdentityInput>
+    create: XOR<AttributionOrderCreateWithoutIdentityInput, AttributionOrderUncheckedCreateWithoutIdentityInput>
+  }
+
+  export type AttributionOrderUpdateWithWhereUniqueWithoutIdentityInput = {
+    where: AttributionOrderWhereUniqueInput
+    data: XOR<AttributionOrderUpdateWithoutIdentityInput, AttributionOrderUncheckedUpdateWithoutIdentityInput>
+  }
+
+  export type AttributionOrderUpdateManyWithWhereWithoutIdentityInput = {
+    where: AttributionOrderScalarWhereInput
+    data: XOR<AttributionOrderUpdateManyMutationInput, AttributionOrderUncheckedUpdateManyWithoutIdentityInput>
+  }
+
+  export type IgContatoUpsertWithWhereUniqueWithoutTrackingIdentityInput = {
+    where: IgContatoWhereUniqueInput
+    update: XOR<IgContatoUpdateWithoutTrackingIdentityInput, IgContatoUncheckedUpdateWithoutTrackingIdentityInput>
+    create: XOR<IgContatoCreateWithoutTrackingIdentityInput, IgContatoUncheckedCreateWithoutTrackingIdentityInput>
+  }
+
+  export type IgContatoUpdateWithWhereUniqueWithoutTrackingIdentityInput = {
+    where: IgContatoWhereUniqueInput
+    data: XOR<IgContatoUpdateWithoutTrackingIdentityInput, IgContatoUncheckedUpdateWithoutTrackingIdentityInput>
+  }
+
+  export type IgContatoUpdateManyWithWhereWithoutTrackingIdentityInput = {
+    where: IgContatoScalarWhereInput
+    data: XOR<IgContatoUpdateManyMutationInput, IgContatoUncheckedUpdateManyWithoutTrackingIdentityInput>
+  }
+
+  export type TrackingIdentityUpsertWithoutMergedFromInput = {
+    update: XOR<TrackingIdentityUpdateWithoutMergedFromInput, TrackingIdentityUncheckedUpdateWithoutMergedFromInput>
+    create: XOR<TrackingIdentityCreateWithoutMergedFromInput, TrackingIdentityUncheckedCreateWithoutMergedFromInput>
+    where?: TrackingIdentityWhereInput
+  }
+
+  export type TrackingIdentityUpdateToOneWithWhereWithoutMergedFromInput = {
+    where?: TrackingIdentityWhereInput
+    data: XOR<TrackingIdentityUpdateWithoutMergedFromInput, TrackingIdentityUncheckedUpdateWithoutMergedFromInput>
+  }
+
+  export type TrackingIdentityUpdateWithoutMergedFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput
+    aliases?: IdentityAliasUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUpdateManyWithoutTrackingIdentityNestedInput
+    mergedInto?: TrackingIdentityUpdateOneWithoutMergedFromNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateWithoutMergedFromInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput
+  }
+
+  export type TrackingIdentityUpsertWithWhereUniqueWithoutMergedIntoInput = {
+    where: TrackingIdentityWhereUniqueInput
+    update: XOR<TrackingIdentityUpdateWithoutMergedIntoInput, TrackingIdentityUncheckedUpdateWithoutMergedIntoInput>
+    create: XOR<TrackingIdentityCreateWithoutMergedIntoInput, TrackingIdentityUncheckedCreateWithoutMergedIntoInput>
+  }
+
+  export type TrackingIdentityUpdateWithWhereUniqueWithoutMergedIntoInput = {
+    where: TrackingIdentityWhereUniqueInput
+    data: XOR<TrackingIdentityUpdateWithoutMergedIntoInput, TrackingIdentityUncheckedUpdateWithoutMergedIntoInput>
+  }
+
+  export type TrackingIdentityUpdateManyWithWhereWithoutMergedIntoInput = {
+    where: TrackingIdentityScalarWhereInput
+    data: XOR<TrackingIdentityUpdateManyMutationInput, TrackingIdentityUncheckedUpdateManyWithoutMergedIntoInput>
+  }
+
+  export type TrackingIdentityCreateWithoutAliasesInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingIdentitiesInput
+    visitors?: TrackingVisitorCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoCreateNestedManyWithoutTrackingIdentityInput
+    mergedInto?: TrackingIdentityCreateNestedOneWithoutMergedFromInput
+    mergedFrom?: TrackingIdentityCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUncheckedCreateWithoutAliasesInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    visitors?: TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput
+    mergedFrom?: TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityCreateOrConnectWithoutAliasesInput = {
+    where: TrackingIdentityWhereUniqueInput
+    create: XOR<TrackingIdentityCreateWithoutAliasesInput, TrackingIdentityUncheckedCreateWithoutAliasesInput>
+  }
+
+  export type TrackingIdentityUpsertWithoutAliasesInput = {
+    update: XOR<TrackingIdentityUpdateWithoutAliasesInput, TrackingIdentityUncheckedUpdateWithoutAliasesInput>
+    create: XOR<TrackingIdentityCreateWithoutAliasesInput, TrackingIdentityUncheckedCreateWithoutAliasesInput>
+    where?: TrackingIdentityWhereInput
+  }
+
+  export type TrackingIdentityUpdateToOneWithWhereWithoutAliasesInput = {
+    where?: TrackingIdentityWhereInput
+    data: XOR<TrackingIdentityUpdateWithoutAliasesInput, TrackingIdentityUncheckedUpdateWithoutAliasesInput>
+  }
+
+  export type TrackingIdentityUpdateWithoutAliasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput
+    visitors?: TrackingVisitorUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUpdateManyWithoutTrackingIdentityNestedInput
+    mergedInto?: TrackingIdentityUpdateOneWithoutMergedFromNestedInput
+    mergedFrom?: TrackingIdentityUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateWithoutAliasesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitors?: TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput
+    mergedFrom?: TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type OrganizationCreateWithoutTrackingVisitorsInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutTrackingVisitorsInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountUncheckedCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaUncheckedCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoUncheckedCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventUncheckedCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetUncheckedCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutTrackingVisitorsInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutTrackingVisitorsInput, OrganizationUncheckedCreateWithoutTrackingVisitorsInput>
+  }
+
+  export type TrackingIdentityCreateWithoutVisitorsInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingIdentitiesInput
+    aliases?: IdentityAliasCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoCreateNestedManyWithoutTrackingIdentityInput
+    mergedInto?: TrackingIdentityCreateNestedOneWithoutMergedFromInput
+    mergedFrom?: TrackingIdentityCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUncheckedCreateWithoutVisitorsInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput
+    mergedFrom?: TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityCreateOrConnectWithoutVisitorsInput = {
+    where: TrackingIdentityWhereUniqueInput
+    create: XOR<TrackingIdentityCreateWithoutVisitorsInput, TrackingIdentityUncheckedCreateWithoutVisitorsInput>
+  }
+
+  export type TrackingSessionCreateWithoutVisitorInput = {
+    id?: string
+    sessionId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingSessionsInput
+    events?: TrackingEventCreateNestedManyWithoutSessionInput
+  }
+
+  export type TrackingSessionUncheckedCreateWithoutVisitorInput = {
+    id?: string
+    organizationId: string
+    sessionId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+    events?: TrackingEventUncheckedCreateNestedManyWithoutSessionInput
+  }
+
+  export type TrackingSessionCreateOrConnectWithoutVisitorInput = {
+    where: TrackingSessionWhereUniqueInput
+    create: XOR<TrackingSessionCreateWithoutVisitorInput, TrackingSessionUncheckedCreateWithoutVisitorInput>
+  }
+
+  export type TrackingSessionCreateManyVisitorInputEnvelope = {
+    data: TrackingSessionCreateManyVisitorInput | TrackingSessionCreateManyVisitorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type TrackingEventCreateWithoutVisitorInput = {
+    id?: string
+    eventId: string
+    name: string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingEventsInput
+    session?: TrackingSessionCreateNestedOneWithoutEventsInput
+    identity?: TrackingIdentityCreateNestedOneWithoutEventsInput
+  }
+
+  export type TrackingEventUncheckedCreateWithoutVisitorInput = {
+    id?: string
+    organizationId: string
+    eventId: string
+    name: string
+    sessionId?: string | null
+    identityId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TrackingEventCreateOrConnectWithoutVisitorInput = {
+    where: TrackingEventWhereUniqueInput
+    create: XOR<TrackingEventCreateWithoutVisitorInput, TrackingEventUncheckedCreateWithoutVisitorInput>
+  }
+
+  export type TrackingEventCreateManyVisitorInputEnvelope = {
+    data: TrackingEventCreateManyVisitorInput | TrackingEventCreateManyVisitorInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutTrackingVisitorsInput = {
+    update: XOR<OrganizationUpdateWithoutTrackingVisitorsInput, OrganizationUncheckedUpdateWithoutTrackingVisitorsInput>
+    create: XOR<OrganizationCreateWithoutTrackingVisitorsInput, OrganizationUncheckedCreateWithoutTrackingVisitorsInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutTrackingVisitorsInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutTrackingVisitorsInput, OrganizationUncheckedUpdateWithoutTrackingVisitorsInput>
+  }
+
+  export type OrganizationUpdateWithoutTrackingVisitorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutTrackingVisitorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUncheckedUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUncheckedUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUncheckedUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUncheckedUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type TrackingIdentityUpsertWithoutVisitorsInput = {
+    update: XOR<TrackingIdentityUpdateWithoutVisitorsInput, TrackingIdentityUncheckedUpdateWithoutVisitorsInput>
+    create: XOR<TrackingIdentityCreateWithoutVisitorsInput, TrackingIdentityUncheckedCreateWithoutVisitorsInput>
+    where?: TrackingIdentityWhereInput
+  }
+
+  export type TrackingIdentityUpdateToOneWithWhereWithoutVisitorsInput = {
+    where?: TrackingIdentityWhereInput
+    data: XOR<TrackingIdentityUpdateWithoutVisitorsInput, TrackingIdentityUncheckedUpdateWithoutVisitorsInput>
+  }
+
+  export type TrackingIdentityUpdateWithoutVisitorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput
+    aliases?: IdentityAliasUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUpdateManyWithoutTrackingIdentityNestedInput
+    mergedInto?: TrackingIdentityUpdateOneWithoutMergedFromNestedInput
+    mergedFrom?: TrackingIdentityUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateWithoutVisitorsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput
+    mergedFrom?: TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingSessionUpsertWithWhereUniqueWithoutVisitorInput = {
+    where: TrackingSessionWhereUniqueInput
+    update: XOR<TrackingSessionUpdateWithoutVisitorInput, TrackingSessionUncheckedUpdateWithoutVisitorInput>
+    create: XOR<TrackingSessionCreateWithoutVisitorInput, TrackingSessionUncheckedCreateWithoutVisitorInput>
+  }
+
+  export type TrackingSessionUpdateWithWhereUniqueWithoutVisitorInput = {
+    where: TrackingSessionWhereUniqueInput
+    data: XOR<TrackingSessionUpdateWithoutVisitorInput, TrackingSessionUncheckedUpdateWithoutVisitorInput>
+  }
+
+  export type TrackingSessionUpdateManyWithWhereWithoutVisitorInput = {
+    where: TrackingSessionScalarWhereInput
+    data: XOR<TrackingSessionUpdateManyMutationInput, TrackingSessionUncheckedUpdateManyWithoutVisitorInput>
+  }
+
+  export type TrackingEventUpsertWithWhereUniqueWithoutVisitorInput = {
+    where: TrackingEventWhereUniqueInput
+    update: XOR<TrackingEventUpdateWithoutVisitorInput, TrackingEventUncheckedUpdateWithoutVisitorInput>
+    create: XOR<TrackingEventCreateWithoutVisitorInput, TrackingEventUncheckedCreateWithoutVisitorInput>
+  }
+
+  export type TrackingEventUpdateWithWhereUniqueWithoutVisitorInput = {
+    where: TrackingEventWhereUniqueInput
+    data: XOR<TrackingEventUpdateWithoutVisitorInput, TrackingEventUncheckedUpdateWithoutVisitorInput>
+  }
+
+  export type TrackingEventUpdateManyWithWhereWithoutVisitorInput = {
+    where: TrackingEventScalarWhereInput
+    data: XOR<TrackingEventUpdateManyMutationInput, TrackingEventUncheckedUpdateManyWithoutVisitorInput>
+  }
+
+  export type OrganizationCreateWithoutTrackingSessionsInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutTrackingSessionsInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountUncheckedCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaUncheckedCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoUncheckedCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventUncheckedCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetUncheckedCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutTrackingSessionsInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutTrackingSessionsInput, OrganizationUncheckedCreateWithoutTrackingSessionsInput>
+  }
+
+  export type TrackingVisitorCreateWithoutSessionsInput = {
+    id?: string
+    anonymousId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingVisitorsInput
+    identity?: TrackingIdentityCreateNestedOneWithoutVisitorsInput
+    events?: TrackingEventCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorUncheckedCreateWithoutSessionsInput = {
+    id?: string
+    organizationId: string
+    anonymousId: string
+    identityId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    events?: TrackingEventUncheckedCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorCreateOrConnectWithoutSessionsInput = {
+    where: TrackingVisitorWhereUniqueInput
+    create: XOR<TrackingVisitorCreateWithoutSessionsInput, TrackingVisitorUncheckedCreateWithoutSessionsInput>
+  }
+
+  export type TrackingEventCreateWithoutSessionInput = {
+    id?: string
+    eventId: string
+    name: string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingEventsInput
+    visitor?: TrackingVisitorCreateNestedOneWithoutEventsInput
+    identity?: TrackingIdentityCreateNestedOneWithoutEventsInput
+  }
+
+  export type TrackingEventUncheckedCreateWithoutSessionInput = {
+    id?: string
+    organizationId: string
+    eventId: string
+    name: string
+    visitorId?: string | null
+    identityId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TrackingEventCreateOrConnectWithoutSessionInput = {
+    where: TrackingEventWhereUniqueInput
+    create: XOR<TrackingEventCreateWithoutSessionInput, TrackingEventUncheckedCreateWithoutSessionInput>
+  }
+
+  export type TrackingEventCreateManySessionInputEnvelope = {
+    data: TrackingEventCreateManySessionInput | TrackingEventCreateManySessionInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrganizationUpsertWithoutTrackingSessionsInput = {
+    update: XOR<OrganizationUpdateWithoutTrackingSessionsInput, OrganizationUncheckedUpdateWithoutTrackingSessionsInput>
+    create: XOR<OrganizationCreateWithoutTrackingSessionsInput, OrganizationUncheckedCreateWithoutTrackingSessionsInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutTrackingSessionsInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutTrackingSessionsInput, OrganizationUncheckedUpdateWithoutTrackingSessionsInput>
+  }
+
+  export type OrganizationUpdateWithoutTrackingSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutTrackingSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUncheckedUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUncheckedUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUncheckedUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUncheckedUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type TrackingVisitorUpsertWithoutSessionsInput = {
+    update: XOR<TrackingVisitorUpdateWithoutSessionsInput, TrackingVisitorUncheckedUpdateWithoutSessionsInput>
+    create: XOR<TrackingVisitorCreateWithoutSessionsInput, TrackingVisitorUncheckedCreateWithoutSessionsInput>
+    where?: TrackingVisitorWhereInput
+  }
+
+  export type TrackingVisitorUpdateToOneWithWhereWithoutSessionsInput = {
+    where?: TrackingVisitorWhereInput
+    data: XOR<TrackingVisitorUpdateWithoutSessionsInput, TrackingVisitorUncheckedUpdateWithoutSessionsInput>
+  }
+
+  export type TrackingVisitorUpdateWithoutSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingVisitorsNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutVisitorsNestedInput
+    events?: TrackingEventUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingVisitorUncheckedUpdateWithoutSessionsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TrackingEventUncheckedUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingEventUpsertWithWhereUniqueWithoutSessionInput = {
+    where: TrackingEventWhereUniqueInput
+    update: XOR<TrackingEventUpdateWithoutSessionInput, TrackingEventUncheckedUpdateWithoutSessionInput>
+    create: XOR<TrackingEventCreateWithoutSessionInput, TrackingEventUncheckedCreateWithoutSessionInput>
+  }
+
+  export type TrackingEventUpdateWithWhereUniqueWithoutSessionInput = {
+    where: TrackingEventWhereUniqueInput
+    data: XOR<TrackingEventUpdateWithoutSessionInput, TrackingEventUncheckedUpdateWithoutSessionInput>
+  }
+
+  export type TrackingEventUpdateManyWithWhereWithoutSessionInput = {
+    where: TrackingEventScalarWhereInput
+    data: XOR<TrackingEventUpdateManyMutationInput, TrackingEventUncheckedUpdateManyWithoutSessionInput>
+  }
+
+  export type OrganizationCreateWithoutTrackingEventsInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutTrackingEventsInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountUncheckedCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaUncheckedCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoUncheckedCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventUncheckedCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetUncheckedCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutTrackingEventsInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutTrackingEventsInput, OrganizationUncheckedCreateWithoutTrackingEventsInput>
+  }
+
+  export type TrackingVisitorCreateWithoutEventsInput = {
+    id?: string
+    anonymousId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingVisitorsInput
+    identity?: TrackingIdentityCreateNestedOneWithoutVisitorsInput
+    sessions?: TrackingSessionCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorUncheckedCreateWithoutEventsInput = {
+    id?: string
+    organizationId: string
+    anonymousId: string
+    identityId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    sessions?: TrackingSessionUncheckedCreateNestedManyWithoutVisitorInput
+  }
+
+  export type TrackingVisitorCreateOrConnectWithoutEventsInput = {
+    where: TrackingVisitorWhereUniqueInput
+    create: XOR<TrackingVisitorCreateWithoutEventsInput, TrackingVisitorUncheckedCreateWithoutEventsInput>
+  }
+
+  export type TrackingSessionCreateWithoutEventsInput = {
+    id?: string
+    sessionId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingSessionsInput
+    visitor: TrackingVisitorCreateNestedOneWithoutSessionsInput
+  }
+
+  export type TrackingSessionUncheckedCreateWithoutEventsInput = {
+    id?: string
+    organizationId: string
+    sessionId: string
+    visitorId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+  }
+
+  export type TrackingSessionCreateOrConnectWithoutEventsInput = {
+    where: TrackingSessionWhereUniqueInput
+    create: XOR<TrackingSessionCreateWithoutEventsInput, TrackingSessionUncheckedCreateWithoutEventsInput>
+  }
+
+  export type TrackingIdentityCreateWithoutEventsInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingIdentitiesInput
+    aliases?: IdentityAliasCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoCreateNestedManyWithoutTrackingIdentityInput
+    mergedInto?: TrackingIdentityCreateNestedOneWithoutMergedFromInput
+    mergedFrom?: TrackingIdentityCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUncheckedCreateWithoutEventsInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput
+    orders?: AttributionOrderUncheckedCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput
+    mergedFrom?: TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityCreateOrConnectWithoutEventsInput = {
+    where: TrackingIdentityWhereUniqueInput
+    create: XOR<TrackingIdentityCreateWithoutEventsInput, TrackingIdentityUncheckedCreateWithoutEventsInput>
+  }
+
+  export type OrganizationUpsertWithoutTrackingEventsInput = {
+    update: XOR<OrganizationUpdateWithoutTrackingEventsInput, OrganizationUncheckedUpdateWithoutTrackingEventsInput>
+    create: XOR<OrganizationCreateWithoutTrackingEventsInput, OrganizationUncheckedCreateWithoutTrackingEventsInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutTrackingEventsInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutTrackingEventsInput, OrganizationUncheckedUpdateWithoutTrackingEventsInput>
+  }
+
+  export type OrganizationUpdateWithoutTrackingEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutTrackingEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUncheckedUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUncheckedUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUncheckedUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUncheckedUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type TrackingVisitorUpsertWithoutEventsInput = {
+    update: XOR<TrackingVisitorUpdateWithoutEventsInput, TrackingVisitorUncheckedUpdateWithoutEventsInput>
+    create: XOR<TrackingVisitorCreateWithoutEventsInput, TrackingVisitorUncheckedCreateWithoutEventsInput>
+    where?: TrackingVisitorWhereInput
+  }
+
+  export type TrackingVisitorUpdateToOneWithWhereWithoutEventsInput = {
+    where?: TrackingVisitorWhereInput
+    data: XOR<TrackingVisitorUpdateWithoutEventsInput, TrackingVisitorUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type TrackingVisitorUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingVisitorsNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutVisitorsNestedInput
+    sessions?: TrackingSessionUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingVisitorUncheckedUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: TrackingSessionUncheckedUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingSessionUpsertWithoutEventsInput = {
+    update: XOR<TrackingSessionUpdateWithoutEventsInput, TrackingSessionUncheckedUpdateWithoutEventsInput>
+    create: XOR<TrackingSessionCreateWithoutEventsInput, TrackingSessionUncheckedCreateWithoutEventsInput>
+    where?: TrackingSessionWhereInput
+  }
+
+  export type TrackingSessionUpdateToOneWithWhereWithoutEventsInput = {
+    where?: TrackingSessionWhereInput
+    data: XOR<TrackingSessionUpdateWithoutEventsInput, TrackingSessionUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type TrackingSessionUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingSessionsNestedInput
+    visitor?: TrackingVisitorUpdateOneRequiredWithoutSessionsNestedInput
+  }
+
+  export type TrackingSessionUncheckedUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingIdentityUpsertWithoutEventsInput = {
+    update: XOR<TrackingIdentityUpdateWithoutEventsInput, TrackingIdentityUncheckedUpdateWithoutEventsInput>
+    create: XOR<TrackingIdentityCreateWithoutEventsInput, TrackingIdentityUncheckedCreateWithoutEventsInput>
+    where?: TrackingIdentityWhereInput
+  }
+
+  export type TrackingIdentityUpdateToOneWithWhereWithoutEventsInput = {
+    where?: TrackingIdentityWhereInput
+    data: XOR<TrackingIdentityUpdateWithoutEventsInput, TrackingIdentityUncheckedUpdateWithoutEventsInput>
+  }
+
+  export type TrackingIdentityUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput
+    aliases?: IdentityAliasUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUpdateManyWithoutTrackingIdentityNestedInput
+    mergedInto?: TrackingIdentityUpdateOneWithoutMergedFromNestedInput
+    mergedFrom?: TrackingIdentityUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateWithoutEventsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput
+    mergedFrom?: TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type OrganizationCreateWithoutAttributionOrdersInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutAttributionOrdersInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountUncheckedCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaUncheckedCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoUncheckedCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventUncheckedCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetUncheckedCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    adSpendDaily?: AdSpendDailyUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutAttributionOrdersInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutAttributionOrdersInput, OrganizationUncheckedCreateWithoutAttributionOrdersInput>
+  }
+
+  export type TrackingIdentityCreateWithoutOrdersInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutTrackingIdentitiesInput
+    aliases?: IdentityAliasCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoCreateNestedManyWithoutTrackingIdentityInput
+    mergedInto?: TrackingIdentityCreateNestedOneWithoutMergedFromInput
+    mergedFrom?: TrackingIdentityCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityUncheckedCreateWithoutOrdersInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    aliases?: IdentityAliasUncheckedCreateNestedManyWithoutIdentityInput
+    visitors?: TrackingVisitorUncheckedCreateNestedManyWithoutIdentityInput
+    events?: TrackingEventUncheckedCreateNestedManyWithoutIdentityInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutTrackingIdentityInput
+    mergedFrom?: TrackingIdentityUncheckedCreateNestedManyWithoutMergedIntoInput
+  }
+
+  export type TrackingIdentityCreateOrConnectWithoutOrdersInput = {
+    where: TrackingIdentityWhereUniqueInput
+    create: XOR<TrackingIdentityCreateWithoutOrdersInput, TrackingIdentityUncheckedCreateWithoutOrdersInput>
+  }
+
+  export type AttributionOrderItemCreateWithoutOrderInput = {
+    id?: string
+    productId: string
+    name?: string | null
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemUncheckedCreateWithoutOrderInput = {
+    id?: string
+    productId: string
+    name?: string | null
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemCreateOrConnectWithoutOrderInput = {
+    where: AttributionOrderItemWhereUniqueInput
+    create: XOR<AttributionOrderItemCreateWithoutOrderInput, AttributionOrderItemUncheckedCreateWithoutOrderInput>
+  }
+
+  export type AttributionOrderItemCreateManyOrderInputEnvelope = {
+    data: AttributionOrderItemCreateManyOrderInput | AttributionOrderItemCreateManyOrderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type OrderAttributionCreateWithoutOrderInput = {
+    id?: string
+    model?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: string | null
+    attributedMedium?: string | null
+    attributedCampaign?: string | null
+    attributedAdset?: string | null
+    attributedAd?: string | null
+    attributedContent?: string | null
+    attributedValue: Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type OrderAttributionUncheckedCreateWithoutOrderInput = {
+    id?: string
+    model?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: string | null
+    attributedMedium?: string | null
+    attributedCampaign?: string | null
+    attributedAdset?: string | null
+    attributedAd?: string | null
+    attributedContent?: string | null
+    attributedValue: Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type OrderAttributionCreateOrConnectWithoutOrderInput = {
+    where: OrderAttributionWhereUniqueInput
+    create: XOR<OrderAttributionCreateWithoutOrderInput, OrderAttributionUncheckedCreateWithoutOrderInput>
+  }
+
+  export type OrganizationUpsertWithoutAttributionOrdersInput = {
+    update: XOR<OrganizationUpdateWithoutAttributionOrdersInput, OrganizationUncheckedUpdateWithoutAttributionOrdersInput>
+    create: XOR<OrganizationCreateWithoutAttributionOrdersInput, OrganizationUncheckedCreateWithoutAttributionOrdersInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutAttributionOrdersInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutAttributionOrdersInput, OrganizationUncheckedUpdateWithoutAttributionOrdersInput>
+  }
+
+  export type OrganizationUpdateWithoutAttributionOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutAttributionOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUncheckedUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUncheckedUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUncheckedUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUncheckedUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    adSpendDaily?: AdSpendDailyUncheckedUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type TrackingIdentityUpsertWithoutOrdersInput = {
+    update: XOR<TrackingIdentityUpdateWithoutOrdersInput, TrackingIdentityUncheckedUpdateWithoutOrdersInput>
+    create: XOR<TrackingIdentityCreateWithoutOrdersInput, TrackingIdentityUncheckedCreateWithoutOrdersInput>
+    where?: TrackingIdentityWhereInput
+  }
+
+  export type TrackingIdentityUpdateToOneWithWhereWithoutOrdersInput = {
+    where?: TrackingIdentityWhereInput
+    data: XOR<TrackingIdentityUpdateWithoutOrdersInput, TrackingIdentityUncheckedUpdateWithoutOrdersInput>
+  }
+
+  export type TrackingIdentityUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput
+    aliases?: IdentityAliasUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUpdateManyWithoutTrackingIdentityNestedInput
+    mergedInto?: TrackingIdentityUpdateOneWithoutMergedFromNestedInput
+    mergedFrom?: TrackingIdentityUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateWithoutOrdersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput
+    mergedFrom?: TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type AttributionOrderItemUpsertWithWhereUniqueWithoutOrderInput = {
+    where: AttributionOrderItemWhereUniqueInput
+    update: XOR<AttributionOrderItemUpdateWithoutOrderInput, AttributionOrderItemUncheckedUpdateWithoutOrderInput>
+    create: XOR<AttributionOrderItemCreateWithoutOrderInput, AttributionOrderItemUncheckedCreateWithoutOrderInput>
+  }
+
+  export type AttributionOrderItemUpdateWithWhereUniqueWithoutOrderInput = {
+    where: AttributionOrderItemWhereUniqueInput
+    data: XOR<AttributionOrderItemUpdateWithoutOrderInput, AttributionOrderItemUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type AttributionOrderItemUpdateManyWithWhereWithoutOrderInput = {
+    where: AttributionOrderItemScalarWhereInput
+    data: XOR<AttributionOrderItemUpdateManyMutationInput, AttributionOrderItemUncheckedUpdateManyWithoutOrderInput>
+  }
+
+  export type AttributionOrderItemScalarWhereInput = {
+    AND?: AttributionOrderItemScalarWhereInput | AttributionOrderItemScalarWhereInput[]
+    OR?: AttributionOrderItemScalarWhereInput[]
+    NOT?: AttributionOrderItemScalarWhereInput | AttributionOrderItemScalarWhereInput[]
+    id?: StringFilter<"AttributionOrderItem"> | string
+    orderId?: StringFilter<"AttributionOrderItem"> | string
+    productId?: StringFilter<"AttributionOrderItem"> | string
+    name?: StringNullableFilter<"AttributionOrderItem"> | string | null
+    quantity?: IntFilter<"AttributionOrderItem"> | number
+    price?: DecimalFilter<"AttributionOrderItem"> | Decimal | DecimalJsLike | number | string
+  }
+
+  export type OrderAttributionUpsertWithoutOrderInput = {
+    update: XOR<OrderAttributionUpdateWithoutOrderInput, OrderAttributionUncheckedUpdateWithoutOrderInput>
+    create: XOR<OrderAttributionCreateWithoutOrderInput, OrderAttributionUncheckedCreateWithoutOrderInput>
+    where?: OrderAttributionWhereInput
+  }
+
+  export type OrderAttributionUpdateToOneWithWhereWithoutOrderInput = {
+    where?: OrderAttributionWhereInput
+    data: XOR<OrderAttributionUpdateWithoutOrderInput, OrderAttributionUncheckedUpdateWithoutOrderInput>
+  }
+
+  export type OrderAttributionUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAdset?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAd?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type OrderAttributionUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    model?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    saleSource?: NullableJsonNullValueInput | InputJsonValue
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    attributedSource?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAdset?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedAd?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedContent?: NullableStringFieldUpdateOperationsInput | string | null
+    attributedValue?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    linearShares?: NullableJsonNullValueInput | InputJsonValue
+  }
+
+  export type AttributionOrderCreateWithoutItemsInput = {
+    id?: string
+    externalOrderId: string
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutAttributionOrdersInput
+    identity?: TrackingIdentityCreateNestedOneWithoutOrdersInput
+    attribution?: OrderAttributionCreateNestedOneWithoutOrderInput
+  }
+
+  export type AttributionOrderUncheckedCreateWithoutItemsInput = {
+    id?: string
+    organizationId: string
+    externalOrderId: string
+    identityId?: string | null
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    attribution?: OrderAttributionUncheckedCreateNestedOneWithoutOrderInput
+  }
+
+  export type AttributionOrderCreateOrConnectWithoutItemsInput = {
+    where: AttributionOrderWhereUniqueInput
+    create: XOR<AttributionOrderCreateWithoutItemsInput, AttributionOrderUncheckedCreateWithoutItemsInput>
+  }
+
+  export type AttributionOrderUpsertWithoutItemsInput = {
+    update: XOR<AttributionOrderUpdateWithoutItemsInput, AttributionOrderUncheckedUpdateWithoutItemsInput>
+    create: XOR<AttributionOrderCreateWithoutItemsInput, AttributionOrderUncheckedCreateWithoutItemsInput>
+    where?: AttributionOrderWhereInput
+  }
+
+  export type AttributionOrderUpdateToOneWithWhereWithoutItemsInput = {
+    where?: AttributionOrderWhereInput
+    data: XOR<AttributionOrderUpdateWithoutItemsInput, AttributionOrderUncheckedUpdateWithoutItemsInput>
+  }
+
+  export type AttributionOrderUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutAttributionOrdersNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutOrdersNestedInput
+    attribution?: OrderAttributionUpdateOneWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderUncheckedUpdateWithoutItemsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    attribution?: OrderAttributionUncheckedUpdateOneWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderCreateWithoutAttributionInput = {
+    id?: string
+    externalOrderId: string
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    organization: OrganizationCreateNestedOneWithoutAttributionOrdersInput
+    identity?: TrackingIdentityCreateNestedOneWithoutOrdersInput
+    items?: AttributionOrderItemCreateNestedManyWithoutOrderInput
+  }
+
+  export type AttributionOrderUncheckedCreateWithoutAttributionInput = {
+    id?: string
+    organizationId: string
+    externalOrderId: string
+    identityId?: string | null
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    items?: AttributionOrderItemUncheckedCreateNestedManyWithoutOrderInput
+  }
+
+  export type AttributionOrderCreateOrConnectWithoutAttributionInput = {
+    where: AttributionOrderWhereUniqueInput
+    create: XOR<AttributionOrderCreateWithoutAttributionInput, AttributionOrderUncheckedCreateWithoutAttributionInput>
+  }
+
+  export type AttributionOrderUpsertWithoutAttributionInput = {
+    update: XOR<AttributionOrderUpdateWithoutAttributionInput, AttributionOrderUncheckedUpdateWithoutAttributionInput>
+    create: XOR<AttributionOrderCreateWithoutAttributionInput, AttributionOrderUncheckedCreateWithoutAttributionInput>
+    where?: AttributionOrderWhereInput
+  }
+
+  export type AttributionOrderUpdateToOneWithWhereWithoutAttributionInput = {
+    where?: AttributionOrderWhereInput
+    data: XOR<AttributionOrderUpdateWithoutAttributionInput, AttributionOrderUncheckedUpdateWithoutAttributionInput>
+  }
+
+  export type AttributionOrderUpdateWithoutAttributionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutAttributionOrdersNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutOrdersNestedInput
+    items?: AttributionOrderItemUpdateManyWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderUncheckedUpdateWithoutAttributionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: AttributionOrderItemUncheckedUpdateManyWithoutOrderNestedInput
+  }
+
+  export type OrganizationCreateWithoutAdSpendDailyInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationUncheckedCreateWithoutAdSpendDailyInput = {
+    id?: string
+    nome: string
+    slug: string
+    plan?: string
+    status?: string
+    centralClienteId?: string | null
+    onboardingDone?: boolean
+    maxIgAccounts?: number
+    maxFluxos?: number
+    maxMembers?: number
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    members?: OrganizationMemberUncheckedCreateNestedManyWithoutOrganizationInput
+    subscription?: SubscriptionUncheckedCreateNestedOneWithoutOrganizationInput
+    igAccounts?: IgAccountUncheckedCreateNestedManyWithoutOrganizationInput
+    contatos?: IgContatoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversas?: IgConversaUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxos?: IgFluxoUncheckedCreateNestedManyWithoutOrganizationInput
+    fluxoPastas?: IgFluxoPastaUncheckedCreateNestedManyWithoutOrganizationInput
+    execucoes?: IgFluxoExecucaoUncheckedCreateNestedManyWithoutOrganizationInput
+    webhookEvents?: IgWebhookEventUncheckedCreateNestedManyWithoutOrganizationInput
+    orgSettings?: IgOrgSettingsUncheckedCreateNestedOneWithoutOrganizationInput
+    snippets?: IgSnippetUncheckedCreateNestedManyWithoutOrganizationInput
+    segmentos?: IgSegmentoUncheckedCreateNestedManyWithoutOrganizationInput
+    conversionEvents?: IgConversionEventUncheckedCreateNestedManyWithoutOrganizationInput
+    memberInvites?: IgMemberInviteUncheckedCreateNestedManyWithoutOrganizationInput
+    scheduledMessages?: IgScheduledMessageUncheckedCreateNestedManyWithoutOrganizationInput
+    tagDefinitions?: IgTagDefinitionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingIdentities?: TrackingIdentityUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingVisitors?: TrackingVisitorUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingSessions?: TrackingSessionUncheckedCreateNestedManyWithoutOrganizationInput
+    trackingEvents?: TrackingEventUncheckedCreateNestedManyWithoutOrganizationInput
+    attributionOrders?: AttributionOrderUncheckedCreateNestedManyWithoutOrganizationInput
+  }
+
+  export type OrganizationCreateOrConnectWithoutAdSpendDailyInput = {
+    where: OrganizationWhereUniqueInput
+    create: XOR<OrganizationCreateWithoutAdSpendDailyInput, OrganizationUncheckedCreateWithoutAdSpendDailyInput>
+  }
+
+  export type OrganizationUpsertWithoutAdSpendDailyInput = {
+    update: XOR<OrganizationUpdateWithoutAdSpendDailyInput, OrganizationUncheckedUpdateWithoutAdSpendDailyInput>
+    create: XOR<OrganizationCreateWithoutAdSpendDailyInput, OrganizationUncheckedCreateWithoutAdSpendDailyInput>
+    where?: OrganizationWhereInput
+  }
+
+  export type OrganizationUpdateToOneWithWhereWithoutAdSpendDailyInput = {
+    where?: OrganizationWhereInput
+    data: XOR<OrganizationUpdateWithoutAdSpendDailyInput, OrganizationUncheckedUpdateWithoutAdSpendDailyInput>
+  }
+
+  export type OrganizationUpdateWithoutAdSpendDailyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUpdateManyWithoutOrganizationNestedInput
+  }
+
+  export type OrganizationUncheckedUpdateWithoutAdSpendDailyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    nome?: StringFieldUpdateOperationsInput | string
+    slug?: StringFieldUpdateOperationsInput | string
+    plan?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    centralClienteId?: NullableStringFieldUpdateOperationsInput | string | null
+    onboardingDone?: BoolFieldUpdateOperationsInput | boolean
+    maxIgAccounts?: IntFieldUpdateOperationsInput | number
+    maxFluxos?: IntFieldUpdateOperationsInput | number
+    maxMembers?: IntFieldUpdateOperationsInput | number
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    members?: OrganizationMemberUncheckedUpdateManyWithoutOrganizationNestedInput
+    subscription?: SubscriptionUncheckedUpdateOneWithoutOrganizationNestedInput
+    igAccounts?: IgAccountUncheckedUpdateManyWithoutOrganizationNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversas?: IgConversaUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxos?: IgFluxoUncheckedUpdateManyWithoutOrganizationNestedInput
+    fluxoPastas?: IgFluxoPastaUncheckedUpdateManyWithoutOrganizationNestedInput
+    execucoes?: IgFluxoExecucaoUncheckedUpdateManyWithoutOrganizationNestedInput
+    webhookEvents?: IgWebhookEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    orgSettings?: IgOrgSettingsUncheckedUpdateOneWithoutOrganizationNestedInput
+    snippets?: IgSnippetUncheckedUpdateManyWithoutOrganizationNestedInput
+    segmentos?: IgSegmentoUncheckedUpdateManyWithoutOrganizationNestedInput
+    conversionEvents?: IgConversionEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    memberInvites?: IgMemberInviteUncheckedUpdateManyWithoutOrganizationNestedInput
+    scheduledMessages?: IgScheduledMessageUncheckedUpdateManyWithoutOrganizationNestedInput
+    tagDefinitions?: IgTagDefinitionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingIdentities?: TrackingIdentityUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingVisitors?: TrackingVisitorUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingSessions?: TrackingSessionUncheckedUpdateManyWithoutOrganizationNestedInput
+    trackingEvents?: TrackingEventUncheckedUpdateManyWithoutOrganizationNestedInput
+    attributionOrders?: AttributionOrderUncheckedUpdateManyWithoutOrganizationNestedInput
   }
 
   export type AgregadoMidiaMensalCreateManyClienteInput = {
@@ -80580,11 +99808,13 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
     botPaused?: boolean
     lastInteractionAt?: Date | string | null
+    trackingIdentityId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -80597,6 +99827,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -80696,6 +99927,92 @@ export namespace Prisma {
     createdAt?: Date | string
   }
 
+  export type TrackingIdentityCreateManyOrganizationInput = {
+    id?: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrackingVisitorCreateManyOrganizationInput = {
+    id?: string
+    anonymousId: string
+    identityId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrackingSessionCreateManyOrganizationInput = {
+    id?: string
+    sessionId: string
+    visitorId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+  }
+
+  export type TrackingEventCreateManyOrganizationInput = {
+    id?: string
+    eventId: string
+    name: string
+    visitorId?: string | null
+    sessionId?: string | null
+    identityId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type AttributionOrderCreateManyOrganizationInput = {
+    id?: string
+    externalOrderId: string
+    identityId?: string | null
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type AdSpendDailyCreateManyOrganizationInput = {
+    id?: string
+    date: Date | string
+    platform: string
+    campaignId?: string
+    campaignName?: string | null
+    adsetId?: string
+    adsetName?: string | null
+    adId?: string
+    adName?: string | null
+    spend: Decimal | DecimalJsLike | number | string
+    currency?: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
   export type OrganizationMemberUpdateWithoutOrganizationInput = {
     id?: StringFieldUpdateOperationsInput | string
     role?: StringFieldUpdateOperationsInput | string
@@ -80791,6 +100108,7 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -80799,6 +100117,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     igAccount?: IgAccountUpdateOneRequiredWithoutContatosNestedInput
+    trackingIdentity?: TrackingIdentityUpdateOneWithoutContatosNestedInput
     conversas?: IgConversaUpdateManyWithoutContatoNestedInput
     execucoes?: IgFluxoExecucaoUpdateManyWithoutContatoNestedInput
   }
@@ -80809,11 +100128,13 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     botPaused?: BoolFieldUpdateOperationsInput | boolean
     lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trackingIdentityId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversas?: IgConversaUncheckedUpdateManyWithoutContatoNestedInput
@@ -80826,11 +100147,13 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     botPaused?: BoolFieldUpdateOperationsInput | boolean
     lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trackingIdentityId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -80841,6 +100164,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     igAccount?: IgAccountUpdateOneRequiredWithoutConversasNestedInput
@@ -80856,6 +100180,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     mensagens?: IgMensagemUncheckedUpdateManyWithoutConversaNestedInput
@@ -80869,6 +100194,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -81164,6 +100490,286 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type TrackingIdentityUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUpdateManyWithoutTrackingIdentityNestedInput
+    mergedInto?: TrackingIdentityUpdateOneWithoutMergedFromNestedInput
+    mergedFrom?: TrackingIdentityUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput
+    mergedFrom?: TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    mergedIntoId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingVisitorUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    identity?: TrackingIdentityUpdateOneWithoutVisitorsNestedInput
+    sessions?: TrackingSessionUpdateManyWithoutVisitorNestedInput
+    events?: TrackingEventUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingVisitorUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: TrackingSessionUncheckedUpdateManyWithoutVisitorNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingVisitorUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingSessionUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitor?: TrackingVisitorUpdateOneRequiredWithoutSessionsNestedInput
+    events?: TrackingEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TrackingSessionUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TrackingEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TrackingSessionUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    visitorId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    visitor?: TrackingVisitorUpdateOneWithoutEventsNestedInput
+    session?: TrackingSessionUpdateOneWithoutEventsNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutEventsNestedInput
+  }
+
+  export type TrackingEventUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    visitorId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    visitorId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttributionOrderUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    identity?: TrackingIdentityUpdateOneWithoutOrdersNestedInput
+    items?: AttributionOrderItemUpdateManyWithoutOrderNestedInput
+    attribution?: OrderAttributionUpdateOneWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: AttributionOrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    attribution?: OrderAttributionUncheckedUpdateOneWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdSpendDailyUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: StringFieldUpdateOperationsInput | string
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    adId?: StringFieldUpdateOperationsInput | string
+    adName?: NullableStringFieldUpdateOperationsInput | string | null
+    spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdSpendDailyUncheckedUpdateWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: StringFieldUpdateOperationsInput | string
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    adId?: StringFieldUpdateOperationsInput | string
+    adName?: NullableStringFieldUpdateOperationsInput | string | null
+    spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AdSpendDailyUncheckedUpdateManyWithoutOrganizationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    date?: DateTimeFieldUpdateOperationsInput | Date | string
+    platform?: StringFieldUpdateOperationsInput | string
+    campaignId?: StringFieldUpdateOperationsInput | string
+    campaignName?: NullableStringFieldUpdateOperationsInput | string | null
+    adsetId?: StringFieldUpdateOperationsInput | string
+    adsetName?: NullableStringFieldUpdateOperationsInput | string | null
+    adId?: StringFieldUpdateOperationsInput | string
+    adName?: NullableStringFieldUpdateOperationsInput | string | null
+    spend?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type OrganizationMemberCreateManyUserInput = {
     id?: string
     organizationId: string
@@ -81202,11 +100808,13 @@ export namespace Prisma {
     igsid: string
     nome?: string | null
     username?: string | null
+    profilePictureUrl?: string | null
     tags?: IgContatoCreatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: string | null
     botPaused?: boolean
     lastInteractionAt?: Date | string | null
+    trackingIdentityId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -81219,6 +100827,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -81241,6 +100850,7 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
@@ -81249,6 +100859,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutContatosNestedInput
+    trackingIdentity?: TrackingIdentityUpdateOneWithoutContatosNestedInput
     conversas?: IgConversaUpdateManyWithoutContatoNestedInput
     execucoes?: IgFluxoExecucaoUpdateManyWithoutContatoNestedInput
   }
@@ -81259,11 +100870,13 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     botPaused?: BoolFieldUpdateOperationsInput | boolean
     lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trackingIdentityId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     conversas?: IgConversaUncheckedUpdateManyWithoutContatoNestedInput
@@ -81276,11 +100889,13 @@ export namespace Prisma {
     igsid?: StringFieldUpdateOperationsInput | string
     nome?: NullableStringFieldUpdateOperationsInput | string | null
     username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
     tags?: IgContatoUpdatetagsInput | string[]
     campos?: JsonNullValueInput | InputJsonValue
     phone?: NullableStringFieldUpdateOperationsInput | string | null
     botPaused?: BoolFieldUpdateOperationsInput | boolean
     lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    trackingIdentityId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -81291,6 +100906,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutConversasNestedInput
@@ -81306,6 +100922,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     mensagens?: IgMensagemUncheckedUpdateManyWithoutConversaNestedInput
@@ -81319,6 +100936,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -81374,6 +100992,7 @@ export namespace Prisma {
     handoffHuman?: boolean
     assignedUserId?: string | null
     lastMessageAt?: Date | string | null
+    lastReadAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -81396,6 +101015,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     organization?: OrganizationUpdateOneRequiredWithoutConversasNestedInput
@@ -81411,6 +101031,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     mensagens?: IgMensagemUncheckedUpdateManyWithoutConversaNestedInput
@@ -81424,6 +101045,7 @@ export namespace Prisma {
     handoffHuman?: BoolFieldUpdateOperationsInput | boolean
     assignedUserId?: NullableStringFieldUpdateOperationsInput | string | null
     lastMessageAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    lastReadAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -81654,6 +101276,548 @@ export namespace Prisma {
     context?: JsonNullValueInput | InputJsonValue
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdentityAliasCreateManyIdentityInput = {
+    id?: string
+    organizationId: string
+    type: string
+    value: string
+    createdAt?: Date | string
+  }
+
+  export type TrackingVisitorCreateManyIdentityInput = {
+    id?: string
+    organizationId: string
+    anonymousId: string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrackingEventCreateManyIdentityInput = {
+    id?: string
+    organizationId: string
+    eventId: string
+    name: string
+    visitorId?: string | null
+    sessionId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type AttributionOrderCreateManyIdentityInput = {
+    id?: string
+    organizationId: string
+    externalOrderId: string
+    customerExternalId?: string | null
+    value: Decimal | DecimalJsLike | number | string
+    currency?: string
+    status?: string
+    eventId?: string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IgContatoCreateManyTrackingIdentityInput = {
+    id?: string
+    organizationId: string
+    igAccountId: string
+    igsid: string
+    nome?: string | null
+    username?: string | null
+    profilePictureUrl?: string | null
+    tags?: IgContatoCreatetagsInput | string[]
+    campos?: JsonNullValueInput | InputJsonValue
+    phone?: string | null
+    botPaused?: boolean
+    lastInteractionAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type TrackingIdentityCreateManyMergedIntoInput = {
+    id?: string
+    organizationId: string
+    stId: string
+    email?: string | null
+    phone?: string | null
+    name?: string | null
+    status?: string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type IdentityAliasUpdateWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdentityAliasUncheckedUpdateWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IdentityAliasUncheckedUpdateManyWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    type?: StringFieldUpdateOperationsInput | string
+    value?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingVisitorUpdateWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingVisitorsNestedInput
+    sessions?: TrackingSessionUpdateManyWithoutVisitorNestedInput
+    events?: TrackingEventUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingVisitorUncheckedUpdateWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    sessions?: TrackingSessionUncheckedUpdateManyWithoutVisitorNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutVisitorNestedInput
+  }
+
+  export type TrackingVisitorUncheckedUpdateManyWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    anonymousId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventUpdateWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingEventsNestedInput
+    visitor?: TrackingVisitorUpdateOneWithoutEventsNestedInput
+    session?: TrackingSessionUpdateOneWithoutEventsNestedInput
+  }
+
+  export type TrackingEventUncheckedUpdateWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    visitorId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventUncheckedUpdateManyWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    visitorId?: NullableStringFieldUpdateOperationsInput | string | null
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttributionOrderUpdateWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutAttributionOrdersNestedInput
+    items?: AttributionOrderItemUpdateManyWithoutOrderNestedInput
+    attribution?: OrderAttributionUpdateOneWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderUncheckedUpdateWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    items?: AttributionOrderItemUncheckedUpdateManyWithoutOrderNestedInput
+    attribution?: OrderAttributionUncheckedUpdateOneWithoutOrderNestedInput
+  }
+
+  export type AttributionOrderUncheckedUpdateManyWithoutIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    externalOrderId?: StringFieldUpdateOperationsInput | string
+    customerExternalId?: NullableStringFieldUpdateOperationsInput | string | null
+    value?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+    currency?: StringFieldUpdateOperationsInput | string
+    status?: StringFieldUpdateOperationsInput | string
+    eventId?: NullableStringFieldUpdateOperationsInput | string | null
+    rawPayload?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type IgContatoUpdateWithoutTrackingIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    igsid?: StringFieldUpdateOperationsInput | string
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: IgContatoUpdatetagsInput | string[]
+    campos?: JsonNullValueInput | InputJsonValue
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    botPaused?: BoolFieldUpdateOperationsInput | boolean
+    lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutContatosNestedInput
+    igAccount?: IgAccountUpdateOneRequiredWithoutContatosNestedInput
+    conversas?: IgConversaUpdateManyWithoutContatoNestedInput
+    execucoes?: IgFluxoExecucaoUpdateManyWithoutContatoNestedInput
+  }
+
+  export type IgContatoUncheckedUpdateWithoutTrackingIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    igAccountId?: StringFieldUpdateOperationsInput | string
+    igsid?: StringFieldUpdateOperationsInput | string
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: IgContatoUpdatetagsInput | string[]
+    campos?: JsonNullValueInput | InputJsonValue
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    botPaused?: BoolFieldUpdateOperationsInput | boolean
+    lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    conversas?: IgConversaUncheckedUpdateManyWithoutContatoNestedInput
+    execucoes?: IgFluxoExecucaoUncheckedUpdateManyWithoutContatoNestedInput
+  }
+
+  export type IgContatoUncheckedUpdateManyWithoutTrackingIdentityInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    igAccountId?: StringFieldUpdateOperationsInput | string
+    igsid?: StringFieldUpdateOperationsInput | string
+    nome?: NullableStringFieldUpdateOperationsInput | string | null
+    username?: NullableStringFieldUpdateOperationsInput | string | null
+    profilePictureUrl?: NullableStringFieldUpdateOperationsInput | string | null
+    tags?: IgContatoUpdatetagsInput | string[]
+    campos?: JsonNullValueInput | InputJsonValue
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    botPaused?: BoolFieldUpdateOperationsInput | boolean
+    lastInteractionAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingIdentityUpdateWithoutMergedIntoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingIdentitiesNestedInput
+    aliases?: IdentityAliasUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUpdateManyWithoutTrackingIdentityNestedInput
+    mergedFrom?: TrackingIdentityUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateWithoutMergedIntoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    aliases?: IdentityAliasUncheckedUpdateManyWithoutIdentityNestedInput
+    visitors?: TrackingVisitorUncheckedUpdateManyWithoutIdentityNestedInput
+    events?: TrackingEventUncheckedUpdateManyWithoutIdentityNestedInput
+    orders?: AttributionOrderUncheckedUpdateManyWithoutIdentityNestedInput
+    contatos?: IgContatoUncheckedUpdateManyWithoutTrackingIdentityNestedInput
+    mergedFrom?: TrackingIdentityUncheckedUpdateManyWithoutMergedIntoNestedInput
+  }
+
+  export type TrackingIdentityUncheckedUpdateManyWithoutMergedIntoInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    stId?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    phone?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: StringFieldUpdateOperationsInput | string
+    leadSource?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingSessionCreateManyVisitorInput = {
+    id?: string
+    organizationId: string
+    sessionId: string
+    landingPage?: string | null
+    referrer?: string | null
+    utmSource?: string | null
+    utmMedium?: string | null
+    utmCampaign?: string | null
+    utmContent?: string | null
+    utmTerm?: string | null
+    fbclid?: string | null
+    gclid?: string | null
+    ttclid?: string | null
+    msclkid?: string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: Date | string
+    lastSeenAt?: Date | string
+  }
+
+  export type TrackingEventCreateManyVisitorInput = {
+    id?: string
+    organizationId: string
+    eventId: string
+    name: string
+    sessionId?: string | null
+    identityId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TrackingSessionUpdateWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingSessionsNestedInput
+    events?: TrackingEventUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TrackingSessionUncheckedUpdateWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    events?: TrackingEventUncheckedUpdateManyWithoutSessionNestedInput
+  }
+
+  export type TrackingSessionUncheckedUpdateManyWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    sessionId?: StringFieldUpdateOperationsInput | string
+    landingPage?: NullableStringFieldUpdateOperationsInput | string | null
+    referrer?: NullableStringFieldUpdateOperationsInput | string | null
+    utmSource?: NullableStringFieldUpdateOperationsInput | string | null
+    utmMedium?: NullableStringFieldUpdateOperationsInput | string | null
+    utmCampaign?: NullableStringFieldUpdateOperationsInput | string | null
+    utmContent?: NullableStringFieldUpdateOperationsInput | string | null
+    utmTerm?: NullableStringFieldUpdateOperationsInput | string | null
+    fbclid?: NullableStringFieldUpdateOperationsInput | string | null
+    gclid?: NullableStringFieldUpdateOperationsInput | string | null
+    ttclid?: NullableStringFieldUpdateOperationsInput | string | null
+    msclkid?: NullableStringFieldUpdateOperationsInput | string | null
+    firstTouch?: NullableJsonNullValueInput | InputJsonValue
+    lastTouch?: NullableJsonNullValueInput | InputJsonValue
+    startedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    lastSeenAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventUpdateWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingEventsNestedInput
+    session?: TrackingSessionUpdateOneWithoutEventsNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutEventsNestedInput
+  }
+
+  export type TrackingEventUncheckedUpdateWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventUncheckedUpdateManyWithoutVisitorInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    sessionId?: NullableStringFieldUpdateOperationsInput | string | null
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventCreateManySessionInput = {
+    id?: string
+    organizationId: string
+    eventId: string
+    name: string
+    visitorId?: string | null
+    identityId?: string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: Date | string
+    createdAt?: Date | string
+  }
+
+  export type TrackingEventUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    organization?: OrganizationUpdateOneRequiredWithoutTrackingEventsNestedInput
+    visitor?: TrackingVisitorUpdateOneWithoutEventsNestedInput
+    identity?: TrackingIdentityUpdateOneWithoutEventsNestedInput
+  }
+
+  export type TrackingEventUncheckedUpdateWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    visitorId?: NullableStringFieldUpdateOperationsInput | string | null
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type TrackingEventUncheckedUpdateManyWithoutSessionInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    organizationId?: StringFieldUpdateOperationsInput | string
+    eventId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    visitorId?: NullableStringFieldUpdateOperationsInput | string | null
+    identityId?: NullableStringFieldUpdateOperationsInput | string | null
+    properties?: JsonNullValueInput | InputJsonValue
+    context?: JsonNullValueInput | InputJsonValue
+    occurredAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type AttributionOrderItemCreateManyOrderInput = {
+    id?: string
+    productId: string
+    name?: string | null
+    quantity?: number
+    price: Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemUncheckedUpdateWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
+  }
+
+  export type AttributionOrderItemUncheckedUpdateManyWithoutOrderInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    productId?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    quantity?: IntFieldUpdateOperationsInput | number
+    price?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
   }
 
 

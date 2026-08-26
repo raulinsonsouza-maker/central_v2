@@ -1,23 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { verifyPublicApiKey } from "@/lib/symbius/integrations";
-
-async function authOrg(request: NextRequest) {
-  const apiKey = request.headers.get("x-api-key");
-  const orgId = request.headers.get("x-organization-id");
-  if (!orgId || !apiKey) return null;
-  const ok = await verifyPublicApiKey(orgId, apiKey);
-  return ok ? orgId : null;
-}
+import {
+  isAuthError,
+  requirePublicApiOrg,
+} from "@/lib/symbius/attribution/auth";
 
 export async function GET(request: NextRequest) {
-  const orgId = await authOrg(request);
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requirePublicApiOrg(request);
+  if (isAuthError(auth)) return auth;
 
   const contatos = await prisma.igContato.findMany({
-    where: { organizationId: orgId },
+    where: { organizationId: auth.organizationId },
     take: 100,
     orderBy: { lastInteractionAt: "desc" },
   });
@@ -26,10 +19,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const orgId = await authOrg(request);
-  if (!orgId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const auth = await requirePublicApiOrg(request);
+  if (isAuthError(auth)) return auth;
 
   const body = (await request.json()) as {
     action?: string;
@@ -41,7 +32,7 @@ export async function POST(request: NextRequest) {
   if (body.action === "trigger_flow" && body.contatoId && body.fluxoId) {
     const { triggerManualFluxo } = await import("@/lib/symbius/manualFluxo");
     const ok = await triggerManualFluxo({
-      organizationId: orgId,
+      organizationId: auth.organizationId,
       fluxoId: body.fluxoId,
       contatoId: body.contatoId,
       context: { manual: true, api: true },
@@ -51,7 +42,7 @@ export async function POST(request: NextRequest) {
 
   if (body.action === "add_tags" && body.contatoId && body.tags?.length) {
     const contato = await prisma.igContato.findFirst({
-      where: { id: body.contatoId, organizationId: orgId },
+      where: { id: body.contatoId, organizationId: auth.organizationId },
     });
     if (!contato) {
       return NextResponse.json({ error: "Contato não encontrado" }, { status: 404 });

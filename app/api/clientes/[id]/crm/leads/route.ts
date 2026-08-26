@@ -131,3 +131,83 @@ export async function GET(
     pageSize,
   });
 }
+
+/** Bridge Symbius Flow → Central LeadCrm */
+export async function POST(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  const { id: clienteId } = await params;
+  const internal = request.headers.get("x-internal-key");
+  const expected = process.env.SYMBIUS_INTERNAL_API_KEY;
+  if (expected && internal !== expected) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = (await request.json()) as {
+    source?: string;
+    email?: string;
+    phone?: string;
+    name?: string;
+    tags?: string[];
+    stId?: string;
+    valor?: number;
+    dadosMarketing?: Record<string, unknown>;
+    transactionId?: string;
+  };
+
+  const crmConfig = await prisma.crmConfig.findFirst({
+    where: { clienteId, ativo: true },
+  });
+  if (!crmConfig) {
+    return NextResponse.json(
+      { error: "CRM não configurado para este cliente" },
+      { status: 404 },
+    );
+  }
+
+  const crmLeadId =
+    body.stId ||
+    body.transactionId ||
+    `symbius_${body.email || body.phone || Date.now()}`;
+
+  const dadosMarketing = {
+    ...(body.dadosMarketing ?? {}),
+    source: body.source ?? "symbius_flow",
+    tags: body.tags,
+    stId: body.stId,
+    transactionId: body.transactionId,
+  };
+
+  const lead = await prisma.leadCrm.upsert({
+    where: {
+      clienteId_crmLeadId: { clienteId, crmLeadId },
+    },
+    create: {
+      clienteId,
+      crmConfigId: crmConfig.id,
+      crmLeadId,
+      etapa: body.transactionId ? "Ganho" : "Lead",
+      nome: body.name,
+      email: body.email,
+      telefone: body.phone,
+      fonte: "symbius_flow",
+      dataEntrada: new Date(),
+      valor: body.valor ?? null,
+      dadosMarketing,
+      momentoLead: body.transactionId ? "cliente" : "lead",
+    },
+    update: {
+      nome: body.name ?? undefined,
+      email: body.email ?? undefined,
+      telefone: body.phone ?? undefined,
+      valor: body.valor ?? undefined,
+      dadosMarketing,
+      ...(body.transactionId
+        ? { etapa: "Ganho", momentoLead: "cliente", dataFechamento: new Date() }
+        : {}),
+    },
+  });
+
+  return NextResponse.json({ ok: true, id: lead.id, crmLeadId: lead.crmLeadId });
+}

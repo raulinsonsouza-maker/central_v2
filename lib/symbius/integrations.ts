@@ -84,6 +84,10 @@ export async function syncLeadToCentralCrm(params: {
   username?: string;
   nome?: string;
   tags?: string[];
+  stId?: string;
+  valor?: number;
+  transactionId?: string;
+  dadosMarketing?: Record<string, unknown>;
 }): Promise<void> {
   const org = await prisma.organization.findUnique({
     where: { id: params.organizationId },
@@ -116,6 +120,10 @@ export async function syncLeadToCentralCrm(params: {
         phone: params.phone,
         name: params.nome ?? params.username,
         tags: params.tags,
+        stId: params.stId,
+        valor: params.valor,
+        transactionId: params.transactionId,
+        dadosMarketing: params.dadosMarketing,
       }),
     });
   } catch (e) {

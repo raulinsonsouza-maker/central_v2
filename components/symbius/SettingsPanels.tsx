@@ -130,6 +130,14 @@ export function IntegrationsSettingsPanel() {
   const [syncCentralCrm, setSyncCentralCrm] = useState(false);
   const [googleSheetId, setGoogleSheetId] = useState("");
   const [apiKey, setApiKey] = useState<string | null>(null);
+  const [snippet, setSnippet] = useState<string | null>(null);
+  const [metaPixelId, setMetaPixelId] = useState("");
+  const [metaCapiToken, setMetaCapiToken] = useState("");
+  const [ga4MeasurementId, setGa4MeasurementId] = useState("");
+  const [ga4ApiSecret, setGa4ApiSecret] = useState("");
+  const [shopifySecret, setShopifySecret] = useState("");
+  const [traySecret, setTraySecret] = useState("");
+  const [nuvemshopSecret, setNuvemshopSecret] = useState("");
 
   useEffect(() => {
     void fetch("/api/symbius/integrations")
@@ -138,26 +146,59 @@ export function IntegrationsSettingsPanel() {
         setWebhookUrl(d.settings?.webhookUrl ?? "");
         setSyncCentralCrm(Boolean(d.settings?.syncCentralCrm));
         setGoogleSheetId(d.settings?.googleSheetId ?? "");
+        setSnippet(d.trackingSnippet ?? null);
+        setMetaPixelId(d.settings?.metaPixelId ?? "");
+        setGa4MeasurementId(d.settings?.ga4MeasurementId ?? "");
+        const ec = d.settings?.ecommerceConnectors ?? {};
+        setShopifySecret(ec.shopify?.webhookSecret ? "••••••••" : "");
+        setTraySecret(ec.tray?.webhookSecret ? "••••••••" : "");
+        setNuvemshopSecret(ec.nuvemshop?.webhookSecret ? "••••••••" : "");
       });
   }, []);
 
   async function save() {
+    const ecommerceConnectors: Record<string, { webhookSecret?: string }> = {};
+    if (shopifySecret && !shopifySecret.startsWith("••")) {
+      ecommerceConnectors.shopify = { webhookSecret: shopifySecret };
+    }
+    if (traySecret && !traySecret.startsWith("••")) {
+      ecommerceConnectors.tray = { webhookSecret: traySecret };
+    }
+    if (nuvemshopSecret && !nuvemshopSecret.startsWith("••")) {
+      ecommerceConnectors.nuvemshop = { webhookSecret: nuvemshopSecret };
+    }
+
     await fetch("/api/symbius/integrations", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ webhookUrl, syncCentralCrm, googleSheetId }),
+      body: JSON.stringify({
+        webhookUrl: webhookUrl || null,
+        syncCentralCrm,
+        googleSheetId,
+        metaPixelId: metaPixelId || null,
+        metaCapiToken: metaCapiToken || null,
+        ga4MeasurementId: ga4MeasurementId || null,
+        ga4ApiSecret: ga4ApiSecret || null,
+        ...(Object.keys(ecommerceConnectors).length
+          ? { ecommerceConnectors }
+          : {}),
+      }),
     });
+    const refreshed = await fetch("/api/symbius/integrations").then((r) => r.json());
+    setSnippet(refreshed.trackingSnippet ?? null);
   }
 
   async function genKey() {
     const res = await fetch("/api/symbius/integrations", { method: "POST" });
     const d = await res.json();
     setApiKey(d.apiKey);
+    const refreshed = await fetch("/api/symbius/integrations").then((r) => r.json());
+    setSnippet(refreshed.trackingSnippet ?? null);
   }
 
   return (
     <div className="rounded-2xl border border-zinc-200 bg-white p-6 space-y-4">
-      <h2 className="text-xl font-bold">Integrações</h2>
+      <h2 className="text-xl font-bold">Integrações & Attribution</h2>
       <label className="block text-sm">
         <span className="text-zinc-500">Webhook outbound</span>
         <input
@@ -181,8 +222,76 @@ export function IntegrationsSettingsPanel() {
           checked={syncCentralCrm}
           onChange={(e) => setSyncCentralCrm(e.target.checked)}
         />
-        Sync leads com Central CRM
+        Sync leads/pedidos com Central CRM
       </label>
+
+      <div className="border-t border-zinc-100 pt-4 space-y-3">
+        <h3 className="font-semibold">Symbius Tracker (landing)</h3>
+        <p className="text-xs text-zinc-500">
+          Cole o snippet na landing. Endpoints: POST /api/v1/identify, /api/v1/events, /api/v1/purchases
+        </p>
+        {snippet ? (
+          <pre className="overflow-x-auto rounded-lg bg-zinc-50 p-3 text-xs text-zinc-800 whitespace-pre-wrap">
+            {snippet}
+          </pre>
+        ) : (
+          <p className="text-sm text-amber-700">Gere uma API key para obter o snippet.</p>
+        )}
+      </div>
+
+      <div className="border-t border-zinc-100 pt-4 space-y-3">
+        <h3 className="font-semibold">Meta CAPI / GA4</h3>
+        <input
+          value={metaPixelId}
+          onChange={(e) => setMetaPixelId(e.target.value)}
+          className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm"
+          placeholder="Meta Pixel ID"
+        />
+        <input
+          value={metaCapiToken}
+          onChange={(e) => setMetaCapiToken(e.target.value)}
+          className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm"
+          placeholder="Meta CAPI access token"
+        />
+        <input
+          value={ga4MeasurementId}
+          onChange={(e) => setGa4MeasurementId(e.target.value)}
+          className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm"
+          placeholder="GA4 Measurement ID (G-...)"
+        />
+        <input
+          value={ga4ApiSecret}
+          onChange={(e) => setGa4ApiSecret(e.target.value)}
+          className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm"
+          placeholder="GA4 API Secret"
+        />
+      </div>
+
+      <div className="border-t border-zinc-100 pt-4 space-y-3">
+        <h3 className="font-semibold">Webhooks e-commerce</h3>
+        <p className="text-xs text-zinc-500">
+          Shopify: /api/v1/connectors/shopify · Tray: /api/v1/connectors/tray · Nuvemshop: /api/v1/connectors/nuvemshop
+        </p>
+        <input
+          value={shopifySecret}
+          onChange={(e) => setShopifySecret(e.target.value)}
+          className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm"
+          placeholder="Shopify webhook secret"
+        />
+        <input
+          value={traySecret}
+          onChange={(e) => setTraySecret(e.target.value)}
+          className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm"
+          placeholder="Tray webhook secret"
+        />
+        <input
+          value={nuvemshopSecret}
+          onChange={(e) => setNuvemshopSecret(e.target.value)}
+          className="w-full rounded-lg border border-zinc-200 px-3 py-2 text-sm"
+          placeholder="Nuvemshop webhook secret"
+        />
+      </div>
+
       <div className="flex gap-2">
         <button type="button" onClick={() => void save()} className="symbius-btn-primary px-4 py-2 text-sm">
           Salvar
