@@ -40,12 +40,36 @@ export async function POST(request: NextRequest) {
     const updated = await prisma.igAccount.update({
       where: { id: account.id },
       data: {
+        pageName: profile.name ?? account.pageName,
         igUsername: profile.username ?? account.igUsername,
         igProfilePictureUrl:
           profile.profilePictureUrl ?? account.igProfilePictureUrl,
         followersCount: profile.followersCount ?? account.followersCount,
+        // Corrige igUserId se /me devolver o ID profissional
+        ...(profile.igUserId &&
+        profile.igUserId !== account.igUserId &&
+        profile.username
+          ? { igUserId: profile.igUserId }
+          : {}),
       },
     });
+
+    if (!updated.igUsername || !updated.igProfilePictureUrl) {
+      return NextResponse.json(
+        {
+          error:
+            "A Meta não retornou nome/foto. Reconecte o Instagram em Conectar para renovar o token.",
+          account: {
+            id: updated.id,
+            igUserId: updated.igUserId,
+            igUsername: updated.igUsername,
+            igProfilePictureUrl: updated.igProfilePictureUrl,
+            status: updated.status,
+          },
+        },
+        { status: 422 },
+      );
+    }
 
     return NextResponse.json({
       ok: true,

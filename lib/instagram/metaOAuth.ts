@@ -57,11 +57,13 @@ export async function igGraphGet<T>(
   params: Record<string, string> = {},
 ): Promise<T> {
   const sp = new URLSearchParams(params);
+  // Instagram Login: access_token na query é mais confiável que Bearer
+  sp.set("access_token", token);
   const qs = sp.toString();
-  const url = `${IG_GRAPH}/${path}${qs ? `?${qs}` : ""}`;
+  const url = `${IG_GRAPH}/${path.replace(/^\//, "")}?${qs}`;
   const res = await fetch(url, {
     method: "GET",
-    headers: { Authorization: `Bearer ${token}` },
+    cache: "no-store",
   });
   const json = (await res.json()) as T & { error?: { message: string } };
   if (!res.ok || json.error) {
@@ -164,21 +166,38 @@ export async function exchangeForLongLivedToken(
   shortLivedToken: string,
 ): Promise<{ accessToken: string; expiresIn: number }> {
   const { appSecret } = getSymbiusIgConfig();
-  const body = new URLSearchParams({
-    grant_type: "ig_exchange_token",
-    client_secret: appSecret,
-    access_token: shortLivedToken,
-  });
-  const res = await fetch(`${IG_GRAPH}/access_token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body,
-  });
-  const json = (await res.json()) as {
+  // Endpoint SEM versão (/v21.0/access_token é interpretado como node Graph)
+  const url = new URL("https://graph.instagram.com/access_token");
+  url.searchParams.set("grant_type", "ig_exchange_token");
+  url.searchParams.set("client_secret", appSecret);
+  url.searchParams.set("access_token", shortLivedToken);
+
+  // Docs oficiais: GET. Algumas contas Meta só aceitam POST — tenta ambos.
+  let res = await fetch(url.toString(), { method: "GET", cache: "no-store" });
+  let json = (await res.json()) as {
     access_token?: string;
     expires_in?: number;
     error?: { message: string };
   };
+
+  if (!json.access_token) {
+    const body = new URLSearchParams({
+      grant_type: "ig_exchange_token",
+      client_secret: appSecret,
+      access_token: shortLivedToken,
+    });
+    res = await fetch("https://graph.instagram.com/access_token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body,
+    });
+    json = (await res.json()) as {
+      access_token?: string;
+      expires_in?: number;
+      error?: { message: string };
+    };
+  }
+
   if (!json.access_token) {
     throw new Error(json.error?.message ?? "Long-lived token exchange failed");
   }
@@ -191,20 +210,34 @@ export async function exchangeForLongLivedToken(
 export async function refreshIgLongLivedToken(
   longLivedToken: string,
 ): Promise<{ accessToken: string; expiresIn: number }> {
-  const body = new URLSearchParams({
-    grant_type: "ig_refresh_token",
-    access_token: longLivedToken,
-  });
-  const res = await fetch(`${IG_GRAPH}/refresh_access_token`, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body,
-  });
-  const json = (await res.json()) as {
+  const url = new URL("https://graph.instagram.com/refresh_access_token");
+  url.searchParams.set("grant_type", "ig_refresh_token");
+  url.searchParams.set("access_token", longLivedToken);
+
+  let res = await fetch(url.toString(), { method: "GET", cache: "no-store" });
+  let json = (await res.json()) as {
     access_token?: string;
     expires_in?: number;
     error?: { message: string };
   };
+
+  if (!json.access_token) {
+    const body = new URLSearchParams({
+      grant_type: "ig_refresh_token",
+      access_token: longLivedToken,
+    });
+    res = await fetch("https://graph.instagram.com/refresh_access_token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body,
+    });
+    json = (await res.json()) as {
+      access_token?: string;
+      expires_in?: number;
+      error?: { message: string };
+    };
+  }
+
   if (!json.access_token) {
     throw new Error(json.error?.message ?? "Token refresh failed");
   }
@@ -248,8 +281,9 @@ export async function fetchIgMeProfile(
     });
 
     const row = data.data?.[0] ?? data;
+    // Preferir user_id profissional; `id` é app-scoped e quebra webhooks/perfil
     const igUserId = String(
-      row.user_id ?? data.user_id ?? data.id ?? fallbackUserId ?? "",
+      row.user_id ?? data.user_id ?? fallbackUserId ?? data.id ?? "",
     );
     if (!igUserId) {
       throw new Error("Não foi possível obter o Instagram User ID");
@@ -462,6 +496,7 @@ export async function completeInstagramLogin(code: string): Promise<{
     const long = await exchangeForLongLivedToken(short.accessToken);
     accessToken = long.accessToken;
     expiresIn = long.expiresIn;
+    console.info("[instagram] long-lived exchange ok, expires_in=", expiresIn);
   } catch (e) {
     console.warn(
       "[instagram] long-lived exchange failed, using short-lived token:",
@@ -470,7 +505,25 @@ export async function completeInstagramLogin(code: string): Promise<{
   }
 
   const fallbackId = short.userId?.trim() ? short.userId : undefined;
-  const profile = await fetchIgMeProfile(accessToken, fallbackId);
+  let profile = await fetchIgMeProfile(accessToken, fallbackId);
+
+  // Se /me falhou no short-lived, tenta de novo após long-lived (ou vice-versa)
+  if (!profile.username || !profile.profilePictureUrl) {
+    try {
+      const again = await fetchIgMeProfile(accessToken, profile.igUserId);
+      profile = {
+        ...profile,
+        ...again,
+        igUserId: again.igUserId || profile.igUserId,
+        username: again.username ?? profile.username,
+        name: again.name ?? profile.name,
+        profilePictureUrl: again.profilePictureUrl ?? profile.profilePictureUrl,
+        followersCount: again.followersCount ?? profile.followersCount,
+      };
+    } catch {
+      // mantém o que tiver
+    }
+  }
 
   try {
     await subscribeIgWebhooks(profile.igUserId, accessToken);
