@@ -214,66 +214,129 @@ export async function exchangeForLongLivedToken(
     throw new Error("SYMBIUS_IG_APP_SECRET não configurado");
   }
 
-  // Docs oficiais Instagram Login: GET (sem /vXX.X — senão vira node Graph).
-  // POST neste endpoint retorna "Unsupported request - method type: post".
-  let lastError = "Long-lived token exchange failed";
+  // Meta oscila entre GET e POST conforme o app ("Unsupported request - method type").
+  // Tentamos GET e POST, e os dois secrets (IG / Meta) se forem diferentes.
+  const methods: Array<"GET" | "POST"> = ["GET", "POST"];
+  const errors: string[] = [];
+
   for (const secret of secrets) {
-    const url = new URL("https://graph.instagram.com/access_token");
-    url.searchParams.set("grant_type", "ig_exchange_token");
-    url.searchParams.set("client_secret", secret);
-    url.searchParams.set("access_token", shortLivedToken);
+    for (const method of methods) {
+      try {
+        let res: Response;
+        if (method === "GET") {
+          const url = new URL("https://graph.instagram.com/access_token");
+          url.searchParams.set("grant_type", "ig_exchange_token");
+          url.searchParams.set("client_secret", secret);
+          url.searchParams.set("access_token", shortLivedToken);
+          res = await fetch(url.toString(), {
+            method: "GET",
+            cache: "no-store",
+          });
+        } else {
+          const body = new URLSearchParams({
+            grant_type: "ig_exchange_token",
+            client_secret: secret,
+            access_token: shortLivedToken,
+          });
+          res = await fetch("https://graph.instagram.com/access_token", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body,
+            cache: "no-store",
+          });
+        }
 
-    const res = await fetch(url.toString(), {
-      method: "GET",
-      cache: "no-store",
-    });
-    const json = (await res.json()) as TokenExchangeJson;
-    const picked = pickAccessToken(json);
+        const json = (await res.json()) as TokenExchangeJson;
+        const picked = pickAccessToken(json);
+        if (picked.accessToken) {
+          console.info(
+            "[instagram] long-lived exchange ok via",
+            method,
+            "expires_in=",
+            picked.expiresIn,
+          );
+          return {
+            accessToken: picked.accessToken,
+            expiresIn: picked.expiresIn ?? 60 * 24 * 60 * 60,
+          };
+        }
 
-    if (picked.accessToken) {
-      return {
-        accessToken: picked.accessToken,
-        expiresIn: picked.expiresIn ?? 60 * 24 * 60 * 60,
-      };
+        const err = tokenExchangeError(json, res.status);
+        errors.push(`${method}: ${err}`);
+        console.error(
+          "[instagram] long-lived",
+          method,
+          "failed",
+          res.status,
+          `secret_len=${secret.length}`,
+          JSON.stringify(json).slice(0, 400),
+        );
+      } catch (e) {
+        const msg = e instanceof Error ? e.message : String(e);
+        errors.push(`${method}: ${msg}`);
+        console.error("[instagram] long-lived", method, "exception", msg);
+      }
     }
-
-    lastError = tokenExchangeError(json, res.status);
-    console.error(
-      "[instagram] long-lived GET failed",
-      res.status,
-      `secret_len=${secret.length}`,
-      JSON.stringify(json).slice(0, 500),
-    );
   }
 
-  throw new Error(lastError);
+  const useful =
+    errors.find((e) => !/Unsupported request - method type/i.test(e)) ??
+    errors[0] ??
+    "Long-lived token exchange failed";
+  throw new Error(useful);
 }
 
 export async function refreshIgLongLivedToken(
   longLivedToken: string,
 ): Promise<{ accessToken: string; expiresIn: number }> {
-  // Docs: GET only. POST → "Unsupported request - method type: post".
-  const url = new URL("https://graph.instagram.com/refresh_access_token");
-  url.searchParams.set("grant_type", "ig_refresh_token");
-  url.searchParams.set("access_token", longLivedToken);
+  const methods: Array<"GET" | "POST"> = ["GET", "POST"];
+  const errors: string[] = [];
 
-  const res = await fetch(url.toString(), { method: "GET", cache: "no-store" });
-  const json = (await res.json()) as TokenExchangeJson;
-  const picked = pickAccessToken(json);
+  for (const method of methods) {
+    try {
+      let res: Response;
+      if (method === "GET") {
+        const url = new URL("https://graph.instagram.com/refresh_access_token");
+        url.searchParams.set("grant_type", "ig_refresh_token");
+        url.searchParams.set("access_token", longLivedToken);
+        res = await fetch(url.toString(), {
+          method: "GET",
+          cache: "no-store",
+        });
+      } else {
+        const body = new URLSearchParams({
+          grant_type: "ig_refresh_token",
+          access_token: longLivedToken,
+        });
+        res = await fetch("https://graph.instagram.com/refresh_access_token", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body,
+          cache: "no-store",
+        });
+      }
 
-  if (!picked.accessToken) {
-    console.error(
-      "[instagram] token refresh GET failed",
-      res.status,
-      JSON.stringify(json).slice(0, 500),
-    );
-    throw new Error(tokenExchangeError(json, res.status));
+      const json = (await res.json()) as TokenExchangeJson;
+      const picked = pickAccessToken(json);
+      if (picked.accessToken) {
+        return {
+          accessToken: picked.accessToken,
+          expiresIn: picked.expiresIn ?? 60 * 24 * 60 * 60,
+        };
+      }
+      errors.push(`${method}: ${tokenExchangeError(json, res.status)}`);
+    } catch (e) {
+      errors.push(
+        `${method}: ${e instanceof Error ? e.message : String(e)}`,
+      );
+    }
   }
 
-  return {
-    accessToken: picked.accessToken,
-    expiresIn: picked.expiresIn ?? 60 * 24 * 60 * 60,
-  };
+  const useful =
+    errors.find((e) => !/Unsupported request - method type/i.test(e)) ??
+    errors[0] ??
+    "Token refresh failed";
+  throw new Error(useful);
 }
 
 /** @deprecated use exchangeCodeForShortLivedToken + exchangeForLongLivedToken */

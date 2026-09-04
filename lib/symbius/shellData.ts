@@ -121,6 +121,7 @@ export async function getSymbiusShellData(
 
   if (
     igAccount &&
+    igAccount.status === "CONNECTED" &&
     (!igAccount.igUsername || !igAccount.igProfilePictureUrl)
   ) {
     try {
