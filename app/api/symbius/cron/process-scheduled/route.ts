@@ -18,6 +18,18 @@ async function refreshExpiringTokens(): Promise<number> {
 
   let refreshed = 0;
   for (const account of accounts) {
+    const expired =
+      !account.tokenExpiresAt || account.tokenExpiresAt.getTime() <= Date.now();
+
+    // Já expirou: precisa de OAuth de novo (refresh não funciona em token morto).
+    if (expired) {
+      await prisma.igAccount.update({
+        where: { id: account.id },
+        data: { status: "NEEDS_REAUTH" },
+      });
+      continue;
+    }
+
     try {
       const result = await refreshIgLongLivedToken(account.accessToken);
       await prisma.igAccount.update({
@@ -25,6 +37,7 @@ async function refreshExpiringTokens(): Promise<number> {
         data: {
           accessToken: result.accessToken,
           tokenExpiresAt: new Date(Date.now() + result.expiresIn * 1000),
+          status: "CONNECTED",
         },
       });
       refreshed += 1;

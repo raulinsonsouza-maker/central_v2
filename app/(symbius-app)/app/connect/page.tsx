@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import {
+  AlertTriangle,
   CheckCircle2,
   ChevronRight,
   Instagram,
@@ -37,6 +38,9 @@ function ConnectWizard() {
   const [oauthLoading, setOauthLoading] = useState(false);
   const [oauthError, setOauthError] = useState<string | null>(errorParam);
   const [account, setAccount] = useState<ConnectedAccount | null>(null);
+  const [hydrated, setHydrated] = useState(false);
+
+  const needsReauth = account?.status === "NEEDS_REAUTH";
 
   const loadAccount = useCallback(async () => {
     const res = await fetch("/api/symbius/connect/pages", {
@@ -53,8 +57,14 @@ function ConnectWizard() {
 
   const hydrateFromServer = useCallback(async () => {
     const acc = await loadAccount();
+    setHydrated(true);
     if (!acc) return false;
     setAccount(acc);
+    // Conta expirada: permanece no passo 1 com CTA de reconectar
+    if (acc.status === "NEEDS_REAUTH") {
+      setStep(1);
+      return true;
+    }
     setStep(4);
     return true;
   }, [loadAccount]);
@@ -62,12 +72,12 @@ function ConnectWizard() {
   useEffect(() => {
     if (stepParam >= 5) {
       setStep(4);
-      void loadAccount();
+      void loadAccount().finally(() => setHydrated(true));
       return;
     }
     if (stepParam >= 2) {
       setStep(Math.min(stepParam, 4));
-      void loadAccount();
+      void loadAccount().finally(() => setHydrated(true));
       return;
     }
     void hydrateFromServer();
@@ -76,7 +86,6 @@ function ConnectWizard() {
   useEffect(() => {
     if (errorParam) {
       setOauthError(errorParam);
-      // limpa ?error= da URL pra não reaparecer no refresh
       const url = new URL(window.location.href);
       url.searchParams.delete("error");
       window.history.replaceState({}, "", url.pathname + url.search);
@@ -137,7 +146,9 @@ function ConnectWizard() {
 
   return (
     <div className="p-6 md:p-10">
-      <h1 className="text-2xl font-bold">Conectar Instagram</h1>
+      <h1 className="text-2xl font-bold">
+        {needsReauth ? "Reconectar Instagram" : "Conectar Instagram"}
+      </h1>
       <p className="mt-1 text-[var(--symbius-muted)]">
         Autorize sua conta Professional via Instagram Login
       </p>
@@ -151,8 +162,8 @@ function ConnectWizard() {
       <div className="mt-8 flex flex-wrap gap-2">
         {STEPS.map((label, i) => {
           const n = i + 1;
-          const active = step === n;
-          const done = step > n;
+          const active = step === n && !needsReauth;
+          const done = step > n && !needsReauth;
           return (
             <div
               key={label}
@@ -172,30 +183,80 @@ function ConnectWizard() {
       </div>
 
       <div className="symbius-card mt-8 max-w-2xl">
-        {step === 1 && (
+        {!hydrated && step === 1 && !account ? (
+          <div className="flex justify-center py-10">
+            <Loader2 className="h-8 w-8 animate-spin text-[var(--symbius-primary)]" />
+          </div>
+        ) : null}
+
+        {step === 1 && hydrated && (
           <div className="text-center">
-            <Instagram className="mx-auto h-12 w-12 text-pink-500" />
-            <h2 className="mt-4 text-lg font-semibold">
-              Faltam apenas algumas etapas
-            </h2>
-            <p className="mt-2 text-sm text-[var(--symbius-muted)]">
-              Você será redirecionado para o Instagram. Conceda as permissões e
-              sua conta Professional será vinculada ao Symbius Flow — sem
-              precisar de Página do Facebook.
-            </p>
-            <button
-              type="button"
-              onClick={startMetaOAuth}
-              disabled={oauthLoading}
-              className="symbius-btn-primary mt-8 inline-flex gap-2 disabled:opacity-60"
-            >
-              {oauthLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Instagram className="h-4 w-4" />
-              )}
-              {oauthLoading ? "Aguardando Instagram…" : "Conectar Instagram"}
-            </button>
+            {needsReauth ? (
+              <>
+                <AlertTriangle className="mx-auto h-12 w-12 text-amber-400" />
+                <h2 className="mt-4 text-lg font-semibold">
+                  Conexão expirada
+                </h2>
+                <p className="mt-2 text-sm text-[var(--symbius-muted)]">
+                  {account?.igUsername
+                    ? `@${account.igUsername} precisa autorizar o Instagram de novo.`
+                    : "Sua conta precisa autorizar o Instagram de novo."}{" "}
+                  Automações e inbox ficam pausadas até reconectar.
+                </p>
+                {account?.igProfilePictureUrl ? (
+                  <Image
+                    src={account.igProfilePictureUrl}
+                    alt=""
+                    width={56}
+                    height={56}
+                    className="mx-auto mt-4 rounded-full"
+                    unoptimized
+                  />
+                ) : null}
+                <button
+                  type="button"
+                  onClick={startMetaOAuth}
+                  disabled={oauthLoading}
+                  className="symbius-btn-primary mt-8 inline-flex gap-2 disabled:opacity-60"
+                >
+                  {oauthLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Instagram className="h-4 w-4" />
+                  )}
+                  {oauthLoading
+                    ? "Aguardando Instagram…"
+                    : "Reconectar Instagram"}
+                </button>
+              </>
+            ) : (
+              <>
+                <Instagram className="mx-auto h-12 w-12 text-pink-500" />
+                <h2 className="mt-4 text-lg font-semibold">
+                  Faltam apenas algumas etapas
+                </h2>
+                <p className="mt-2 text-sm text-[var(--symbius-muted)]">
+                  Você será redirecionado para o Instagram. Conceda as permissões
+                  e sua conta Professional será vinculada ao Symbius Flow — sem
+                  precisar de Página do Facebook.
+                </p>
+                <button
+                  type="button"
+                  onClick={startMetaOAuth}
+                  disabled={oauthLoading}
+                  className="symbius-btn-primary mt-8 inline-flex gap-2 disabled:opacity-60"
+                >
+                  {oauthLoading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Instagram className="h-4 w-4" />
+                  )}
+                  {oauthLoading
+                    ? "Aguardando Instagram…"
+                    : "Conectar Instagram"}
+                </button>
+              </>
+            )}
           </div>
         )}
 
@@ -248,7 +309,7 @@ function ConnectWizard() {
           </div>
         )}
 
-        {step === 4 && (
+        {step === 4 && account?.status !== "NEEDS_REAUTH" && (
           <div className="text-center">
             <CheckCircle2 className="mx-auto h-16 w-16 text-[var(--symbius-accent)]" />
             <h2 className="mt-4 text-xl font-bold">Conectado com sucesso!</h2>

@@ -162,88 +162,117 @@ export async function exchangeCodeForShortLivedToken(code: string): Promise<{
   };
 }
 
+type TokenExchangeJson = {
+  access_token?: string;
+  expires_in?: number | string;
+  token_type?: string;
+  data?: Array<{ access_token?: string; expires_in?: number | string }>;
+  error?: { message?: string; type?: string; code?: number };
+  error_message?: string;
+};
+
+function pickAccessToken(json: TokenExchangeJson): {
+  accessToken?: string;
+  expiresIn?: number;
+} {
+  const row = json.data?.[0];
+  const raw = json.access_token ?? row?.access_token;
+  const expiresRaw = json.expires_in ?? row?.expires_in;
+  const expiresIn =
+    typeof expiresRaw === "string"
+      ? Number(expiresRaw)
+      : typeof expiresRaw === "number"
+        ? expiresRaw
+        : undefined;
+  return {
+    accessToken: raw,
+    expiresIn:
+      expiresIn && Number.isFinite(expiresIn) && expiresIn > 0
+        ? expiresIn
+        : undefined,
+  };
+}
+
+function tokenExchangeError(json: TokenExchangeJson, status: number): string {
+  return (
+    json.error?.message ??
+    json.error_message ??
+    `Long-lived token exchange failed (HTTP ${status})`
+  );
+}
+
 export async function exchangeForLongLivedToken(
   shortLivedToken: string,
 ): Promise<{ accessToken: string; expiresIn: number }> {
   const { appSecret } = getSymbiusIgConfig();
-  // Endpoint SEM versão (/v21.0/access_token é interpretado como node Graph)
-  const url = new URL("https://graph.instagram.com/access_token");
-  url.searchParams.set("grant_type", "ig_exchange_token");
-  url.searchParams.set("client_secret", appSecret);
-  url.searchParams.set("access_token", shortLivedToken);
-
-  // Docs oficiais: GET. Algumas contas Meta só aceitam POST — tenta ambos.
-  let res = await fetch(url.toString(), { method: "GET", cache: "no-store" });
-  let json = (await res.json()) as {
-    access_token?: string;
-    expires_in?: number;
-    error?: { message: string };
-  };
-
-  if (!json.access_token) {
-    const body = new URLSearchParams({
-      grant_type: "ig_exchange_token",
-      client_secret: appSecret,
-      access_token: shortLivedToken,
-    });
-    res = await fetch("https://graph.instagram.com/access_token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body,
-    });
-    json = (await res.json()) as {
-      access_token?: string;
-      expires_in?: number;
-      error?: { message: string };
-    };
+  const metaSecret =
+    process.env.SYMBIUS_META_APP_SECRET ?? process.env.META_APP_SECRET ?? "";
+  const secrets = [appSecret, metaSecret].filter(
+    (s, i, arr) => Boolean(s) && arr.indexOf(s) === i,
+  );
+  if (secrets.length === 0) {
+    throw new Error("SYMBIUS_IG_APP_SECRET não configurado");
   }
 
-  if (!json.access_token) {
-    throw new Error(json.error?.message ?? "Long-lived token exchange failed");
+  // Docs oficiais Instagram Login: GET (sem /vXX.X — senão vira node Graph).
+  // POST neste endpoint retorna "Unsupported request - method type: post".
+  let lastError = "Long-lived token exchange failed";
+  for (const secret of secrets) {
+    const url = new URL("https://graph.instagram.com/access_token");
+    url.searchParams.set("grant_type", "ig_exchange_token");
+    url.searchParams.set("client_secret", secret);
+    url.searchParams.set("access_token", shortLivedToken);
+
+    const res = await fetch(url.toString(), {
+      method: "GET",
+      cache: "no-store",
+    });
+    const json = (await res.json()) as TokenExchangeJson;
+    const picked = pickAccessToken(json);
+
+    if (picked.accessToken) {
+      return {
+        accessToken: picked.accessToken,
+        expiresIn: picked.expiresIn ?? 60 * 24 * 60 * 60,
+      };
+    }
+
+    lastError = tokenExchangeError(json, res.status);
+    console.error(
+      "[instagram] long-lived GET failed",
+      res.status,
+      `secret_len=${secret.length}`,
+      JSON.stringify(json).slice(0, 500),
+    );
   }
-  return {
-    accessToken: json.access_token,
-    expiresIn: json.expires_in ?? 60 * 24 * 60 * 60,
-  };
+
+  throw new Error(lastError);
 }
 
 export async function refreshIgLongLivedToken(
   longLivedToken: string,
 ): Promise<{ accessToken: string; expiresIn: number }> {
+  // Docs: GET only. POST → "Unsupported request - method type: post".
   const url = new URL("https://graph.instagram.com/refresh_access_token");
   url.searchParams.set("grant_type", "ig_refresh_token");
   url.searchParams.set("access_token", longLivedToken);
 
-  let res = await fetch(url.toString(), { method: "GET", cache: "no-store" });
-  let json = (await res.json()) as {
-    access_token?: string;
-    expires_in?: number;
-    error?: { message: string };
-  };
+  const res = await fetch(url.toString(), { method: "GET", cache: "no-store" });
+  const json = (await res.json()) as TokenExchangeJson;
+  const picked = pickAccessToken(json);
 
-  if (!json.access_token) {
-    const body = new URLSearchParams({
-      grant_type: "ig_refresh_token",
-      access_token: longLivedToken,
-    });
-    res = await fetch("https://graph.instagram.com/refresh_access_token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body,
-    });
-    json = (await res.json()) as {
-      access_token?: string;
-      expires_in?: number;
-      error?: { message: string };
-    };
+  if (!picked.accessToken) {
+    console.error(
+      "[instagram] token refresh GET failed",
+      res.status,
+      JSON.stringify(json).slice(0, 500),
+    );
+    throw new Error(tokenExchangeError(json, res.status));
   }
 
-  if (!json.access_token) {
-    throw new Error(json.error?.message ?? "Token refresh failed");
-  }
   return {
-    accessToken: json.access_token,
-    expiresIn: json.expires_in ?? 60 * 24 * 60 * 60,
+    accessToken: picked.accessToken,
+    expiresIn: picked.expiresIn ?? 60 * 24 * 60 * 60,
   };
 }
 
@@ -490,19 +519,12 @@ export async function completeInstagramLogin(code: string): Promise<{
 }> {
   const short = await exchangeCodeForShortLivedToken(code);
 
-  let accessToken = short.accessToken;
-  let expiresIn = 60 * 60;
-  try {
-    const long = await exchangeForLongLivedToken(short.accessToken);
-    accessToken = long.accessToken;
-    expiresIn = long.expiresIn;
-    console.info("[instagram] long-lived exchange ok, expires_in=", expiresIn);
-  } catch (e) {
-    console.warn(
-      "[instagram] long-lived exchange failed, using short-lived token:",
-      e instanceof Error ? e.message : e,
-    );
-  }
+  // Token short-lived (~1h) não pode ser renovado via ig_refresh_token.
+  // Sem long-lived a conexão “parece ok” e o cron marca NEEDS_REAUTH em minutos.
+  const long = await exchangeForLongLivedToken(short.accessToken);
+  const accessToken = long.accessToken;
+  const expiresIn = long.expiresIn;
+  console.info("[instagram] long-lived exchange ok, expires_in=", expiresIn);
 
   const fallbackId = short.userId?.trim() ? short.userId : undefined;
   let profile = await fetchIgMeProfile(accessToken, fallbackId);
