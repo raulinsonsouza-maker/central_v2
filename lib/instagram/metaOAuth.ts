@@ -214,76 +214,98 @@ export async function exchangeForLongLivedToken(
     throw new Error("SYMBIUS_IG_APP_SECRET não configurado");
   }
 
-  // Meta oscila entre GET e POST conforme o app ("Unsupported request - method type").
-  // Tentamos GET e POST, e os dois secrets (IG / Meta) se forem diferentes.
-  const methods: Array<"GET" | "POST"> = ["GET", "POST"];
+  // Meta: alguns apps exigem GET, outros POST; às vezes só /v21.0 funciona.
+  // Code 100 "Unsupported request - method type" em GET e POST juntos =
+  // bloqueio de Access Verification / Instagram Tester (não é HTTP method).
+  const bases = [
+    "https://graph.instagram.com",
+    "https://graph.instagram.com/v21.0",
+    "https://graph.instagram.com/v22.0",
+    "https://graph.instagram.com/v23.0",
+  ];
+  const methods: Array<"GET" | "POST"> = ["POST", "GET"];
   const errors: string[] = [];
+  let sawMethodTypeBlock = false;
 
   for (const secret of secrets) {
-    for (const method of methods) {
-      try {
-        let res: Response;
-        if (method === "GET") {
-          const url = new URL("https://graph.instagram.com/access_token");
-          url.searchParams.set("grant_type", "ig_exchange_token");
-          url.searchParams.set("client_secret", secret);
-          url.searchParams.set("access_token", shortLivedToken);
-          res = await fetch(url.toString(), {
-            method: "GET",
-            cache: "no-store",
-          });
-        } else {
-          const body = new URLSearchParams({
-            grant_type: "ig_exchange_token",
-            client_secret: secret,
-            access_token: shortLivedToken,
-          });
-          res = await fetch("https://graph.instagram.com/access_token", {
-            method: "POST",
-            headers: { "Content-Type": "application/x-www-form-urlencoded" },
-            body,
-            cache: "no-store",
-          });
-        }
+    for (const base of bases) {
+      for (const method of methods) {
+        try {
+          const endpoint = `${base}/access_token`;
+          let res: Response;
+          if (method === "GET") {
+            const url = new URL(endpoint);
+            url.searchParams.set("grant_type", "ig_exchange_token");
+            url.searchParams.set("client_secret", secret);
+            url.searchParams.set("access_token", shortLivedToken);
+            res = await fetch(url.toString(), {
+              method: "GET",
+              cache: "no-store",
+            });
+          } else {
+            const body = new URLSearchParams({
+              grant_type: "ig_exchange_token",
+              client_secret: secret,
+              access_token: shortLivedToken,
+            });
+            res = await fetch(endpoint, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body,
+              cache: "no-store",
+            });
+          }
 
-        const json = (await res.json()) as TokenExchangeJson;
-        const picked = pickAccessToken(json);
-        if (picked.accessToken) {
-          console.info(
-            "[instagram] long-lived exchange ok via",
+          const json = (await res.json()) as TokenExchangeJson;
+          const picked = pickAccessToken(json);
+          if (picked.accessToken) {
+            console.info(
+              "[instagram] long-lived exchange ok via",
+              method,
+              base,
+              "expires_in=",
+              picked.expiresIn,
+            );
+            return {
+              accessToken: picked.accessToken,
+              expiresIn: picked.expiresIn ?? 60 * 24 * 60 * 60,
+            };
+          }
+
+          const err = tokenExchangeError(json, res.status);
+          if (/Unsupported request - method type/i.test(err)) {
+            sawMethodTypeBlock = true;
+          }
+          errors.push(`${method} ${base}: ${err}`);
+          console.error(
+            "[instagram] long-lived",
             method,
-            "expires_in=",
-            picked.expiresIn,
+            base,
+            "failed",
+            res.status,
+            JSON.stringify(json).slice(0, 300),
           );
-          return {
-            accessToken: picked.accessToken,
-            expiresIn: picked.expiresIn ?? 60 * 24 * 60 * 60,
-          };
+        } catch (e) {
+          const msg = e instanceof Error ? e.message : String(e);
+          errors.push(`${method} ${base}: ${msg}`);
         }
-
-        const err = tokenExchangeError(json, res.status);
-        errors.push(`${method}: ${err}`);
-        console.error(
-          "[instagram] long-lived",
-          method,
-          "failed",
-          res.status,
-          `secret_len=${secret.length}`,
-          JSON.stringify(json).slice(0, 400),
-        );
-      } catch (e) {
-        const msg = e instanceof Error ? e.message : String(e);
-        errors.push(`${method}: ${msg}`);
-        console.error("[instagram] long-lived", method, "exception", msg);
       }
     }
   }
 
-  const useful =
+  if (sawMethodTypeBlock) {
+    throw new Error(
+      "META_ACCESS_BLOCKED: A Meta bloqueou a troca do token (Access Verification / Instagram Tester). No App Dashboard: Roles → Instagram Testers (adicione a conta) e Basics → Verifications → Access verification.",
+    );
+  }
+
+  throw new Error(
     errors.find((e) => !/Unsupported request - method type/i.test(e)) ??
-    errors[0] ??
-    "Long-lived token exchange failed";
-  throw new Error(useful);
+      errors[0] ??
+      "Long-lived token exchange failed",
+  );
 }
 
 export async function refreshIgLongLivedToken(
@@ -399,6 +421,13 @@ export async function fetchIgMeProfile(
     }
     throw e;
   }
+}
+
+/** Valida que o token responde no Graph (sem engolir erro com fallback). */
+export async function assertIgTokenWorks(accessToken: string): Promise<void> {
+  await igGraphGet<{ id?: string; user_id?: string }>("me", accessToken, {
+    fields: "user_id,username",
+  });
 }
 
 export async function subscribeIgWebhooks(
@@ -581,18 +610,62 @@ export async function completeInstagramLogin(code: string): Promise<{
   messagesEnabled: boolean;
 }> {
   const short = await exchangeCodeForShortLivedToken(code);
-
-  // Token short-lived (~1h) não pode ser renovado via ig_refresh_token.
-  // Sem long-lived a conexão “parece ok” e o cron marca NEEDS_REAUTH em minutos.
-  const long = await exchangeForLongLivedToken(short.accessToken);
-  const accessToken = long.accessToken;
-  const expiresIn = long.expiresIn;
-  console.info("[instagram] long-lived exchange ok, expires_in=", expiresIn);
-
   const fallbackId = short.userId?.trim() ? short.userId : undefined;
+
+  let accessToken = short.accessToken;
+  let expiresIn = 60 * 60;
+
+  try {
+    const long = await exchangeForLongLivedToken(short.accessToken);
+    accessToken = long.accessToken;
+    expiresIn = long.expiresIn;
+    console.info("[instagram] long-lived exchange ok, expires_in=", expiresIn);
+  } catch (exchangeErr) {
+    const exchangeMsg =
+      exchangeErr instanceof Error ? exchangeErr.message : String(exchangeErr);
+    console.warn("[instagram] long-lived exchange failed:", exchangeMsg);
+
+    // Workaround Meta: token inicial pode já funcionar; refresh às vezes gera 60d.
+    try {
+      const refreshed = await refreshIgLongLivedToken(short.accessToken);
+      accessToken = refreshed.accessToken;
+      expiresIn = refreshed.expiresIn;
+      console.info(
+        "[instagram] refresh fallback ok, expires_in=",
+        expiresIn,
+      );
+    } catch (refreshErr) {
+      console.warn(
+        "[instagram] refresh fallback failed:",
+        refreshErr instanceof Error ? refreshErr.message : refreshErr,
+      );
+
+      // Se /me funciona, conecta com o token curto (melhor que bloquear tudo).
+      try {
+        await assertIgTokenWorks(short.accessToken);
+        accessToken = short.accessToken;
+        expiresIn = 60 * 60;
+        console.warn(
+          "[instagram] using short-lived token; reconecte em ~1h ou conclua Access Verification na Meta",
+        );
+      } catch (meErr) {
+        const meMsg = meErr instanceof Error ? meErr.message : String(meErr);
+        console.error("[instagram] /me also failed:", meMsg);
+        if (
+          exchangeMsg.startsWith("META_ACCESS_BLOCKED") ||
+          /Unsupported request - method type/i.test(meMsg)
+        ) {
+          throw new Error(
+            "A Meta bloqueou esta conexão. No Meta App Dashboard: (1) Roles → Instagram Testers — adicione e aceite o convite na conta IG; (2) Basics → Verifications → Access verification (Tech Provider). Depois clique em Reconectar.",
+          );
+        }
+        throw new Error(exchangeMsg.replace(/^META_ACCESS_BLOCKED:\s*/, ""));
+      }
+    }
+  }
+
   let profile = await fetchIgMeProfile(accessToken, fallbackId);
 
-  // Se /me falhou no short-lived, tenta de novo após long-lived (ou vice-versa)
   if (!profile.username || !profile.profilePictureUrl) {
     try {
       const again = await fetchIgMeProfile(accessToken, profile.igUserId);
