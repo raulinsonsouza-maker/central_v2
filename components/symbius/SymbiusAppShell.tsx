@@ -98,7 +98,7 @@ export function SymbiusAppShell({
 
   return (
     <div className="symbius-app-shell">
-      {shell.needsReauth ? (
+      {shell.needsReauth && pathname !== "/app/connect" ? (
         <div className="symbius-reauth-banner" role="alert">
           <span>
             A conexão do Instagram expirou ou precisa ser renovada. Automações e

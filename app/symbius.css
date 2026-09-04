@@ -129,6 +129,7 @@
 /* —— App shell (ManyChat-style sidebar) —— */
 .symbius-app-shell {
   display: flex;
+  flex-direction: column;
   height: 100dvh;
   max-height: 100dvh;
   overflow: hidden;
@@ -466,20 +467,24 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.65rem 1rem;
+  justify-content: center;
+  gap: 0.5rem 1rem;
+  width: 100%;
+  padding: 0.5rem 1rem;
   background: #fef3c7;
   color: #92400e;
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
+  line-height: 1.35;
   border-bottom: 1px solid #fcd34d;
   flex-shrink: 0;
+  text-align: center;
 }
 
 .symbius-reauth-banner-cta {
   font-weight: 600;
   color: #92400e;
   text-decoration: underline;
+  white-space: nowrap;
 }
 
 .symbius-mobile-topbar {
